@@ -6,7 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RouterProvider } from 'react-router-dom';
 import { worker } from './mocks/browser';
 import customRouter from '@components/Router/CustomRouter.tsx';
-import reportWebVitals from './reportWebVitals';
+// import reportWebVitals from './reportWebVitals';
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -4,9 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum Provider {
-
-	GOOGLE("google"),
-	KAKAO("kakao");
+	GOOGLE("GOOGLE"),
+	KAKAO("KAKAO");
 
 	private final String provider;
 

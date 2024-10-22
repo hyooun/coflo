@@ -50,17 +50,15 @@ public class JwtProvider {
 	public static Authentication getAuthentication(String token) {
 		Map<String, Object> claims = validateToken(token);
 
-		Integer id = (Integer)claims.get("id");
-		String name = (String)claims.get("name");
+		String oauth2Id = (String)claims.get("oauth2Id");
 		String role = (String)claims.get("role");
 
 		Role memberRole = Role.valueOf(role);
-		Long longId = (long)id;
-		User member = User.builder().id(longId).username(name).role(memberRole).build();
+		User user = User.builder().oauth2Id(oauth2Id).role(memberRole).build();
 
 		Set<SimpleGrantedAuthority> authorities = Collections.singleton(
 			new SimpleGrantedAuthority(memberRole.getValue()));
-		PrincipalDetail principalDetail = new PrincipalDetail(member, authorities);
+		PrincipalDetail principalDetail = new PrincipalDetail(user, authorities);
 		return new UsernamePasswordAuthenticationToken(principalDetail, "", authorities);
 	}
 

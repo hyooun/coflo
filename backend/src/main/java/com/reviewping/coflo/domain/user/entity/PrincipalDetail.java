@@ -38,17 +38,15 @@ public class PrincipalDetail implements UserDetails {
 		this.attributes = attributes;
 	}
 
-	// info 에 들어가는 것들이 토큰에 들어가는 데이터
 	public Map<String, Object> getMemberInfo() {
 		Map<String, Object> info = new HashMap<>();
-		info.put("id", user.getId());
-		info.put("name", user.getUsername());
+		info.put("oauth2Id", user.getOauth2Id());
 		info.put("role", user.getRole());
 		return info;
 	}
 
-	public Long getId() {
-		return user.getId();
+	public String getOauth2Id() {
+		return user.getOauth2Id();
 	}
 
 	@Override

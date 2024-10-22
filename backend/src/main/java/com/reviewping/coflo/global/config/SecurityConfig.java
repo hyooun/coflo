@@ -25,14 +25,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+	private final JwtVerifyFilter jwtVerifyFilter;
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
-	public JwtVerifyFilter jwtVerifyFilter() {
-		return new JwtVerifyFilter();
 	}
 
 	@Bean
@@ -49,7 +46,7 @@ public class SecurityConfig {
 			cors.configurationSource(corsConfigurationSource());
 		});
 
-		http.addFilterBefore(jwtVerifyFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class);
 
 		http.formLogin(AbstractHttpConfigurer::disable);
 

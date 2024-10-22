@@ -34,7 +34,13 @@ public enum ErrorCode {
 	/**
 	 * Etc(Z000)
 	 */
-	INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "Z009", "잘못된 파라미터가 포함되었습니다.");
+	INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "Z009", "잘못된 파라미터가 포함되었습니다."),
+
+	/**
+	 * crypto(C000)
+	 */
+	ENCRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C001", "암호화 도중 오류가 발생했습니다."),
+	DECRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C002", "복호화 도중 오류가 발생했습니다.");
 
 	private final HttpStatus httpStatus;
 	private final String code;

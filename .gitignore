@@ -138,3 +138,5 @@ key.js
 *.njsproj
 *.sln
 *.sw?
+
+.env

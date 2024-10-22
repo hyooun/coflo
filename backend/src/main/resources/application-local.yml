@@ -8,3 +8,5 @@ spring:
     url: jdbc:postgresql://localhost:5432/coflo
     username: postgres
     password: 1234
+
+crypto-key: ${CRYPTO_KEY}

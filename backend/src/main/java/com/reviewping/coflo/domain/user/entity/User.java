@@ -48,7 +48,7 @@ public class User {
 	private Role role;
 
 	@OneToMany(fetch = FetchType.LAZY)
-	private final ArrayList<GitlabAccount> gitlabAccounts = new ArrayList<>();
+	private ArrayList<GitlabAccount> gitlabAccounts = new ArrayList<>();
 
 	@Builder
 	public User(String username, String profileImageUrl, String oauth2Id, Provider provider,

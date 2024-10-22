@@ -1,9 +1,5 @@
 package com.reviewping.coflo.global.util;
 
-import static com.reviewping.coflo.global.error.ErrorCode.*;
-
-import java.net.URI;
-
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 
 import lombok.RequiredArgsConstructor;
@@ -36,16 +33,13 @@ public class RestTemplateUtils {
 		return headers;
 	}
 
-	public static <T> ResponseEntity<T> sendGetRequest(String url, HttpHeaders headers, ParameterizedTypeReference<T> responseType) {
+	public static <T> ResponseEntity<T> sendGetRequest(String url, HttpHeaders headers,
+		ParameterizedTypeReference<T> responseType) {
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 		try {
 			return restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
 		} catch (HttpClientErrorException e) {
-			if (e.getStatusCode().is4xxClientError()) {
-				return ResponseEntity.status(e.getStatusCode()).build();
-			} else {
-				throw new BusinessException(EXTERNAL_API_BAD_REQUEST);
-			}
+			throw handleClientOrServerError(e);
 		}
 	}
 
@@ -55,7 +49,16 @@ public class RestTemplateUtils {
 		try {
 			return restTemplate.exchange(url, HttpMethod.POST, entity, responseType);
 		} catch (HttpClientErrorException e) {
-			throw new BusinessException(EXTERNAL_API_BAD_REQUEST);
+			throw handleClientOrServerError(e);
 		}
+	}
+
+	private static BusinessException handleClientOrServerError(HttpClientErrorException e) {
+		if (e.getStatusCode().is4xxClientError()) {
+			return new BusinessException(ErrorCode.EXTERNAL_API_BAD_REQUEST);
+		} else if (e.getStatusCode().is5xxServerError()) {
+			return new BusinessException(ErrorCode.EXTERNAL_API_INTERNAL_SERVER_ERROR);
+		}
+		return new BusinessException(ErrorCode.EXTERNAL_API_INTERNAL_SERVER_ERROR);
 	}
 }

@@ -22,7 +22,7 @@ public class UserService {
 	private final GitlabAccountRepository gitlabAccountRepository;
 
 	@Transactional
-	public String createGitlabAccount(String domain, String userToken, String oauth2Id) {
+	public String addGitlabAccount(String domain, String userToken, String oauth2Id) {
 		User user = userRepository.findByOauth2Id(oauth2Id)
 			.orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXIST));
 		GitlabAccount gitlabAccount = gitlabAccountRepository.save(GitlabAccount.builder()

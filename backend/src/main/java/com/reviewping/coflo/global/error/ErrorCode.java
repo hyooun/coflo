@@ -22,15 +22,14 @@ public enum ErrorCode {
 	TOKEN_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "H003", "지원되지 않는 토큰입니다."),
 	TOKEN_WRONG(HttpStatus.UNAUTHORIZED, "H004", "잘못된 토큰 서명입니다."),
 
-
 	/**
 	 * 외부 API(Y000)
 	 */
 	EXTERNAL_API_NOT_FOUND(HttpStatus.NOT_FOUND, "Y001", "외부 API를 찾을 수 없습니다."),
-	EXTERNAL_API_METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "Y002", "허용되지 않은 HTTP 메서드입니다."),
-	EXTERNAL_API_UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Y003", "지원되지 않는 미디어 타입입니다."),
-	EXTERNAL_API_BAD_REQUEST(HttpStatus.INTERNAL_SERVER_ERROR, "Y004", "잘못된 요청입니다."),
-	EXTERNAL_API_INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Y005", "서버 내부 오류가 발생했습니다."),
+	EXTERNAL_API_METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "Y002", "외부 API 요청에 허용되지 않은 HTTP 메서드입니다."),
+	EXTERNAL_API_UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Y003", "외부 API 요청에 지원되지 않는 미디어 타입입니다."),
+	EXTERNAL_API_BAD_REQUEST(HttpStatus.INTERNAL_SERVER_ERROR, "Y004", "잘못된 외부 API 요청입니다."),
+	EXTERNAL_API_INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Y005", "외부 API 서버 내부 오류가 발생했습니다."),
 
 	/**
 	 * Etc(Z000)

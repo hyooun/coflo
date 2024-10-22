@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectResponse;
+import com.reviewping.coflo.domain.gitlab.dto.response.GitlabUserInfoResponse;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,9 @@ public class GitLabApiService {
 
 	@Value("${gitlab.api.project-list}")
 	private String projectListEndpoint;
+
+	@Value("${gitlab.api.user-info}")
+	private String userInfoEndpoint;
 
 	public List<GitlabProjectResponse> getProjects(String gitlabUrl, String token) {
 		HttpHeaders headers = RestTemplateUtils.createHeaders("application/json", token);
@@ -35,5 +39,14 @@ public class GitLabApiService {
 		return response.getBody();
 	}
 
+	public GitlabUserInfoResponse getUserInfo(String gitlabUrl, String token) {
+		HttpHeaders headers = RestTemplateUtils.createHeaders("application/json", token);
+		String url = "https://" + gitlabUrl + userInfoEndpoint;
+
+		ResponseEntity<GitlabUserInfoResponse> response = RestTemplateUtils.sendGetRequest(
+			url, headers, new ParameterizedTypeReference<GitlabUserInfoResponse>() {}
+		);
+		return response.getBody();
+	}
 }
 

@@ -41,7 +41,6 @@ public class SecurityConfig {
 			httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		});
 
-		// CORS 설정 추가
 		http.cors(cors -> {
 			cors.configurationSource(corsConfigurationSource());
 		});
@@ -53,15 +52,14 @@ public class SecurityConfig {
 		return http.build();
 	}
 
-	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Arrays.asList(
 			"http://localhost:5173",
-			"https://localhost:5173")); // 허용할 도메인 설정
-		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메소드
-		configuration.setAllowedHeaders(Arrays.asList("*")); // 모든 헤더 허용
-		configuration.setAllowCredentials(true); // 자격 증명 허용
+			"https://localhost:5173"));
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		configuration.setAllowedHeaders(Arrays.asList("*"));
+		configuration.setAllowCredentials(true);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);

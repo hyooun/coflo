@@ -4,6 +4,7 @@ import static com.reviewping.coflo.global.error.ErrorCode.*;
 
 import java.net.URI;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -35,13 +36,7 @@ public class RestTemplateUtils {
 		return headers;
 	}
 
-	public static HttpHeaders createHeaders(String contentType) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.set(CONTENT_TYPE, contentType);
-		return headers;
-	}
-
-	public static <T> ResponseEntity<T> sendGetRequest(String url, HttpHeaders headers, Class<T> responseType) {
+	public static <T> ResponseEntity<T> sendGetRequest(String url, HttpHeaders headers, ParameterizedTypeReference<T> responseType) {
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 		try {
 			return restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
@@ -54,21 +49,8 @@ public class RestTemplateUtils {
 		}
 	}
 
-	public static <T> ResponseEntity<T> sendGetRequestWithUri(URI uri, HttpHeaders headers, Class<T> responseType) {
-		HttpEntity<String> entity = new HttpEntity<>(headers);
-		try {
-			return restTemplate.exchange(uri, HttpMethod.GET, entity, responseType);
-		} catch (HttpClientErrorException e) {
-			if (e.getStatusCode().is4xxClientError()) {
-				return ResponseEntity.status(e.getStatusCode()).build();
-			} else {
-				throw new BusinessException(EXTERNAL_API_BAD_REQUEST);
-			}
-		}
-	}
-
 	public static <T> ResponseEntity<T> sendPostRequest(String url, HttpHeaders headers, String body,
-		Class<T> responseType) {
+		ParameterizedTypeReference<T> responseType) {
 		HttpEntity<String> entity = new HttpEntity<>(body, headers);
 		try {
 			return restTemplate.exchange(url, HttpMethod.POST, entity, responseType);

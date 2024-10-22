@@ -20,11 +20,11 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping("/me")
-	public ApiResponse<String> addGitlabAccount(
+	public ApiResponse<Void> addGitlabAccount(
 		@AuthenticationPrincipal User user,
 		GitlabAccountRequest gitlabAccountRequest) {
-		String username = userService.addGitlabAccount(gitlabAccountRequest.domain(),
+		userService.addGitlabAccount(gitlabAccountRequest.domain(),
 			gitlabAccountRequest.userToken(), user.getOauth2Id());
-		return ApiSuccessResponse.success(username);
+		return ApiSuccessResponse.success();
 	}
 }

@@ -66,7 +66,6 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 		String authHeader) throws IOException, ServletException {
 		String token = JwtProvider.getTokenFromHeader(authHeader);
 		Authentication authentication = JwtProvider.getAuthentication(token);
-		// Authentication authentication = null;
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		filterChain.doFilter(request, response);

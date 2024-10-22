@@ -9,6 +9,16 @@ spring:
     username: postgres
     password: 1234
 
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: true
+
   data:
     # Redis 연결 정보
     redis:

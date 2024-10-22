@@ -1,5 +1,7 @@
 package com.reviewping.coflo.domain.user.entity;
 
+import com.reviewping.coflo.domain.user.enums.Provider;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,12 +28,12 @@ public class User {
 
 	private Long oauth2Id;
 
-	private String provider;
+	private Provider provider;
 
 	private String role;
 
 	@Builder
-	public User(String username, String userToken, String profileImageUrl, Long oauth2Id, String provider,
+	public User(String username, String userToken, String profileImageUrl, Long oauth2Id, Provider provider,
 		String role) {
 		this.username = username;
 		this.userToken = userToken;

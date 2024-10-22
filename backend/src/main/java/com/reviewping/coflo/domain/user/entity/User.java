@@ -29,7 +29,7 @@ public class User {
 	private String profileImageUrl;
 
 	@Column(nullable = false, unique = true)
-	private Long oauth2Id;
+	private String oauth2Id;
 
 	@Column(nullable = false)
 	private Provider provider;
@@ -38,7 +38,7 @@ public class User {
 	private Role role;
 
 	@Builder
-	public User(String username, String profileImageUrl, Long oauth2Id, Provider provider,
+	public User(String username, String profileImageUrl, String oauth2Id, Provider provider,
 		Role role) {
 		this.username = username;
 		this.profileImageUrl = profileImageUrl;

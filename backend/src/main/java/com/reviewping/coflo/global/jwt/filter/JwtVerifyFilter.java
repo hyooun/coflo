@@ -32,7 +32,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 	@Autowired
 	private RedisUtil redisUtil;
 
-	private static final String[] whitelist = {"/api/swagger-ui/**", "/api/v3/**", "/api/users/me", "/test"};
+	private static final String[] whitelist = {"/api/swagger-ui/**", "/api/v3/**", "/api/users/me"};
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -103,6 +103,8 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 	}
 
 	private void handleException(HttpServletResponse response, Exception e) throws IOException {
+		if (response.isCommitted()) return;
+
 		Map<String, String> error = Map.of(
 			"status", "ERROR",
 			"code", TOKEN_INVALID.getCode(),

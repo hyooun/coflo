@@ -16,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import com.reviewping.coflo.domain.user.entity.PrincipalDetail;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.enums.Role;
+import com.reviewping.coflo.global.error.ErrorCode;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -43,7 +44,7 @@ public class JwtProvider {
 				.signWith(key)
 				.compact();
 		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+			throw new JwtException(e.getMessage());
 		}
 	}
 
@@ -74,11 +75,9 @@ public class JwtProvider {
 
 			return claim;
 		} catch (ExpiredJwtException expiredJwtException) {
-			log.error("만료된 토큰입니다.");
-			throw new JwtException("만료된 토큰입니다.");
+			throw new JwtException(ErrorCode.TOKEN_EXPIRED.getMessage());
 		} catch (Exception e) {
-			log.error("존재하지 않는 토큰입니다.");
-			throw new JwtException("존재하지 않는 토큰입니다.");
+			throw new JwtException(ErrorCode.TOKEN_UNSUPPORTED.getMessage());
 		}
 	}
 

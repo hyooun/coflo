@@ -5,15 +5,14 @@ import static com.reviewping.coflo.global.error.ErrorCode.*;
 import java.io.IOException;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.jwt.utils.JwtProvider;
 import com.reviewping.coflo.global.util.RedisUtil;
@@ -77,10 +76,8 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 		String userId = (String)claims.get("id");
 		String token = (String)redisUtil.get(userId);
 
-		if(token != null) {
-			throw new JwtException("존재하지 않는 리프레시 토큰입니다.");
-		} else if(!refreshToken.equals(token)) {
-			throw new JwtException("이미 사용된 리프레시 토큰입니다.");
+		if(token != null || !refreshToken.equals(token)) {
+			throw new JwtException(TOKEN_INVALID.getMessage());
 		} else{
 			redisUtil.delete(userId);
 			String accessToken = JwtProvider.generateToken(claims, JwtConstants.ACCESS_EXP_TIME);
@@ -99,17 +96,20 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 		}
 
-		log.error("토큰이 존재하지 않습니다.");
-		throw new JwtException("토큰이 존재하지 않습니다.");
+		throw new JwtException(TOKEN_INVALID.getMessage());
 	}
 
 	private void handleException(HttpServletResponse response, Exception e) throws IOException {
 		if (response.isCommitted()) return;
 
+		log.error(e.getMessage());
+
+		ErrorCode errorCode = determineErrorCode(e);
+
 		Map<String, String> error = Map.of(
 			"status", "ERROR",
-			"code", TOKEN_INVALID.getCode(),
-			"message", TOKEN_INVALID.getMessage()
+			"code", errorCode.getCode(),
+			"message", errorCode.getMessage()
 		);
 
 		response.setContentType("application/json; charset=UTF-8");
@@ -118,6 +118,20 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String errorJson = objectMapper.writeValueAsString(error);
 		response.getWriter().write(errorJson);
+	}
+
+	private ErrorCode determineErrorCode(Exception e) {
+		if (e instanceof JwtException) {
+			String errorMessage = e.getMessage();
+
+			if (errorMessage.contains(ErrorCode.TOKEN_EXPIRED.getMessage())) {
+				return ErrorCode.TOKEN_EXPIRED;
+			} else if (errorMessage.contains(ErrorCode.TOKEN_UNSUPPORTED.getMessage())) {
+				return ErrorCode.TOKEN_UNSUPPORTED;
+			}
+		}
+
+		return ErrorCode.TOKEN_INVALID;
 	}
 
 }

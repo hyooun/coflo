@@ -17,16 +17,17 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.reviewping.coflo.global.jwt.filter.JwtVerifyFilter;
+import com.reviewping.coflo.global.util.RedisUtil;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-@EnableMethodSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
 
-	private final JwtVerifyFilter jwtVerifyFilter;
-	
+	private final RedisUtil redisUtil;
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -45,7 +46,7 @@ public class SecurityConfig {
 			cors.configurationSource(corsConfigurationSource());
 		});
 
-		http.addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(new JwtVerifyFilter(redisUtil), UsernamePasswordAuthenticationFilter.class);
 
 		http.formLogin(AbstractHttpConfigurer::disable);
 

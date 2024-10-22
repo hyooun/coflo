@@ -23,16 +23,17 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
+@RequiredArgsConstructor
 public class JwtVerifyFilter extends OncePerRequestFilter {
 
-	@Autowired
-	private RedisUtil redisUtil;
+	private final RedisUtil redisUtil;
 
 	private static final String[] whitelist = {"/api/swagger-ui/**", "/api/v3/**", "/api/users/me"};
+
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {

@@ -1,5 +1,7 @@
 package com.reviewping.coflo.domain.user.entity;
 
+import java.util.ArrayList;
+
 import com.reviewping.coflo.domain.user.enums.Provider;
 import com.reviewping.coflo.domain.user.enums.Role;
 
@@ -7,9 +9,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -42,6 +46,9 @@ public class User {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Role role;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	private final ArrayList<GitlabAccount> gitlabAccounts = new ArrayList<>();
 
 	@Builder
 	public User(String username, String profileImageUrl, String oauth2Id, Provider provider,

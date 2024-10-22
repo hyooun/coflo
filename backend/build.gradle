@@ -33,6 +33,9 @@ dependencies {
 	// DB
 	runtimeOnly 'org.postgresql:postgresql'
 
+	// Docker Compose
+	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+
 	// Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 

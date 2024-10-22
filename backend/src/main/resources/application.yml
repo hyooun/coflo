@@ -8,3 +8,7 @@ spring:
   output:
     ansi:
       enabled: always
+
+gitlab:
+  api:
+    project-list: /api/v4/projects

@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: coflo
+
+  profiles:
+    default: local
+
+  output:
+    ansi:
+      enabled: always

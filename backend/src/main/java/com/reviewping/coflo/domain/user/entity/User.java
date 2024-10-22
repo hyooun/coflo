@@ -3,6 +3,7 @@ package com.reviewping.coflo.domain.user.entity;
 import com.reviewping.coflo.domain.user.enums.Provider;
 import com.reviewping.coflo.domain.user.enums.Role;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,23 +22,25 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false, unique = true)
 	private String username;
 
-	private String userToken;
-
+	@Column(nullable = false)
 	private String profileImageUrl;
 
+	@Column(nullable = false, unique = true)
 	private Long oauth2Id;
 
+	@Column(nullable = false)
 	private Provider provider;
 
+	@Column(nullable = false)
 	private Role role;
 
 	@Builder
-	public User(String username, String userToken, String profileImageUrl, Long oauth2Id, Provider provider,
+	public User(String username, String profileImageUrl, Long oauth2Id, Provider provider,
 		Role role) {
 		this.username = username;
-		this.userToken = userToken;
 		this.profileImageUrl = profileImageUrl;
 		this.oauth2Id = oauth2Id;
 		this.provider = provider;

@@ -60,4 +60,8 @@ public class User extends BaseTimeEntity {
 		this.provider = provider;
 		this.role = role;
 	}
+
+	public void addGitlabAccount(GitlabAccount gitlabAccount) {
+		this.gitlabAccounts.add(gitlabAccount);
+	}
 }

@@ -32,7 +32,7 @@ public class User extends BaseTimeEntity {
     @Column(unique = true)
     private String username;
 
-    @Column private String profileImageUrl;
+    private String profileImageUrl;
 
     @Column(nullable = false, unique = true)
     private String oauth2Id;

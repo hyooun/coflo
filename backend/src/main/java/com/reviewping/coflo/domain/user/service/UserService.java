@@ -3,6 +3,8 @@ package com.reviewping.coflo.domain.user.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.reviewping.coflo.domain.gitlab.dto.response.GitlabUserInfoResponse;
+import com.reviewping.coflo.domain.gitlab.service.GitLabApiService;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
@@ -20,6 +22,7 @@ public class UserService {
 
 	private final UserRepository userRepository;
 	private final GitlabAccountRepository gitlabAccountRepository;
+	private final GitLabApiService gitLabApiService;
 
 	@Transactional
 	public void addGitlabAccount(String domain, String userToken, String oauth2Id) {
@@ -34,4 +37,12 @@ public class UserService {
 		userRepository.save(user);
 	}
 
+	public void synchronizeUserInfo(String oauth2Id) {
+		User user = userRepository.findByOauth2Id(oauth2Id)
+			.orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXIST));
+		GitlabUserInfoResponse userInfo = gitLabApiService.getUserInfo(
+			user.getGitlabAccounts().getFirst().getDomain(),
+			user.getGitlabAccounts().getFirst().getUserToken());
+		user.updateUserInfo(userInfo.username(), userInfo.avatarUrl());
+	}
 }

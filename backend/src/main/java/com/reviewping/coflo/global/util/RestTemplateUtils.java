@@ -20,16 +20,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class RestTemplateUtils {
 
-	static final String CONTENT_TYPE = "Content-Type";
-	static final String AUTHORIZATION = "Authorization";
-	static final String BEARER = "Bearer ";
+	static final String HEADER_CONTENT_TYPE = "Content-Type";
+	static final String HEADER_AUTHORIZATION = "Authorization";
+	static final String AUTH_TYPE = "Bearer ";
 
 	private static final RestTemplate restTemplate = new RestTemplate();
 
 	public static HttpHeaders createHeaders(String contentType, String token) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set(CONTENT_TYPE, contentType);
-		headers.set(AUTHORIZATION, BEARER + token);
+		headers.set(HEADER_CONTENT_TYPE, contentType);
+		headers.set(HEADER_AUTHORIZATION, AUTH_TYPE + token);
 		return headers;
 	}
 

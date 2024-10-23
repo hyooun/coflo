@@ -14,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.reviewping.coflo.domain.user.entity.PrincipalDetail;
-import com.reviewping.coflo.domain.user.entity.User;
-import com.reviewping.coflo.domain.user.enums.Role;
 import com.reviewping.coflo.global.error.ErrorCode;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -52,15 +50,10 @@ public class JwtProvider {
 		Map<String, Object> claims = validateToken(token);
 
 		String oauth2Id = (String)claims.get("oauth2Id");
-		String role = (String)claims.get("role");
-
-		Role memberRole = Role.valueOf(role);
-		User user = User.builder().oauth2Id(oauth2Id).role(memberRole).build();
 
 		Set<SimpleGrantedAuthority> authorities = Collections.singleton(
-			new SimpleGrantedAuthority(memberRole.getRole()));
-		PrincipalDetail principalDetail = new PrincipalDetail(user, authorities);
-		return new UsernamePasswordAuthenticationToken(principalDetail, "", authorities);
+			new SimpleGrantedAuthority("ROLE_USER"));
+		return new UsernamePasswordAuthenticationToken(new PrincipalDetail(oauth2Id), "", authorities);
 	}
 
 	public static Map<String, Object> validateToken(String token) {
@@ -70,7 +63,7 @@ public class JwtProvider {
 			Map<String, Object> claim = Jwts.parserBuilder()
 				.setSigningKey(key)
 				.build()
-				.parseClaimsJws(token) // 파싱 및 검증, 실패 시 에러
+				.parseClaimsJws(token)
 				.getBody();
 
 			return claim;

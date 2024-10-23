@@ -12,3 +12,6 @@ spring:
 gitlab:
   api:
     project-list: /api/v4/projects
+    user-info: /api/v4/user
+
+crypto-key: ${CRYPTO_KEY}

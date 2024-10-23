@@ -4,12 +4,12 @@ import lombok.Getter;
 
 @Getter
 public enum Provider {
-	GOOGLE("GOOGLE"),
-	KAKAO("KAKAO");
+    GOOGLE("GOOGLE"),
+    KAKAO("KAKAO");
 
-	private final String provider;
+    private final String provider;
 
-	Provider(String provider) {
-		this.provider = provider;
-	}
+    Provider(String provider) {
+        this.provider = provider;
+    }
 }

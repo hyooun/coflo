@@ -39,3 +39,6 @@ out/
 ### env ###
 .env
 env
+
+### spotlesCheck ###
+spotless_check_output.txt

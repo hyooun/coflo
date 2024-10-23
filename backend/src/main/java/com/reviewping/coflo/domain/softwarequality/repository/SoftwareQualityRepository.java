@@ -1,6 +1,6 @@
-package com.reviewping.coflo.domain.userproject.repository;
+package com.reviewping.coflo.domain.softwarequality.repository;
 
-import com.reviewping.coflo.domain.userproject.entity.SoftwareQuality;
+import com.reviewping.coflo.domain.softwarequality.entity.SoftwareQuality;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

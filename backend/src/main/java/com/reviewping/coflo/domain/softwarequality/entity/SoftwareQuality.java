@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.userproject.entity;
+package com.reviewping.coflo.domain.softwarequality.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,9 +12,9 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class SoftwareQuality {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private String name;
+    private String name;
 }

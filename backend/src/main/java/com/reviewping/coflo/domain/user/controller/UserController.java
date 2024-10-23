@@ -27,14 +27,14 @@ public class UserController {
         userService.addGitlabAccount(
                 gitlabAccountRequest.domain(),
                 gitlabAccountRequest.userToken(),
-                principalDetail.getUsername());
+                principalDetail.getName());
         return ApiSuccessResponse.success();
     }
 
     @PatchMapping("/me/sync")
     public ApiResponse<Void> synchronizeUserInfo(
             @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        userService.synchronizeUserInfo(principalDetail.getUsername());
+        userService.synchronizeUserInfo(principalDetail.getName());
         return ApiSuccessResponse.success();
     }
 }

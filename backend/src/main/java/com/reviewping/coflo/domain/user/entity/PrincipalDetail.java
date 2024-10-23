@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 @Data
-public class PrincipalDetail implements UserDetails, OAuth2User {
+public class PrincipalDetail implements OAuth2User {
 
     private String oauth2Id;
 
@@ -28,37 +28,7 @@ public class PrincipalDetail implements UserDetails, OAuth2User {
     }
 
     @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return oauth2Id;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
     public String getName() {
-        return "";
+        return oauth2Id;
     }
 }

@@ -39,7 +39,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         User user = userRepository.findByOauth2Id(principal.getOauth2Id()).orElse(null);
 
         log.info("=== 로그인 성공 ===");
-        Map<String, Object> responseMap = Map.of("oauthId", principal.getUsername());
+        Map<String, Object> responseMap = Map.of("oauthId", principal.getName());
         String accessToken = JwtProvider.generateToken(responseMap, JwtConstants.ACCESS_EXP_TIME);
         String refreshToken = JwtProvider.generateToken(responseMap, JwtConstants.REFRESH_EXP_TIME);
 

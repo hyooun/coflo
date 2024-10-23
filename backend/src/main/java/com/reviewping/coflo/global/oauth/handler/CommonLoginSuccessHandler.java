@@ -45,7 +45,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         Cookie accessTokenCookie =
                 createCookie(
-                        "accessToken",
+                        JwtConstants.JWT_HEADER,
                         accessToken,
                         (int) JwtConstants.ACCESS_EXP_TIME / 1000,
                         true,
@@ -53,7 +53,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
                         "/");
         Cookie refreshTokenCookie =
                 createCookie(
-                        "refreshToken",
+                        JwtConstants.JWT_REFRESH_HEADER,
                         refreshToken,
                         (int) JwtConstants.REFRESH_EXP_TIME / 1000,
                         true,

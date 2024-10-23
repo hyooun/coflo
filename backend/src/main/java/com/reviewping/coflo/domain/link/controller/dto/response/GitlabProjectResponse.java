@@ -7,7 +7,8 @@ import lombok.Builder;
 public record GitlabProjectResponse(
         Long gitlabProjectId, String name, boolean isLinkable, boolean isLinked) {
 
-    public static GitlabProjectResponse of(GitlabProjectContent content, boolean isLinkable, boolean isLinked) {
+    public static GitlabProjectResponse of(
+            GitlabProjectContent content, boolean isLinkable, boolean isLinked) {
         return GitlabProjectResponse.builder()
                 .gitlabProjectId(content.id())
                 .name(content.name())

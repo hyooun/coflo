@@ -16,6 +16,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reviewping.coflo.global.jwt.filter.JwtExceptionFilter;
 import com.reviewping.coflo.global.jwt.filter.JwtVerifyFilter;
 import com.reviewping.coflo.global.util.RedisUtil;
 
@@ -27,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
 	private final RedisUtil redisUtil;
+	private final ObjectMapper objectMapper;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -35,20 +38,16 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		JwtVerifyFilter jwtVerifyFilter = new JwtVerifyFilter(redisUtil);
 
-		http.csrf(AbstractHttpConfigurer::disable);
-
-		http.sessionManagement(httpSecuritySessionManagementConfigurer -> {
-			httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		});
-
-		http.cors(cors -> {
-			cors.configurationSource(corsConfigurationSource());
-		});
-
-		http.addFilterBefore(new JwtVerifyFilter(redisUtil), UsernamePasswordAuthenticationFilter.class);
-
-		http.formLogin(AbstractHttpConfigurer::disable);
+		http.csrf(AbstractHttpConfigurer::disable)
+			.sessionManagement(httpSecuritySessionManagementConfigurer -> {
+				httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+			}).cors(cors -> {
+				cors.configurationSource(corsConfigurationSource());
+			}).addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(new JwtExceptionFilter(objectMapper), jwtVerifyFilter.getClass())
+			.formLogin(AbstractHttpConfigurer::disable);
 
 		return http.build();
 	}

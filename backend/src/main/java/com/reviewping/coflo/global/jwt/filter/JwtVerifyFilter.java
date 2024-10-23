@@ -5,14 +5,11 @@ import static com.reviewping.coflo.global.error.ErrorCode.*;
 import java.io.IOException;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.jwt.utils.JwtProvider;
 import com.reviewping.coflo.global.util.RedisUtil;
@@ -33,7 +30,6 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 
 	private static final String[] whitelist = {"/api/swagger-ui/**", "/api/v3/**", "/api/users/me"};
 
-
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		String requestURI = request.getRequestURI();
@@ -49,16 +45,12 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 		String accessToken = request.getHeader(JwtConstants.JWT_HEADER);
 		String refreshToken = request.getHeader(JwtConstants.JWT_REFRESH_HEADER);
 
-		try {
-			if (refreshToken != null) {
-				handleRefreshToken(request, response, refreshToken);
-			} else if (accessToken != null) {
-				handleAccessToken(request, response, filterChain, accessToken);
-			} else {
-				proceedToNextFilter(request, response, filterChain, requestURI);
-			}
-		} catch (Exception e) {
-			handleException(response, e);
+		if (refreshToken != null) {
+			handleRefreshToken(request, response, refreshToken);
+		} else if (accessToken != null) {
+			handleAccessToken(request, response, filterChain, accessToken);
+		} else {
+			proceedToNextFilter(request, response, filterChain, requestURI);
 		}
 	}
 
@@ -76,9 +68,9 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 		String userId = (String)claims.get("id");
 		String token = (String)redisUtil.get(userId);
 
-		if(token != null || !refreshToken.equals(token)) {
+		if (token != null || !refreshToken.equals(token)) {
 			throw new JwtException(TOKEN_INVALID.getMessage());
-		} else{
+		} else {
 			redisUtil.delete(userId);
 			String accessToken = JwtProvider.generateToken(claims, JwtConstants.ACCESS_EXP_TIME);
 			refreshToken = JwtProvider.generateToken(claims, JwtConstants.REFRESH_EXP_TIME);
@@ -97,41 +89,6 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 		}
 
 		throw new JwtException(TOKEN_INVALID.getMessage());
-	}
-
-	private void handleException(HttpServletResponse response, Exception e) throws IOException {
-		if (response.isCommitted()) return;
-
-		log.error(e.getMessage());
-
-		ErrorCode errorCode = determineErrorCode(e);
-
-		Map<String, String> error = Map.of(
-			"status", "ERROR",
-			"code", errorCode.getCode(),
-			"message", errorCode.getMessage()
-		);
-
-		response.setContentType("application/json; charset=UTF-8");
-		response.setStatus(HttpStatus.UNAUTHORIZED.value());
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		String errorJson = objectMapper.writeValueAsString(error);
-		response.getWriter().write(errorJson);
-	}
-
-	private ErrorCode determineErrorCode(Exception e) {
-		if (e instanceof JwtException) {
-			String errorMessage = e.getMessage();
-
-			if (errorMessage.contains(ErrorCode.TOKEN_EXPIRED.getMessage())) {
-				return ErrorCode.TOKEN_EXPIRED;
-			} else if (errorMessage.contains(ErrorCode.TOKEN_UNSUPPORTED.getMessage())) {
-				return ErrorCode.TOKEN_UNSUPPORTED;
-			}
-		}
-
-		return ErrorCode.TOKEN_INVALID;
 	}
 
 }

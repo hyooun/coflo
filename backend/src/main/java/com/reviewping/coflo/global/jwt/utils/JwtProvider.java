@@ -58,7 +58,7 @@ public class JwtProvider {
 		User user = User.builder().oauth2Id(oauth2Id).role(memberRole).build();
 
 		Set<SimpleGrantedAuthority> authorities = Collections.singleton(
-			new SimpleGrantedAuthority(memberRole.getValue()));
+			new SimpleGrantedAuthority(memberRole.getRole()));
 		PrincipalDetail principalDetail = new PrincipalDetail(user, authorities);
 		return new UsernamePasswordAuthenticationToken(principalDetail, "", authorities);
 	}

@@ -46,7 +46,7 @@ public class SecurityConfig {
 
     @Bean
     public CommonLoginFailHandler commonLoginFailHandler() {
-        return new CommonLoginFailHandler();
+        return new CommonLoginFailHandler(objectMapper);
     }
 
     @Bean

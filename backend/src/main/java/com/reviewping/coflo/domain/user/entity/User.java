@@ -61,10 +61,6 @@ public class User extends BaseTimeEntity {
 		this.role = role;
 	}
 
-	public void addGitlabAccount(GitlabAccount gitlabAccount) {
-		this.gitlabAccounts.add(gitlabAccount);
-	}
-
 	public void updateUserInfo(String username, String profileImageUrl) {
 		this.username = username;
 		this.profileImageUrl = profileImageUrl;

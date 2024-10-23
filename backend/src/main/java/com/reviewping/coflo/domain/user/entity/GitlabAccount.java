@@ -42,5 +42,6 @@ public class GitlabAccount extends BaseTimeEntity {
 		this.user = user;
 		this.domain = domain;
 		this.userToken = userToken;
+		user.getGitlabAccounts().add(this);
 	}
 }

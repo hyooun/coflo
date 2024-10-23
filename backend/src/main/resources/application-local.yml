@@ -24,3 +24,6 @@ spring:
       host: ${DEV_REDIS_HOST}
       port: ${DEV_REDIS_PORT}
       password: ${DEV_REDIS_PASSWORD}
+
+redirect-regist-url: ${REDIRECT_REGIST_URL}
+redirect-main-url: ${REDIRECT_MAIN_URL}

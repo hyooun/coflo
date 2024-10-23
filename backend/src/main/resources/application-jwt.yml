@@ -1,9 +1,0 @@
-jwt:
-  secretKey: ${JWT_SECRET_KEY}
-  access:
-    expiration: ${ACCESS_EXPIRATION}
-    header: ${ACCESS_HEADER}
-
-  refresh:
-    expiration: ${REFRESH_EXPIRATION}
-    header: ${REFRESH_HEADER}

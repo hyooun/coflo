@@ -1,8 +1,12 @@
 package com.reviewping.coflo.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.global.jwt.filter.JwtExceptionFilter;
 import com.reviewping.coflo.global.jwt.filter.JwtVerifyFilter;
+import com.reviewping.coflo.global.oauth.handler.CommonLoginFailHandler;
+import com.reviewping.coflo.global.oauth.handler.CommonLoginSuccessHandler;
+import com.reviewping.coflo.global.oauth.service.OAuth2UserService;
 import com.reviewping.coflo.global.util.RedisUtil;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +31,22 @@ public class SecurityConfig {
 
     private final RedisUtil redisUtil;
     private final ObjectMapper objectMapper;
+    private final OAuth2UserService oAuth2UserService;
+    private final UserRepository userRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CommonLoginSuccessHandler commonLoginSuccessHandler() {
+        return new CommonLoginSuccessHandler(userRepository, redisUtil);
+    }
+
+    @Bean
+    public CommonLoginFailHandler commonLoginFailHandler() {
+        return new CommonLoginFailHandler(objectMapper);
     }
 
     @Bean
@@ -50,6 +66,22 @@ public class SecurityConfig {
                 .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtExceptionFilter(objectMapper), jwtVerifyFilter.getClass())
                 .formLogin(AbstractHttpConfigurer::disable);
+
+        http.oauth2Login(
+                httpSecurityOAuth2LoginConfigurer ->
+                        httpSecurityOAuth2LoginConfigurer
+                                .authorizationEndpoint(
+                                        authorization ->
+                                                authorization.baseUri("/api/oauth2/authorization"))
+                                .redirectionEndpoint(
+                                        redirection ->
+                                                redirection.baseUri("/api/login/oauth2/code/*"))
+                                .successHandler(commonLoginSuccessHandler())
+                                .failureHandler(commonLoginFailHandler())
+                                .userInfoEndpoint(
+                                        userInfoEndpointConfig ->
+                                                userInfoEndpointConfig.userService(
+                                                        oAuth2UserService)));
 
         return http.build();
     }

@@ -64,11 +64,12 @@ public class GitLabApiService {
     }
 
     private PageDetail createPageDetail(HttpHeaders responseHeaders) {
-        Long totalElements = Long.valueOf(Objects.requireNonNull(responseHeaders.getFirst("X-Total")));
-        int totalPages = Integer.parseInt(Objects.requireNonNull(responseHeaders.getFirst("X-Total-Pages")));
+        long totalElements =
+                Long.parseLong(Objects.requireNonNull(responseHeaders.getFirst("X-Total")));
+        int totalPages =
+                Integer.parseInt(Objects.requireNonNull(responseHeaders.getFirst("X-Total-Pages")));
         int currPage = Integer.parseInt(Objects.requireNonNull(responseHeaders.getFirst("X-Page")));
         boolean isLast = currPage == totalPages;
         return PageDetail.of(totalElements, totalPages, isLast, currPage);
     }
-
 }

@@ -4,6 +4,7 @@ import com.reviewping.coflo.domain.softwarequality.entity.SoftwareQuality;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +27,7 @@ public class UserProjectScore extends BaseTimeEntity {
     private Long week;
     private Long totalScore;
 
+    @Builder
     public UserProjectScore(UserProject userProject, SoftwareQuality softwareQuality) {
         this.totalScore = 0L;
         this.userProject = userProject;

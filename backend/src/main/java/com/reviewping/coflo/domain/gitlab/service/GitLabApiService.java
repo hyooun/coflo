@@ -19,12 +19,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GitLabApiService {
 
-	@Value("${gitlab.api.project-list}")
+	@Value("${gitlab.api.project-search}")
 	private String projectListEndpoint;
 
-	public List<GitlabProjectResponse> getProjects(String gitlabUrl, String token) {
-		HttpHeaders headers = RestTemplateUtils.createHeaders("application/json", token);
-		String url = gitlabUrl + projectListEndpoint;
+	private static final String URL_PROTOCOL_HTTPS = "https://";
+	private static final String MIME_TYPE_JSON = "application/json";
+
+	public List<GitlabProjectResponse> searchGitlabProjects(String gitlabUrl, String token, String searchQuery) {
+		HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
+		String url = URL_PROTOCOL_HTTPS + gitlabUrl + projectListEndpoint + searchQuery;
 
 		ResponseEntity<List<GitlabProjectResponse>> response = RestTemplateUtils.sendGetRequest(
 			url,

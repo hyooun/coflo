@@ -12,3 +12,4 @@ spring:
 gitlab:
   api:
     project-list: /api/v4/projects
+    project-search: /api/v4/search?scope=projects&search=

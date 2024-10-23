@@ -37,6 +37,7 @@ public class UserService {
 		userRepository.save(user);
 	}
 
+	@Transactional
 	public void synchronizeUserInfo(String oauth2Id) {
 		User user = userRepository.findByOauth2Id(oauth2Id)
 			.orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXIST));

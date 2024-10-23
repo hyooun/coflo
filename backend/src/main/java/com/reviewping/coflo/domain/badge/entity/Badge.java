@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.user.entity;
+package com.reviewping.coflo.domain.badge.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

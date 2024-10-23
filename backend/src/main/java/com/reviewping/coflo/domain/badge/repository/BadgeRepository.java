@@ -1,6 +1,6 @@
-package com.reviewping.coflo.domain.user.repository;
+package com.reviewping.coflo.domain.badge.repository;
 
-import com.reviewping.coflo.domain.user.entity.Badge;
+import com.reviewping.coflo.domain.badge.entity.Badge;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

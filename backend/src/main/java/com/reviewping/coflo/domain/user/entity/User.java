@@ -1,5 +1,6 @@
 package com.reviewping.coflo.domain.user.entity;
 
+import com.reviewping.coflo.domain.badge.entity.UserBadge;
 import com.reviewping.coflo.domain.user.enums.Provider;
 import com.reviewping.coflo.domain.user.enums.Role;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;

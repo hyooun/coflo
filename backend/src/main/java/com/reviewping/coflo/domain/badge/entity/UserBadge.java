@@ -1,5 +1,6 @@
-package com.reviewping.coflo.domain.user.entity;
+package com.reviewping.coflo.domain.badge.entity;
 
+import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

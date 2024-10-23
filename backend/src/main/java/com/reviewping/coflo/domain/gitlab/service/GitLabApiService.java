@@ -6,7 +6,6 @@ import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchReque
 import com.reviewping.coflo.global.util.RestTemplateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +17,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GitLabApiService {
-
-    @Value("${gitlab.api.user-info}")
-    private String userInfoEndpoint;
 
     private static final String SEARCH_ENDPOINT = "/api/v4/search";
     private static final String USERINFO_ENDPOINT = "/api/v4/user";

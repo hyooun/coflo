@@ -3,7 +3,7 @@ package com.reviewping.coflo.domain.project.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.reviewping.coflo.domain.user.entity.UserProject;
+import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 
 import jakarta.persistence.Column;

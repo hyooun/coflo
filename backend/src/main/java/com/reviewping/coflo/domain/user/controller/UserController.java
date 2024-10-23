@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.reviewping.coflo.domain.user.dto.request.GitlabAccountRequest;
+import com.reviewping.coflo.domain.user.controller.dto.request.GitlabAccountRequest;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.service.UserService;
 import com.reviewping.coflo.global.common.response.ApiResponse;

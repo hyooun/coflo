@@ -1,9 +1,7 @@
 package com.reviewping.coflo.domain.link.service;
 
-import static com.reviewping.coflo.global.error.ErrorCode.USER_GITLAB_ACCOUNT_NOT_EXIST;
-import static com.reviewping.coflo.global.error.ErrorCode.USER_NOT_EXIST;
-
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectContent;
+import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectDetailContent;
+import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectPageContent;
 import com.reviewping.coflo.domain.gitlab.service.GitLabApiService;
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectResponse;
@@ -12,10 +10,14 @@ import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.global.error.exception.BusinessException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static com.reviewping.coflo.global.error.ErrorCode.USER_GITLAB_ACCOUNT_NOT_EXIST;
+import static com.reviewping.coflo.global.error.ErrorCode.USER_NOT_EXIST;
 
 @Service
 @RequiredArgsConstructor
@@ -30,12 +32,14 @@ public class LinkService {
     public List<GitlabProjectResponse> getGitlabProjects(
             Long userId, GitlabSearchRequest gitlabSearchRequest) {
         GitlabAccount gitlabAccount = findGitlabAccount(userId);
-        List<GitlabProjectContent> searchGitlabProjects =
-                gitLabApiService.searchGitlabProjects(
-                        gitlabAccount.getDomain(),
-                        gitlabAccount.getUserToken(),
-                        gitlabSearchRequest);
-        return searchGitlabProjects.stream()
+        List<GitlabProjectDetailContent> searchGitlabProjects;
+
+        GitlabProjectPageContent gitlabProjectPageContent = gitLabApiService.searchGitlabProjects(
+                gitlabAccount.getDomain(),
+                gitlabAccount.getUserToken(),
+                gitlabSearchRequest);
+
+        return gitlabProjectPageContent.gitlabProjectDetailContents().stream()
                 .map(project -> createGitlabProjectResponse(project, gitlabAccount.getId()))
                 .toList();
     }
@@ -51,7 +55,7 @@ public class LinkService {
     }
 
     private GitlabProjectResponse createGitlabProjectResponse(
-            GitlabProjectContent content, Long gitlabAccountId) {
+            GitlabProjectDetailContent content, Long gitlabAccountId) {
         return projectRepository
                 .findByGitlabProjectId(content.id())
                 .map(

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LinkController {
 
-    private LinkService linkService;
+    private final LinkService linkService;
 
     @GetMapping("/search")
     public ApiResponse<GitlabProjectPageResponse> getGitlabProjects(

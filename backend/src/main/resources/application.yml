@@ -3,7 +3,8 @@ spring:
     name: coflo
 
   profiles:
-    default: local
+    active: ${DEV_ACTIVE_PROFILE}
+    include: jwt
 
   output:
     ansi:

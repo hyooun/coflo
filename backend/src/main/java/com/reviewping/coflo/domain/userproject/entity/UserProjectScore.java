@@ -28,5 +28,4 @@ public class UserProjectScore extends BaseTimeEntity {
         this.softwareQuality = softwareQuality;
         userProject.getUserProjectScores().add(this);
     }
-
 }

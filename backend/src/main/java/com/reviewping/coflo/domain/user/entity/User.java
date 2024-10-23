@@ -5,13 +5,12 @@ import com.reviewping.coflo.domain.user.enums.Provider;
 import com.reviewping.coflo.domain.user.enums.Role;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter

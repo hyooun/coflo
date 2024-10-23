@@ -24,15 +24,15 @@ public class Project extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Long id;
+	private Long id;
 
 	@Column(nullable = false, unique = true)
-	public String botToken;
+	private String botToken;
 
 	@Column(nullable = false, unique = true)
-	public Long gitlabProjectId;
+	private Long gitlabProjectId;
 
-	public String name;
+	private String name;
 
 	@OneToMany(mappedBy = "project")
 	private List<UserProject> userProjects = new ArrayList<>();

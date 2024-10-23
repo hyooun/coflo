@@ -23,7 +23,11 @@ public class UserProjectScore extends BaseTimeEntity {
     @JoinColumn(name = "software_quality_id")
     private SoftwareQuality softwareQuality;
 
+    private Long week;
+    private Long totalScore;
+
     public UserProjectScore(UserProject userProject, SoftwareQuality softwareQuality) {
+        this.totalScore = 0L;
         this.userProject = userProject;
         this.softwareQuality = softwareQuality;
         userProject.getUserProjectScores().add(this);

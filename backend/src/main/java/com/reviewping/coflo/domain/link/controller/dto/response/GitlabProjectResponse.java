@@ -5,12 +5,14 @@ import lombok.Builder;
 
 @Builder
 public record GitlabProjectResponse(
-        Long gitProjectId, String name, boolean isLinked, boolean hasBotToken) {
+        Long gitlabProjectId, String name, boolean isLinkable, boolean isLinked) {
 
-    public static GitlabProjectResponse of(GitlabProjectContent content) {
+    public static GitlabProjectResponse of(GitlabProjectContent content, boolean isLinkable, boolean isLinked) {
         return GitlabProjectResponse.builder()
-                .gitProjectId(content.id())
+                .gitlabProjectId(content.id())
                 .name(content.name())
+                .isLinkable(isLinkable)
+                .isLinked(isLinked)
                 .build();
     }
 }

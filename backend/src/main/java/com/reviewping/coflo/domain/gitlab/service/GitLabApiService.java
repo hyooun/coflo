@@ -6,15 +6,14 @@ import com.reviewping.coflo.domain.gitlab.dto.response.GitlabUserInfoContent;
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.global.common.entity.PageDetail;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -45,8 +44,7 @@ public class GitLabApiService {
                 RestTemplateUtils.sendGetRequest(
                         url,
                         headers,
-                        new ParameterizedTypeReference<List<GitlabProjectDetailContent>>() {
-                        });
+                        new ParameterizedTypeReference<List<GitlabProjectDetailContent>>() {});
 
         PageDetail pageDetail = createPageDetail(response.getHeaders());
         return GitlabProjectPageContent.of(response.getBody(), pageDetail);
@@ -58,8 +56,7 @@ public class GitLabApiService {
 
         ResponseEntity<GitlabUserInfoContent> response =
                 RestTemplateUtils.sendGetRequest(
-                        url, headers, new ParameterizedTypeReference<GitlabUserInfoContent>() {
-                        });
+                        url, headers, new ParameterizedTypeReference<GitlabUserInfoContent>() {});
         return response.getBody();
     }
 

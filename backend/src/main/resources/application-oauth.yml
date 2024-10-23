@@ -34,8 +34,9 @@ jwt:
   secretKey: ${JWT_SECRET_KEY}
   access:
     expiration: ${ACCESS_EXPIRATION}
-    header: ${ACCESS_HEADER}
+    name: ${ACCESS_NAME}
 
   refresh:
     expiration: ${REFRESH_EXPIRATION}
-    header: ${REFRESH_HEADER}
+    name: ${REFRESH_NAME}
+

@@ -34,7 +34,6 @@ public class UserService {
 				.userToken(userToken)
 				.build());
 		user.addGitlabAccount(gitlabAccount);
-		userRepository.save(user);
 	}
 
 	@Transactional

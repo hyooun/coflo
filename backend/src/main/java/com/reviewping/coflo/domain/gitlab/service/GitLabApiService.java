@@ -8,8 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectResponse;
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabUserInfoResponse;
+import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectContent;
+import com.reviewping.coflo.domain.gitlab.dto.response.GitlabUserInfoContent;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -29,26 +29,26 @@ public class GitLabApiService {
 	private static final String URL_PROTOCOL_HTTPS = "https://";
 	private static final String MIME_TYPE_JSON = "application/json";
 
-	public List<GitlabProjectResponse> searchGitlabProjects(String gitlabUrl, String token, String searchQuery) {
+	public List<GitlabProjectContent> searchGitlabProjects(String gitlabUrl, String token, String searchQuery) {
 		HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
 		String url = URL_PROTOCOL_HTTPS + gitlabUrl + projectListEndpoint + searchQuery;
 
-		ResponseEntity<List<GitlabProjectResponse>> response =
+		ResponseEntity<List<GitlabProjectContent>> response =
 			RestTemplateUtils.sendGetRequest(
 				url,
 				headers,
-				new ParameterizedTypeReference<List<GitlabProjectResponse>>() {
+				new ParameterizedTypeReference<List<GitlabProjectContent>>() {
 				});
 		return response.getBody();
 	}
 
-	public GitlabUserInfoResponse getUserInfo(String gitlabUrl, String token) {
+	public GitlabUserInfoContent getUserInfo(String gitlabUrl, String token) {
 		HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
 		String url = URL_PROTOCOL_HTTPS + gitlabUrl + userInfoEndpoint;
 
-		ResponseEntity<GitlabUserInfoResponse> response =
+		ResponseEntity<GitlabUserInfoContent> response =
 			RestTemplateUtils.sendGetRequest(
-				url, headers, new ParameterizedTypeReference<GitlabUserInfoResponse>() {
+				url, headers, new ParameterizedTypeReference<GitlabUserInfoContent>() {
 				});
 		return response.getBody();
 	}

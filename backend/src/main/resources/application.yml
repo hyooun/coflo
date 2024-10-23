@@ -4,7 +4,7 @@ spring:
 
   profiles:
     active: ${DEV_ACTIVE_PROFILE}
-    include: jwt
+    include: jwt, oauth2
 
   output:
     ansi:

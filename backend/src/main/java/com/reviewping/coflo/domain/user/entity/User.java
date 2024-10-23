@@ -1,17 +1,10 @@
 package com.reviewping.coflo.domain.user.entity;
 
+import com.reviewping.coflo.domain.badge.entity.UserBadge;
 import com.reviewping.coflo.domain.user.enums.Provider;
 import com.reviewping.coflo.domain.user.enums.Role;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -48,6 +41,9 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "user")
     private List<GitlabAccount> gitlabAccounts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<UserBadge> userBadges = new ArrayList<>();
 
     @Builder
     public User(

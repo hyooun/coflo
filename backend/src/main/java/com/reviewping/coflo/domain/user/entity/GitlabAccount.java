@@ -1,5 +1,6 @@
 package com.reviewping.coflo.domain.user.entity;
 
+import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import com.reviewping.coflo.global.crypto.CryptoConverter;
 import jakarta.persistence.Column;
@@ -11,6 +12,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +39,9 @@ public class GitlabAccount extends BaseTimeEntity {
     @Convert(converter = CryptoConverter.class)
     @Column(nullable = false, unique = true)
     private String userToken;
+
+    @OneToMany(mappedBy = "gitlabAccount")
+    private List<UserProject> userProjects = new ArrayList<>();
 
     @Builder
     public GitlabAccount(User user, String domain, String userToken) {

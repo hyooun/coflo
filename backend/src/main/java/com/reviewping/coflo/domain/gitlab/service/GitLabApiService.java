@@ -1,8 +1,10 @@
 package com.reviewping.coflo.domain.gitlab.service;
 
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectContent;
+import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectDetailContent;
+import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectPageContent;
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabUserInfoContent;
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
+import com.reviewping.coflo.global.common.entity.PageDetail;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -24,7 +27,7 @@ public class GitLabApiService {
     private static final String URL_PROTOCOL_HTTPS = "https://";
     private static final String MIME_TYPE_JSON = "application/json";
 
-    public List<GitlabProjectContent> searchGitlabProjects(
+    public GitlabProjectPageContent searchGitlabProjects(
             String gitlabUrl, String token, GitlabSearchRequest gitlabSearchRequest) {
         HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
         String url =
@@ -38,13 +41,15 @@ public class GitLabApiService {
                         + "&per_page="
                         + gitlabSearchRequest.size();
 
-        ResponseEntity<List<GitlabProjectContent>> response =
+        ResponseEntity<List<GitlabProjectDetailContent>> response =
                 RestTemplateUtils.sendGetRequest(
                         url,
                         headers,
-                        new ParameterizedTypeReference<List<GitlabProjectContent>>() {
+                        new ParameterizedTypeReference<List<GitlabProjectDetailContent>>() {
                         });
-        return response.getBody();
+
+        PageDetail pageDetail = createPageDetail(response.getHeaders());
+        return GitlabProjectPageContent.of(response.getBody(), pageDetail);
     }
 
     public GitlabUserInfoContent getUserInfo(String gitlabUrl, String token) {
@@ -57,4 +62,13 @@ public class GitLabApiService {
                         });
         return response.getBody();
     }
+
+    private PageDetail createPageDetail(HttpHeaders responseHeaders) {
+        Long totalElements = Long.valueOf(Objects.requireNonNull(responseHeaders.getFirst("X-Total")));
+        int totalPages = Integer.parseInt(Objects.requireNonNull(responseHeaders.getFirst("X-Total-Pages")));
+        int currPage = Integer.parseInt(Objects.requireNonNull(responseHeaders.getFirst("X-Page")));
+        boolean isLast = currPage == totalPages;
+        return PageDetail.of(totalElements, totalPages, isLast, currPage);
+    }
+
 }

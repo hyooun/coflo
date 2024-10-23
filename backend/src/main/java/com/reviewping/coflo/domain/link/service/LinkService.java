@@ -1,5 +1,8 @@
 package com.reviewping.coflo.domain.link.service;
 
+import static com.reviewping.coflo.global.error.ErrorCode.USER_GITLAB_ACCOUNT_NOT_EXIST;
+import static com.reviewping.coflo.global.error.ErrorCode.USER_NOT_EXIST;
+
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectDetailContent;
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectPageContent;
 import com.reviewping.coflo.domain.gitlab.service.GitLabApiService;
@@ -12,15 +15,11 @@ import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.global.error.exception.BusinessException;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-
-import static com.reviewping.coflo.global.error.ErrorCode.USER_GITLAB_ACCOUNT_NOT_EXIST;
-import static com.reviewping.coflo.global.error.ErrorCode.USER_NOT_EXIST;
 
 @Service
 @RequiredArgsConstructor

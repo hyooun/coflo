@@ -5,6 +5,7 @@ import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.global.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.jwt.utils.JwtProvider;
+import com.reviewping.coflo.global.util.RedisUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
     private String mainUrl;
 
     private final UserRepository userRepository;
+    private final RedisUtil redisUtil;
 
     @Override
     public void onAuthenticationSuccess(
@@ -60,6 +62,8 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
+
+        redisUtil.set(user.getOauth2Id(), refreshToken, JwtConstants.REFRESH_EXP_TIME);
 
         if (user.getUsername() == null) {
             response.sendRedirect(registUrl);

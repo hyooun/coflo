@@ -41,7 +41,7 @@ public class SecurityConfig {
 
     @Bean
     public CommonLoginSuccessHandler commonLoginSuccessHandler() {
-        return new CommonLoginSuccessHandler(userRepository);
+        return new CommonLoginSuccessHandler(userRepository, redisUtil);
     }
 
     @Bean

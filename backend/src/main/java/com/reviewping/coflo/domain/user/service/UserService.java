@@ -26,10 +26,10 @@ public class UserService {
 		User user = userRepository.findByOauth2Id(oauth2Id)
 			.orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXIST));
 		GitlabAccount gitlabAccount = gitlabAccountRepository.save(GitlabAccount.builder()
-			.domain(domain)
-			.userToken(userToken)
-			.build());
-
+				.user(user)
+				.domain(domain)
+				.userToken(userToken)
+				.build());
 		user.addGitlabAccount(gitlabAccount);
 		userRepository.save(user);
 	}

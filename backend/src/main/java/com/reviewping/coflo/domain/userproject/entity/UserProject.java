@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +32,7 @@ public class UserProject extends BaseTimeEntity {
 	@JoinColumn(name = "project_id")
 	private Project project;
 
+	@Builder
 	public UserProject(GitlabAccount gitlabAccount, Project project) {
 		this.gitlabAccount = gitlabAccount;
 		this.project = project;

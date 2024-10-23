@@ -1,5 +1,6 @@
 package com.reviewping.coflo.domain.user.controller;
 
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,13 @@ public class UserController {
 		@RequestBody GitlabAccountRequest gitlabAccountRequest) {
 		userService.addGitlabAccount(gitlabAccountRequest.domain(),
 			gitlabAccountRequest.userToken(), user.getOauth2Id());
+		return ApiSuccessResponse.success();
+	}
+
+	@PatchMapping("/me/sync")
+	public ApiResponse<Void> synchronizeUserInfo(
+		@AuthenticationPrincipal User user) {
+		userService.synchronizeUserInfo(user.getOauth2Id());
 		return ApiSuccessResponse.success();
 	}
 }

@@ -31,22 +31,11 @@ public class GitLabApiService {
     public GitlabProjectPageContent searchGitlabProjects(
             String gitlabUrl, String token, GitlabSearchRequest gitlabSearchRequest) {
         HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
-        String url =
-                URL_PROTOCOL_HTTPS
-                        + gitlabUrl
-                        + PROJECTS_ENDPOINT
-                        + "&search="
-                        + gitlabSearchRequest.keyword()
-                        + "&page="
-                        + gitlabSearchRequest.page()
-                        + "&per_page="
-                        + gitlabSearchRequest.size();
+        String url = makeSearchGitlabProjectUrl(gitlabUrl, gitlabSearchRequest);
 
         ResponseEntity<List<GitlabProjectDetailContent>> response =
                 RestTemplateUtils.sendGetRequest(
-                        url,
-                        headers,
-                        new ParameterizedTypeReference<List<GitlabProjectDetailContent>>() {});
+                        url, headers, new ParameterizedTypeReference<>() {});
 
         PageDetail pageDetail = createPageDetail(response.getHeaders());
         return GitlabProjectPageContent.of(response.getBody(), pageDetail);
@@ -89,6 +78,19 @@ public class GitLabApiService {
         int currPage = Integer.parseInt(Objects.requireNonNull(responseHeaders.getFirst("X-Page")));
         boolean isLast = currPage == totalPages;
         return PageDetail.of(totalElements, totalPages, isLast, currPage);
+    }
+
+    private String makeSearchGitlabProjectUrl(
+            String gitlabUrl, GitlabSearchRequest gitlabSearchRequest) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + PROJECTS_ENDPOINT
+                + "&search="
+                + gitlabSearchRequest.keyword()
+                + "&page="
+                + gitlabSearchRequest.page()
+                + "&per_page="
+                + gitlabSearchRequest.size();
     }
 
     private String makeMRDiffsUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {

@@ -23,10 +23,6 @@ public class JwtProvider {
 
     public static String secretKey = JwtConstants.key;
 
-    public static String getTokenFromHeader(String header) {
-        return header.split(" ")[1];
-    }
-
     public static String generateToken(Map<String, Object> valueMap, int validTime) {
         try {
             SecretKey key =

@@ -49,18 +49,12 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
                 cookieUtil.createCookie(
                         JwtConstants.ACCESS_NAME,
                         accessToken,
-                        (int) JwtConstants.ACCESS_EXP_TIME / 1000,
-                        true,
-                        false,
-                        "/");
+                        (int) JwtConstants.ACCESS_EXP_TIME / 1000);
         Cookie refreshTokenCookie =
                 cookieUtil.createCookie(
                         JwtConstants.REFRESH_NAME,
                         refreshToken,
-                        (int) JwtConstants.REFRESH_EXP_TIME / 1000,
-                        true,
-                        false,
-                        "/");
+                        (int) JwtConstants.REFRESH_EXP_TIME / 1000);
 
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);

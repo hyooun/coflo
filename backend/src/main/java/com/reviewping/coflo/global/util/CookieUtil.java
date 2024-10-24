@@ -7,12 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class CookieUtil {
 
-    public Cookie createCookie(
-            String name, String value, int maxAge, boolean httpOnly, boolean secure, String path) {
+    public Cookie createCookie(String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
-        cookie.setHttpOnly(httpOnly);
-        cookie.setSecure(secure);
-        cookie.setPath(path);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/");
         cookie.setMaxAge(maxAge);
         return cookie;
     }

@@ -10,4 +10,14 @@ spring:
     ansi:
       enabled: always
 
+gitlab:
+  api:
+    project-list: /api/v4/projects
+    project-search: /api/v4/search?scope=projects&search=
+    user-info: /api/v4/user
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+
 crypto-key: ${CRYPTO_KEY}

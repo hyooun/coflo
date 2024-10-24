@@ -1,5 +1,6 @@
 package com.reviewping.coflo.domain.gitlab.service;
 
+import com.reviewping.coflo.domain.gitlab.dto.response.GitlabMrDiffsContent;
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectContent;
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabUserInfoContent;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
@@ -47,5 +48,44 @@ public class GitLabApiService {
                 RestTemplateUtils.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<GitlabUserInfoContent>() {});
         return response.getBody();
+    }
+
+    public GitlabMrDiffsContent getMrDiffs(
+            String gitlabUrl, String token, Long gitlabProjectId, Long iid) {
+        HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
+        String url = makeMRDiffsUrl(gitlabUrl, gitlabProjectId, iid);
+
+        ResponseEntity<GitlabMrDiffsContent> response =
+                RestTemplateUtils.sendGetRequest(
+                        url, headers, new ParameterizedTypeReference<>() {});
+        return response.getBody();
+    }
+
+    public void addNoteToMr(
+            String gitlabUrl, String token, Long gitlabProjectId, Long iid, String chatMessage) {
+        HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
+        String url = makeNoteToMRUrl(gitlabUrl, gitlabProjectId, iid);
+        RestTemplateUtils.sendPostRequest(
+                url, headers, chatMessage, new ParameterizedTypeReference<>() {});
+    }
+
+    private String makeMRDiffsUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + "/projects/"
+                + gitlabProjectId
+                + "/merge_requests/"
+                + iid
+                + "/diffs";
+    }
+
+    private String makeNoteToMRUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + "/projects/"
+                + gitlabProjectId
+                + "/merge_requests/"
+                + iid
+                + "/notes";
     }
 }

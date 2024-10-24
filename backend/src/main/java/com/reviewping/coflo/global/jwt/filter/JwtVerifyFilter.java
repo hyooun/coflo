@@ -4,10 +4,12 @@ import static com.reviewping.coflo.global.error.ErrorCode.*;
 
 import com.reviewping.coflo.global.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.jwt.utils.JwtProvider;
+import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -24,6 +26,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtVerifyFilter extends OncePerRequestFilter {
 
     private final RedisUtil redisUtil;
+    private final CookieUtil cookieUtil;
 
     private static final String[] whitelist = {
         "/api/swagger-ui/**", "/api/v3/**", "/api/users/me", "/favicon.ico"
@@ -42,8 +45,8 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        String accessToken = request.getHeader(JwtConstants.JWT_HEADER);
-        String refreshToken = request.getHeader(JwtConstants.JWT_REFRESH_HEADER);
+        String accessToken = cookieUtil.getCookieValue(request, JwtConstants.ACCESS_NAME);
+        String refreshToken = cookieUtil.getCookieValue(request, JwtConstants.REFRESH_NAME);
 
         if (refreshToken != null) {
             handleRefreshToken(request, response, refreshToken);
@@ -58,10 +61,9 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain,
-            String authHeader)
+            String accessToken)
             throws IOException, ServletException {
-        String token = JwtProvider.getTokenFromHeader(authHeader);
-        Authentication authentication = JwtProvider.getAuthentication(token);
+        Authentication authentication = JwtProvider.getAuthentication(accessToken);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
@@ -81,8 +83,20 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             refreshToken = JwtProvider.generateToken(claims, JwtConstants.REFRESH_EXP_TIME);
             redisUtil.set(userId, refreshToken, JwtConstants.REFRESH_EXP_TIME);
 
-            response.setHeader(JwtConstants.JWT_HEADER, accessToken);
-            response.setHeader(JwtConstants.JWT_REFRESH_HEADER, refreshToken);
+            Cookie accessTokenCookie =
+                    cookieUtil.createCookie(
+                            JwtConstants.ACCESS_NAME,
+                            accessToken,
+                            (int) JwtConstants.ACCESS_EXP_TIME / 1000);
+
+            Cookie refreshTokenCookie =
+                    cookieUtil.createCookie(
+                            JwtConstants.REFRESH_NAME,
+                            refreshToken,
+                            (int) JwtConstants.REFRESH_EXP_TIME / 1000);
+
+            response.addCookie(accessTokenCookie);
+            response.addCookie(refreshTokenCookie);
         }
     }
 

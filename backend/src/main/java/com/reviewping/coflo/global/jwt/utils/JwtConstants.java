@@ -11,11 +11,9 @@ public class JwtConstants {
 
     public static int REFRESH_EXP_TIME;
 
-    public static String JWT_HEADER;
+    public static String ACCESS_NAME;
 
-    public static String JWT_REFRESH_HEADER;
-
-    public static final String JWT_TYPE = "Bearer ";
+    public static String REFRESH_NAME;
 
     @Value("${jwt.secretKey}")
     public void setKey(String secretKey) {
@@ -32,13 +30,13 @@ public class JwtConstants {
         this.REFRESH_EXP_TIME = expiration;
     }
 
-    @Value("${jwt.access.header}")
-    public void setJwtHeader(String header) {
-        this.JWT_HEADER = header;
+    @Value("${jwt.access.name}")
+    public void setAccessName(String name) {
+        this.ACCESS_NAME = name;
     }
 
-    @Value("${jwt.refresh.header}")
-    public void setJwtRefreshHeader(String header) {
-        this.JWT_REFRESH_HEADER = header;
+    @Value("${jwt.refresh.name}")
+    public void setRefreshName(String name) {
+        this.REFRESH_NAME = name;
     }
 }

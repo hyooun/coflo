@@ -40,11 +40,17 @@ public class OpenaiApiService {
         headers.set("OpenAI-Organization", openaiOrganization);
         headers.set("OpenAI-Project", openaiProject);
 
-        ChatCompletionRequest body =
-                new ChatCompletionRequest("gpt-4o", List.of(new ChatMessage("user", prompt, null)));
+        ChatCompletionRequest chatCompletionRequest =
+                new ChatCompletionRequest("gpt-4o-mini", List.of(new ChatMessage("user", prompt)));
+        String body;
+        try {
+            body = objectMapper.writeValueAsString(chatCompletionRequest);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         ResponseEntity<ChatCompletionContent> response =
                 RestTemplateUtils.sendPostRequest(
-                        CHAT_URL, headers, body.toString(), new ParameterizedTypeReference<>() {});
+                        CHAT_URL, headers, body, new ParameterizedTypeReference<>() {});
         return response.getBody();
     }
 }

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GitLabApiService {
 
-    private static final String SEARCH_ENDPOINT = "/api/v4/search";
+    private static final String PROJECTS_ENDPOINT = "/api/v4/projects";
     private static final String USERINFO_ENDPOINT = "/api/v4/user";
 
     private static final String URL_PROTOCOL_HTTPS = "https://";
@@ -32,7 +32,7 @@ public class GitLabApiService {
         String url =
                 URL_PROTOCOL_HTTPS
                         + gitlabUrl
-                        + SEARCH_ENDPOINT
+                        + PROJECTS_ENDPOINT
                         + "?scope=projects&search="
                         + gitlabSearchRequest.keyword()
                         + "&page="

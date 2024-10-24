@@ -23,9 +23,9 @@ public class LinkController {
     @GetMapping("/search")
     public ApiResponse<GitlabProjectPageResponse> getGitlabProjects(
             @AuthenticationPrincipal AuthUser authUser,
-            @RequestParam String keyword,
-            @RequestParam int page,
-            @RequestParam int size) {
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
         GitlabProjectPageResponse gitlabProjects =
                 linkService.getGitlabProjects(
                         authUser.getUserId(), GitlabSearchRequest.of(keyword, page, size));

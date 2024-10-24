@@ -4,6 +4,7 @@ import MergeListPage from '@pages/MergeList/MergeListPage';
 import CustomTemplatePage from '@pages/CustomTemplate/CustomTemplatePage';
 import BadgePage from '@pages/Badge/BadgePage';
 import SettingsPage from '@pages/Setting/SettingPage';
+import LoginPage from '@pages/Login/LoginPage';
 import { createBrowserRouter } from 'react-router-dom';
 
 const customRouter = createBrowserRouter([
@@ -31,6 +32,10 @@ const customRouter = createBrowserRouter([
         path: 'settings',
         element: <SettingsPage />,
       },
+      {
+        path: 'login',
+        element: <LoginPage />,
+      }
     ],
   },
 ]);

@@ -14,6 +14,11 @@ public enum ErrorCode {
     USER_NOT_EXIST(HttpStatus.BAD_REQUEST, "A001", "존재하지 않는 유저입니다"),
 
     /**
+     * MR_INFO(M000)
+     */
+    MR_INFO_NOT_EXIST(HttpStatus.BAD_REQUEST, "M001", "MR_INFO를 찾을 수 없습니다."),
+
+    /**
      * Gitlab Account(B00)
      */
     USER_GITLAB_ACCOUNT_NOT_EXIST(HttpStatus.BAD_REQUEST, "B001", "사용자의 깃랩 계정이 존재하지 않습니다."),

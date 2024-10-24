@@ -3,7 +3,7 @@ spring:
     name: coflo
 
   profiles:
-    active: ${DEV_ACTIVE_PROFILE}
+    active: local
     include: oauth
 
   output:

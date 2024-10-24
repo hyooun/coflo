@@ -1,8 +1,8 @@
-package com.reviewping.coflo.global.oauth.handler;
+package com.reviewping.coflo.global.auth.oauth.handler;
 
 import com.reviewping.coflo.domain.user.entity.PrincipalDetail;
-import com.reviewping.coflo.global.jwt.utils.JwtConstants;
-import com.reviewping.coflo.global.jwt.utils.JwtProvider;
+import com.reviewping.coflo.global.auth.jwt.utils.JwtConstants;
+import com.reviewping.coflo.global.auth.jwt.utils.JwtProvider;
 import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
 import jakarta.servlet.ServletException;
@@ -36,7 +36,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
             throws IOException, ServletException {
         PrincipalDetail principal = (PrincipalDetail) authentication.getPrincipal();
         Long userId = principal.getUserId();
-        String username = principal.getUsername();
+        String username = principal.getName();
 
         log.info("=== 로그인 성공 ===");
         Map<String, Object> responseMap = Map.of("userId", principal.getUserId());
@@ -59,7 +59,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         redisUtil.set(userId.toString(), refreshToken, JwtConstants.REFRESH_EXP_TIME);
 
-        if (username == null) {
+        if (username.equals("empty")) {
             response.sendRedirect(registUrl);
         } else {
             response.sendRedirect(mainUrl);

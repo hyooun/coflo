@@ -1,4 +1,4 @@
-package com.reviewping.coflo.global.jwt.filter;
+package com.reviewping.coflo.global.auth.jwt.filter;
 
 import static org.springframework.util.MimeTypeUtils.*;
 

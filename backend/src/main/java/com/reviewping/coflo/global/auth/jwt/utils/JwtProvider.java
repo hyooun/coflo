@@ -1,4 +1,4 @@
-package com.reviewping.coflo.global.jwt.utils;
+package com.reviewping.coflo.global.auth.jwt.utils;
 
 import com.reviewping.coflo.domain.user.entity.PrincipalDetail;
 import com.reviewping.coflo.global.error.ErrorCode;

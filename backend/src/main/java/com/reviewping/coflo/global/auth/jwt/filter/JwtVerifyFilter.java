@@ -1,9 +1,9 @@
-package com.reviewping.coflo.global.jwt.filter;
+package com.reviewping.coflo.global.auth.jwt.filter;
 
 import static com.reviewping.coflo.global.error.ErrorCode.*;
 
-import com.reviewping.coflo.global.jwt.utils.JwtConstants;
-import com.reviewping.coflo.global.jwt.utils.JwtProvider;
+import com.reviewping.coflo.global.auth.jwt.utils.JwtConstants;
+import com.reviewping.coflo.global.auth.jwt.utils.JwtProvider;
 import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
 import io.jsonwebtoken.JwtException;

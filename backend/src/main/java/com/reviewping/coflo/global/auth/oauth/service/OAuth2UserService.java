@@ -1,11 +1,11 @@
-package com.reviewping.coflo.global.oauth.service;
+package com.reviewping.coflo.global.auth.oauth.service;
 
 import com.reviewping.coflo.domain.user.entity.PrincipalDetail;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.enums.Provider;
 import com.reviewping.coflo.domain.user.enums.Role;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
-import com.reviewping.coflo.global.oauth.user.OAuth2UserInfo;
+import com.reviewping.coflo.global.auth.oauth.user.OAuth2UserInfo;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

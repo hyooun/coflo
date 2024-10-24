@@ -1,4 +1,4 @@
-package com.reviewping.coflo.global.oauth.user;
+package com.reviewping.coflo.global.auth.oauth.user;
 
 import java.util.Map;
 import lombok.Getter;

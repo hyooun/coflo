@@ -1,11 +1,11 @@
 package com.reviewping.coflo.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reviewping.coflo.global.jwt.filter.JwtExceptionFilter;
-import com.reviewping.coflo.global.jwt.filter.JwtVerifyFilter;
-import com.reviewping.coflo.global.oauth.handler.CommonLoginFailHandler;
-import com.reviewping.coflo.global.oauth.handler.CommonLoginSuccessHandler;
-import com.reviewping.coflo.global.oauth.service.OAuth2UserService;
+import com.reviewping.coflo.global.auth.jwt.filter.JwtExceptionFilter;
+import com.reviewping.coflo.global.auth.jwt.filter.JwtVerifyFilter;
+import com.reviewping.coflo.global.auth.oauth.handler.CommonLoginFailHandler;
+import com.reviewping.coflo.global.auth.oauth.handler.CommonLoginSuccessHandler;
+import com.reviewping.coflo.global.auth.oauth.service.OAuth2UserService;
 import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
 import java.util.Arrays;

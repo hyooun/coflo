@@ -30,6 +30,6 @@ public class PrincipalDetail implements OAuth2User {
 
     @Override
     public String getName() {
-        return "name";
+        return username;
     }
 }

@@ -10,10 +10,14 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 @Data
 public class PrincipalDetail implements OAuth2User {
 
-    private String oauth2Id;
+    private Long userId;
 
-    public PrincipalDetail(String oauth2Id) {
-        this.oauth2Id = oauth2Id;
+    public PrincipalDetail(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     @Override
@@ -28,6 +32,6 @@ public class PrincipalDetail implements OAuth2User {
 
     @Override
     public String getName() {
-        return oauth2Id;
+        return "name";
     }
 }

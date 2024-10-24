@@ -36,10 +36,10 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
             HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
         PrincipalDetail principal = (PrincipalDetail) authentication.getPrincipal();
-        User user = userRepository.findByOauth2Id(principal.getOauth2Id()).orElse(null);
+        User user = userRepository.findById(principal.getUserId()).orElse(null);
 
         log.info("=== 로그인 성공 ===");
-        Map<String, Object> responseMap = Map.of("oauthId", principal.getName());
+        Map<String, Object> responseMap = Map.of("userId", principal.getUserId());
         String accessToken = JwtProvider.generateToken(responseMap, JwtConstants.ACCESS_EXP_TIME);
         String refreshToken = JwtProvider.generateToken(responseMap, JwtConstants.REFRESH_EXP_TIME);
 
@@ -63,7 +63,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
 
-        redisUtil.set(user.getOauth2Id(), refreshToken, JwtConstants.REFRESH_EXP_TIME);
+        redisUtil.set(user.getId().toString(), refreshToken, JwtConstants.REFRESH_EXP_TIME);
 
         if (user.getUsername() == null) {
             response.sendRedirect(registUrl);

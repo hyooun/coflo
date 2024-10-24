@@ -23,20 +23,21 @@ public class UserService {
     private final GitLabApiService gitLabApiService;
 
     @Transactional
-    public void addGitlabAccount(String domain, String userToken, String oauth2Id) {
+    public void addGitlabAccount(String domain, String userToken, Long userId) {
+        System.out.println(userId);
         User user =
                 userRepository
-                        .findByOauth2Id(oauth2Id)
+                        .findById(userId)
                         .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXIST));
         gitlabAccountRepository.save(
                 GitlabAccount.builder().user(user).domain(domain).userToken(userToken).build());
     }
 
     @Transactional
-    public void synchronizeUserInfo(String oauth2Id) {
+    public void synchronizeUserInfo(Long userId) {
         User user =
                 userRepository
-                        .findByOauth2Id(oauth2Id)
+                        .findById(userId)
                         .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXIST));
         GitlabUserInfoContent userInfo =
                 gitLabApiService.getUserInfo(

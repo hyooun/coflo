@@ -24,17 +24,19 @@ public class UserController {
     public ApiResponse<Void> addGitlabAccount(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @RequestBody GitlabAccountRequest gitlabAccountRequest) {
+        System.out.println("principalDetail=" + principalDetail);
+        System.out.println(principalDetail.getUserId());
         userService.addGitlabAccount(
                 gitlabAccountRequest.domain(),
                 gitlabAccountRequest.userToken(),
-                principalDetail.getName());
+                principalDetail.getUserId());
         return ApiSuccessResponse.success();
     }
 
     @PatchMapping("/me/sync")
     public ApiResponse<Void> synchronizeUserInfo(
             @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        userService.synchronizeUserInfo(principalDetail.getName());
+        userService.synchronizeUserInfo(principalDetail.getUserId());
         return ApiSuccessResponse.success();
     }
 }

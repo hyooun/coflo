@@ -1,12 +1,11 @@
 package com.reviewping.coflo.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reviewping.coflo.domain.user.repository.UserRepository;
-import com.reviewping.coflo.global.jwt.filter.JwtExceptionFilter;
-import com.reviewping.coflo.global.jwt.filter.JwtVerifyFilter;
-import com.reviewping.coflo.global.oauth.handler.CommonLoginFailHandler;
-import com.reviewping.coflo.global.oauth.handler.CommonLoginSuccessHandler;
-import com.reviewping.coflo.global.oauth.service.OAuth2UserService;
+import com.reviewping.coflo.global.auth.jwt.filter.JwtExceptionFilter;
+import com.reviewping.coflo.global.auth.jwt.filter.JwtVerifyFilter;
+import com.reviewping.coflo.global.auth.oauth.handler.CommonLoginFailHandler;
+import com.reviewping.coflo.global.auth.oauth.handler.CommonLoginSuccessHandler;
+import com.reviewping.coflo.global.auth.oauth.service.OAuth2UserService;
 import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
 import java.util.Arrays;
@@ -34,7 +33,6 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final OAuth2UserService oAuth2UserService;
     private final CookieUtil cookieUtil;
-    private final UserRepository userRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,7 +41,7 @@ public class SecurityConfig {
 
     @Bean
     public CommonLoginSuccessHandler commonLoginSuccessHandler() {
-        return new CommonLoginSuccessHandler(userRepository, redisUtil, cookieUtil);
+        return new CommonLoginSuccessHandler(redisUtil, cookieUtil);
     }
 
     @Bean

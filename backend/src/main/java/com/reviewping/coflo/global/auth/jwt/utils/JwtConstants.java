@@ -1,4 +1,4 @@
-package com.reviewping.coflo.global.jwt.utils;
+package com.reviewping.coflo.global.auth.jwt.utils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

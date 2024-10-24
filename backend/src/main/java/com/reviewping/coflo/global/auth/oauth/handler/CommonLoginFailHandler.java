@@ -1,4 +1,4 @@
-package com.reviewping.coflo.global.oauth.handler;
+package com.reviewping.coflo.global.auth.oauth.handler;
 
 import static org.springframework.util.MimeTypeUtils.*;
 

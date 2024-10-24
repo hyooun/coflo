@@ -24,8 +24,8 @@ public class LinkController {
     public ApiResponse<GitlabProjectPageResponse> getGitlabProjects(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @RequestParam String keyword,
-            @RequestParam Long page,
-            @RequestParam Long size) {
+            @RequestParam int page,
+            @RequestParam int size) {
         Long userId = 1L;
         GitlabProjectPageResponse gitlabProjects =
                 linkService.getGitlabProjects(userId, GitlabSearchRequest.of(keyword, page, size));

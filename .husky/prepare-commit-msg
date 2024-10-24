@@ -8,7 +8,7 @@ if [ "$BRANCH_NAME" = "main" ] || [ "$BRANCH_NAME" = "dev" ] || [ "$BRANCH_NAME"
   exit 0
 fi
 
-if ! echo "$BRANCH_NAME" | grep -qE '^[a-z]+\/S11P31A210-[0-9]+-[a-z0-9-]+$'; then
+if ! echo "$BRANCH_NAME" | grep -qE '^[a-z]+\/S11P31A210-[0-9]+-.*'; then
   echo "분야/S11P31A210-숫자-이슈요약 형식의 브랜치명을 사용해주세요."
   exit 1
 fi

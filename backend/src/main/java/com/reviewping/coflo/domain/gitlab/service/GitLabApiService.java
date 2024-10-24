@@ -1,7 +1,8 @@
 package com.reviewping.coflo.domain.gitlab.service;
 
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabMrDiffsContent;
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectContent;
+import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectDetailContent;
+import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectPageContent;
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabUserInfoContent;
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.global.common.entity.PageDetail;
@@ -78,6 +79,16 @@ public class GitLabApiService {
         String url = makeNoteToMRUrl(gitlabUrl, gitlabProjectId, iid);
         RestTemplateUtils.sendPostRequest(
                 url, headers, chatMessage, new ParameterizedTypeReference<>() {});
+    }
+
+    private PageDetail createPageDetail(HttpHeaders responseHeaders) {
+        long totalElements =
+                Long.parseLong(Objects.requireNonNull(responseHeaders.getFirst("X-Total")));
+        int totalPages =
+                Integer.parseInt(Objects.requireNonNull(responseHeaders.getFirst("X-Total-Pages")));
+        int currPage = Integer.parseInt(Objects.requireNonNull(responseHeaders.getFirst("X-Page")));
+        boolean isLast = currPage == totalPages;
+        return PageDetail.of(totalElements, totalPages, isLast, currPage);
     }
 
     private String makeMRDiffsUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {

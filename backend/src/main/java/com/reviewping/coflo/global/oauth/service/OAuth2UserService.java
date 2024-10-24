@@ -51,7 +51,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                                         oAuth2UserInfo.getOauthId(),
                                         Provider.valueOf(provider.toUpperCase())));
 
-        return new PrincipalDetail(user.getId());
+        return new PrincipalDetail(user.getId(), user.getUsername());
     }
 
     public User saveSocialMember(String oauthId, Provider provider) {

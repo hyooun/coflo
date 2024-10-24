@@ -24,7 +24,6 @@ public class UserService {
 
     @Transactional
     public void addGitlabAccount(String domain, String userToken, Long userId) {
-        System.out.println(userId);
         User user =
                 userRepository
                         .findById(userId)

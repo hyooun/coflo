@@ -1,7 +1,6 @@
 package com.reviewping.coflo.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.global.jwt.filter.JwtExceptionFilter;
 import com.reviewping.coflo.global.jwt.filter.JwtVerifyFilter;
 import com.reviewping.coflo.global.oauth.handler.CommonLoginFailHandler;
@@ -32,7 +31,6 @@ public class SecurityConfig {
     private final RedisUtil redisUtil;
     private final ObjectMapper objectMapper;
     private final OAuth2UserService oAuth2UserService;
-    private final UserRepository userRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,7 +39,7 @@ public class SecurityConfig {
 
     @Bean
     public CommonLoginSuccessHandler commonLoginSuccessHandler() {
-        return new CommonLoginSuccessHandler(userRepository, redisUtil);
+        return new CommonLoginSuccessHandler(redisUtil);
     }
 
     @Bean

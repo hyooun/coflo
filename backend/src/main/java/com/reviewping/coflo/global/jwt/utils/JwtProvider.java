@@ -47,11 +47,12 @@ public class JwtProvider {
     public static Authentication getAuthentication(String token) {
         Map<String, Object> claims = validateToken(token);
         Long userId = ((Integer) claims.get("userId")).longValue();
+        String username = (String) claims.get("username");
 
         Set<SimpleGrantedAuthority> authorities =
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
         return new UsernamePasswordAuthenticationToken(
-                new PrincipalDetail(userId), "", authorities);
+                new PrincipalDetail(userId, username), "", authorities);
     }
 
     public static Map<String, Object> validateToken(String token) {

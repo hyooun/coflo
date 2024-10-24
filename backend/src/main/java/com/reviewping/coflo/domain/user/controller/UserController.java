@@ -24,8 +24,6 @@ public class UserController {
     public ApiResponse<Void> addGitlabAccount(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @RequestBody GitlabAccountRequest gitlabAccountRequest) {
-        System.out.println("principalDetail=" + principalDetail);
-        System.out.println(principalDetail.getUserId());
         userService.addGitlabAccount(
                 gitlabAccountRequest.domain(),
                 gitlabAccountRequest.userToken(),

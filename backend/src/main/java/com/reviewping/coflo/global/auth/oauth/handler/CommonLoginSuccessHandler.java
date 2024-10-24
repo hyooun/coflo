@@ -1,8 +1,8 @@
 package com.reviewping.coflo.global.auth.oauth.handler;
 
-import com.reviewping.coflo.domain.user.entity.PrincipalDetail;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtProvider;
+import com.reviewping.coflo.global.auth.oauth.model.AuthUser;
 import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
 import jakarta.servlet.ServletException;
@@ -34,7 +34,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(
             HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
-        PrincipalDetail principal = (PrincipalDetail) authentication.getPrincipal();
+        AuthUser principal = (AuthUser) authentication.getPrincipal();
         Long userId = principal.getUserId();
         String username = principal.getName();
 

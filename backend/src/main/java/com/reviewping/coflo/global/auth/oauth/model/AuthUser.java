@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.user.entity;
+package com.reviewping.coflo.global.auth.oauth.model;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -8,12 +8,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 @Data
-public class PrincipalDetail implements OAuth2User {
+public class AuthUser implements OAuth2User {
 
     private Long userId;
     private String username;
 
-    public PrincipalDetail(Long userId, String username) {
+    public AuthUser(Long userId, String username) {
         this.userId = userId;
         this.username = username;
     }

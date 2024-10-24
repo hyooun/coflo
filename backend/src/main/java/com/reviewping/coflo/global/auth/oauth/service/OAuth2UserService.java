@@ -1,11 +1,11 @@
 package com.reviewping.coflo.global.auth.oauth.service;
 
-import com.reviewping.coflo.domain.user.entity.PrincipalDetail;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.enums.Provider;
 import com.reviewping.coflo.domain.user.enums.Role;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
-import com.reviewping.coflo.global.auth.oauth.user.OAuth2UserInfo;
+import com.reviewping.coflo.global.auth.oauth.model.AuthUser;
+import com.reviewping.coflo.global.auth.oauth.model.OAuth2UserInfo;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +51,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                                         oAuth2UserInfo.getOauthId(),
                                         Provider.valueOf(provider.toUpperCase())));
 
-        return new PrincipalDetail(user.getId(), user.getUsername());
+        return new AuthUser(user.getId(), user.getUsername());
     }
 
     public User saveSocialMember(String oauthId, Provider provider) {

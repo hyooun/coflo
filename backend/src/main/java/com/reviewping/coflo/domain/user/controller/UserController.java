@@ -1,8 +1,8 @@
 package com.reviewping.coflo.domain.user.controller;
 
 import com.reviewping.coflo.domain.user.controller.dto.request.GitlabAccountRequest;
-import com.reviewping.coflo.domain.user.entity.PrincipalDetail;
 import com.reviewping.coflo.domain.user.service.UserService;
+import com.reviewping.coflo.global.auth.oauth.model.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,19 +22,18 @@ public class UserController {
 
     @PostMapping("/me")
     public ApiResponse<Void> addGitlabAccount(
-            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            @AuthenticationPrincipal AuthUser authUser,
             @RequestBody GitlabAccountRequest gitlabAccountRequest) {
         userService.addGitlabAccount(
                 gitlabAccountRequest.domain(),
                 gitlabAccountRequest.userToken(),
-                principalDetail.getUserId());
+                authUser.getUserId());
         return ApiSuccessResponse.success();
     }
 
     @PatchMapping("/me/sync")
-    public ApiResponse<Void> synchronizeUserInfo(
-            @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        userService.synchronizeUserInfo(principalDetail.getUserId());
+    public ApiResponse<Void> synchronizeUserInfo(@AuthenticationPrincipal AuthUser authUser) {
+        userService.synchronizeUserInfo(authUser.getUserId());
         return ApiSuccessResponse.success();
     }
 }

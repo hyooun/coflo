@@ -1,6 +1,6 @@
 package com.reviewping.coflo.global.auth.jwt.utils;
 
-import com.reviewping.coflo.domain.user.entity.PrincipalDetail;
+import com.reviewping.coflo.global.auth.oauth.model.AuthUser;
 import com.reviewping.coflo.global.error.ErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -48,7 +48,7 @@ public class JwtProvider {
         Set<SimpleGrantedAuthority> authorities =
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
         return new UsernamePasswordAuthenticationToken(
-                new PrincipalDetail(userId, username), "", authorities);
+                new AuthUser(userId, username), "", authorities);
     }
 
     public static Map<String, Object> validateToken(String token) {

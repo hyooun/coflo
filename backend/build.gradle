@@ -24,6 +24,8 @@ repositories {
     mavenCentral()
 }
 
+var mockitoAgent = configurations.create("mockitoAgent")
+
 dependencies {
     // Spring boot
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -52,10 +54,25 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:5.14.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
+    // mockitoAgent configuration에 의존성 추가
+    add("mockitoAgent", "org.mockito:mockito-core:5.14.2")
+
+    // h2 for test
+    testRuntimeOnly 'com.h2database:h2'
+}
+
+// 의존성 전이를 비활성화
+configurations.mockitoAgent.dependencies.withType(ExternalModuleDependency).configureEach {
+    it.transitive = false
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    jvmArgs("-javaagent:${mockitoAgent.asPath}")
 }
 
 spotless {

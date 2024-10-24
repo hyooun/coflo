@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# 현재 브랜치 이름 가져오기
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+
+# "be/"로 시작하는 브랜치에서만 spotless로 포맷 확인
+if [[ "$BRANCH_NAME" == be/* ]]; then
+  echo "Running gradle spotlessApply on $BRANCH_NAME"
+
+  # backend 디렉토리로 이동
+  cd backend || exit 1
+  
+  # spotless 확인 출력 파일 경로
+  SPOTLESS_OUTPUT_FILE="spotless_check_output.txt"
+
+  # spotless 확인, 결과를 파일에 저장
+  ./gradlew spotlessCheck > "$SPOTLESS_OUTPUT_FILE" 2>&1
+
+  # spotlessCheck가 실패하면 커밋 중단
+  if [ $? -ne 0 ]; then
+    echo -e "\033[0;31mSpotless check failed. Aborting commit.\033[0m\nSee the details in $SPOTLESS_OUTPUT_FILE"
+    exit 1
+  fi
+fi

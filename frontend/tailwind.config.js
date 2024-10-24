@@ -13,6 +13,7 @@ export default {
     fontFamily: {
       notoKR: 'Noto Sans KR',
       pretendard: 'Pretendard',
+      SFMono: 'SF Mono',
     },
     extend: {
       colors: {

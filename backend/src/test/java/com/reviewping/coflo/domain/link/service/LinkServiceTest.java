@@ -102,9 +102,7 @@ class LinkServiceTest {
 
         // when & then
         assertThatThrownBy(
-                        () ->
-                                linkService.getGitlabProjects(
-                                        userId, GitlabSearchRequest.of("", 1, 10)))
+                        () -> linkService.getGitlabProjects(userId, any(GitlabSearchRequest.class)))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(USER_NOT_EXIST.getMessage());
     }
@@ -120,9 +118,7 @@ class LinkServiceTest {
 
         // when & then
         assertThatThrownBy(
-                        () ->
-                                linkService.getGitlabProjects(
-                                        userId, GitlabSearchRequest.of("", 1, 10)))
+                        () -> linkService.getGitlabProjects(userId, any(GitlabSearchRequest.class)))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(USER_GITLAB_ACCOUNT_NOT_EXIST.getMessage());
     }

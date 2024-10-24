@@ -5,6 +5,7 @@ import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.global.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.jwt.utils.JwtProvider;
+import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -30,6 +31,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final UserRepository userRepository;
     private final RedisUtil redisUtil;
+    private final CookieUtil cookieUtil;
 
     @Override
     public void onAuthenticationSuccess(
@@ -44,21 +46,15 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         String refreshToken = JwtProvider.generateToken(responseMap, JwtConstants.REFRESH_EXP_TIME);
 
         Cookie accessTokenCookie =
-                createCookie(
-                        JwtConstants.JWT_HEADER,
+                cookieUtil.createCookie(
+                        JwtConstants.ACCESS_NAME,
                         accessToken,
-                        (int) JwtConstants.ACCESS_EXP_TIME / 1000,
-                        true,
-                        false,
-                        "/");
+                        (int) JwtConstants.ACCESS_EXP_TIME / 1000);
         Cookie refreshTokenCookie =
-                createCookie(
-                        JwtConstants.JWT_REFRESH_HEADER,
+                cookieUtil.createCookie(
+                        JwtConstants.REFRESH_NAME,
                         refreshToken,
-                        (int) JwtConstants.REFRESH_EXP_TIME / 1000,
-                        true,
-                        false,
-                        "/");
+                        (int) JwtConstants.REFRESH_EXP_TIME / 1000);
 
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
@@ -70,15 +66,5 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         } else {
             response.sendRedirect(mainUrl);
         }
-    }
-
-    public Cookie createCookie(
-            String name, String value, int maxAge, boolean httpOnly, boolean secure, String path) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setHttpOnly(httpOnly);
-        cookie.setSecure(secure);
-        cookie.setPath(path);
-        cookie.setMaxAge(maxAge);
-        return cookie;
     }
 }

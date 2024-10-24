@@ -7,6 +7,7 @@ import com.reviewping.coflo.global.jwt.filter.JwtVerifyFilter;
 import com.reviewping.coflo.global.oauth.handler.CommonLoginFailHandler;
 import com.reviewping.coflo.global.oauth.handler.CommonLoginSuccessHandler;
 import com.reviewping.coflo.global.oauth.service.OAuth2UserService;
+import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class SecurityConfig {
     private final RedisUtil redisUtil;
     private final ObjectMapper objectMapper;
     private final OAuth2UserService oAuth2UserService;
+    private final CookieUtil cookieUtil;
     private final UserRepository userRepository;
 
     @Bean
@@ -41,7 +43,7 @@ public class SecurityConfig {
 
     @Bean
     public CommonLoginSuccessHandler commonLoginSuccessHandler() {
-        return new CommonLoginSuccessHandler(userRepository, redisUtil);
+        return new CommonLoginSuccessHandler(userRepository, redisUtil, cookieUtil);
     }
 
     @Bean
@@ -51,7 +53,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        JwtVerifyFilter jwtVerifyFilter = new JwtVerifyFilter(redisUtil);
+        JwtVerifyFilter jwtVerifyFilter = new JwtVerifyFilter(redisUtil, cookieUtil);
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(

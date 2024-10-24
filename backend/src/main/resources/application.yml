@@ -19,5 +19,7 @@ gitlab:
 openai:
   api:
     key: ${OPENAI_API_KEY}
+    organization: ${OPENAI_ORGANIZATION}
+    project: ${OPENAI_PROJECT}
 
 crypto-key: ${CRYPTO_KEY}

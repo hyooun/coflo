@@ -16,4 +16,8 @@ gitlab:
     project-search: /api/v4/search?scope=projects&search=
     user-info: /api/v4/user
 
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+
 crypto-key: ${CRYPTO_KEY}

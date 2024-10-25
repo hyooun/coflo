@@ -45,7 +45,7 @@ class LinkServiceTest {
     public void testProjectNotLinked() {
         // given
         Long userId = 1L;
-        GitlabSearchRequest searchRequest = GitlabSearchRequest.of("", 1, 10);
+        GitlabSearchRequest searchRequest = new GitlabSearchRequest("", 1, 10);
 
         User user = mock(User.class);
         GitlabAccount gitlabAccount = mock(GitlabAccount.class);
@@ -69,7 +69,7 @@ class LinkServiceTest {
     public void testProjectLinked() {
         // given
         Long userId = 1L;
-        GitlabSearchRequest searchRequest = GitlabSearchRequest.of("", 1, 10);
+        GitlabSearchRequest searchRequest = new GitlabSearchRequest("", 1, 10);
 
         User user = mock(User.class);
         GitlabAccount gitlabAccount = mock(GitlabAccount.class);

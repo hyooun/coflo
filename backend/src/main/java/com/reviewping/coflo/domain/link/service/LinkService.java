@@ -53,7 +53,14 @@ public class LinkService {
     public Long linkGitlabProject(
             Long userId, Long gitlabProjectId, ProjectLinkReqeust projectLinkReqeust) {
         GitlabAccount gitlabAccount = findGitlabAccountByUserId(userId);
-        Project project = getOrCreateProject(gitlabProjectId, projectLinkReqeust.botToken());
+        Project project =
+                findProjectByGitlabProjectId(gitlabProjectId)
+                        .orElseGet(
+                                () ->
+                                        createProject(
+                                                gitlabAccount,
+                                                gitlabProjectId,
+                                                projectLinkReqeust.botToken()));
         UserProject savedProject =
                 userProjectRepository.save(
                         UserProject.builder()
@@ -93,18 +100,17 @@ public class LinkService {
         return projectRepository.findByGitlabProjectId(gitlabProjectId);
     }
 
-    private Project getOrCreateProject(Long gitlabProjectId, String botToken) {
-        Optional<Project> optionalProject = findProjectByGitlabProjectId(gitlabProjectId);
-        if (optionalProject.isPresent()) {
-            return optionalProject.get();
-        }
-
+    private Project createProject(
+            GitlabAccount gitlabAccount, Long gitlabProjectId, String botToken) {
+        GitlabProjectDetailContent gitlabProject =
+                gitLabApiService.getSingleProject(
+                        gitlabAccount.getDomain(), gitlabAccount.getUserToken(), gitlabProjectId);
         Project project =
                 Project.builder()
                         .gitlabProjectId(gitlabProjectId)
                         .botToken(botToken)
-                        .name("name")
+                        .name(gitlabProject.name())
                         .build();
-        return project;
+        return projectRepository.save(project);
     }
 }

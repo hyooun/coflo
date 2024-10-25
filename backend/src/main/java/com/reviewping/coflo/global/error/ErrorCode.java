@@ -24,6 +24,12 @@ public enum ErrorCode {
     USER_GITLAB_ACCOUNT_NOT_EXIST(HttpStatus.BAD_REQUEST, "B001", "사용자의 깃랩 계정이 존재하지 않습니다."),
 
     /**
+     * Gitlab(C000)
+     */
+    GITLAB_REQUEST_SERIALIZATION_ERROR(
+            HttpStatus.INTERNAL_SERVER_ERROR, "C001", "GITLAB 요청 생성에 오류가 발생했습니다."),
+
+    /**
      * OpenAI(D000)
      */
     CHAT_REQUEST_SERIALIZATION_ERROR(

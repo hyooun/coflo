@@ -8,13 +8,7 @@ import lombok.Builder;
  */
 @Builder
 public record ChatCompletionContent(
-        String id,
-        String object,
-        long created,
-        String model,
-        List<Choice> choices,
-        Usage usage,
-        SystemFingerprint system_fingerprint) {
+        String id, String object, long created, String model, List<Choice> choices, Usage usage) {
     @Builder
     public record Choice(int index, ChatMessage message, Object logprobs, String finish_reason) {}
 
@@ -29,6 +23,4 @@ public record ChatCompletionContent(
 
         public record CompletionTokensDetails(int reasoning_tokens) {}
     }
-
-    public record SystemFingerprint(String fingerprint) {}
 }

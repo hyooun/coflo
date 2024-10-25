@@ -47,7 +47,7 @@ public class ReviewCreateServiceTest {
 
         // ChatCompletionContent mock data
         String chatResult = "This is a review suggestion";
-        ChatMessage chatCompletionMessage = new ChatMessage("assistant", chatResult, null);
+        ChatMessage chatCompletionMessage = new ChatMessage("assistant", chatResult);
         ChatCompletionContent.Choice chatCompletionChoice =
                 ChatCompletionContent.Choice.builder().message(chatCompletionMessage).build();
         List<ChatCompletionContent.Choice> chatCompletionChoices = List.of(chatCompletionChoice);

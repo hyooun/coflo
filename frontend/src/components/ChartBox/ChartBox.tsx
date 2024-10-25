@@ -1,4 +1,6 @@
-import { Radar, Line } from 'react-chartjs-2';
+import { Radar, Line, Bar } from 'react-chartjs-2';
+import { useEffect, useRef } from 'react';
+
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -22,33 +24,47 @@ ChartJS.register(
   LinearScale,
 );
 
-const ChartBox = ({ chartType, data, options }: ChartBoxProps) => {
+const ChartBox = ({
+  chartType,
+  data,
+  options,
+  chartId,
+  width = 550,
+  height = 300,
+}: ChartBoxProps) => {
+  const chartRef = useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (ChartJS.getChart(chartId)) {
+        ChartJS.getChart(chartId)?.destroy();
+      }
+    };
+  }, [chartId]);
+
   const renderChart = () => {
+    const chartProps = {
+      ref: chartRef,
+      data,
+      options: { ...options, maintainAspectRatio: false },
+      id: chartId,
+      width,
+      height,
+    };
+
     switch (chartType) {
       case 'radar':
-        return (
-          <Radar
-            data={data}
-            options={{ ...options, maintainAspectRatio: false }}
-          />
-        );
+        return <Radar {...chartProps} />;
       case 'line':
-        return (
-          <Line
-            data={data}
-            options={{ ...options, maintainAspectRatio: false }}
-          />
-        );
+        return <Line {...chartProps} />;
+      case 'bar':
+        return <Bar {...chartProps} />;
       default:
         return null;
     }
   };
 
-  return (
-    <div className="w-[600px] h-[300px] bg-[#F5F7FA] m-2 flex items-center justify-center">
-      {renderChart()}
-    </div>
-  );
+  return <div style={{ width, height }}>{renderChart()}</div>;
 };
 
 export default ChartBox;

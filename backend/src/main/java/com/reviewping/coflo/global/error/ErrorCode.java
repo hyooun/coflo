@@ -24,6 +24,18 @@ public enum ErrorCode {
     USER_GITLAB_ACCOUNT_NOT_EXIST(HttpStatus.BAD_REQUEST, "B001", "사용자의 깃랩 계정이 존재하지 않습니다."),
 
     /**
+     * Gitlab(C000)
+     */
+    GITLAB_REQUEST_SERIALIZATION_ERROR(
+            HttpStatus.INTERNAL_SERVER_ERROR, "C001", "GITLAB 요청 생성에 오류가 발생했습니다."),
+
+    /**
+     * OpenAI(D000)
+     */
+    CHAT_REQUEST_SERIALIZATION_ERROR(
+            HttpStatus.INTERNAL_SERVER_ERROR, "D001", "OPENAI 요청 생성에 오류가 발생했습니다."),
+
+    /**
      * JWT Token(H000)
      */
     TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "H001", "유효하지 않은 토큰입니다."),
@@ -61,6 +73,11 @@ public enum ErrorCode {
      * Link(D00)
      */
     LINK_BOT_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "D001", "연동에 필요한 Bot 토큰이 존재하지 않습니다.");
+
+     /*
+     * project(P000)
+     */
+    PROJECT_NOT_EXIST(HttpStatus.BAD_REQUEST, "P001", "존재하지 않는 프로젝트입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

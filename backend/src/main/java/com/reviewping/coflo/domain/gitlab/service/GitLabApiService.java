@@ -1,11 +1,14 @@
 package com.reviewping.coflo.domain.gitlab.service;
 
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabMrDiffsContent;
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectDetailContent;
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectPageContent;
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabUserInfoContent;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reviewping.coflo.domain.gitlab.dto.response.*;
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.global.common.entity.PageDetail;
+import com.reviewping.coflo.global.error.ErrorCode;
+import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +25,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GitLabApiService {
 
+    private static final String PRIVATE_TOKEN = "PRIVATE-TOKEN";
+
     private static final String PROJECTS_ENDPOINT =
             "/api/v4/projects?order_by=updated_at&sort=desc";
     private static final String USERINFO_ENDPOINT = "/api/v4/user";
@@ -28,6 +34,8 @@ public class GitLabApiService {
 
     private static final String URL_PROTOCOL_HTTPS = "https://";
     private static final String MIME_TYPE_JSON = "application/json";
+
+    private final ObjectMapper objectMapper;
 
     public void validateToken(String domain, String token) {
         searchGitlabProjects(domain, token, new GitlabSearchRequest("", 1, 20));
@@ -79,10 +87,18 @@ public class GitLabApiService {
 
     public void addNoteToMr(
             String gitlabUrl, String token, Long gitlabProjectId, Long iid, String chatMessage) {
-        HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
+        HttpHeaders headers = makeGitlabHeaders(token);
+
         String url = makeNoteToMRUrl(gitlabUrl, gitlabProjectId, iid);
+        GitlabNoteRequest gitlabNoteRequest = new GitlabNoteRequest(chatMessage);
+        String body;
+        try {
+            body = objectMapper.writeValueAsString(gitlabNoteRequest);
+        } catch (JsonProcessingException e) {
+            throw new BusinessException(ErrorCode.GITLAB_REQUEST_SERIALIZATION_ERROR);
+        }
         RestTemplateUtils.sendPostRequest(
-                url, headers, chatMessage, new ParameterizedTypeReference<>() {});
+                url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
     private PageDetail createPageDetail(HttpHeaders responseHeaders) {
@@ -93,6 +109,13 @@ public class GitLabApiService {
         int currPage = Integer.parseInt(Objects.requireNonNull(responseHeaders.getFirst("X-Page")));
         boolean isLast = currPage == totalPages;
         return PageDetail.of(totalElements, totalPages, isLast, currPage);
+    }
+
+    private HttpHeaders makeGitlabHeaders(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        headers.set(PRIVATE_TOKEN, token);
+        return headers;
     }
 
     private String makeSearchGitlabProjectUrl(
@@ -121,7 +144,7 @@ public class GitLabApiService {
     private String makeNoteToMRUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {
         return URL_PROTOCOL_HTTPS
                 + gitlabUrl
-                + "/projects/"
+                + "/api/v4/projects/"
                 + gitlabProjectId
                 + "/merge_requests/"
                 + iid

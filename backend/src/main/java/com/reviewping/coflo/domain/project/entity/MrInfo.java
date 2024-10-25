@@ -1,6 +1,7 @@
 package com.reviewping.coflo.domain.project.entity;
 
 import com.reviewping.coflo.domain.review.entity.Review;
+import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MrInfo {
+public class MrInfo extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,8 +35,7 @@ public class MrInfo {
     // TODO: skillN_score 이름정하기
 
     @Builder
-    public MrInfo(Long id, Project project, Long gitlabMrIid, LocalDateTime gitlabCreatedDate) {
-        this.id = id;
+    public MrInfo(Project project, Long gitlabMrIid, LocalDateTime gitlabCreatedDate) {
         this.project = project;
         this.gitlabMrIid = gitlabMrIid;
         this.gitlabCreatedDate = gitlabCreatedDate;

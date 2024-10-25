@@ -87,7 +87,7 @@ const Pagination = () => {
         {paginationItems.map((item, index) => (
           <button
             key={index}
-            className={`w-[40px] h-[40px] flex items-center justify-center ${item === currentPage ? 'bg-[#2C365B] text-white' : 'bg-gray-200'} rounded mx-1`}
+            className={`w-[40px] h-[40px] flex items-center justify-center ${item === currentPage ? 'bg-primary-500 text-white' : 'bg-gray-200'} rounded mx-1`}
             onClick={() => typeof item === 'number' && handlePageChange(item)}
             disabled={item === '...'}
           >

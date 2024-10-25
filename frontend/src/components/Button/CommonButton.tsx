@@ -1,5 +1,5 @@
 export function CommonButton({ active, icon, onClick, children, className }: BtnProps) {
-  const bgColor = active ? 'bg-[#2C365B]' : 'bg-[#2C365B]';
+  const bgColor = active ? 'bg-primary-500' : 'bg-primary-500';
   const textColor = active ? 'text-white' : 'text-white';
 
   return (

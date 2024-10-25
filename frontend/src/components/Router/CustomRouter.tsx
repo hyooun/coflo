@@ -14,11 +14,11 @@ const customRouter = createBrowserRouter([
     element: <App />,
   },
   {
-    path: '/repository/',
+    path: '/repository',
     element: <RepositoryLayout />,
   },
   {
-    path: '/main/',
+    path: '/main',
     element: <MainLayout />,
     children: [
       {

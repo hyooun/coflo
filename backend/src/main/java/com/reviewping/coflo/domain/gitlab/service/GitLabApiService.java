@@ -24,7 +24,7 @@ public class GitLabApiService {
     private static final String PROJECTS_ENDPOINT =
             "/api/v4/projects?order_by=updated_at&sort=desc";
     private static final String USERINFO_ENDPOINT = "/api/v4/user";
-    private static final String SINGLE_PROJECT_ENDPOINT = "/api/v4/project/";
+    private static final String SINGLE_PROJECT_ENDPOINT = "/api/v4/projects/";
 
     private static final String URL_PROTOCOL_HTTPS = "https://";
     private static final String MIME_TYPE_JSON = "application/json";

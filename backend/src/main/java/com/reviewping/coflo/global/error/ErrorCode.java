@@ -54,7 +54,12 @@ public enum ErrorCode {
     ENCRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C001", "암호화 도중 오류가 발생했습니다."),
     DECRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C002", "복호화 도중 오류가 발생했습니다."),
 
-    LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "L001", "로그인 도중 오류가 발생했습니다.");
+    LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "L001", "로그인 도중 오류가 발생했습니다."),
+
+    /**
+     * Link(D00)
+     */
+    LINK_BOT_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "D001", "연동에 필요한 Bot 토큰이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

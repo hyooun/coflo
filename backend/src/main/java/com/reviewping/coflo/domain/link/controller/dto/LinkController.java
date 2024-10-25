@@ -33,9 +33,9 @@ public class LinkController {
 
     @PostMapping("/{gitlabProjectId}")
     public ApiResponse<Map<String, Long>> linkGitlabProject(
-            @PathVariable(name = "gitlabProjectId") Long gitlabProjectId,
-            @RequestBody ProjectLinkReqeust projectLinkReqeust,
-            @AuthenticationPrincipal AuthUser authUser) {
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable("gitlabProjectId") Long gitlabProjectId,
+            @RequestBody(required = false) ProjectLinkReqeust projectLinkReqeust) {
         Long projectId =
                 linkService.linkGitlabProject(
                         authUser.getUserId(), gitlabProjectId, projectLinkReqeust);

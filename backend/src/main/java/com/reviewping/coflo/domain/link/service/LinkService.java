@@ -1,7 +1,6 @@
 package com.reviewping.coflo.domain.link.service;
 
-import static com.reviewping.coflo.global.error.ErrorCode.USER_GITLAB_ACCOUNT_NOT_EXIST;
-import static com.reviewping.coflo.global.error.ErrorCode.USER_NOT_EXIST;
+import static com.reviewping.coflo.global.error.ErrorCode.*;
 
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectDetailContent;
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectPageContent;
@@ -50,6 +49,7 @@ public class LinkService {
         return GitlabProjectPageResponse.of(gitlabProjectList, gitlabProjectPage.pageDetail());
     }
 
+    @Transactional
     public Long linkGitlabProject(
             Long userId, Long gitlabProjectId, ProjectLinkReqeust projectLinkReqeust) {
         GitlabAccount gitlabAccount = findGitlabAccountByUserId(userId);
@@ -98,23 +98,24 @@ public class LinkService {
             ProjectLinkReqeust projectLinkReqeust,
             GitlabAccount gitlabAccount) {
         return findProjectByGitlabProjectId(gitlabProjectId)
-                .orElseGet(
-                        () ->
-                                createProject(
-                                        gitlabAccount,
-                                        gitlabProjectId,
-                                        projectLinkReqeust.botToken()));
+                .orElseGet(() -> createProject(gitlabAccount, gitlabProjectId, projectLinkReqeust));
     }
 
     private Project createProject(
-            GitlabAccount gitlabAccount, Long gitlabProjectId, String botToken) {
+            GitlabAccount gitlabAccount,
+            Long gitlabProjectId,
+            ProjectLinkReqeust projectLinkReqeust) {
+        if (projectLinkReqeust == null || projectLinkReqeust.botToken() == null) {
+            throw new BusinessException(LINK_BOT_TOKEN_NOT_EXIST);
+        }
+
         GitlabProjectDetailContent gitlabProject =
                 gitLabApiService.getSingleProject(
                         gitlabAccount.getDomain(), gitlabAccount.getUserToken(), gitlabProjectId);
         Project project =
                 Project.builder()
                         .gitlabProjectId(gitlabProjectId)
-                        .botToken(botToken)
+                        .botToken(projectLinkReqeust.botToken())
                         .name(gitlabProject.name())
                         .build();
         return projectRepository.save(project);

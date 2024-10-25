@@ -1,12 +1,17 @@
+import SignupForm from '@components/Signup/SignupForm.tsx';
+
 const SignupContent = () => {
   return (
-    <>
-      <img
-        src="/images/signup_bg_image.webp"
-        alt="sign up"
-        className="w-screen h-screen"
-      />
-    </>
+    <div className="w-full h-full flex items-center justify-center">
+      <div className="absolute inset-0 pointer-events-none">
+        <img
+          src="/images/signup_bg_image.webp"
+          alt="sign up"
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <SignupForm />
+    </div>
   );
 };
 

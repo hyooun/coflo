@@ -20,11 +20,7 @@ const BadgePage = () => {
       <div className="grid grid-cols-4 grid-rows-2 px-2 ">
         {images.map((src, index) => (
           <div key={index} className="flex justify-center items-center">
-            <img
-              src={src}
-              alt={`Badge ${index + 1}`}
-              className="w-60 h-60 object-cover"
-            />
+            <img src={src} alt={`Badge ${index + 1}`} className="w-60 h-60 object-cover" />
           </div>
         ))}
       </div>

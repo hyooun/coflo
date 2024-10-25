@@ -3,4 +3,5 @@ interface BtnProps {
   icon?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }

@@ -1,10 +1,12 @@
-import App from 'App';
-import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '@pages/Home/HomePage';
 import MergeListPage from '@pages/MergeList/MergeListPage';
 import CustomTemplatePage from '@pages/CustomTemplate/CustomTemplatePage';
 import BadgePage from '@pages/Badge/BadgePage';
 import SettingsPage from '@pages/Setting/SettingPage';
+import { createBrowserRouter } from 'react-router-dom';
+import MainLayout from '@components/Layout/MainLayout';
+import RepositoryLayout from '@components/Layout/RepositoryLayout';
+import App from 'App';
 import LoginPage from '@pages/Login/LoginPage';
 
 const customRouter = createBrowserRouter([
@@ -15,9 +17,17 @@ const customRouter = createBrowserRouter([
   {
     path: '/',
     element: <App />,
+  },
+  {
+    path: '/repository',
+    element: <RepositoryLayout />,
+  },
+  {
+    path: '/main',
+    element: <MainLayout />,
     children: [
       {
-        path: '/',
+        path: '',
         element: <HomePage />,
       },
       {

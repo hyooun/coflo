@@ -5,7 +5,7 @@ import {
   BadgeIcon,
   CustomTemplateIcon,
 } from '@components/Sidebar/Icons/index';
-import { Button } from '@components/Button/Button';
+import { NavButton } from '@components/Button/NavButton';
 import { Title } from '@components/Sidebar/Title';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -15,42 +15,36 @@ export const Sidebar = () => {
   return (
     <div className="h-screen w-[250px] border-r border-r-solid border-r-[#dfe1e6] bg-[#f4f5f7] flex flex-col items-center px-4 font-pretendard text-sm leading-[1.2]">
       <Title />
-      <Link to="/" className="w-full">
-        <Button active={location.pathname === '/'} icon={<HomeIcon />}>
+      <Link to="/main" className="w-full">
+        <NavButton active={location.pathname === '/main'} icon={<HomeIcon />}>
           Home
-        </Button>
+        </NavButton>
       </Link>
-      <Link to="/merge-request" className="w-full">
-        <Button
-          active={location.pathname === '/merge-request'}
-          icon={<MergeListIcon />}
-        >
+      <Link to="/main/merge-request" className="w-full">
+        <NavButton active={location.pathname === '/main/merge-request'} icon={<MergeListIcon />}>
           Merge Request
-        </Button>
+        </NavButton>
       </Link>
-      <Link to="/custom-template" className="w-full">
-        <Button
-          active={location.pathname === '/custom-template'}
+      <Link to="/main/custom-template" className="w-full">
+        <NavButton
+          active={location.pathname === '/main/custom-template'}
           icon={<CustomTemplateIcon />}
         >
           Custom template
-        </Button>
+        </NavButton>
       </Link>
       <div className="h-10 w-full flex flex-col justify-center">
         <div className="bg-[#c1c7d0] h-[1px] w-full"></div>
       </div>
-      <Link to="/badge" className="w-full">
-        <Button active={location.pathname === '/badge'} icon={<BadgeIcon />}>
+      <Link to="/main/badge" className="w-full">
+        <NavButton active={location.pathname === '/main/badge'} icon={<BadgeIcon />}>
           My Badge
-        </Button>
+        </NavButton>
       </Link>
-      <Link to="/settings" className="w-full">
-        <Button
-          active={location.pathname === '/settings'}
-          icon={<SettingIcon />}
-        >
+      <Link to="/main/settings" className="w-full">
+        <NavButton active={location.pathname === '/main/settings'} icon={<SettingIcon />}>
           Setting
-        </Button>
+        </NavButton>
       </Link>
     </div>
   );

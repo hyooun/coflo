@@ -22,10 +22,7 @@ const SearchComponent = () => {
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (
-      !(event.target instanceof HTMLElement) ||
-      !event.target.closest('.category-button')
-    ) {
+    if (!(event.target instanceof HTMLElement) || !event.target.closest('.category-button')) {
       setSelectedCategory(null);
     }
   };
@@ -39,9 +36,7 @@ const SearchComponent = () => {
 
   const handleToggleSelectSearch = (search: string) => {
     setSelectedSearches((prev) =>
-      prev.includes(search)
-        ? prev.filter((s) => s !== search)
-        : [...prev, search],
+      prev.includes(search) ? prev.filter((s) => s !== search) : [...prev, search],
     );
   };
 

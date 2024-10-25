@@ -7,8 +7,13 @@ import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '@components/Layout/MainLayout';
 import RepositoryLayout from '@components/Layout/RepositoryLayout';
 import App from 'App';
+import LoginPage from '@pages/Login/LoginPage';
 
 const customRouter = createBrowserRouter([
+  {
+    path: 'login',
+    element: <LoginPage />,
+  },
   {
     path: '/',
     element: <App />,

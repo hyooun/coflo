@@ -38,7 +38,7 @@ public class GitLabApiService {
                         url, headers, new ParameterizedTypeReference<>() {});
 
         PageDetail pageDetail = createPageDetail(response.getHeaders());
-        return GitlabProjectPageContent.of(response.getBody(), pageDetail);
+        return new GitlabProjectPageContent(response.getBody(), pageDetail);
     }
 
     public GitlabUserInfoContent getUserInfo(String gitlabUrl, String token) {
@@ -47,7 +47,7 @@ public class GitLabApiService {
 
         ResponseEntity<GitlabUserInfoContent> response =
                 RestTemplateUtils.sendGetRequest(
-                        url, headers, new ParameterizedTypeReference<GitlabUserInfoContent>() {});
+                        url, headers, new ParameterizedTypeReference<>() {});
         return response.getBody();
     }
 

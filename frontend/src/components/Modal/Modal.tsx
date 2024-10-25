@@ -48,7 +48,7 @@ export const Modal = ({ repo, inputValue, setInputValue, onConfirm, onClose }: M
         <div className="flex justify-end">
           <button
             onClick={onConfirm}
-            className="bg-[#2C365B] items-center w-[100px] text-white rounded p-2 rounded font-pretendard hover:cursor-pointer"
+            className="bg-primary-500 items-center w-[100px] text-white rounded p-2 rounded font-pretendard hover:cursor-pointer"
           >
             확인
           </button>

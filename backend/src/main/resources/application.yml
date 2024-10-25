@@ -3,18 +3,12 @@ spring:
     name: coflo
 
   profiles:
-    active: ${DEV_ACTIVE_PROFILE}
+    active: local
     include: oauth
 
   output:
     ansi:
       enabled: always
-
-gitlab:
-  api:
-    project-list: /api/v4/projects
-    project-search: /api/v4/search?scope=projects&search=
-    user-info: /api/v4/user
 
 openai:
   api:

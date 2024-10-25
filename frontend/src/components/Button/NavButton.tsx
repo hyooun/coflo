@@ -1,6 +1,6 @@
-export function Button({ active, icon, children, className }: BtnProps) {
+export function NavButton({ active, icon, children, className }: BtnProps) {
   const bgColor = active ? 'bg-[#ebecf0]' : 'bg-[#f4f5f7]';
-  const textColor = active ? 'text-[#2a52ce]' : 'text-[#293d68]';
+  const textColor = active ? 'text-secondary' : 'text-primary-500';
 
   return (
     <div

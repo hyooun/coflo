@@ -11,7 +11,7 @@ const LoginContent = () => {
     console.log('구글');
   };
   return (
-    <div className="flex flex-row md:flex-col gap-20 h-full items-center justify-center">
+    <div className="flex mobile:flex-col flex-row gap-20 h-full items-center justify-center ">
       <div className="w-full lg:w-1/2">
         <img
           src="/images/login_image.png"

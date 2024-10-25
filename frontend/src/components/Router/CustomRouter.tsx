@@ -1,19 +1,33 @@
-import App from 'App';
 import HomePage from '@pages/Home/HomePage';
 import MergeListPage from '@pages/MergeList/MergeListPage';
 import CustomTemplatePage from '@pages/CustomTemplate/CustomTemplatePage';
 import BadgePage from '@pages/Badge/BadgePage';
 import SettingsPage from '@pages/Setting/SettingPage';
-import LoginPage from '@pages/Login/LoginPage';
 import { createBrowserRouter } from 'react-router-dom';
+import MainLayout from '@components/Layout/MainLayout';
+import RepositoryLayout from '@components/Layout/RepositoryLayout';
+import App from 'App';
+import LoginPage from '@pages/Login/LoginPage';
 
 const customRouter = createBrowserRouter([
   {
+    path: 'login',
+    element: <LoginPage />,
+  },
+  {
     path: '/',
     element: <App />,
+  },
+  {
+    path: '/repository',
+    element: <RepositoryLayout />,
+  },
+  {
+    path: '/main',
+    element: <MainLayout />,
     children: [
       {
-        path: '/',
+        path: '',
         element: <HomePage />,
       },
       {
@@ -32,10 +46,6 @@ const customRouter = createBrowserRouter([
         path: 'settings',
         element: <SettingsPage />,
       },
-      {
-        path: 'login',
-        element: <LoginPage />,
-      }
     ],
   },
 ]);

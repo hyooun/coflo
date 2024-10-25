@@ -1,14 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { SearchIcon } from './Icons/Search';
 
-const SearchInput = ({
-  searchTerm,
-  setSearchTerm,
-  handleSaveSearch,
-}: SearchInputProps) => {
+const SearchInput = ({ searchTerm, setSearchTerm, handleSaveSearch }: SearchInputProps) => {
   const [height, setHeight] = useState<number>(40);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const maxHeight = 150;
+  const maxHeight = 1000;
   const maxLength = 1000;
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -56,10 +52,7 @@ const SearchInput = ({
           }}
         />
 
-        <div
-          className="absolute right-4 bottom-2 cursor-pointer"
-          onClick={handleIconClick}
-        >
+        <div className="absolute right-4 bottom-2 cursor-pointer" onClick={handleIconClick}>
           <SearchIcon />
         </div>
       </div>

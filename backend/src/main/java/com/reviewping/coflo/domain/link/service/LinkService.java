@@ -53,14 +53,7 @@ public class LinkService {
     public Long linkGitlabProject(
             Long userId, Long gitlabProjectId, ProjectLinkReqeust projectLinkReqeust) {
         GitlabAccount gitlabAccount = findGitlabAccountByUserId(userId);
-        Project project =
-                findProjectByGitlabProjectId(gitlabProjectId)
-                        .orElseGet(
-                                () ->
-                                        createProject(
-                                                gitlabAccount,
-                                                gitlabProjectId,
-                                                projectLinkReqeust.botToken()));
+        Project project = getOrCreateProject(gitlabProjectId, projectLinkReqeust, gitlabAccount);
         UserProject savedProject =
                 userProjectRepository.save(
                         UserProject.builder()
@@ -98,6 +91,19 @@ public class LinkService {
 
     private Optional<Project> findProjectByGitlabProjectId(Long gitlabProjectId) {
         return projectRepository.findByGitlabProjectId(gitlabProjectId);
+    }
+
+    private Project getOrCreateProject(
+            Long gitlabProjectId,
+            ProjectLinkReqeust projectLinkReqeust,
+            GitlabAccount gitlabAccount) {
+        return findProjectByGitlabProjectId(gitlabProjectId)
+                .orElseGet(
+                        () ->
+                                createProject(
+                                        gitlabAccount,
+                                        gitlabProjectId,
+                                        projectLinkReqeust.botToken()));
     }
 
     private Project createProject(

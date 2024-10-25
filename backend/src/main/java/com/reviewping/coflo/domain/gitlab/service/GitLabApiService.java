@@ -29,6 +29,10 @@ public class GitLabApiService {
     private static final String URL_PROTOCOL_HTTPS = "https://";
     private static final String MIME_TYPE_JSON = "application/json";
 
+    public void validateToken(String domain, String token) {
+        searchGitlabProjects(domain, token, new GitlabSearchRequest("", 1, 20));
+    }
+
     public GitlabProjectPageContent searchGitlabProjects(
             String gitlabUrl, String token, GitlabSearchRequest gitlabSearchRequest) {
         HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);

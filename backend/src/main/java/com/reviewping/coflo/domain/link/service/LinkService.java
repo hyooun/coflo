@@ -109,6 +109,8 @@ public class LinkService {
             throw new BusinessException(LINK_BOT_TOKEN_NOT_EXIST);
         }
 
+        gitLabApiService.validateToken(gitlabAccount.getDomain(), projectLinkReqeust.botToken());
+
         GitlabProjectDetailContent gitlabProject =
                 gitLabApiService.getSingleProject(
                         gitlabAccount.getDomain(), gitlabAccount.getUserToken(), gitlabProjectId);

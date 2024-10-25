@@ -1,13 +1,17 @@
 import App from 'App';
+import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '@pages/Home/HomePage';
 import MergeListPage from '@pages/MergeList/MergeListPage';
 import CustomTemplatePage from '@pages/CustomTemplate/CustomTemplatePage';
 import BadgePage from '@pages/Badge/BadgePage';
 import SettingsPage from '@pages/Setting/SettingPage';
 import LoginPage from '@pages/Login/LoginPage';
-import { createBrowserRouter } from 'react-router-dom';
 
 const customRouter = createBrowserRouter([
+  {
+    path: 'login',
+    element: <LoginPage />,
+  },
   {
     path: '/',
     element: <App />,
@@ -32,10 +36,6 @@ const customRouter = createBrowserRouter([
         path: 'settings',
         element: <SettingsPage />,
       },
-      {
-        path: 'login',
-        element: <LoginPage />,
-      }
     ],
   },
 ]);

@@ -10,7 +10,9 @@ const SignupContent = () => {
           className="w-full h-full object-cover"
         />
       </div>
-      <SignupForm />
+      <div className="absolute inset-x-10 w-5/12">
+        <SignupForm />
+      </div>
     </div>
   );
 };

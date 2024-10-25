@@ -12,12 +12,13 @@ import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectRes
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
+import com.reviewping.coflo.domain.user.entity.User;
+import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,7 @@ public class LinkService {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
+    private final GitlabAccountRepository gitlabAccountRepository;
 
     public GitlabProjectPageResponse getGitlabProjects(
             Long userId, GitlabSearchRequest gitlabSearchRequest) {
@@ -64,24 +66,25 @@ public class LinkService {
     }
 
     private GitlabAccount findGitlabAccountByUserId(Long userId) {
-        return userRepository
-                .findById(userId)
-                .orElseThrow(() -> new BusinessException(USER_NOT_EXIST))
-                .getGitlabAccounts()
-                .stream()
-                .findFirst()
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new BusinessException(USER_NOT_EXIST));
+        return gitlabAccountRepository
+                .findFirstByUserOrderByIdAsc(user)
                 .orElseThrow(() -> new BusinessException(USER_GITLAB_ACCOUNT_NOT_EXIST));
     }
 
     private GitlabProjectResponse buildGitlabProjectResponse(
             GitlabProjectDetailContent content, Long gitlabAccountId) {
-        Optional<Project> optionalProject = findProjectByGitlabProjectId(content.id());
-        if (optionalProject.isPresent()) {
-            Project project = optionalProject.get();
-            boolean isLinked = isProjectLinked(gitlabAccountId, project.getId());
-            return GitlabProjectResponse.ofLinkable(content, isLinked);
-        }
-        return GitlabProjectResponse.ofNonLinkable(content);
+        return projectRepository
+                .findByGitlabProjectId(content.id())
+                .map(
+                        project -> {
+                            boolean isLinked = isProjectLinked(gitlabAccountId, project.getId());
+                            return GitlabProjectResponse.ofLinkable(content, isLinked);
+                        })
+                .orElseGet(() -> GitlabProjectResponse.ofNonLinkable(content));
     }
 
     private boolean isProjectLinked(Long gitlabAccountId, Long projectId) {
@@ -89,15 +92,12 @@ public class LinkService {
                 gitlabAccountId, projectId);
     }
 
-    private Optional<Project> findProjectByGitlabProjectId(Long gitlabProjectId) {
-        return projectRepository.findByGitlabProjectId(gitlabProjectId);
-    }
-
     private Project getOrCreateProject(
             Long gitlabProjectId,
             ProjectLinkReqeust projectLinkReqeust,
             GitlabAccount gitlabAccount) {
-        return findProjectByGitlabProjectId(gitlabProjectId)
+        return projectRepository
+                .findByGitlabProjectId(gitlabProjectId)
                 .orElseGet(() -> createProject(gitlabAccount, gitlabProjectId, projectLinkReqeust));
     }
 
@@ -105,20 +105,25 @@ public class LinkService {
             GitlabAccount gitlabAccount,
             Long gitlabProjectId,
             ProjectLinkReqeust projectLinkReqeust) {
+
         if (projectLinkReqeust == null || projectLinkReqeust.botToken() == null) {
             throw new BusinessException(LINK_BOT_TOKEN_NOT_EXIST);
         }
-
         gitLabApiService.validateToken(gitlabAccount.getDomain(), projectLinkReqeust.botToken());
 
-        GitlabProjectDetailContent gitlabProject =
-                gitLabApiService.getSingleProject(
-                        gitlabAccount.getDomain(), gitlabAccount.getUserToken(), gitlabProjectId);
+        String gitlabProjectName =
+                gitLabApiService
+                        .getSingleProject(
+                                gitlabAccount.getDomain(),
+                                gitlabAccount.getUserToken(),
+                                gitlabProjectId)
+                        .name();
+
         Project project =
                 Project.builder()
                         .gitlabProjectId(gitlabProjectId)
                         .botToken(projectLinkReqeust.botToken())
-                        .name(gitlabProject.name())
+                        .name(gitlabProjectName)
                         .build();
         return projectRepository.save(project);
     }

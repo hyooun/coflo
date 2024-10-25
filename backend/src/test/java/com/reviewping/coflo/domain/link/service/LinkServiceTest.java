@@ -18,6 +18,7 @@ import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
+import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.global.common.entity.PageDetail;
@@ -38,6 +39,7 @@ class LinkServiceTest {
     @Mock private UserRepository userRepository;
     @Mock private ProjectRepository projectRepository;
     @Mock private UserProjectRepository userProjectRepository;
+    @Mock private GitlabAccountRepository gitlabAccountRepository;
     @InjectMocks private LinkService linkService;
 
     @Test
@@ -51,7 +53,9 @@ class LinkServiceTest {
         GitlabAccount gitlabAccount = mock(GitlabAccount.class);
 
         given(userRepository.findById(userId)).willReturn(Optional.of(user));
-        given(user.getGitlabAccounts()).willReturn(List.of(gitlabAccount));
+        given(gitlabAccountRepository.findFirstByUserOrderByIdAsc(user))
+                .willReturn(Optional.of(gitlabAccount));
+        //        given(user.getGitlabAccounts()).willReturn(List.of(gitlabAccount));
         given(gitLabApiService.searchGitlabProjects(any(), any(), any()))
                 .willReturn(createGitlabProjectPageContent());
         given(projectRepository.findByGitlabProjectId(anyLong())).willReturn(Optional.empty());
@@ -76,7 +80,9 @@ class LinkServiceTest {
         Project project = mock(Project.class);
 
         given(userRepository.findById(userId)).willReturn(Optional.of(user));
-        given(user.getGitlabAccounts()).willReturn(List.of(gitlabAccount));
+        given(gitlabAccountRepository.findFirstByUserOrderByIdAsc(user))
+                .willReturn(Optional.of(gitlabAccount));
+        //        given(user.getGitlabAccounts()).willReturn(List.of(gitlabAccount));
         given(gitlabAccount.getId()).willReturn(1L);
         given(project.getId()).willReturn(1L);
         given(gitLabApiService.searchGitlabProjects(any(), any(), any()))
@@ -114,7 +120,8 @@ class LinkServiceTest {
         Long userId = 1L;
         User user = mock(User.class);
         given(userRepository.findById(userId)).willReturn(Optional.of(user));
-        given(user.getGitlabAccounts()).willReturn(List.of());
+        given(gitlabAccountRepository.findFirstByUserOrderByIdAsc(user))
+                .willReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(

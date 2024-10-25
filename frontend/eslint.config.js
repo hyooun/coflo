@@ -2,24 +2,34 @@ import js from '@eslint/js';
 import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import tseslint from 'typescript-eslint';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
 
-export default tseslint.config(
-  { ignores: ['dist'] },
+export default [
   {
-    extends: [
-      'airbnb',
-      'airbnb-typescript',
-      'prettier',
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
+    ignores: [
+      'dist',
+      'public',
+      '.eslintrc.cjs',
+      'vite.config.ts',
+      'jest.config.ts',
+      'jest.setup.ts',
+      'tailwind.config.ts',
     ],
+  },
+  {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
-      ecmaVersion: 2020,
+      parser: tsParser,
+      parserOptions: {
+        project: './tsconfig.json',
+        ecmaVersion: 2020,
+        sourceType: 'module',
+      },
       globals: globals.browser,
     },
     plugins: {
+      '@typescript-eslint': tseslint,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
     },
@@ -31,16 +41,5 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
     },
-    parserOptions: {
-      project: './tsconfig.json',
-    },
-    ignorePatterns: [
-      '.eslintrc.cjs',
-      'vite.config.ts',
-      'jest.config.ts',
-      'jest.setup.ts',
-      'public/',
-      'tailwind.config.ts',
-    ],
   },
-);
+];

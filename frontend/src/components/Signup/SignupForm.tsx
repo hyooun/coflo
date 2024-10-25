@@ -6,10 +6,17 @@ import { CommonButton } from '@components/Button/CommonButton.tsx';
 const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(true);
   const [projectUrl, setProjectUrl] = useState('');
+  const [userToken, setUserToken] = useState('');
   const [isUrlValid, setIsUrlValid] = useState(true);
+  const [isTokenValid, setIsTokenValid] = useState(true);
 
   const validateUrl = (url: string) => {
-    return url.startsWith('https://');
+    return url.startsWith('lab.ssafy');
+  };
+
+  const validateUserToken = (token: string) => {
+    const englishOnlyRegex = /^[A-Za-z]+$/;
+    return englishOnlyRegex.test(token);
   };
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,25 +25,37 @@ const SignupForm = () => {
     setIsUrlValid(validateUrl(value));
   };
 
+  const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setUserToken(value);
+    setIsTokenValid(validateUserToken(value));
+  };
+
   return (
     <div className="bg-white/70 rounded-3xl p-10 relative z-10 font-pretendard">
       <div className="text-3xl font-bold mb-10 mt-20">회원 가입</div>
       <form>
         <div className="space-y-8">
           <div className="flex flex-col space-y-4">
-            <CommonInput
-              placeholder="Enter your user project URL"
-              labelText="가져올 프로젝트의 URL을 입력해주세요."
-              value={projectUrl}
-              onChange={handleUrlChange}
-              isWarning={!isUrlValid}
-              warningMessage="유효하지 않은 URL 형식입니다. (ex: https://...)"
-            />
-            <div>
+            <div className="h-28">
+              <CommonInput
+                placeholder="Enter your user project URL"
+                labelText="가져올 프로젝트의 URL을 입력해주세요."
+                value={projectUrl}
+                onChange={handleUrlChange}
+                isWarning={!isUrlValid}
+                warningMessage="유효하지 않은 URL 형식입니다. (ex: lab.ssafy. ...)"
+              />
+            </div>
+            <div className="h-28">
               <CommonInput
                 type={showPassword ? 'password' : 'text'}
                 placeholder="Enter your user access token"
                 labelText="사용자 인증 토큰을 입력해주세요."
+                value={userToken}
+                onChange={handleTokenChange}
+                isWarning={!isTokenValid}
+                warningMessage="유효하지 않은 토큰입니다. 다시 한 번 입력해주세요."
                 icon={
                   <button
                     type="button"

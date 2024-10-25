@@ -40,7 +40,9 @@ function CommonInput({
           {...props}
         />
         {icon && (
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 text-primary-500">{icon}</div>
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 text-primary-500 flex items-center">
+            {icon}
+          </div>
         )}
       </div>
       {isWarning && warningMessage && (

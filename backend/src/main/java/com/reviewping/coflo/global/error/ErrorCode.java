@@ -54,7 +54,12 @@ public enum ErrorCode {
     ENCRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C001", "암호화 도중 오류가 발생했습니다."),
     DECRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C002", "복호화 도중 오류가 발생했습니다."),
 
-    LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "L001", "로그인 도중 오류가 발생했습니다.");
+    LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "L001", "로그인 도중 오류가 발생했습니다."),
+
+    /**
+     * project(P000)
+     */
+    PROJECT_NOT_EXIST(HttpStatus.BAD_REQUEST, "P001", "존재하지 않는 프로젝트입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

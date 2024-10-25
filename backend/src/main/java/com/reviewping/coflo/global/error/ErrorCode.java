@@ -71,7 +71,12 @@ public enum ErrorCode {
     /**
      * project(P000)
      */
-    PROJECT_NOT_EXIST(HttpStatus.BAD_REQUEST, "P001", "존재하지 않는 프로젝트입니다.");
+    PROJECT_NOT_EXIST(HttpStatus.BAD_REQUEST, "P001", "존재하지 않는 프로젝트입니다."),
+
+    /**
+     * custom_prompt(R000)
+     */
+    CUSTOM_PROMPT_NOT_EXIST(HttpStatus.BAD_REQUEST, "U001", "존재하지 않는 커스텀 프롬프트입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

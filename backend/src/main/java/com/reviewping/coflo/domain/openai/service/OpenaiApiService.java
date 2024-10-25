@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reviewping.coflo.domain.openai.dto.response.ChatCompletionContent;
 import com.reviewping.coflo.domain.openai.dto.response.ChatCompletionRequest;
 import com.reviewping.coflo.domain.openai.dto.response.ChatMessage;
+import com.reviewping.coflo.global.error.ErrorCode;
+import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +48,7 @@ public class OpenaiApiService {
         try {
             body = objectMapper.writeValueAsString(chatCompletionRequest);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new BusinessException(ErrorCode.CHAT_REQUEST_SERIALIZATION_ERROR);
         }
         ResponseEntity<ChatCompletionContent> response =
                 RestTemplateUtils.sendPostRequest(

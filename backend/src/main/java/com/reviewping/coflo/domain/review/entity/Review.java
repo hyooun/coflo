@@ -1,6 +1,7 @@
 package com.reviewping.coflo.domain.review.entity;
 
 import com.reviewping.coflo.domain.project.entity.MrInfo;
+import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Review {
+public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,8 +24,7 @@ public class Review {
     private String content;
 
     @Builder
-    public Review(Long id, MrInfo mrInfo, String content) {
-        this.id = id;
+    public Review(MrInfo mrInfo, String content) {
         this.mrInfo = mrInfo;
         this.content = content;
     }

@@ -20,9 +20,9 @@ export default function LoginButton({
       <img
         src={`/images/logo/${imageName}`}
         alt={`${buttonText} 로고`}
-        className="absolute left-8 w-4 h-4"
+        className="absolute left-8 w-4 h-4 sm:w-4 sm:h-4 sm:absolute sm:left-8"
       />
-      <p className="ml-6">{buttonText}</p>
+      <p className="ml-6 block sm:hidden">{buttonText}</p>
     </button>
   );
 }

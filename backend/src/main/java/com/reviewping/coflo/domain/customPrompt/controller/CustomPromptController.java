@@ -27,8 +27,7 @@ public class CustomPromptController {
     public ApiResponse<Void> createCustomPrompt(
             @PathVariable("projectId") Long projectId,
             @ModelAttribute CustomPromptRequest customPromptRequest) {
-        customPromptService.saveCustomPrompt(
-                customPromptRequest.title(), customPromptRequest.contents(), projectId);
+        customPromptService.saveCustomPrompt(customPromptRequest.contents(), projectId);
         return ApiSuccessResponse.success();
     }
 
@@ -42,8 +41,7 @@ public class CustomPromptController {
     public ApiResponse<Void> updateCustomPrompt(
             @PathVariable("customPromptId") Long customPromptId,
             @ModelAttribute CustomPromptRequest customPromptRequest) {
-        customPromptService.updateCustomPrompt(
-                customPromptRequest.title(), customPromptRequest.contents(), customPromptId);
+        customPromptService.updateCustomPrompt(customPromptRequest.contents(), customPromptId);
         return ApiSuccessResponse.success();
     }
 }

@@ -20,22 +20,22 @@ public class CustomPromptService {
     private final ProjectRepository projectRepository;
 
     @Transactional
-    public void saveCustomPrompt(String title, String content, Long projectId) {
+    public void saveCustomPrompt(String content, Long projectId) {
         Project project =
                 projectRepository
                         .findById(projectId)
                         .orElseThrow(() -> new BusinessException(PROJECT_NOT_EXIST));
 
         CustomPrompt customPrompt =
-                CustomPrompt.builder().title(title).content(content).project(project).build();
+                CustomPrompt.builder().content(content).project(project).build();
 
         customPromptRepository.save(customPrompt);
     }
 
     @Transactional
-    public void updateCustomPrompt(String title, String content, Long customPromptId) {
+    public void updateCustomPrompt(String content, Long customPromptId) {
         CustomPrompt customPrompt = findById(customPromptId);
-        customPrompt.change(title, content);
+        customPrompt.change(content);
     }
 
     public void deleteCustomPrompt(Long customPromptId) {

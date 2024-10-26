@@ -2,7 +2,6 @@ package com.reviewping.coflo.domain.customPrompt.entity;
 
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,20 +26,15 @@ public class CustomPrompt extends BaseTimeEntity {
     @JoinColumn(name = "project_id")
     Project project;
 
-    @Column(nullable = false)
-    String title;
-
     String content;
 
     @Builder
-    public CustomPrompt(Project project, String title, String content) {
+    public CustomPrompt(Project project, String content) {
         this.project = project;
-        this.title = title;
         this.content = content;
     }
 
-    public void change(String title, String content) {
-        this.title = title;
+    public void change(String content) {
         this.content = content;
     }
 }

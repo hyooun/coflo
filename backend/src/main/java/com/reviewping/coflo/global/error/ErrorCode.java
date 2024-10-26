@@ -12,36 +12,54 @@ public enum ErrorCode {
      * USER(A000)
      */
     USER_NOT_EXIST(HttpStatus.BAD_REQUEST, "A001", "존재하지 않는 유저입니다"),
+    LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "A002", "로그인 도중 오류가 발생했습니다."),
 
     /**
-     * MR_INFO(M000)
+     * MR_INFO(B000)
      */
-    MR_INFO_NOT_EXIST(HttpStatus.BAD_REQUEST, "M001", "MR_INFO를 찾을 수 없습니다."),
-
-    /**
-     * Gitlab Account(B00)
-     */
-    USER_GITLAB_ACCOUNT_NOT_EXIST(HttpStatus.BAD_REQUEST, "B001", "사용자의 깃랩 계정이 존재하지 않습니다."),
+    MR_INFO_NOT_EXIST(HttpStatus.NOT_FOUND, "B001", "MR_INFO를 찾을 수 없습니다."),
 
     /**
      * Gitlab(C000)
      */
+    USER_GITLAB_ACCOUNT_NOT_EXIST(HttpStatus.NOT_FOUND, "C001", "사용자의 깃랩 계정이 존재하지 않습니다."),
     GITLAB_REQUEST_SERIALIZATION_ERROR(
-            HttpStatus.INTERNAL_SERVER_ERROR, "C001", "GITLAB 요청 생성에 오류가 발생했습니다."),
+            HttpStatus.INTERNAL_SERVER_ERROR, "C002", "GITLAB 요청 생성에 오류가 발생했습니다."),
 
     /**
-     * OpenAI(D000)
+     * Review(D000)
      */
     CHAT_REQUEST_SERIALIZATION_ERROR(
             HttpStatus.INTERNAL_SERVER_ERROR, "D001", "OPENAI 요청 생성에 오류가 발생했습니다."),
 
     /**
-     * JWT Token(H000)
+     * JWT Token(E000)
      */
-    TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "H001", "유효하지 않은 토큰입니다."),
-    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "H002", "만료된 토큰입니다."),
-    TOKEN_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "H003", "지원되지 않는 토큰입니다."),
-    TOKEN_WRONG(HttpStatus.UNAUTHORIZED, "H004", "잘못된 토큰 서명입니다."),
+    TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "E001", "유효하지 않은 토큰입니다."),
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "E002", "만료된 토큰입니다."),
+    TOKEN_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "E003", "지원되지 않는 토큰입니다."),
+    TOKEN_WRONG(HttpStatus.UNAUTHORIZED, "E004", "잘못된 토큰 서명입니다."),
+
+    /**
+     * crypto(F000)
+     */
+    ENCRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "F001", "암호화 도중 오류가 발생했습니다."),
+    DECRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "F002", "복호화 도중 오류가 발생했습니다."),
+
+    /**
+     * custom_prompt(G000)
+     */
+    CUSTOM_PROMPT_NOT_EXIST(HttpStatus.NOT_FOUND, "G001", "존재하지 않는 커스텀 프롬프트입니다."),
+
+    /**
+     * project(H000)
+     */
+    PROJECT_NOT_EXIST(HttpStatus.NOT_FOUND, "H001", "존재하지 않는 프로젝트입니다."),
+
+    /**
+     * Link(I00)
+     */
+    LINK_BOT_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "I001", "연동에 필요한 Bot 토큰이 존재하지 않습니다."),
 
     /**
      * 외부 API(Y000)
@@ -59,30 +77,7 @@ public enum ErrorCode {
     /**
      * Etc(Z000)
      */
-    INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "Z009", "잘못된 파라미터가 포함되었습니다."),
-
-    /**
-     * crypto(C000)
-     */
-    ENCRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C001", "암호화 도중 오류가 발생했습니다."),
-    DECRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C002", "복호화 도중 오류가 발생했습니다."),
-
-    LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "L001", "로그인 도중 오류가 발생했습니다."),
-
-    /**
-     * Link(D00)
-     */
-    LINK_BOT_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "D001", "연동에 필요한 Bot 토큰이 존재하지 않습니다."),
-
-    /*
-     * project(P000)
-     */
-    PROJECT_NOT_EXIST(HttpStatus.BAD_REQUEST, "P001", "존재하지 않는 프로젝트입니다."),
-
-    /**
-     * custom_prompt(R000)
-     */
-    CUSTOM_PROMPT_NOT_EXIST(HttpStatus.BAD_REQUEST, "U001", "존재하지 않는 커스텀 프롬프트입니다.");
+    INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "Z009", "잘못된 파라미터가 포함되었습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

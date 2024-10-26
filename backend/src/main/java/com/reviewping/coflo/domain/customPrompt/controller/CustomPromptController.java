@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,14 +21,6 @@ public class CustomPromptController {
 
     private final CustomPromptService customPromptService;
     private final GetCustomPromptService getCustomPromptService;
-
-    @PostMapping("/{projectId}")
-    public ApiResponse<Void> createCustomPrompt(
-            @PathVariable("projectId") Long projectId,
-            @ModelAttribute CustomPromptRequest customPromptRequest) {
-        customPromptService.saveCustomPrompt(customPromptRequest.contents(), projectId);
-        return ApiSuccessResponse.success();
-    }
 
     @GetMapping("/{projectId}")
     public ApiResponse<CustomPromptResponse> getCustomPrompt(

@@ -31,4 +31,23 @@ public class CustomPromptService {
 
         customPromptRepository.save(customPrompt);
     }
+
+    @Transactional
+    public void updateCustomPrompt(String title, String content, Long customPromptId) {
+        CustomPrompt customPrompt = findById(customPromptId);
+        customPrompt.change(title, content);
+    }
+
+    public void deleteCustomPrompt(Long customPromptId) {
+        CustomPrompt customPrompt = findById(customPromptId);
+        customPromptRepository.delete(customPrompt);
+    }
+
+    private CustomPrompt findById(Long customPromptId) {
+        CustomPrompt customPrompt =
+                customPromptRepository
+                        .findById(customPromptId)
+                        .orElseThrow(() -> new BusinessException(CUSTOM_PROMPT_NOT_EXIST));
+        return customPrompt;
+    }
 }

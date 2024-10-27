@@ -27,9 +27,10 @@ public class GitLabApiService {
 
     private static final String PRIVATE_TOKEN = "PRIVATE-TOKEN";
 
-    private static final String PROJECTS_ENDPOINT =
+    private static final String PROJECT_SEARCH_ENDPOINT =
             "/api/v4/projects?order_by=updated_at&sort=desc";
     private static final String USERINFO_ENDPOINT = "/api/v4/user";
+    private static final String PROJECT_ENDPOINT = "/api/v4/projects/";
 
     private static final String URL_PROTOCOL_HTTPS = "https://";
     private static final String MIME_TYPE_JSON = "application/json";
@@ -47,6 +48,19 @@ public class GitLabApiService {
 
         PageDetail pageDetail = createPageDetail(response.getHeaders());
         return new GitlabProjectPageContent(response.getBody(), pageDetail);
+    }
+
+    public GitlabMrPageContent searchGitlabMergeRequests(
+        String gitlabUrl, String token, Long gitlabProjectId, String mergeRequestState, GitlabSearchRequest gitlabSearchRequest
+    ) {
+        HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
+        String url = makeSearchMergeRequestUrl(gitlabUrl, gitlabProjectId, mergeRequestState, gitlabSearchRequest);
+
+        ResponseEntity<List<GitlabMrDetailContent>> response =
+            RestTemplateUtils.sendGetRequest(url, headers, new ParameterizedTypeReference<>() {});
+
+        PageDetail pageDetail = createPageDetail(response.getHeaders());
+        return new GitlabMrPageContent(response.getBody(), pageDetail);
     }
 
     public GitlabUserInfoContent getUserInfo(String gitlabUrl, String token) {
@@ -107,7 +121,7 @@ public class GitLabApiService {
             String gitlabUrl, GitlabSearchRequest gitlabSearchRequest) {
         return URL_PROTOCOL_HTTPS
                 + gitlabUrl
-                + PROJECTS_ENDPOINT
+                + PROJECT_SEARCH_ENDPOINT
                 + "&search="
                 + gitlabSearchRequest.keyword()
                 + "&page="
@@ -119,7 +133,7 @@ public class GitLabApiService {
     private String makeMRDiffsUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {
         return URL_PROTOCOL_HTTPS
                 + gitlabUrl
-                + "/projects/"
+                + PROJECT_ENDPOINT
                 + gitlabProjectId
                 + "/merge_requests/"
                 + iid
@@ -129,10 +143,26 @@ public class GitLabApiService {
     private String makeNoteToMRUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {
         return URL_PROTOCOL_HTTPS
                 + gitlabUrl
-                + "/api/v4/projects/"
+                + PROJECT_ENDPOINT
                 + gitlabProjectId
                 + "/merge_requests/"
                 + iid
                 + "/notes";
+    }
+
+    private String makeSearchMergeRequestUrl(String gitlabUrl, Long gitlabProjectId, String mergeRequestState, GitlabSearchRequest gitlabSearchRequest) {
+        return URL_PROTOCOL_HTTPS
+            + gitlabUrl
+            + PROJECT_ENDPOINT
+            + gitlabProjectId
+            + "/merge_requests"
+            + "&state="
+            + mergeRequestState
+            + "&search="
+            + gitlabSearchRequest.keyword()
+            + "&page="
+            + gitlabSearchRequest.page()
+            + "&per_page="
+            + gitlabSearchRequest.size();
     }
 }

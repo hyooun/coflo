@@ -51,13 +51,19 @@ public class GitLabApiService {
     }
 
     public GitlabMrPageContent searchGitlabMergeRequests(
-        String gitlabUrl, String token, Long gitlabProjectId, String mergeRequestState, GitlabSearchRequest gitlabSearchRequest
-    ) {
+            String gitlabUrl,
+            String token,
+            Long gitlabProjectId,
+            String mergeRequestState,
+            GitlabSearchRequest gitlabSearchRequest) {
         HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
-        String url = makeSearchMergeRequestUrl(gitlabUrl, gitlabProjectId, mergeRequestState, gitlabSearchRequest);
-
+        String url =
+                makeSearchMergeRequestUrl(
+                        gitlabUrl, gitlabProjectId, mergeRequestState, gitlabSearchRequest);
+        log.info("url: {}", url);
         ResponseEntity<List<GitlabMrDetailContent>> response =
-            RestTemplateUtils.sendGetRequest(url, headers, new ParameterizedTypeReference<>() {});
+                RestTemplateUtils.sendGetRequest(
+                        url, headers, new ParameterizedTypeReference<>() {});
 
         PageDetail pageDetail = createPageDetail(response.getHeaders());
         return new GitlabMrPageContent(response.getBody(), pageDetail);
@@ -150,19 +156,23 @@ public class GitLabApiService {
                 + "/notes";
     }
 
-    private String makeSearchMergeRequestUrl(String gitlabUrl, Long gitlabProjectId, String mergeRequestState, GitlabSearchRequest gitlabSearchRequest) {
+    private String makeSearchMergeRequestUrl(
+            String gitlabUrl,
+            Long gitlabProjectId,
+            String mergeRequestState,
+            GitlabSearchRequest gitlabSearchRequest) {
         return URL_PROTOCOL_HTTPS
-            + gitlabUrl
-            + PROJECT_ENDPOINT
-            + gitlabProjectId
-            + "/merge_requests"
-            + "&state="
-            + mergeRequestState
-            + "&search="
-            + gitlabSearchRequest.keyword()
-            + "&page="
-            + gitlabSearchRequest.page()
-            + "&per_page="
-            + gitlabSearchRequest.size();
+                + gitlabUrl
+                + PROJECT_ENDPOINT
+                + gitlabProjectId
+                + "/merge_requests"
+                + "?state="
+                + mergeRequestState
+                + "&search="
+                + gitlabSearchRequest.keyword()
+                + "&page="
+                + gitlabSearchRequest.page()
+                + "&per_page="
+                + gitlabSearchRequest.size();
     }
 }

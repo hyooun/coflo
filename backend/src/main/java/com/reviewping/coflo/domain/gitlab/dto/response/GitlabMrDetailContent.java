@@ -3,6 +3,10 @@ package com.reviewping.coflo.domain.gitlab.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record GitlabMrDetailContent(
         Long id,
         Long iid,

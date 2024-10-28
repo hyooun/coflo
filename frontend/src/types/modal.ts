@@ -7,6 +7,9 @@ interface ModalProps {
 }
 
 export interface GuideModalProps {
+  repo?: any;
+  inputValue?: string;
+  setInputValue?: (value: string) => void;
   isOpen: boolean;
   width?: string;
   title: string;

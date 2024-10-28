@@ -1,12 +1,13 @@
 package com.reviewping.coflo.domain.review.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 
 import com.reviewping.coflo.domain.project.entity.MrInfo;
+import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.MrInfoRepository;
 import com.reviewping.coflo.domain.review.entity.Review;
 import com.reviewping.coflo.domain.review.repository.ReviewRepository;
@@ -34,7 +35,7 @@ public class ReviewServiceTest {
         Long iid = 100L;
         String chatResult = "This is a review";
 
-        MrInfo mrInfo = MrInfo.builder().build();
+        MrInfo mrInfo = MrInfo.builder().project(Project.builder().build()).build();
         given(mrInfoRepository.findByProjectIdAndGitlabMrIid(projectId, iid))
                 .willReturn(Optional.of(mrInfo));
 

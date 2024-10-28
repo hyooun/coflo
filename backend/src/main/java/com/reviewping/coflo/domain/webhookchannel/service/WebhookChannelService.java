@@ -6,8 +6,8 @@ import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.webhookchannel.entity.ChannelCode;
 import com.reviewping.coflo.domain.webhookchannel.entity.WebhookChannel;
+import com.reviewping.coflo.domain.webhookchannel.repository.ChannelCodeRepository;
 import com.reviewping.coflo.domain.webhookchannel.repository.WebhookChannelRepository;
-import com.reviewping.coflo.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,18 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class WebhookChannelService {
 
     private final WebhookChannelRepository webhookChannelRepository;
-    private final ChannelCodeService channelCodeService;
+    private final ChannelCodeRepository channelCodeRepository;
     private final ProjectRepository projectRepository;
 
-    // TODO: ProjectRepository => ProjectService
     @Transactional
     public void addWebhookChannel(Long projectId, Long channelCodeId, String webhookUrl) {
-        Project project =
-                projectRepository
-                        .findById(projectId)
-                        .orElseThrow(() -> new BusinessException(PROJECT_NOT_EXIST));
-
-        ChannelCode channelCode = channelCodeService.findById(channelCodeId);
+        Project project = projectRepository.findProjectById(projectId);
+        ChannelCode channelCode = channelCodeRepository.findChannelCodeById(channelCodeId);
 
         WebhookChannel webhookChannel =
                 WebhookChannel.builder()

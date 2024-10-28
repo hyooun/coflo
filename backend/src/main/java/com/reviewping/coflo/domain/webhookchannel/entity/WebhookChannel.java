@@ -1,6 +1,7 @@
 package com.reviewping.coflo.domain.webhookchannel.entity;
 
 import com.reviewping.coflo.domain.project.entity.Project;
+import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WebhookChannel {
+public class WebhookChannel extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

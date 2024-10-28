@@ -34,11 +34,11 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="bg-white/70 rounded-3xl p-10 relative z-10 font-pretendard">
-      <div className="text-3xl font-bold mb-10 mt-20">회원 가입</div>
+    <div className="bg-white/70 rounded-3xl p-10 py-20 relative z-10 font-pretendard">
+      <div className="text-5xl font-bold mb-10 mt-20">회원 가입</div>
       <form>
-        <div className="space-y-8">
-          <div className="flex flex-col space-y-4">
+        <div className="space-y-14">
+          <div className="flex flex-col space-y-10">
             <div className="h-28">
               <CommonInput
                 placeholder="Enter your user project URL"
@@ -73,7 +73,7 @@ const SignupForm = () => {
                 onClick={() => setIsModalOpen(true)}
               >
                 <Info size={16} />
-                <span className="ml-1">사용자 인증 토큰 안내</span>
+                <span className="ml-1 text-xl">사용자 인증 토큰 안내</span>
               </div>
             </div>
           </div>
@@ -100,8 +100,8 @@ const SignupForm = () => {
         }}
       />
 
-      <div className="flex justify-center mt-10">
-        <CommonButton className="w-32 h-10">회원가입</CommonButton>
+      <div className="flex justify-center mt-20">
+        <CommonButton className="w-36 h-14 text-xl">회원가입</CommonButton>
       </div>
     </div>
   );

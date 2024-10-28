@@ -97,10 +97,7 @@ public class LinkService {
             Long gitlabProjectId,
             ProjectLinkRequest projectLinkRequest) {
 
-        if (projectLinkRequest == null || projectLinkRequest.botToken() == null) {
-            throw new BusinessException(LINK_BOT_TOKEN_NOT_EXIST);
-        }
-        gitLabApiService.validateToken(gitlabAccount.getDomain(), projectLinkRequest.botToken());
+        validateBotToken(gitlabAccount.getDomain(), projectLinkRequest);
 
         String gitlabProjectName =
                 gitLabApiService
@@ -117,5 +114,12 @@ public class LinkService {
                         .name(gitlabProjectName)
                         .build();
         return projectRepository.save(project);
+    }
+
+    private void validateBotToken(String domain, ProjectLinkRequest projectLinkRequest) {
+        if (projectLinkRequest == null || projectLinkRequest.botToken() == null) {
+            throw new BusinessException(LINK_BOT_TOKEN_NOT_EXIST);
+        }
+        gitLabApiService.validateToken(domain, projectLinkRequest.botToken());
     }
 }

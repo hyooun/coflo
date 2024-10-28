@@ -32,16 +32,31 @@ public record GitlabMrResponse(
                 .title(gitlabMrDetailContent.title())
                 .description(gitlabMrDetailContent.description())
                 .state(gitlabMrDetailContent.state())
-                .mergedAt(gitlabMrDetailContent.mergedAt().toLocalDateTime())
-                .createdAt(gitlabMrDetailContent.createdAt().toLocalDateTime())
-                .updatedAt(gitlabMrDetailContent.updatedAt().toLocalDateTime())
-                .closedAt(gitlabMrDetailContent.closedAt().toLocalDateTime())
+                .mergedAt(
+                        gitlabMrDetailContent.mergedAt() != null
+                                ? gitlabMrDetailContent.mergedAt().toLocalDateTime()
+                                : null)
+                .createdAt(
+                        gitlabMrDetailContent.createdAt() != null
+                                ? gitlabMrDetailContent.createdAt().toLocalDateTime()
+                                : null)
+                .updatedAt(
+                        gitlabMrDetailContent.updatedAt() != null
+                                ? gitlabMrDetailContent.updatedAt().toLocalDateTime()
+                                : null)
+                .closedAt(
+                        gitlabMrDetailContent.closedAt() != null
+                                ? gitlabMrDetailContent.closedAt().toLocalDateTime()
+                                : null)
                 .sourceBranch(gitlabMrDetailContent.sourceBranch())
                 .targetBranch(gitlabMrDetailContent.targetBranch())
                 .labels(gitlabMrDetailContent.labels())
                 .hasConflicts(gitlabMrDetailContent.hasConflicts())
                 .assignee(gitlabMrDetailContent.assignee())
-                .reviewer(gitlabMrDetailContent.reviewer())
+                .reviewer(
+                        gitlabMrDetailContent.reviewers().isEmpty()
+                                ? null
+                                : gitlabMrDetailContent.reviewers().getFirst())
                 .isAiReviewCreated(isAiReviewCreated)
                 .build();
     }

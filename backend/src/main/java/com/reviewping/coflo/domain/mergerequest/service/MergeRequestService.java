@@ -4,10 +4,13 @@ import com.reviewping.coflo.domain.gitlab.dto.response.GitlabMrPageContent;
 import com.reviewping.coflo.domain.gitlab.service.GitLabApiService;
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrPageResponse;
+import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
+import com.reviewping.coflo.domain.project.repository.MrInfoRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ public class MergeRequestService {
 
     private final GitLabApiService gitLabApiService;
     private final GitlabAccountRepository gitlabAccountRepository;
+    private final MrInfoRepository mrInfoRepository;
 
     public GitlabMrPageResponse getGitlabMergeRequests(
             Long userId, Long projectId, String state, GitlabSearchRequest gitlabSearchRequest) {
@@ -40,7 +44,16 @@ public class MergeRequestService {
                         state,
                         gitlabSearchRequest);
 
-        return GitlabMrPageResponse.of(
-                gitlabMrPage.gitlabMrDetailContents(), gitlabMrPage.pageDetail());
+        List<GitlabMrResponse> gitlabMrResponseList =
+                gitlabMrPage.gitlabMrDetailContents().stream()
+                        .map(
+                                content ->
+                                        GitlabMrResponse.of(
+                                                content,
+                                                mrInfoRepository.existsByGitlabMrIid(
+                                                        content.iid())))
+                        .toList();
+
+        return GitlabMrPageResponse.of(gitlabMrResponseList, gitlabMrPage.pageDetail());
     }
 }

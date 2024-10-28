@@ -21,4 +21,4 @@ public record GitlabMrDetailContent(
         List<String> labels,
         Boolean hasConflicts,
         GitlabUserInfoContent assignee,
-        GitlabUserInfoContent reviewer) {}
+        List<GitlabUserInfoContent> reviewers) {}

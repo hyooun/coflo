@@ -7,9 +7,10 @@ import ToggleSwitch from '@components/Repository/ToggleSwitch';
 import Pagination from '@components/Pagination/Pagination';
 import { Link } from '@apis/Link';
 import { GitlabProject } from 'types/gitLab';
-import { Modal } from '@components/Modal/Modal';
 import { CommonButton } from '@components/Button/CommonButton';
 import { useNavigate } from 'react-router-dom';
+import GuideModal from '@components/Modal/GuideModal.tsx';
+import tokenintro from '@assets/tokenintro.png';
 
 export default function RepositoryPage() {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
@@ -111,16 +112,40 @@ export default function RepositoryPage() {
       </div>
 
       {isModalOpen && (
-        <Modal
-          repo={selectedRepo}
-          inputValue={inputValue}
-          setInputValue={setInputValue}
-          onConfirm={handleModalConfirm}
+        <GuideModal
+          isOpen={isModalOpen}
+          title="프로젝트 토큰을 얻어오는 방법"
+          width="w-[600px]"
+          content={
+            <div className="space-y-2">
+              <p>1. 버튼을 클릭하여 프로젝트 검색을 시작하세요.</p>
+              <p>2. 설정(Settings)으로 이동하세요.</p>
+              <p>3. Access Tokens 메뉴를 선택하세요.</p>
+              <p>4. Project Access Tokens를 생성하세요.</p>
+              <p>5. API 체크를 확인하세요.</p>
+              <p>6. Create Access Tokens를 생성하세요.</p>
+            </div>
+          }
+          image={{
+            src: tokenintro,
+            alt: 'Project Token Instructions',
+          }}
+          hasInput
+          inputProps={{
+            value: inputValue,
+            onChange: setInputValue,
+            placeholder: '프로젝트 토큰을 입력하세요',
+          }}
+          link={{
+            url: 'https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html',
+            text: '프로젝트 토큰 생성 가이드 보기',
+          }}
           onClose={() => {
             setIsModalOpen(false);
             setSelectedRepo(null);
             setInputValue('');
           }}
+          onConfirm={handleModalConfirm}
         />
       )}
       <Pagination />

@@ -26,7 +26,7 @@ public class MergeRequestService {
             Long userId, Long projectId, String state, GitlabSearchRequest gitlabSearchRequest) {
         GitlabAccount gitlabAccount =
                 gitlabAccountRepository
-                        .findFirstByUserIdOrderByIdAsc(userId)
+                        .findGitlabAccountByUserIdAndProjectId(userId, projectId)
                         .orElseThrow(
                                 () ->
                                         new BusinessException(

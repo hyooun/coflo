@@ -7,9 +7,11 @@ import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/channels")
 @RequiredArgsConstructor
 public class WebhookChannelController {
 

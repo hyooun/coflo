@@ -39,5 +39,7 @@ public class MrInfo extends BaseTimeEntity {
         this.project = project;
         this.gitlabMrIid = gitlabMrIid;
         this.gitlabCreatedDate = gitlabCreatedDate;
+
+        this.project.getMrInfos().add(this);
     }
 }

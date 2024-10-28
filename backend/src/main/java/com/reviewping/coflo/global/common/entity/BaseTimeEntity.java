@@ -3,6 +3,7 @@ package com.reviewping.coflo.global.common.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,4 +24,8 @@ public abstract class BaseTimeEntity {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime modifiedDate;
+
+    public void updateModifiedDateTime(@NotNull LocalDateTime modifiedDateTime) {
+        this.modifiedDate = modifiedDateTime;
+    }
 }

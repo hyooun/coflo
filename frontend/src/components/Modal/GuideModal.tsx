@@ -56,7 +56,7 @@ export default function GuideModal({
               onChange={(e) => inputProps.onChange(e.target.value)}
               placeholder={inputProps.placeholder}
               className="w-full p-3 border-2 border-primary-500 rounded-lg
-                       focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                       focus:outline-none"
             />
           </div>
         )}

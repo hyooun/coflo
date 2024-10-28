@@ -27,24 +27,17 @@ public class GitLabApiService {
 
     private static final String PRIVATE_TOKEN = "PRIVATE-TOKEN";
 
-    private static final String PROJECT_SEARCH_ENDPOINT =
-            "/api/v4/projects?order_by=updated_at&sort=desc";
-    private static final String USERINFO_ENDPOINT = "/api/v4/user";
-    private static final String SINGLE_PROJECT_ENDPOINT = "/api/v4/projects/";
-
-    private static final String URL_PROTOCOL_HTTPS = "https://";
-    private static final String MIME_TYPE_JSON = "application/json";
-
     private final ObjectMapper objectMapper;
 
     public void validateToken(String domain, String token) {
-        searchGitlabProjects(domain, token, new GitlabSearchRequest("", 1, 20));
+        searchGitlabProjects(domain, token, new GitlabSearchRequest("", 1, 1));
     }
 
     public GitlabProjectPageContent searchGitlabProjects(
             String gitlabUrl, String token, GitlabSearchRequest gitlabSearchRequest) {
-        HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
-        String url = makeSearchGitlabProjectUrl(gitlabUrl, gitlabSearchRequest);
+        HttpHeaders headers = makeGitlabHeaders(token);
+        String url =
+                GitLabApiUrlBuilder.createSearchGitlabProjectUrl(gitlabUrl, gitlabSearchRequest);
 
         ResponseEntity<List<GitlabProjectDetailContent>> response =
                 RestTemplateUtils.sendGetRequest(
@@ -60,11 +53,10 @@ public class GitLabApiService {
             Long gitlabProjectId,
             String mergeRequestState,
             GitlabSearchRequest gitlabSearchRequest) {
-        HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
+        HttpHeaders headers = makeGitlabHeaders(token);
         String url =
-                makeSearchMergeRequestUrl(
+                GitLabApiUrlBuilder.createSearchMergeRequestUrl(
                         gitlabUrl, gitlabProjectId, mergeRequestState, gitlabSearchRequest);
-        log.info("url: {}", url);
         ResponseEntity<List<GitlabMrDetailContent>> response =
                 RestTemplateUtils.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
@@ -75,8 +67,8 @@ public class GitLabApiService {
 
     public GitlabProjectDetailContent getSingleProject(
             String gitlabUrl, String token, Long gitlabProjectId) {
-        HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
-        String url = URL_PROTOCOL_HTTPS + gitlabUrl + SINGLE_PROJECT_ENDPOINT + gitlabProjectId;
+        HttpHeaders headers = makeGitlabHeaders(token);
+        String url = GitLabApiUrlBuilder.createSingleProjectUrl(gitlabUrl, gitlabProjectId);
         ResponseEntity<GitlabProjectDetailContent> response =
                 RestTemplateUtils.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
@@ -84,8 +76,8 @@ public class GitLabApiService {
     }
 
     public GitlabUserInfoContent getUserInfo(String gitlabUrl, String token) {
-        HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
-        String url = URL_PROTOCOL_HTTPS + gitlabUrl + USERINFO_ENDPOINT;
+        HttpHeaders headers = makeGitlabHeaders(token);
+        String url = GitLabApiUrlBuilder.createUserInfoUrl(gitlabUrl);
 
         ResponseEntity<GitlabUserInfoContent> response =
                 RestTemplateUtils.sendGetRequest(
@@ -96,7 +88,7 @@ public class GitLabApiService {
     public List<GitlabMrDiffsContent> getMrDiffs(
             String gitlabUrl, String token, Long gitlabProjectId, Long iid) {
         HttpHeaders headers = makeGitlabHeaders(token);
-        String url = makeMRDiffsUrl(gitlabUrl, gitlabProjectId, iid);
+        String url = GitLabApiUrlBuilder.createMRDiffsUrl(gitlabUrl, gitlabProjectId, iid);
 
         ResponseEntity<List<GitlabMrDiffsContent>> response =
                 RestTemplateUtils.sendGetRequest(
@@ -108,7 +100,7 @@ public class GitLabApiService {
             String gitlabUrl, String token, Long gitlabProjectId, Long iid, String chatMessage) {
         HttpHeaders headers = makeGitlabHeaders(token);
 
-        String url = makeNoteToMRUrl(gitlabUrl, gitlabProjectId, iid);
+        String url = GitLabApiUrlBuilder.createNoteToMRUrl(gitlabUrl, gitlabProjectId, iid);
         GitlabNoteRequest gitlabNoteRequest = new GitlabNoteRequest(chatMessage);
         String body;
         try {
@@ -135,58 +127,5 @@ public class GitLabApiService {
         headers.set(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.set(PRIVATE_TOKEN, token);
         return headers;
-    }
-
-    private String makeSearchGitlabProjectUrl(
-            String gitlabUrl, GitlabSearchRequest gitlabSearchRequest) {
-        return URL_PROTOCOL_HTTPS
-                + gitlabUrl
-                + PROJECT_SEARCH_ENDPOINT
-                + "&search="
-                + gitlabSearchRequest.keyword()
-                + "&page="
-                + gitlabSearchRequest.page()
-                + "&per_page="
-                + gitlabSearchRequest.size();
-    }
-
-    private String makeMRDiffsUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {
-        return URL_PROTOCOL_HTTPS
-                + gitlabUrl
-                + SINGLE_PROJECT_ENDPOINT
-                + gitlabProjectId
-                + "/merge_requests/"
-                + iid
-                + "/diffs";
-    }
-
-    private String makeNoteToMRUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {
-        return URL_PROTOCOL_HTTPS
-                + gitlabUrl
-                + SINGLE_PROJECT_ENDPOINT
-                + gitlabProjectId
-                + "/merge_requests/"
-                + iid
-                + "/notes";
-    }
-
-    private String makeSearchMergeRequestUrl(
-            String gitlabUrl,
-            Long gitlabProjectId,
-            String mergeRequestState,
-            GitlabSearchRequest gitlabSearchRequest) {
-        return URL_PROTOCOL_HTTPS
-                + gitlabUrl
-                + SINGLE_PROJECT_ENDPOINT
-                + gitlabProjectId
-                + "/merge_requests"
-                + "?state="
-                + mergeRequestState
-                + "&search="
-                + gitlabSearchRequest.keyword()
-                + "&page="
-                + gitlabSearchRequest.page()
-                + "&per_page="
-                + gitlabSearchRequest.size();
     }
 }

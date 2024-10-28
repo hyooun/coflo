@@ -90,7 +90,7 @@ const SignupForm = () => {
           width="w-[400px]"
           title="사용자 인증 토큰 안내"
           content={
-            <div className="text-center font-bold text-primary-500">
+            <div className="text-center text-xl font-bold text-primary-500">
               아바타 프로필 클릭 &gt; Edit Profile &gt; User settings &gt; Access Tokens
             </div>
           }

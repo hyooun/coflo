@@ -84,6 +84,11 @@ public enum ErrorCode {
      */
     CUSTOM_PROMPT_NOT_EXIST(HttpStatus.BAD_REQUEST, "U001", "존재하지 않는 커스텀 프롬프트입니다.");
 
+    /**
+     * (R000)
+     */
+    CHANNEL_CODE_NOT_EXIST(HttpStatus.BAD_REQUEST, "L001", "존재하지 않는 채널 코드입니다.");
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

@@ -1,16 +1,5 @@
-// components/Input/CommonInput.tsx
-import { InputHTMLAttributes, ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-interface CommonInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  placeholder?: string;
-  className?: string;
-  type?: string;
-  icon?: ReactNode;
-  warningMessage?: string;
-  isWarning?: boolean;
-  labelText?: string;
-}
+import { CommonInputProps } from 'types/input.ts';
 
 function CommonInput({
   placeholder,

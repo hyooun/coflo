@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.mergerequest.dto.response;
+package com.reviewping.coflo.domain.mergerequest.controller.dto.response;
 
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabMrDetailContent;
 import com.reviewping.coflo.global.common.entity.PageDetail;

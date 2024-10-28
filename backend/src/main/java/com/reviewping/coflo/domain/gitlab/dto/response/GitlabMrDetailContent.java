@@ -21,5 +21,4 @@ public record GitlabMrDetailContent(
         List<String> labels,
         Boolean hasConflicts,
         GitlabUserInfoContent assignee,
-        GitlabUserInfoContent reviewer,
-        Boolean isAiReviewCreated) {}
+        GitlabUserInfoContent reviewer) {}

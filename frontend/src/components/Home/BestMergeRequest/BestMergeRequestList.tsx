@@ -4,14 +4,14 @@ import { MergeRequest } from 'types/mergeRequest.ts';
 import { PullRequestIcon } from '@components/TextDiv/Icons/PullRequestIcon.tsx';
 
 const BestMergeRequestList = () => {
-  const [mergeRequests, setMergeRequests] = useState<MergeRequest[]>([]);
+  const [bestMergeRequests, setBestMergeRequests] = useState<MergeRequest[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMergeRequests = async () => {
       const response = await fetch('/api/best-merge-requests');
       const data = await response.json();
-      setMergeRequests(data.slice(0, 3)); // 상위 3개만 표시
+      setBestMergeRequests(data.slice(0, 3)); // 상위 3개만 표시
     };
 
     fetchMergeRequests();
@@ -25,7 +25,7 @@ const BestMergeRequestList = () => {
     <div className="font-pretendard">
       <h2 className="text-lg font-bold mb-2">Best Merge Request</h2>
       <div className="p-2 bg-gray-400 border-2 border-gray-500 rounded-lg ">
-        {mergeRequests.map((mr) => (
+        {bestMergeRequests.map((mr) => (
           <div
             key={mr.id}
             className="flex items-center justify-between p-4 rounded-lg mb-4 cursor-pointer group hover:bg-gray-200"

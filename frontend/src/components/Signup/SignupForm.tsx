@@ -34,74 +34,80 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="bg-white/70 rounded-3xl p-10 py-20 relative z-10 font-pretendard">
-      <div className="text-5xl font-bold mb-10 mt-20">회원 가입</div>
-      <form>
-        <div className="space-y-14">
-          <div className="flex flex-col space-y-10">
-            <div className="h-28">
-              <CommonInput
-                placeholder="Enter your user project URL"
-                labelText="가져올 프로젝트의 URL을 입력해주세요."
-                value={projectUrl}
-                onChange={handleUrlChange}
-                isWarning={!isUrlValid}
-                warningMessage="유효하지 않은 URL 형식입니다. (ex: lab.ssafy. ...)"
-              />
-            </div>
-            <div className="h-28">
-              <CommonInput
-                type={showPassword ? 'password' : 'text'}
-                placeholder="Enter your user access token"
-                labelText="사용자 인증 토큰을 입력해주세요."
-                value={userToken}
-                onChange={handleTokenChange}
-                isWarning={!isTokenValid}
-                warningMessage="유효하지 않은 토큰입니다. 다시 한 번 입력해주세요."
-                icon={
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="focus:outline-none"
-                  >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
-                }
-              />
-              <div
-                className="flex items-center text-sm text-secondary mt-1 cursor-pointer"
-                onClick={() => setIsModalOpen(true)}
-              >
-                <Info size={16} />
-                <span className="ml-1 text-xl">사용자 인증 토큰 안내</span>
+    <div className="relative">
+      {/* 블러 효과 배경 */}
+      <div className="absolute inset-0 backdrop-blur-md rounded-3xl"></div>
+
+      {/* SignupForm 콘텐츠 */}
+      <div className="bg-white/50 rounded-3xl p-10 py-20 relative z-10 font-pretendard">
+        <div className="text-5xl font-bold mb-10 mt-20">회원 가입</div>
+        <form>
+          <div className="space-y-14">
+            <div className="flex flex-col space-y-10">
+              <div className="h-28">
+                <CommonInput
+                  placeholder="Enter your user project URL"
+                  labelText="가져올 프로젝트의 URL을 입력해주세요."
+                  value={projectUrl}
+                  onChange={handleUrlChange}
+                  isWarning={!isUrlValid}
+                  warningMessage="유효하지 않은 URL 형식입니다. (ex: lab.ssafy. ...)"
+                />
+              </div>
+              <div className="h-28">
+                <CommonInput
+                  type={showPassword ? 'password' : 'text'}
+                  placeholder="Enter your user access token"
+                  labelText="사용자 인증 토큰을 입력해주세요."
+                  value={userToken}
+                  onChange={handleTokenChange}
+                  isWarning={!isTokenValid}
+                  warningMessage="유효하지 않은 토큰입니다. 다시 한 번 입력해주세요."
+                  icon={
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="focus:outline-none"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  }
+                />
+                <div
+                  className="flex items-center text-sm text-secondary mt-1 cursor-pointer"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  <Info size={16} />
+                  <span className="ml-1 text-xl">사용자 인증 토큰 안내</span>
+                </div>
               </div>
             </div>
           </div>
+        </form>
+
+        <GuideModal
+          isOpen={isModalOpen}
+          width="w-[400px]"
+          title="사용자 인증 토큰 안내"
+          content={
+            <div className="text-center font-bold text-primary-500">
+              아바타 프로필 클릭 &gt; Edit Profile &gt; User settings &gt; Access Tokens
+            </div>
+          }
+          onClose={() => setIsModalOpen(false)}
+          image={{
+            src: '/images/guide/guide_personal_access_token.png',
+            alt: 'personal_access_token',
+          }}
+          link={{
+            url: 'https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html',
+            text: '인증 토큰 발급 관련 안내',
+          }}
+        />
+
+        <div className="flex justify-center mt-20">
+          <CommonButton className="w-36 h-14 text-xl">회원가입</CommonButton>
         </div>
-      </form>
-
-      <GuideModal
-        isOpen={isModalOpen}
-        width="w-[400px]"
-        title="사용자 인증 토큰 안내"
-        content={
-          <div className="text-center font-bold text-primary-500">
-            아바타 프로필 클릭 &gt; Edit Profile &gt; User settings &gt; Access Tokens
-          </div>
-        }
-        onClose={() => setIsModalOpen(false)}
-        image={{
-          src: '/images/guide/guide_personal_access_token.png',
-          alt: 'personal_access_token',
-        }}
-        link={{
-          url: 'https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html',
-          text: '인증 토큰 발급 관련 안내',
-        }}
-      />
-
-      <div className="flex justify-center mt-20">
-        <CommonButton className="w-36 h-14 text-xl">회원가입</CommonButton>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 export function MergeListIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
-      width="24"
+      width="20"
       height="24"
       viewBox="0 0 24 24"
       fill="none"

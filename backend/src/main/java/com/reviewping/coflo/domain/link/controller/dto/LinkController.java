@@ -42,9 +42,8 @@ public class LinkController {
     }
 
     @GetMapping("/status")
-    public ApiResponse<Map<String, Boolean>> linkStatus(
-            @AuthenticationPrincipal AuthUser authUser) {
-        boolean hasLinkedProject = linkService.hasLinkedProject(authUser.getUserId());
+    public ApiResponse<Map<String, Boolean>> linkStatus(@AuthUser User user) {
+        boolean hasLinkedProject = linkService.hasLinkedProject(user.getId());
         return ApiSuccessResponse.success("hasLinkedProject", hasLinkedProject);
     }
 }

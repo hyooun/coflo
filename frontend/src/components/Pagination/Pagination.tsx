@@ -74,20 +74,19 @@ const Pagination = () => {
   return (
     <div className="flex justify-center mt-4 ml-[150px]">
       <button
-        className="flex items-center px-4 py-2 bg-gray-200 rounded mx-1"
+        className="flex items-center px-4 py-2 rounded mx-1"
         onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
       >
         <div className="mr-2">
           <LeftArrow />
         </div>
-        Prev
       </button>
       <div className="flex justify-center">
         {paginationItems.map((item, index) => (
           <button
             key={index}
-            className={`w-[40px] h-[40px] flex items-center justify-center ${item === currentPage ? 'bg-primary-500 text-white' : 'bg-gray-200'} rounded mx-1`}
+            className={`w-[40px] h-[40px] flex items-center justify-center ${item === currentPage ? 'bg-primary-500 text-white' : ''} rounded mx-1`}
             onClick={() => typeof item === 'number' && handlePageChange(item)}
             disabled={item === '...'}
           >
@@ -96,11 +95,10 @@ const Pagination = () => {
         ))}
       </div>
       <button
-        className="flex items-center px-4 py-2 bg-gray-200 rounded mx-1"
+        className="flex items-center px-4 py-2 rounded mx-1"
         onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
       >
-        Next
         <div className="ml-2">
           <RightArrow />
         </div>

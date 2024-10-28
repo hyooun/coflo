@@ -41,9 +41,8 @@ public class ReviewCreateServiceTest {
         Long projectId = 1L;
 
         // GitlabMrDiffsContent mock data
-        GitlabMrDiffsContent.Change change =
-                new GitlabMrDiffsContent.Change("old/path", "new/path", "diff content");
-        GitlabMrDiffsContent mrDiffs = new GitlabMrDiffsContent(List.of(change));
+        GitlabMrDiffsContent mrDiffs =
+                new GitlabMrDiffsContent("old/path", "new/path", "diff content");
 
         // ChatCompletionContent mock data
         String chatResult = "This is a review suggestion";
@@ -55,7 +54,7 @@ public class ReviewCreateServiceTest {
                 ChatCompletionContent.builder().choices(chatCompletionChoices).build();
 
         given(gitLabApiService.getMrDiffs(gitlabUrl, token, gitlabProjectId, iid))
-                .willReturn(mrDiffs);
+                .willReturn(List.of(mrDiffs));
         given(openAIApiService.chat(anyString())).willReturn(chatCompletionContent);
 
         // when

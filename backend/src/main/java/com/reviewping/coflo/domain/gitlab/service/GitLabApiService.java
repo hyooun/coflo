@@ -74,12 +74,12 @@ public class GitLabApiService {
         return response.getBody();
     }
 
-    public GitlabMrDiffsContent getMrDiffs(
+    public List<GitlabMrDiffsContent> getMrDiffs(
             String gitlabUrl, String token, Long gitlabProjectId, Long iid) {
-        HttpHeaders headers = RestTemplateUtils.createHeaders(MIME_TYPE_JSON, token);
+        HttpHeaders headers = makeGitlabHeaders(token);
         String url = makeMRDiffsUrl(gitlabUrl, gitlabProjectId, iid);
 
-        ResponseEntity<GitlabMrDiffsContent> response =
+        ResponseEntity<List<GitlabMrDiffsContent>> response =
                 RestTemplateUtils.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
         return response.getBody();
@@ -134,7 +134,7 @@ public class GitLabApiService {
     private String makeMRDiffsUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {
         return URL_PROTOCOL_HTTPS
                 + gitlabUrl
-                + "/projects/"
+                + "/api/v4/projects/"
                 + gitlabProjectId
                 + "/merge_requests/"
                 + iid

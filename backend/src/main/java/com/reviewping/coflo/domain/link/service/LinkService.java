@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.link.service;
 
-import static com.reviewping.coflo.global.error.ErrorCode.*;
+import static com.reviewping.coflo.global.error.ErrorCode.LINK_BOT_TOKEN_NOT_EXIST;
 
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectDetailContent;
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectPageContent;
@@ -12,9 +12,7 @@ import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectRes
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
-import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
-import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.global.error.exception.BusinessException;
@@ -29,14 +27,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class LinkService {
 
     private final GitLabApiService gitLabApiService;
-    private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
     private final GitlabAccountRepository gitlabAccountRepository;
 
     public GitlabProjectPageResponse getGitlabProjects(
             Long userId, GitlabSearchRequest gitlabSearchRequest) {
-        GitlabAccount gitlabAccount = findGitlabAccountByUserId(userId);
+        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(userId);
         GitlabProjectPageContent gitlabProjectPage =
                 gitLabApiService.searchGitlabProjects(
                         gitlabAccount.getDomain(),
@@ -54,7 +51,7 @@ public class LinkService {
     @Transactional
     public Long linkGitlabProject(
             Long userId, Long gitlabProjectId, ProjectLinkRequest projectLinkRequest) {
-        GitlabAccount gitlabAccount = findGitlabAccountByUserId(userId);
+        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(userId);
         Project project = getOrCreateProject(gitlabProjectId, projectLinkRequest, gitlabAccount);
         UserProject savedProject =
                 userProjectRepository.save(
@@ -66,21 +63,7 @@ public class LinkService {
     }
 
     public boolean hasLikedProject(Long userId) {
-        User user = findUserById(userId);
-        return userProjectRepository.existsByGitlabAccountUser(user);
-    }
-
-    private User findUserById(Long userId) {
-        return userRepository
-                .findById(userId)
-                .orElseThrow(() -> new BusinessException(USER_NOT_EXIST));
-    }
-
-    private GitlabAccount findGitlabAccountByUserId(Long userId) {
-        User user = findUserById(userId);
-        return gitlabAccountRepository
-                .findFirstByUserOrderByIdAsc(user)
-                .orElseThrow(() -> new BusinessException(USER_GITLAB_ACCOUNT_NOT_EXIST));
+        return userProjectRepository.existsByGitlabAccountUserId(userId);
     }
 
     private GitlabProjectResponse buildGitlabProjectResponse(

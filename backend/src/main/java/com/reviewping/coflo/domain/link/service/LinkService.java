@@ -101,14 +101,7 @@ public class LinkService {
                 getProjectNameByBotToken(
                         gitlabAccount.getDomain(), gitlabProjectId, projectLinkRequest);
 
-        Project project =
-                Project.builder()
-                        .gitlabProjectId(gitlabProjectId)
-                        .botToken(projectLinkRequest.botToken())
-                        .name(gitlabProjectName)
-                        .build();
-
-        return projectRepository.save(project);
+        return saveProject(gitlabProjectId, projectLinkRequest.botToken(), gitlabProjectName);
     }
 
     private String getProjectNameByBotToken(
@@ -119,5 +112,15 @@ public class LinkService {
         return gitLabApiService
                 .getSingleProject(domain, projectLinkRequest.botToken(), gitlabProjectId)
                 .name();
+    }
+
+    private Project saveProject(Long gitlabProjectId, String botToken, String gitlabProjectName) {
+        Project project =
+                Project.builder()
+                        .gitlabProjectId(gitlabProjectId)
+                        .botToken(botToken)
+                        .name(gitlabProjectName)
+                        .build();
+        return projectRepository.save(project);
     }
 }

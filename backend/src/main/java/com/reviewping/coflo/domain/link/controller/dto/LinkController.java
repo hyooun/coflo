@@ -4,12 +4,12 @@ import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchReque
 import com.reviewping.coflo.domain.link.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectPageResponse;
 import com.reviewping.coflo.domain.link.service.LinkService;
-import com.reviewping.coflo.global.auth.oauth.model.AuthUser;
+import com.reviewping.coflo.domain.user.entity.User;
+import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,24 +21,23 @@ public class LinkController {
 
     @GetMapping("/search")
     public ApiResponse<GitlabProjectPageResponse> getGitlabProjects(
-            @AuthenticationPrincipal AuthUser authUser,
+            @AuthUser User user,
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "10") int size) {
         GitlabProjectPageResponse gitlabProjects =
                 linkService.getGitlabProjects(
-                        authUser.getUserId(), new GitlabSearchRequest(keyword, page, size));
+                        user.getId(), new GitlabSearchRequest(keyword, page, size));
         return ApiSuccessResponse.success(gitlabProjects);
     }
 
     @PostMapping("/{gitlabProjectId}")
     public ApiResponse<Map<String, Long>> linkGitlabProject(
-            @AuthenticationPrincipal AuthUser authUser,
+            @AuthUser User user,
             @PathVariable("gitlabProjectId") Long gitlabProjectId,
             @RequestBody(required = false) ProjectLinkRequest projectLinkRequest) {
         Long projectId =
-                linkService.linkGitlabProject(
-                        authUser.getUserId(), gitlabProjectId, projectLinkRequest);
+                linkService.linkGitlabProject(user.getId(), gitlabProjectId, projectLinkRequest);
         return ApiSuccessResponse.success("projectId", projectId);
     }
 }

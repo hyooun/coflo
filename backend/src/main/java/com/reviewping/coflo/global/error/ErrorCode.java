@@ -62,6 +62,11 @@ public enum ErrorCode {
     LINK_BOT_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "I001", "연동에 필요한 Bot 토큰이 존재하지 않습니다."),
 
     /**
+     * (J000)
+     */
+    CHANNEL_CODE_NOT_EXIST(HttpStatus.BAD_REQUEST, "J001", "존재하지 않는 채널 코드입니다."),
+
+    /**
      * 외부 API(Y000)
      */
     EXTERNAL_API_NOT_FOUND(HttpStatus.NOT_FOUND, "Y001", "외부 API를 찾을 수 없습니다."),

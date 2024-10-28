@@ -23,7 +23,6 @@ public class GetCustomPromptService {
         CustomPromptResponse customPromptResponse =
                 CustomPromptResponse.builder()
                         .customPromptId(customPrompt.getId())
-                        .title(customPrompt.getTitle())
                         .content(customPrompt.getContent().replace("\n", "<br>"))
                         .build();
         return customPromptResponse;

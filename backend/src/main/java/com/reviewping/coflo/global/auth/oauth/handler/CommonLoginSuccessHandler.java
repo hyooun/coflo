@@ -1,8 +1,9 @@
 package com.reviewping.coflo.global.auth.oauth.handler;
 
+import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtProvider;
-import com.reviewping.coflo.global.auth.oauth.model.AuthUser;
+import com.reviewping.coflo.global.auth.oauth.model.UserDetails;
 import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
 import jakarta.servlet.ServletException;
@@ -34,12 +35,12 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(
             HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
-        AuthUser principal = (AuthUser) authentication.getPrincipal();
-        Long userId = principal.getUserId();
-        String username = principal.getName();
+        UserDetails principal = (UserDetails) authentication.getPrincipal();
+        User user = principal.getUser();
+        Long userId = user.getId();
 
         log.info("=== 로그인 성공 ===");
-        Map<String, Object> responseMap = Map.of("userId", principal.getUserId());
+        Map<String, Object> responseMap = Map.of("userId", userId);
         String accessToken = JwtProvider.generateToken(responseMap, JwtConstants.ACCESS_EXP_TIME);
         String refreshToken = JwtProvider.generateToken(responseMap, JwtConstants.REFRESH_EXP_TIME);
 
@@ -59,7 +60,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         redisUtil.set(userId.toString(), refreshToken, JwtConstants.REFRESH_EXP_TIME);
 
-        if (username.equals("empty")) {
+        if (principal.getName().equals("empty")) {
             response.sendRedirect(registUrl);
         } else {
             response.sendRedirect(mainUrl);

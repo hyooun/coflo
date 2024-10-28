@@ -189,7 +189,7 @@ const HomePage = () => {
               )}
             </div>
           </div>
-          <div className="w-[350px] h-[320px]">
+          <div className="w-[350px] h-[350px]">
             <BestMergeRequestList />
           </div>
         </div>

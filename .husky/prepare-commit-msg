@@ -1,32 +1,19 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # 현재 브랜치 이름 가져오기
-BRANCH_NAME=$(git symbolic-ref --short HEAD)
+BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+COMMIT_MSG_FILE=$1
 
-# master 및 develop 브랜치에서는 작업을 스킵
-if [ "$BRANCH_NAME" = "main" ] || [ "$BRANCH_NAME" = "dev" ] || [ "$BRANCH_NAME" = "fe/dev" ] || [ "$BRANCH_NAME" = "be/dev"  ]; then
-  exit 0
-fi
-
-if ! echo "$BRANCH_NAME" | grep -qE '^[a-z]+\/S11P31A210-[0-9]+-.*'; then
-  echo "분야/S11P31A210-숫자-이슈요약 형식의 브랜치명을 사용해주세요."
+if [[ $BRANCH_NAME =~ [a-z]+\/(S11P31A210-[0-9]+)-.* ]]; then
+    JIRA_ID="${BASH_REMATCH[1]}"
+else
+  echo "분야/S11P31A210-숫자-이슈요약 형식의 브랜치명을 사용해주세요." >&2
   exit 0
 fi
 
 echo "현재 브랜치: $BRANCH_NAME"
-
-# JIRA 이슈 번호 추출
-IFS='/' read -ra PARTS <<< "$BRANCH_NAME"
-IFS='-' read -ra BODY_PARTS <<< "${PARTS[1]}"
-JIRA_ID="${BODY_PARTS[0]}-${BODY_PARTS[1]}"
-
 echo "추출된 JIRA ID: $JIRA_ID"
 
-if ! grep -q "$JIRA_ID" "$1"; then
-  # 임시 파일에 새로운 메시지를 작성
-  {
-    cat "$1"  # 기존 커밋 메시지 내용 모두 추가
-    echo ""   # 개행 추가
-    echo "Jira: $JIRA_ID"  # JIRA ID 추가
-  } > "$1".tmp && mv "$1".tmp "$1"  # 임시 파일을 원래 파일로 교체
+if ! grep -q "Jira: $JIRA_ID" "$COMMIT_MSG_FILE"; then
+        echo -e "\n\nJira: $JIRA_ID" >> "$COMMIT_MSG_FILE"
 fi

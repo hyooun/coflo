@@ -45,7 +45,7 @@ public class LinkController {
     @GetMapping("/status")
     public ApiResponse<Map<String, Boolean>> lingStatus(
             @AuthenticationPrincipal AuthUser authUser) {
-        boolean hasLikedProject = linkService.hasLikedProject(authUser.getUserId());
-        return ApiSuccessResponse.success("hasLikedProject", hasLikedProject);
+        boolean hasLinkedProject = linkService.hasLinkedProject(authUser.getUserId());
+        return ApiSuccessResponse.success("hasLinkedProject", hasLinkedProject);
     }
 }

@@ -1,7 +1,6 @@
 package com.reviewping.coflo.domain.userproject.service;
 
 import static com.reviewping.coflo.global.error.ErrorCode.PROJECT_NOT_EXIST;
-import static com.reviewping.coflo.global.error.ErrorCode.USER_GITLAB_ACCOUNT_NOT_EXIST;
 
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
@@ -25,10 +24,7 @@ public class UserProjectService {
     private final GitlabAccountRepository gitlabAccountRepository;
 
     public List<UserProjectResponse> getUserProjects(User user, Long currentProjectId) {
-        GitlabAccount gitlabAccount =
-                gitlabAccountRepository
-                        .findFirstByUserOrderByIdAsc(user)
-                        .orElseThrow(() -> new BusinessException(USER_GITLAB_ACCOUNT_NOT_EXIST));
+        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
         List<UserProject> userProjects =
                 userProjectRepository.getUserProjectsOrderByModifiedDateDesc(gitlabAccount.getId());
 

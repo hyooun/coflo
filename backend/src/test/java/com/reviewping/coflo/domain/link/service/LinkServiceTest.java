@@ -130,6 +130,40 @@ class LinkServiceTest {
                 .hasMessageContaining(USER_GITLAB_ACCOUNT_NOT_EXIST.getMessage());
     }
 
+    @Test
+    @DisplayName("사용자가 연동된 프로젝트가 있을 때, true를 반환한다.")
+    public void testUserHasLinkedProject() {
+        // given
+        Long userId = 1L;
+        User user = mock(User.class);
+
+        given(userRepository.findById(userId)).willReturn(Optional.of(user));
+        given(userProjectRepository.existsByGitlabAccountUser(user)).willReturn(true);
+
+        // when
+        boolean result = linkService.hasLikedProject(userId);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("사용자가 연동된 프로젝트가 없을 때, false를 반환한다.")
+    public void testUserHasNoLinkedProject() {
+        // given
+        Long userId = 1L;
+        User user = mock(User.class);
+
+        given(userRepository.findById(userId)).willReturn(Optional.of(user));
+        given(userProjectRepository.existsByGitlabAccountUser(user)).willReturn(false);
+
+        // when
+        boolean result = linkService.hasLikedProject(userId);
+
+        // then
+        assertThat(result).isFalse();
+    }
+
     private GitlabProjectPageContent createGitlabProjectPageContent() {
         GitlabProjectDetailContent detailContent =
                 new GitlabProjectDetailContent(123L, "Test Project", "Description");

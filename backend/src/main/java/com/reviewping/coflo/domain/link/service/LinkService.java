@@ -62,7 +62,7 @@ public class LinkService {
         return savedProject.getId();
     }
 
-    public boolean hasLikedProject(Long userId) {
+    public boolean hasLinkedProject(Long userId) {
         return userProjectRepository.existsByGitlabAccountUserId(userId);
     }
 

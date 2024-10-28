@@ -1,3 +1,3 @@
 package com.reviewping.coflo.domain.link.controller.dto.request;
 
-public record ProjectLinkReqeust(String botToken) {}
+public record ProjectLinkRequest(String botToken) {}

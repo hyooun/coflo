@@ -1,7 +1,7 @@
 package com.reviewping.coflo.domain.link.controller.dto;
 
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
-import com.reviewping.coflo.domain.link.controller.dto.request.ProjectLinkReqeust;
+import com.reviewping.coflo.domain.link.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectPageResponse;
 import com.reviewping.coflo.domain.link.service.LinkService;
 import com.reviewping.coflo.global.auth.oauth.model.AuthUser;
@@ -35,10 +35,10 @@ public class LinkController {
     public ApiResponse<Map<String, Long>> linkGitlabProject(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable("gitlabProjectId") Long gitlabProjectId,
-            @RequestBody(required = false) ProjectLinkReqeust projectLinkReqeust) {
+            @RequestBody(required = false) ProjectLinkRequest projectLinkRequest) {
         Long projectId =
                 linkService.linkGitlabProject(
-                        authUser.getUserId(), gitlabProjectId, projectLinkReqeust);
+                        authUser.getUserId(), gitlabProjectId, projectLinkRequest);
         return ApiSuccessResponse.success("projectId", projectId);
     }
 }

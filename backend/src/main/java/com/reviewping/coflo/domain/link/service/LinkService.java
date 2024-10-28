@@ -6,7 +6,7 @@ import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectDetailConten
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectPageContent;
 import com.reviewping.coflo.domain.gitlab.service.GitLabApiService;
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
-import com.reviewping.coflo.domain.link.controller.dto.request.ProjectLinkReqeust;
+import com.reviewping.coflo.domain.link.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectPageResponse;
 import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectResponse;
 import com.reviewping.coflo.domain.project.entity.Project;
@@ -53,9 +53,9 @@ public class LinkService {
 
     @Transactional
     public Long linkGitlabProject(
-            Long userId, Long gitlabProjectId, ProjectLinkReqeust projectLinkReqeust) {
+            Long userId, Long gitlabProjectId, ProjectLinkRequest projectLinkRequest) {
         GitlabAccount gitlabAccount = findGitlabAccountByUserId(userId);
-        Project project = getOrCreateProject(gitlabProjectId, projectLinkReqeust, gitlabAccount);
+        Project project = getOrCreateProject(gitlabProjectId, projectLinkRequest, gitlabAccount);
         UserProject savedProject =
                 userProjectRepository.save(
                         UserProject.builder()
@@ -94,22 +94,22 @@ public class LinkService {
 
     private Project getOrCreateProject(
             Long gitlabProjectId,
-            ProjectLinkReqeust projectLinkReqeust,
+            ProjectLinkRequest projectLinkRequest,
             GitlabAccount gitlabAccount) {
         return projectRepository
                 .findByGitlabProjectId(gitlabProjectId)
-                .orElseGet(() -> createProject(gitlabAccount, gitlabProjectId, projectLinkReqeust));
+                .orElseGet(() -> createProject(gitlabAccount, gitlabProjectId, projectLinkRequest));
     }
 
     private Project createProject(
             GitlabAccount gitlabAccount,
             Long gitlabProjectId,
-            ProjectLinkReqeust projectLinkReqeust) {
+            ProjectLinkRequest projectLinkRequest) {
 
-        if (projectLinkReqeust == null || projectLinkReqeust.botToken() == null) {
+        if (projectLinkRequest == null || projectLinkRequest.botToken() == null) {
             throw new BusinessException(LINK_BOT_TOKEN_NOT_EXIST);
         }
-        gitLabApiService.validateToken(gitlabAccount.getDomain(), projectLinkReqeust.botToken());
+        gitLabApiService.validateToken(gitlabAccount.getDomain(), projectLinkRequest.botToken());
 
         String gitlabProjectName =
                 gitLabApiService
@@ -122,7 +122,7 @@ public class LinkService {
         Project project =
                 Project.builder()
                         .gitlabProjectId(gitlabProjectId)
-                        .botToken(projectLinkReqeust.botToken())
+                        .botToken(projectLinkRequest.botToken())
                         .name(gitlabProjectName)
                         .build();
         return projectRepository.save(project);

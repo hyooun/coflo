@@ -1,5 +1,6 @@
 package com.reviewping.coflo.global.auth.jwt.filter;
 
+import static com.reviewping.coflo.global.error.ErrorCode.*;
 import static org.springframework.util.MimeTypeUtils.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,13 +57,15 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         if (e instanceof JwtException) {
             String errorMessage = e.getMessage();
 
-            if (errorMessage.contains(ErrorCode.TOKEN_EXPIRED.getMessage())) {
-                return ErrorCode.TOKEN_EXPIRED;
-            } else if (errorMessage.contains(ErrorCode.TOKEN_UNSUPPORTED.getMessage())) {
-                return ErrorCode.TOKEN_UNSUPPORTED;
+            if (errorMessage.contains(TOKEN_EXPIRED.getMessage())) {
+                return TOKEN_EXPIRED;
+            } else if (errorMessage.contains(TOKEN_UNSUPPORTED.getMessage())) {
+                return TOKEN_UNSUPPORTED;
+            } else if (errorMessage.contains(USER_NOT_EXIST.getMessage())) {
+                return USER_NOT_EXIST;
             }
         }
 
-        return ErrorCode.TOKEN_INVALID;
+        return TOKEN_INVALID;
     }
 }

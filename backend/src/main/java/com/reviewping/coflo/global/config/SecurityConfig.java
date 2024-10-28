@@ -5,6 +5,7 @@ import com.reviewping.coflo.global.auth.jwt.filter.JwtExceptionFilter;
 import com.reviewping.coflo.global.auth.jwt.filter.JwtVerifyFilter;
 import com.reviewping.coflo.global.auth.oauth.handler.CommonLoginFailHandler;
 import com.reviewping.coflo.global.auth.oauth.handler.CommonLoginSuccessHandler;
+import com.reviewping.coflo.global.auth.oauth.service.AuthenticationService;
 import com.reviewping.coflo.global.auth.oauth.service.OAuth2UserService;
 import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
@@ -33,6 +34,7 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final OAuth2UserService oAuth2UserService;
     private final CookieUtil cookieUtil;
+    private final AuthenticationService authenticationService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -51,7 +53,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        JwtVerifyFilter jwtVerifyFilter = new JwtVerifyFilter(redisUtil, cookieUtil);
+        JwtVerifyFilter jwtVerifyFilter =
+                new JwtVerifyFilter(redisUtil, cookieUtil, authenticationService);
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(

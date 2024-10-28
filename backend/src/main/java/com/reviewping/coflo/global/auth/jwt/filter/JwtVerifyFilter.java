@@ -4,6 +4,7 @@ import static com.reviewping.coflo.global.error.ErrorCode.*;
 
 import com.reviewping.coflo.global.auth.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtProvider;
+import com.reviewping.coflo.global.auth.oauth.service.AuthenticationService;
 import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
 import io.jsonwebtoken.JwtException;
@@ -16,8 +17,6 @@ import java.io.IOException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -27,6 +26,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 
     private final RedisUtil redisUtil;
     private final CookieUtil cookieUtil;
+    private final AuthenticationService authenticationService;
 
     private static final String[] whitelist = {
         "/api/swagger-ui/**", "/api/v3/**", "/api/users/me", "/favicon.ico"
@@ -63,9 +63,9 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             FilterChain filterChain,
             String accessToken)
             throws IOException, ServletException {
-        Authentication authentication = JwtProvider.getAuthentication(accessToken);
+        Map<String, Object> claims = JwtProvider.validateToken(accessToken);
+        authenticationService.setAuthentication(((Integer) claims.get("userId")).longValue());
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
     }
 

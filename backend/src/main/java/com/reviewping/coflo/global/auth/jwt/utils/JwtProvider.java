@@ -1,6 +1,5 @@
 package com.reviewping.coflo.global.auth.jwt.utils;
 
-import com.reviewping.coflo.global.auth.oauth.model.AuthUser;
 import com.reviewping.coflo.global.error.ErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -8,15 +7,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Slf4j
 public class JwtProvider {
@@ -38,17 +32,6 @@ public class JwtProvider {
         } catch (Exception e) {
             throw new JwtException(e.getMessage());
         }
-    }
-
-    public static Authentication getAuthentication(String token) {
-        Map<String, Object> claims = validateToken(token);
-        Long userId = ((Integer) claims.get("userId")).longValue();
-        String username = (String) claims.get("username");
-
-        Set<SimpleGrantedAuthority> authorities =
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
-        return new UsernamePasswordAuthenticationToken(
-                new AuthUser(userId, username), "", authorities);
     }
 
     public static Map<String, Object> validateToken(String token) {

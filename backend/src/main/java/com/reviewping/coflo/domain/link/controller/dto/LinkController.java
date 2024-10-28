@@ -40,4 +40,11 @@ public class LinkController {
                 linkService.linkGitlabProject(user.getId(), gitlabProjectId, projectLinkRequest);
         return ApiSuccessResponse.success("projectId", projectId);
     }
+
+    @GetMapping("/status")
+    public ApiResponse<Map<String, Boolean>> lingStatus(
+            @AuthenticationPrincipal AuthUser authUser) {
+        boolean hasLikedProject = linkService.hasLikedProject(authUser.getUserId());
+        return ApiSuccessResponse.success("hasLikedProject", hasLikedProject);
+    }
 }

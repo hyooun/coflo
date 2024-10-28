@@ -8,5 +8,5 @@ public interface UserProjectRepository
         extends JpaRepository<UserProject, Long>, UserProjectRepositoryCustom {
     Boolean existsByGitlabAccountIdAndProjectId(Long gitlabAccountId, Long projectId);
 
-    Boolean existsByUser(User user);
+    Boolean existsByGitlabAccountUser(User user);
 }

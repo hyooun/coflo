@@ -72,9 +72,9 @@ public enum ErrorCode {
     /**
      * Link(D00)
      */
-    LINK_BOT_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "D001", "연동에 필요한 Bot 토큰이 존재하지 않습니다.");
+    LINK_BOT_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "D001", "연동에 필요한 Bot 토큰이 존재하지 않습니다."),
 
-     /*
+    /*
      * project(P000)
      */
     PROJECT_NOT_EXIST(HttpStatus.BAD_REQUEST, "P001", "존재하지 않는 프로젝트입니다."),

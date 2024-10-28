@@ -71,7 +71,7 @@ const BestMergeRequestList = () => {
               </div>
             </div>
 
-            <div className=" text-xl">→</div>
+            <div className="font-extrabold text-xl">→</div>
           </div>
         ))}
       </div>

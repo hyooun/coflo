@@ -28,7 +28,7 @@ public class UserProjectService {
         List<UserProject> userProjects =
                 userProjectRepository.getUserProjectsOrderByModifiedDateDesc(gitlabAccount.getId());
 
-        if (currentProjectId == -1) {
+        if (currentProjectId != -1) {
             moveCurrentProjectToFront(currentProjectId, userProjects);
         }
 

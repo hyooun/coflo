@@ -22,7 +22,7 @@ public class AuthenticationService {
 
     public Authentication getAuthentication(Long userId) {
         try {
-            User user = userRepository.findUserById(userId);
+            User user = userRepository.getById(userId);
             Set<SimpleGrantedAuthority> authorities =
                     Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
             return new UsernamePasswordAuthenticationToken(new UserDetails(user), "", authorities);

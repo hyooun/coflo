@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MrInfoRepository extends JpaRepository<MrInfo, Long> {
     Optional<MrInfo> findByProjectIdAndGitlabMrIid(Long projectId, Long iid);
+
+    Boolean existsByGitlabMrIid(Long gitlabMrIid);
 }

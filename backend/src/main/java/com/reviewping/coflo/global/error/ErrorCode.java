@@ -84,11 +84,6 @@ public enum ErrorCode {
      */
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "Z009", "잘못된 파라미터가 포함되었습니다.");
 
-    /**
-     * (R000)
-     */
-    CHANNEL_CODE_NOT_EXIST(HttpStatus.BAD_REQUEST, "L001", "존재하지 않는 채널 코드입니다.");
-
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

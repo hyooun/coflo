@@ -54,6 +54,7 @@ public enum ErrorCode {
     EXTERNAL_API_BAD_REQUEST(HttpStatus.INTERNAL_SERVER_ERROR, "Y004", "잘못된 외부 API 요청입니다."),
     EXTERNAL_API_INTERNAL_SERVER_ERROR(
             HttpStatus.INTERNAL_SERVER_ERROR, "Y005", "외부 API 서버 내부 오류가 발생했습니다."),
+    EXTERNAL_API_UNAUTHORIZED(HttpStatus.BAD_REQUEST, "Y006", "외부 API 토큰이 유효하지 않습니다."),
 
     /**
      * Etc(Z000)
@@ -69,6 +70,11 @@ public enum ErrorCode {
     LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "L001", "로그인 도중 오류가 발생했습니다."),
 
     /**
+     * Link(D00)
+     */
+    LINK_BOT_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "D001", "연동에 필요한 Bot 토큰이 존재하지 않습니다.");
+
+     /*
      * project(P000)
      */
     PROJECT_NOT_EXIST(HttpStatus.BAD_REQUEST, "P001", "존재하지 않는 프로젝트입니다."),

@@ -2,12 +2,7 @@ package com.reviewping.coflo.domain.project.entity;
 
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;

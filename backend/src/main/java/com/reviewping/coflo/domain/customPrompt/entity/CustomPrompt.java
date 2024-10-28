@@ -2,7 +2,6 @@ package com.reviewping.coflo.domain.customPrompt.entity;
 
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,21 +20,20 @@ import lombok.NoArgsConstructor;
 public class CustomPrompt extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
-    Project project;
+    private Project project;
 
-    @Column(nullable = false)
-    String title;
-
-    String content;
+    private String content = "";
 
     @Builder
-    public CustomPrompt(Project project, String title, String content) {
+    public CustomPrompt(Project project) {
         this.project = project;
-        this.title = title;
+    }
+
+    public void setContent(String content) {
         this.content = content;
     }
 }

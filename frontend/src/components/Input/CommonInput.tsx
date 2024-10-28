@@ -24,13 +24,13 @@ function CommonInput({
 }: CommonInputProps) {
   return (
     <div className="w-full">
-      {labelText && <label className="block mb-2">{labelText}</label>}
+      {labelText && <label className="block mb-2 text-2xl">{labelText}</label>}
       <div className="relative">
         <input
           type={type}
           placeholder={placeholder}
           className={twMerge(
-            'w-full px-4 py-3 border-2 rounded-xl text-primary-500 placeholder-primary-500/50',
+            'w-full px-4 py-3 border-2 rounded-xl text-primary-500 placeholder-primary-500/50 placeholder:text-lg',
             'border-primary-500 bg-transparent',
             'focus:outline-none',
             icon && 'pr-12', // 아이콘이 있을 경우 오른쪽 패딩 추가
@@ -45,9 +45,7 @@ function CommonInput({
           </div>
         )}
       </div>
-      {isWarning && warningMessage && (
-        <p className="mt-1 text-sm text-state-warning">{warningMessage}</p>
-      )}
+      {isWarning && warningMessage && <p className="mt-1 text-state-warning">{warningMessage}</p>}
     </div>
   );
 }

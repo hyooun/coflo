@@ -110,7 +110,7 @@ class LinkServiceTest {
         given(userProjectRepository.existsByGitlabAccountUserId(userId)).willReturn(true);
 
         // when
-        boolean result = linkService.hasLikedProject(userId);
+        boolean result = linkService.hasLinkedProject(userId);
 
         // then
         assertThat(result).isTrue();
@@ -125,7 +125,7 @@ class LinkServiceTest {
         given(userProjectRepository.existsByGitlabAccountUserId(userId)).willReturn(false);
 
         // when
-        boolean result = linkService.hasLikedProject(userId);
+        boolean result = linkService.hasLinkedProject(userId);
 
         // then
         assertThat(result).isFalse();

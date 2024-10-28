@@ -14,6 +14,7 @@ import {
   cubicLineOptions,
 } from '@constants/chartOptions';
 import Title from '@components/Title/Title';
+import BestMergeRequestList from '@components/Home/BestMergeRequest/BestMergeRequestList.tsx';
 
 const HomePage = () => {
   const [selectedChart, setSelectedChart] = useState<'line' | 'cubic'>('line');
@@ -141,7 +142,7 @@ const HomePage = () => {
               <IconWithText svg={<BranchIcon />} text="branches" count={7} />
             </div>
             <div className="flex flex-row m-2 ml-8 gap-4">
-              <IconWithText svg={<PullRequestIcon />} text="MRs" count={224} />
+              <IconWithText svg={<PullRequestIcon className="w-4 h-4" />} text="MRs" count={224} />
               <IconWithText svg={<AiIcon />} text="Ai reviews" count={211} />
             </div>
           </div>
@@ -188,9 +189,8 @@ const HomePage = () => {
               )}
             </div>
           </div>
-          <div className="flex flex-col">
-            <Title title="Best Merge Request" />
-            <div className="w-[350px] h-[320px] bg-[#F5F7FA] m-2 flex items-center justify-center"></div>
+          <div className="w-[350px] h-[320px]">
+            <BestMergeRequestList />
           </div>
         </div>
       </div>

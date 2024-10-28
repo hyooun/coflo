@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Eye, EyeOff, Info } from 'lucide-react';
 import CommonInput from '@components/Input/CommonInput.tsx';
 import { CommonButton } from '@components/Button/CommonButton.tsx';
+import GuideModal from '@components/Modal/GuideModal.tsx';
 
 const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(true);
@@ -9,6 +10,7 @@ const SignupForm = () => {
   const [userToken, setUserToken] = useState('');
   const [isUrlValid, setIsUrlValid] = useState(true);
   const [isTokenValid, setIsTokenValid] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const validateUrl = (url: string) => {
     return url.startsWith('lab.ssafy');
@@ -68,7 +70,7 @@ const SignupForm = () => {
               />
               <div
                 className="flex items-center text-sm text-secondary mt-1 cursor-pointer"
-                // onClick={() => setShowModal(true)}
+                onClick={() => setIsModalOpen(true)}
               >
                 <Info size={16} />
                 <span className="ml-1">사용자 인증 토큰 안내</span>
@@ -77,6 +79,27 @@ const SignupForm = () => {
           </div>
         </div>
       </form>
+
+      <GuideModal
+        isOpen={isModalOpen}
+        width="w-[400px]"
+        title="사용자 인증 토큰 안내"
+        content={
+          <div className="text-center font-bold text-primary-500">
+            아바타 프로필 클릭 &gt; Edit Profile &gt; User settings &gt; Access Tokens
+          </div>
+        }
+        onClose={() => setIsModalOpen(false)}
+        image={{
+          src: '/images/guide/guide_personal_access_token.png',
+          alt: 'personal_access_token',
+        }}
+        link={{
+          url: 'https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html',
+          text: '인증 토큰 발급 관련 안내',
+        }}
+      />
+
       <div className="flex justify-center mt-10">
         <CommonButton className="w-32 h-10">회원가입</CommonButton>
       </div>

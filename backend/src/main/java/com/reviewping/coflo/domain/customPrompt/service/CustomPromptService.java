@@ -18,15 +18,14 @@ public class CustomPromptService {
     private final CustomPromptRepository customPromptRepository;
 
     public void saveCustomPrompt(Project project) {
-        CustomPrompt customPrompt = CustomPrompt.builder().content("").project(project).build();
-
+        CustomPrompt customPrompt = CustomPrompt.builder().project(project).build();
         customPromptRepository.save(customPrompt);
     }
 
     @Transactional
     public void updateCustomPrompt(String content, Long customPromptId) {
         CustomPrompt customPrompt = findById(customPromptId);
-        customPrompt.change(content);
+        customPrompt.setContent(content);
     }
 
     public void deleteCustomPrompt(Long customPromptId) {
@@ -35,10 +34,8 @@ public class CustomPromptService {
     }
 
     private CustomPrompt findById(Long customPromptId) {
-        CustomPrompt customPrompt =
-                customPromptRepository
-                        .findById(customPromptId)
-                        .orElseThrow(() -> new BusinessException(CUSTOM_PROMPT_NOT_EXIST));
-        return customPrompt;
+        return customPromptRepository
+                .findById(customPromptId)
+                .orElseThrow(() -> new BusinessException(CUSTOM_PROMPT_NOT_EXIST));
     }
 }

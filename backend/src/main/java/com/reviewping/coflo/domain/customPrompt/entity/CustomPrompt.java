@@ -20,21 +20,20 @@ import lombok.NoArgsConstructor;
 public class CustomPrompt extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
-    Project project;
+    private Project project;
 
-    String content;
+    private String content = "";
 
     @Builder
-    public CustomPrompt(Project project, String content) {
+    public CustomPrompt(Project project) {
         this.project = project;
-        this.content = content;
     }
 
-    public void change(String content) {
+    public void setContent(String content) {
         this.content = content;
     }
 }

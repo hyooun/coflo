@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserProjectRepository extends JpaRepository<UserProject, Long> {
     Boolean existsByGitlabAccountIdAndProjectId(Long gitlabAccountId, Long projectId);
 
-    Boolean existsByUser(User user);
+    Boolean existsByGitlabAccountUser(User user);
 }

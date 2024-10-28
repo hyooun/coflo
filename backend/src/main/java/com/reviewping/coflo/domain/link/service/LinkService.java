@@ -67,7 +67,7 @@ public class LinkService {
 
     public boolean hasLikedProject(Long userId) {
         User user = findUserById(userId);
-        return userProjectRepository.existsByUser(user);
+        return userProjectRepository.existsByGitlabAccountUser(user);
     }
 
     private User findUserById(Long userId) {

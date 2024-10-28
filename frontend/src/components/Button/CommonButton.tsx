@@ -4,7 +4,7 @@ export function CommonButton({ active, icon, onClick, children, className }: Btn
 
   return (
     <div
-      className={`${className} font-pretendard flex flex-row items-center rounded-3xl ${bgColor} ${textColor}  hover:cursor-pointer`}
+      className={`${className} font-pretendard flex flex-row items-center rounded-full ${bgColor} ${textColor}  hover:cursor-pointer`}
       onClick={onClick}
     >
       {icon && <div className="pr-2">{icon}</div>}

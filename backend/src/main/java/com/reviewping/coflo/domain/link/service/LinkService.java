@@ -65,11 +65,19 @@ public class LinkService {
         return savedProject.getId();
     }
 
+    public boolean hasLikedProject(Long userId) {
+        User user = findUserById(userId);
+        return userProjectRepository.existsByUser(user);
+    }
+
+    private User findUserById(Long userId) {
+        return userRepository
+                .findById(userId)
+                .orElseThrow(() -> new BusinessException(USER_NOT_EXIST));
+    }
+
     private GitlabAccount findGitlabAccountByUserId(Long userId) {
-        User user =
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(() -> new BusinessException(USER_NOT_EXIST));
+        User user = findUserById(userId);
         return gitlabAccountRepository
                 .findFirstByUserOrderByIdAsc(user)
                 .orElseThrow(() -> new BusinessException(USER_GITLAB_ACCOUNT_NOT_EXIST));

@@ -30,6 +30,9 @@ public class Project extends BaseTimeEntity {
     @OneToMany(mappedBy = "project")
     private List<UserProject> userProjects = new ArrayList<>();
 
+    @OneToMany(mappedBy = "project")
+    private List<MrInfo> mrInfos = new ArrayList<>();
+
     @Builder
     public Project(String botToken, Long gitlabProjectId, String name) {
         this.botToken = botToken;

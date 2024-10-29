@@ -40,3 +40,11 @@ export interface Reference {
   content: string;
   relevance?: number;
 }
+
+export interface ReviewCommentProps {
+  name: string;
+  content: string;
+  createdAt?: string;
+  backgroundColor?: string;
+  reviewer?: Reviewer;
+}

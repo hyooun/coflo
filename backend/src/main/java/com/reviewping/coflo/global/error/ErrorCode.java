@@ -57,10 +57,10 @@ public enum ErrorCode {
     PROJECT_NOT_EXIST(HttpStatus.NOT_FOUND, "H001", "존재하지 않는 프로젝트입니다."),
 
     /**
-     * Link(I00)
+     * USER-PROJECT(I00)
      */
     LINK_BOT_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "I001", "연동에 필요한 Bot 토큰이 존재하지 않습니다."),
-
+    USER_PROJECT_NOT_EXIST(HttpStatus.BAD_REQUEST, "I002", "존재하지 않는 프로젝트입니다."),
     /**
      * (J000)
      */

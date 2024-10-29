@@ -30,6 +30,13 @@ public class UserProjectController {
         return ApiSuccessResponse.success("projectId", projectId);
     }
 
+    @DeleteMapping("/{gitlabProjectId}")
+    public ApiResponse<Map<String, Long>> deleteUserProject(
+            @AuthUser User user, @PathVariable("gitlabProjectId") Long gitlabProjectId) {
+        Long projectId = userProjectService.unlinkGitlabProject(user, gitlabProjectId);
+        return ApiSuccessResponse.success("projectId", projectId);
+    }
+
     @GetMapping("/status")
     public ApiResponse<Map<String, Boolean>> getLinkedStatus(@AuthUser User user) {
         boolean hasLinkedProject = userProjectService.hasLinkedProject(user.getId());

@@ -23,7 +23,7 @@ public class WebhookChannelService {
 
     @Transactional
     public void addWebhookChannel(Long projectId, Long channelCodeId, String webhookUrl) {
-        Project project = projectRepository.findProjectById(projectId);
+        Project project = projectRepository.getById(projectId);
         ChannelCode channelCode = channelCodeRepository.findChannelCodeById(channelCodeId);
 
         WebhookChannel webhookChannel =
@@ -37,12 +37,10 @@ public class WebhookChannelService {
     }
 
     public List<WebhookChannelResponse> getWebhookChannelList(Long projectId) {
-        Project project = projectRepository.findProjectById(projectId);
+        Project project = projectRepository.getById(projectId);
 
         List<WebhookChannel> webhookChannelList =
                 webhookChannelRepository.findAllByProject(project);
-        return webhookChannelList.stream()
-                        .map(WebhookChannelResponse::of)
-                        .toList();
+        return webhookChannelList.stream().map(WebhookChannelResponse::of).toList();
     }
 }

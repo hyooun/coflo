@@ -1,10 +1,14 @@
 export interface Assignee {
+  id: number;
   username: string;
+  name: string;
   avatarUrl: string;
 }
 
 export interface Reviewer {
+  id: number;
   username: string;
+  name: string;
   avatarUrl: string;
 }
 

@@ -61,7 +61,7 @@ public class WebhookChannelService {
     }
 
     public void sendData(Long projectId, String content) {
-        Project project = projectRepository.findProjectById(projectId);
+        Project project = projectRepository.getById(projectId);
         List<WebhookChannel> webhookChannels = project.getWebhookChannels();
 
         webhookChannels.stream()

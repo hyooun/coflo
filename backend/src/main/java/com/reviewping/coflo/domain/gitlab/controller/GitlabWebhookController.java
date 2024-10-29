@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-public class WebhookController {
+public class GitlabWebhookController {
 
     private final MrEventHandler mrEventHandler;
     private final ObjectMapper objectMapper;

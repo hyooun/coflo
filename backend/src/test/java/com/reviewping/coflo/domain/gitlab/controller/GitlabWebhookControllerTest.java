@@ -31,7 +31,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-class WebhookControllerTest {
+class GitlabWebhookControllerTest {
 
     private WebTestClient webTestClient;
 

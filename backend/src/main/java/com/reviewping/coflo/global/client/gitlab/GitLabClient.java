@@ -1,5 +1,6 @@
 package com.reviewping.coflo.global.client.gitlab;
 
+import static com.reviewping.coflo.global.error.ErrorCode.EXTERNAL_API_BAD_REQUEST;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,6 +13,7 @@ import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,10 +31,6 @@ public class GitLabClient {
     private static final String PRIVATE_TOKEN = "PRIVATE-TOKEN";
 
     private final ObjectMapper objectMapper;
-
-    public void validateToken(String domain, String token) {
-        searchGitlabProjects(domain, token, new GitlabSearchRequest("", 1, 1));
-    }
 
     public GitlabProjectPageContent searchGitlabProjects(
             String gitlabUrl, String token, GitlabSearchRequest gitlabSearchRequest) {
@@ -111,6 +109,59 @@ public class GitLabClient {
         }
         RestTemplateUtils.sendPostRequest(
                 url, headers, body, new ParameterizedTypeReference<>() {});
+    }
+
+    public ProjectInfoContent getProjectInfoDetail(
+            String gitlabUrl, String token, Long gitlabProjectId) {
+        int commitCount = getProjectCommitCount(gitlabUrl, token, gitlabProjectId);
+        Long branchCount = getProjectBranchCount(gitlabUrl, token, gitlabProjectId);
+        Long mergeRequestCount = getProjectMRCount(gitlabUrl, token, gitlabProjectId);
+        Map<String, Double> languages = getProjectLanguages(gitlabUrl, token, gitlabProjectId);
+        return ProjectInfoContent.of(commitCount, branchCount, mergeRequestCount, languages);
+    }
+
+    private int getProjectCommitCount(String gitlabUrl, String token, Long gitlabProjectId) {
+        String url = GitLabApiUrlBuilder.createProjectCommitsUrl(gitlabUrl, gitlabProjectId);
+        HttpHeaders headers = makeGitlabHeaders(token);
+
+        ResponseEntity<Map<String, Object>> response =
+                RestTemplateUtils.sendGetRequest(
+                        url, headers, new ParameterizedTypeReference<>() {});
+
+        Map<String, Object> body = response.getBody();
+        if (body == null || !body.containsKey("statistics")) {
+            throw new BusinessException(EXTERNAL_API_BAD_REQUEST);
+        }
+        Map<String, Object> statistics = (Map<String, Object>) body.get("statistics");
+        return (int) statistics.get("commit_count");
+    }
+
+    private Map<String, Double> getProjectLanguages(
+            String gitlabUrl, String token, Long gitlabProjectId) {
+        String url = GitLabApiUrlBuilder.createProjectLanguagesUrl(gitlabUrl, gitlabProjectId);
+        HttpHeaders headers = makeGitlabHeaders(token);
+        ResponseEntity<Map<String, Double>> response =
+                RestTemplateUtils.sendGetRequest(
+                        url, headers, new ParameterizedTypeReference<>() {});
+        return response.getBody();
+    }
+
+    private long getProjectBranchCount(String gitlabUrl, String token, Long gitlabProjectId) {
+        String url = GitLabApiUrlBuilder.createProjectBranchesUrl(gitlabUrl, gitlabProjectId);
+        return getTotalByHeader(token, url);
+    }
+
+    private long getProjectMRCount(String gitlabUrl, String token, Long gitlabProjectId) {
+        String url = GitLabApiUrlBuilder.createProjectMRUrl(gitlabUrl, gitlabProjectId);
+        return getTotalByHeader(token, url);
+    }
+
+    private long getTotalByHeader(String token, String url) {
+        HttpHeaders headers = makeGitlabHeaders(token);
+        ResponseEntity<Object> response =
+                RestTemplateUtils.sendGetRequest(
+                        url, headers, new ParameterizedTypeReference<>() {});
+        return Long.parseLong(Objects.requireNonNull(response.getHeaders().getFirst("X-Total")));
     }
 
     private PageDetail createPageDetail(HttpHeaders responseHeaders) {

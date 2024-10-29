@@ -71,4 +71,36 @@ public class GitLabApiUrlBuilder {
     public static String createUserInfoUrl(String gitlabUrl) {
         return URL_PROTOCOL_HTTPS + gitlabUrl + USERINFO_ENDPOINT;
     }
+
+    public static String createProjectLanguagesUrl(String gitlabUrl, Long gitlabProjectId) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + SINGLE_PROJECT_ENDPOINT
+                + gitlabProjectId
+                + "/languages";
+    }
+
+    public static String createProjectBranchesUrl(String gitlabUrl, Long gitlabProjectId) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + SINGLE_PROJECT_ENDPOINT
+                + gitlabProjectId
+                + "/repository/branches?per_page=1";
+    }
+
+    public static String createProjectMRUrl(String gitlabUrl, Long gitlabProjectId) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + SINGLE_PROJECT_ENDPOINT
+                + gitlabProjectId
+                + "/merge_requests";
+    }
+
+    public static String createProjectCommitsUrl(String gitlabUrl, Long gitlabProjectId) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + SINGLE_PROJECT_ENDPOINT
+                + gitlabProjectId
+                + "?statistics=true";
+    }
 }

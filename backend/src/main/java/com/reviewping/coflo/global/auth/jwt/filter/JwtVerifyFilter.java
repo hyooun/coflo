@@ -29,7 +29,12 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
     private final AuthenticationService authenticationService;
 
     private static final String[] whitelist = {
-        "/swagger-ui/**", "/v3/api-docs/**", "/api/users/me", "/favicon.ico", "/webhook/*"
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "/actuator/prometheus",
+        "/api/users/me",
+        "/favicon.ico",
+        "/webhook/*"
     };
 
     @Override

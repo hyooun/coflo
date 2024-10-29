@@ -1,16 +1,17 @@
 package com.reviewping.coflo.domain.link.controller.dto;
 
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
-import com.reviewping.coflo.domain.link.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectPageResponse;
 import com.reviewping.coflo.domain.link.service.LinkService;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/link")
@@ -29,21 +30,5 @@ public class LinkController {
                 linkService.getGitlabProjects(
                         user.getId(), new GitlabSearchRequest(keyword, page, size));
         return ApiSuccessResponse.success(gitlabProjects);
-    }
-
-    @PostMapping("/{gitlabProjectId}")
-    public ApiResponse<Map<String, Long>> linkGitlabProject(
-            @AuthUser User user,
-            @PathVariable("gitlabProjectId") Long gitlabProjectId,
-            @RequestBody(required = false) ProjectLinkRequest projectLinkRequest) {
-        Long projectId =
-                linkService.linkGitlabProject(user.getId(), gitlabProjectId, projectLinkRequest);
-        return ApiSuccessResponse.success("projectId", projectId);
-    }
-
-    @GetMapping("/status")
-    public ApiResponse<Map<String, Boolean>> linkStatus(@AuthUser User user) {
-        boolean hasLinkedProject = linkService.hasLinkedProject(user.getId());
-        return ApiSuccessResponse.success("hasLinkedProject", hasLinkedProject);
     }
 }

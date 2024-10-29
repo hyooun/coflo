@@ -1,5 +1,6 @@
 package com.reviewping.coflo.domain.webhookchannel.service;
 
+import static com.reviewping.coflo.global.error.ErrorCode.*;
 import static org.springframework.util.MimeTypeUtils.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,7 +16,6 @@ import com.reviewping.coflo.domain.webhookchannel.entity.ChannelType;
 import com.reviewping.coflo.domain.webhookchannel.entity.WebhookChannel;
 import com.reviewping.coflo.domain.webhookchannel.repository.ChannelCodeRepository;
 import com.reviewping.coflo.domain.webhookchannel.repository.WebhookChannelRepository;
-import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
 import java.util.List;
@@ -74,6 +74,18 @@ public class WebhookChannelService {
                         });
     }
 
+    @Transactional
+    public void updateWebhookChannel(Long webhookChannelId, String webhookUrl) {
+        WebhookChannel webhookChannel = webhookChannelRepository.getById(webhookChannelId);
+        webhookChannel.setWebhookUrl(webhookUrl);
+    }
+
+    @Transactional
+    public void deleteWebhookChannel(Long webhookChannelId) {
+        WebhookChannel webhookChannel = webhookChannelRepository.getById(webhookChannelId);
+        webhookChannelRepository.delete(webhookChannel);
+    }
+
     private void send(String url, String content, ChannelCode channelCode) {
         HttpHeaders headers = RestTemplateUtils.createHeaders(APPLICATION_JSON_VALUE);
         WebhookContent webhookContent = getWebhookContent(content, channelCode.getName());
@@ -82,7 +94,7 @@ public class WebhookChannelService {
         try {
             body = objectMapper.writeValueAsString(webhookContent);
         } catch (JsonProcessingException e) {
-            throw new BusinessException(ErrorCode.WEBHOOK_REQUEST_SERIALIZATION_ERROR);
+            throw new BusinessException(WEBHOOK_REQUEST_SERIALIZATION_ERROR);
         }
 
         ResponseEntity<String> response =

@@ -1,7 +1,7 @@
 // src/pages/MergeRequestReview/MergeRequestReviewPage.tsx
 import { useParams } from 'react-router-dom';
 import MergeRequestHeader from '@components/MergeRequest/MergeRequestHeader .tsx';
-import ReviewList from '@components/MergeRequest/ReviewList.tsx';
+import ReviewList from '@components/MergeRequest/Review/ReviewList.tsx';
 import { GitlabMergeRequest } from 'types/mergeRequest.ts';
 import { MergeRequestReview, Reference } from 'types/review.ts';
 import { useEffect, useState } from 'react';

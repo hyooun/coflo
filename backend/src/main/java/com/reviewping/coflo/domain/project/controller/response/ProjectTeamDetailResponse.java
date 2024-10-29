@@ -8,7 +8,7 @@ import lombok.Builder;
 public record ProjectTeamDetailResponse(
         int commitCount,
         Long branchCount,
-        Long mergerRequestCount,
+        Long mergeRequestCount,
         Map<String, Double> languages,
         Long aiReviewCount) {
     public static ProjectTeamDetailResponse of(
@@ -16,7 +16,7 @@ public record ProjectTeamDetailResponse(
         return ProjectTeamDetailResponse.builder()
                 .commitCount(projectInfoContent.commitCount())
                 .branchCount(projectInfoContent.branchCount())
-                .mergerRequestCount(projectInfoContent.mergerRequestCount())
+                .mergeRequestCount(projectInfoContent.mergeRequestCount())
                 .languages(projectInfoContent.languages())
                 .aiReviewCount(aiReviewCount)
                 .build();

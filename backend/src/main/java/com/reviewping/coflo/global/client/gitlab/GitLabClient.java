@@ -115,9 +115,9 @@ public class GitLabClient {
             String gitlabUrl, String token, Long gitlabProjectId) {
         int commitCount = getProjectCommitCount(gitlabUrl, token, gitlabProjectId);
         Long branchCount = getProjectBranchCount(gitlabUrl, token, gitlabProjectId);
-        Long mergerRequestCount = getProjectMRCount(gitlabUrl, token, gitlabProjectId);
+        Long mergeRequestCount = getProjectMRCount(gitlabUrl, token, gitlabProjectId);
         Map<String, Double> languages = getProjectLanguages(gitlabUrl, token, gitlabProjectId);
-        return ProjectInfoContent.of(commitCount, branchCount, mergerRequestCount, languages);
+        return ProjectInfoContent.of(commitCount, branchCount, mergeRequestCount, languages);
     }
 
     private int getProjectCommitCount(String gitlabUrl, String token, Long gitlabProjectId) {

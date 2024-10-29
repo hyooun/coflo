@@ -13,6 +13,8 @@ const apiRequests = {
 
   post: <T>(url: string, body: object) =>
     instance.post<ApiResponse<T>>(url, body).then(responseBody),
+
+  delete: <T>(url: string) => instance.delete<ApiResponse<T>>(url).then(responseBody),
 };
 
 export const Link = {
@@ -21,11 +23,14 @@ export const Link = {
     page: number,
     size: number,
   ): Promise<ApiResponse<GitlabProjectListResponse>> =>
-    apiRequests.get<GitlabProjectListResponse>('link/search', { keyword, page, size }),
+    apiRequests.get<GitlabProjectListResponse>('gitlab/search', { keyword, page, size }),
 
   updateRepository: (repoId: number, data: { botToken: string }): Promise<ApiResponse<any>> =>
-    apiRequests.post(`link/${repoId}`, data),
+    apiRequests.post(`user-project/${repoId}`, data),
 
   getLinkStatus: (): Promise<ApiResponse<{ isLinked: boolean }>> =>
-    apiRequests.get<{ isLinked: boolean }>(`link/status`),
+    apiRequests.get<{ isLinked: boolean }>(`user-project/status`),
+
+  deleteRepository: (repoId: number): Promise<ApiResponse<any>> =>
+    apiRequests.delete(`user-project/${repoId}`),
 };

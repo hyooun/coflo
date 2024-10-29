@@ -1,7 +1,7 @@
 import Header from '@components/Header/Header';
 import SearchComponent from '@components/SearchBar/SearchComponent';
 
-const CustompromptPage = () => {
+const CustomPromptPage = () => {
   return (
     <div className="flex flex-col flex-grow overflow-auto px-8 pt-6 ">
       <Header title="Custom prompt"></Header>
@@ -11,4 +11,4 @@ const CustompromptPage = () => {
   );
 };
 
-export default CustompromptPage;
+export default CustomPromptPage;

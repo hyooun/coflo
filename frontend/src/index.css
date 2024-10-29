@@ -3,9 +3,59 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Pretendard, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 300;
+  src:
+    url('./assets/fonts/Pretendard-Light.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-Light.woff') format('woff');
+}
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 400;
+  src:
+    url('./assets/fonts/Pretendard-Regular.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-Regular.woff') format('woff');
+}
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 500;
+  src:
+    url('./assets/fonts/Pretendard-Medium.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-Medium.woff') format('woff');
+}
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 700;
+  src:
+    url('./assets/fonts/Pretendard-Bold.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-Bold.woff') format('woff');
+}
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 600;
+  src:
+    url('./assets/fonts/Pretendard-Bold.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-Bold.woff') format('woff');
+}
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 800;
+  src:
+    url('./assets/fonts/Pretendard-ExtraBold.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-ExtraBold.woff') format('woff');
+}
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 900;
+  src:
+    url('./assets/fonts/Pretendard-Black.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-Black.woff') format('woff');
 }
 
 * {
@@ -41,6 +91,12 @@
 ::-webkit-scrollbar-thumb:active {
   background-color: #909090;
 }
+
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: #fff;
+  -webkit-text-fill-color: #fff;
+}
+
 body {
   margin: 0;
   -ms-overflow-style: none;
@@ -53,4 +109,24 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-weight: normal;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.tooltip {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.relative:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
 }

@@ -4,10 +4,11 @@ export function CommonButton({
   onClick,
   children,
   className,
-  bgColor = 'bg-primary-500',
+  bgColor,
+  hoverColor,
 }: BtnProps) {
   const currentBgColor = active ? bgColor : 'bg-primary-300';
-  const currentHoverColor = active ? 'bg-primary-500' : 'hover:bg-primary-400';
+  const currentHoverColor = active ? hoverColor : 'hover:bg-primary-400';
 
   return (
     <div

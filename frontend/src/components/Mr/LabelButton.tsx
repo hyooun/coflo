@@ -16,16 +16,16 @@ const labelColors: LabelColors = {
   '♻️ Refactor': {
     bgColor: 'bg-[#00BC42]',
   },
-  '📬  Api': {
-    bgColor: 'bg-gray-500',
+  '📬 API': {
+    bgColor: 'bg-gray-600',
   },
 };
 
-const LabelButton = ({ label, active }: { label: string; active?: string }) => {
-  const { bgColor } = labelColors[label] || { bgColor: 'bg-gray-300' };
+const LabelButton = ({ label, active }: { label: string; active?: boolean }) => {
+  const { bgColor } = labelColors[label] || { bgColor: 'bg-blue-500' };
 
   return (
-    <CommonButton active={true} bgColor={bgColor} className="w-[70px] h-[15px]">
+    <CommonButton active={true} hoverColor="" bgColor={bgColor} className="w-[70px] h-[15px]">
       {label}
     </CommonButton>
   );

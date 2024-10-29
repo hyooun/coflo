@@ -54,9 +54,9 @@ export const handlers = [
   }),
   rest.post<UpdateRepositoryRequest>('/api/link/:repoId', (req, res, ctx) => {
     const { repoId } = req.params;
-    const { token } = req.body;
+    const { botToken } = req.body;
 
-    if (!token) {
+    if (!botToken) {
       return res(
         ctx.status(400),
         ctx.json({

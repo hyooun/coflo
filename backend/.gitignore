@@ -42,3 +42,6 @@ env
 
 ### spotlesCheck ###
 spotless_check_output.txt
+
+### generated ###
+generated

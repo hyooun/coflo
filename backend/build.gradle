@@ -72,6 +72,9 @@ dependencies {
 
     // webflux for end-to-end test
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 }
 
 // 의존성 전이를 비활성화

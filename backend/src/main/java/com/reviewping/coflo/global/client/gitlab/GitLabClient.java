@@ -111,7 +111,16 @@ public class GitLabClient {
                 url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
-    public int getProjectCommitCount(String gitlabUrl, String token, Long gitlabProjectId) {
+    public ProjectInfoContent getProjectInfoDetail(
+            String gitlabUrl, String token, Long gitlabProjectId) {
+        Long commitCount = getProjectCommitCount(gitlabUrl, token, gitlabProjectId);
+        Long branchCount = getProjectBranchCount(gitlabUrl, token, gitlabProjectId);
+        Long mergerRequestCount = getProjectMRCount(gitlabUrl, token, gitlabProjectId);
+        Map<String, Double> languages = getProjectLanguages(gitlabUrl, token, gitlabProjectId);
+        return ProjectInfoContent.of(commitCount, branchCount, mergerRequestCount, languages);
+    }
+
+    private long getProjectCommitCount(String gitlabUrl, String token, Long gitlabProjectId) {
         String url = GitLabApiUrlBuilder.createProjectCommitsUrl(gitlabUrl, gitlabProjectId);
         HttpHeaders headers = makeGitlabHeaders(token);
 
@@ -124,10 +133,10 @@ public class GitLabClient {
             throw new BusinessException(EXTERNAL_API_BAD_REQUEST);
         }
         Map<String, Object> statistics = (Map<String, Object>) body.get("statistics");
-        return (int) statistics.get("commit_count");
+        return (long) statistics.get("commit_count");
     }
 
-    public Map<String, Double> getProjectLanguages(
+    private Map<String, Double> getProjectLanguages(
             String gitlabUrl, String token, Long gitlabProjectId) {
         String url = GitLabApiUrlBuilder.createProjectLanguagesUrl(gitlabUrl, gitlabProjectId);
         HttpHeaders headers = makeGitlabHeaders(token);
@@ -137,22 +146,22 @@ public class GitLabClient {
         return response.getBody();
     }
 
-    public int getProjectBranchCount(String gitlabUrl, String token, Long gitlabProjectId) {
+    private long getProjectBranchCount(String gitlabUrl, String token, Long gitlabProjectId) {
         String url = GitLabApiUrlBuilder.createProjectBranchesUrl(gitlabUrl, gitlabProjectId);
         return getTotalByHeader(token, url);
     }
 
-    public int getProjectMRCount(String gitlabUrl, String token, Long gitlabProjectId) {
+    private long getProjectMRCount(String gitlabUrl, String token, Long gitlabProjectId) {
         String url = GitLabApiUrlBuilder.createProjectMRUrl(gitlabUrl, gitlabProjectId);
         return getTotalByHeader(token, url);
     }
 
-    private int getTotalByHeader(String token, String url) {
+    private long getTotalByHeader(String token, String url) {
         HttpHeaders headers = makeGitlabHeaders(token);
         ResponseEntity<Object> response =
                 RestTemplateUtils.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
-        return Integer.parseInt(Objects.requireNonNull(response.getHeaders().getFirst("X-Total")));
+        return Long.parseLong(Objects.requireNonNull(response.getHeaders().getFirst("X-Total")));
     }
 
     private PageDetail createPageDetail(HttpHeaders responseHeaders) {

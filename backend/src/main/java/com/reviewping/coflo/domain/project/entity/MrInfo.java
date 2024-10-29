@@ -42,8 +42,4 @@ public class MrInfo extends BaseTimeEntity {
 
         this.project.getMrInfos().add(this);
     }
-
-    public void updateGitlabCreatedDate(LocalDateTime localDateTime) {
-        this.gitlabCreatedDate = localDateTime;
-    }
 }

@@ -31,7 +31,7 @@ public class UserProjectController {
     }
 
     @GetMapping("/status")
-    public ApiResponse<Map<String, Boolean>> linkStatus(@AuthUser User user) {
+    public ApiResponse<Map<String, Boolean>> getLinkedStatus(@AuthUser User user) {
         boolean hasLinkedProject = userProjectService.hasLinkedProject(user.getId());
         return ApiSuccessResponse.success("hasLinkedProject", hasLinkedProject);
     }

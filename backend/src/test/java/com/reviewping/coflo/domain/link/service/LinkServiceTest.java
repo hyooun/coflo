@@ -74,6 +74,7 @@ class LinkServiceTest {
         given(project.getId()).willReturn(1L);
         given(gitLabApiService.searchGitlabProjects(any(), any(), any()))
                 .willReturn(createGitlabProjectPageContent());
+
         given(projectRepository.findByGitlabProjectId(anyLong())).willReturn(Optional.of(project));
         given(userProjectRepository.existsByGitlabAccountIdAndProjectId(anyLong(), anyLong()))
                 .willReturn(true);
@@ -99,36 +100,6 @@ class LinkServiceTest {
                         () -> linkService.getGitlabProjects(userId, any(GitlabSearchRequest.class)))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(USER_GITLAB_ACCOUNT_NOT_EXIST.getMessage());
-    }
-
-    @Test
-    @DisplayName("사용자가 연동된 프로젝트가 있을 때, true를 반환한다.")
-    public void testUserHasLinkedProject() {
-        // given
-        Long userId = 1L;
-
-        given(userProjectRepository.existsByGitlabAccountUserId(userId)).willReturn(true);
-
-        // when
-        boolean result = linkService.hasLinkedProject(userId);
-
-        // then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    @DisplayName("사용자가 연동된 프로젝트가 없을 때, false를 반환한다.")
-    public void testUserHasNoLinkedProject() {
-        // given
-        Long userId = 1L;
-
-        given(userProjectRepository.existsByGitlabAccountUserId(userId)).willReturn(false);
-
-        // when
-        boolean result = linkService.hasLinkedProject(userId);
-
-        // then
-        assertThat(result).isFalse();
     }
 
     private GitlabProjectPageContent createGitlabProjectPageContent() {

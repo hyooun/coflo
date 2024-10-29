@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/link")
+@RequestMapping("/api/gitlab")
 @RequiredArgsConstructor
 public class GitlabApiController {
 

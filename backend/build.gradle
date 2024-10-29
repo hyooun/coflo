@@ -85,7 +85,6 @@ tasks.named('test') {
 }
 
 spotless {
-
     format 'misc', {
         target '*.gradle'
         trimTrailingWhitespace()
@@ -93,10 +92,16 @@ spotless {
         endWithNewline()
     }
     java {
+        targetExclude 'src/main/generated/**/*.java' // generated 디렉토리 제외
         removeUnusedImports()
         googleJavaFormat().aosp().reflowLongStrings().skipJavadocFormatting()
         formatAnnotations()
     }
+}
+
+// spotlessJava 태스크가 compileJava 태스크에 의존하도록 설정
+tasks.named("spotlessJava") {
+    dependsOn tasks.named("compileJava")
 }
 
 def generated = 'src/main/generated'

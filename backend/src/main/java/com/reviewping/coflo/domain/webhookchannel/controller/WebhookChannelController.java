@@ -1,12 +1,11 @@
 package com.reviewping.coflo.domain.webhookchannel.controller;
 
-import java.util.List;
-
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.WebhookChannelRequest;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.response.WebhookChannelResponse;
 import com.reviewping.coflo.domain.webhookchannel.service.WebhookChannelService;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WebhookChannelController {
 
     private final WebhookChannelService webhookChannelService;
+    private static final String TEST_CONTENT = "Hello coFlo!";
 
     @PostMapping
     public ApiResponse<Void> addWebhookChannel(
@@ -37,5 +37,11 @@ public class WebhookChannelController {
     public ApiResponse<List<WebhookChannelResponse>> getWebhookChannelList(
             @PathVariable("projectId") Long projectId) {
         return ApiSuccessResponse.success(webhookChannelService.getWebhookChannelList(projectId));
+    }
+
+    @PostMapping("/test/{projectId}")
+    public ApiResponse<Void> testWebhookChannel(@PathVariable("projectId") Long projectId) {
+        webhookChannelService.sendData(projectId, TEST_CONTENT);
+        return ApiSuccessResponse.success();
     }
 }

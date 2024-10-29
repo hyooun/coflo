@@ -1,6 +1,7 @@
 package com.reviewping.coflo.domain.project.entity;
 
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
+import com.reviewping.coflo.domain.webhookchannel.entity.WebhookChannel;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -32,6 +33,9 @@ public class Project extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "project")
     private List<MrInfo> mrInfos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project")
+    private List<WebhookChannel> webhookChannels = new ArrayList<>();
 
     @Builder
     public Project(String botToken, Long gitlabProjectId, String name) {

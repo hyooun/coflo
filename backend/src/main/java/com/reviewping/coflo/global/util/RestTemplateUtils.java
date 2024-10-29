@@ -28,6 +28,12 @@ public class RestTemplateUtils {
         return headers;
     }
 
+    public static HttpHeaders createHeaders(String contentType) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HEADER_CONTENT_TYPE, contentType);
+        return headers;
+    }
+
     public static <T> ResponseEntity<T> sendGetRequest(
             String url, HttpHeaders headers, ParameterizedTypeReference<T> responseType) {
         HttpEntity<String> entity = new HttpEntity<>(headers);

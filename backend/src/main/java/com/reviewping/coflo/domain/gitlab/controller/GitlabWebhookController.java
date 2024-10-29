@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class GitlabWebhookController {
 
+    private static final String MERGE_REQUEST_TYPE = "Merge Request Hook";
+
     private final MrEventHandler mrEventHandler;
     private final ObjectMapper objectMapper;
 
@@ -24,16 +26,17 @@ public class GitlabWebhookController {
             @RequestHeader("X-Gitlab-Event") String gitlabEventType,
             @PathVariable("projectId") Long projectId,
             @RequestBody String requestBody) {
-        if (gitlabEventType.equals("Merge Request Hook")) {
-            GitlabEventRequest gitlabEventRequest;
-            try {
-                gitlabEventRequest = objectMapper.readValue(requestBody, new TypeReference<>() {});
-            } catch (JsonProcessingException e) {
-                throw new BusinessException(ErrorCode.GITLAB_EVENT_REQUEST_SERIALIZATION_ERROR);
-            }
-            mrEventHandler.handle(projectId, gitlabEventRequest);
-            return ApiSuccessResponse.success();
+        if (!gitlabEventType.equals(MERGE_REQUEST_TYPE)) {
+            throw new BusinessException(ErrorCode.UNSUPPORTED_EVENT_TYPE);
         }
-        throw new BusinessException(ErrorCode.UNSUPPORTED_EVENT_TYPE);
+
+        GitlabEventRequest gitlabEventRequest;
+        try {
+            gitlabEventRequest = objectMapper.readValue(requestBody, new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            throw new BusinessException(ErrorCode.GITLAB_EVENT_REQUEST_SERIALIZATION_ERROR);
+        }
+        mrEventHandler.handle(projectId, gitlabEventRequest);
+        return ApiSuccessResponse.success();
     }
 }

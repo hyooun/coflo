@@ -76,9 +76,7 @@ public class WebhookChannelService {
 
     private void send(String url, String content, ChannelCode channelCode) {
         HttpHeaders headers = RestTemplateUtils.createHeaders(APPLICATION_JSON_VALUE);
-
-        WebhookContent webhookContent;
-        webhookContent = getWebhookContent(content, channelCode);
+        WebhookContent webhookContent = getWebhookContent(content, channelCode);
 
         String body;
         try {

@@ -7,11 +7,11 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabMrDiffsContent;
-import com.reviewping.coflo.domain.gitlab.service.GitLabClient;
 import com.reviewping.coflo.domain.openai.dto.response.ChatCompletionContent;
 import com.reviewping.coflo.domain.openai.dto.response.ChatMessage;
 import com.reviewping.coflo.domain.openai.service.OpenaiApiService;
+import com.reviewping.coflo.global.client.gitlab.GitLabClient;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.List;

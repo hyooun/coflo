@@ -1,9 +1,9 @@
 package com.reviewping.coflo.domain.review.service;
 
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabMrDiffsContent;
-import com.reviewping.coflo.domain.gitlab.service.GitLabClient;
 import com.reviewping.coflo.domain.openai.dto.response.ChatCompletionContent;
 import com.reviewping.coflo.domain.openai.service.OpenaiApiService;
+import com.reviewping.coflo.global.client.gitlab.GitLabClient;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

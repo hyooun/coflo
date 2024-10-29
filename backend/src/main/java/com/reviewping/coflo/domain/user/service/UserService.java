@@ -1,11 +1,11 @@
 package com.reviewping.coflo.domain.user.service;
 
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabUserInfoContent;
-import com.reviewping.coflo.domain.gitlab.service.GitLabClient;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
+import com.reviewping.coflo.global.client.gitlab.GitLabClient;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabUserInfoContent;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;

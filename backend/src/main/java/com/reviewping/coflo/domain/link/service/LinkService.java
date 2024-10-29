@@ -1,8 +1,5 @@
 package com.reviewping.coflo.domain.link.service;
 
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectDetailContent;
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectPageContent;
-import com.reviewping.coflo.domain.gitlab.service.GitLabClient;
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectPageResponse;
 import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectResponse;
@@ -10,6 +7,9 @@ import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
+import com.reviewping.coflo.global.client.gitlab.GitLabClient;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectDetailContent;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectPageContent;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

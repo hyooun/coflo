@@ -3,7 +3,6 @@ package com.reviewping.coflo.domain.userproject.service;
 import static com.reviewping.coflo.global.error.ErrorCode.LINK_BOT_TOKEN_NOT_EXIST;
 import static com.reviewping.coflo.global.error.ErrorCode.PROJECT_NOT_EXIST;
 
-import com.reviewping.coflo.domain.gitlab.service.GitLabClient;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
@@ -13,6 +12,7 @@ import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLin
 import com.reviewping.coflo.domain.userproject.controller.dto.response.UserProjectResponse;
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
+import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.List;
 import java.util.stream.IntStream;

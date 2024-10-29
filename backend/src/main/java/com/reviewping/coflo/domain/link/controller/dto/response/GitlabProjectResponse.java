@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.link.controller.dto.response;
 
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectDetailContent;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectDetailContent;
 import lombok.Builder;
 
 @Builder

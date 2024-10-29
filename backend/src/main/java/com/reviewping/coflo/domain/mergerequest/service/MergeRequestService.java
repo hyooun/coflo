@@ -1,13 +1,13 @@
 package com.reviewping.coflo.domain.mergerequest.service;
 
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabMrPageContent;
-import com.reviewping.coflo.domain.gitlab.service.GitLabClient;
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrPageResponse;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
 import com.reviewping.coflo.domain.project.repository.MrInfoRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
+import com.reviewping.coflo.global.client.gitlab.GitLabClient;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabMrPageContent;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.List;

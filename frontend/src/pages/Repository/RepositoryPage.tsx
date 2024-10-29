@@ -36,14 +36,20 @@ export default function RepositoryPage() {
     fetchProjects();
   }, [currentPage, setTotalPages]);
 
-  const handleToggleChange = (index: number) => {
+  const handleToggleChange = async (index: number) => {
     const repo = repositories[index];
+
     if (repo.isLinkable) {
-      setRepositories((prev) => {
-        const updatedRepos = [...prev];
-        updatedRepos[index] = { ...updatedRepos[index], isLinked: !updatedRepos[index].isLinked };
-        return updatedRepos;
-      });
+      if (repo.isLinked) {
+        await Link.deleteRepository(repo.gitlabProjectId);
+        setRepositories((prev) => prev.filter((_, i) => i !== index));
+      } else {
+        setRepositories((prev) => {
+          const updatedRepos = [...prev];
+          updatedRepos[index] = { ...updatedRepos[index], isLinked: true };
+          return updatedRepos;
+        });
+      }
     } else {
       setSelectedRepo(repo);
       setIsModalOpen(true);

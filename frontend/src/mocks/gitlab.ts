@@ -3,7 +3,7 @@ import { GitlabProjectListResponse } from 'types/gitLab';
 import { UpdateRepositoryRequest } from 'types/api';
 
 export const handlers = [
-  rest.get('/api/link/search', (req, res, ctx) => {
+  rest.get('/api/gitlab/search', (req, res, ctx) => {
     const keyword = req.url.searchParams.get('keyword');
     const page = req.url.searchParams.get('page');
     const size = req.url.searchParams.get('size');
@@ -52,7 +52,7 @@ export const handlers = [
       }),
     );
   }),
-  rest.post<UpdateRepositoryRequest>('/api/link/:repoId', (req, res, ctx) => {
+  rest.post<UpdateRepositoryRequest>('/api/user-project/:repoId', (req, res, ctx) => {
     const { repoId } = req.params;
     const { botToken } = req.body;
 
@@ -75,7 +75,7 @@ export const handlers = [
     );
   }),
 
-  rest.get('/api/link/status', (req, res, ctx) => {
+  rest.get('/api/user-project/status', (req, res, ctx) => {
     const isLinked = Math.random() < 0.5;
 
     return res(
@@ -83,6 +83,18 @@ export const handlers = [
       ctx.json({
         status: 'SUCCESS',
         data: { isLinked },
+      }),
+    );
+  }),
+
+  rest.delete('/api/user-project/:repoId', (req, res, ctx) => {
+    const { repoId } = req.params;
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        status: 'SUCCESS',
+        message: `리포지토리 ${repoId}가 삭제되었습니다.`,
       }),
     );
   }),
@@ -164,6 +176,78 @@ export const handlers = [
         isAiReviewCreated: false,
       },
       {
+        id: 639386,
+        iid: 30,
+        title: '[feat/#255] 커스텀 프롬프트 수정 및 삭제',
+        state: 'opened',
+        merged_at: null,
+        created_at: '2024-10-26T07:44:37.935Z',
+        updated_at: '2024-10-26T09:23:10.799Z',
+        closed_at: null,
+        source_branch: 'be/S11P31A210-225-커스텀-프롬프트-수정-및-삭제',
+        target_branch: 'be/dev',
+        labels: ['✨ Feature', '🐛 Fix'],
+        has_conflicts: false,
+        assignee: {
+          username: 'fkgnssla',
+          avatar_url: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17530/avatar.png',
+        },
+        reviewer: {
+          username: 'anjs134',
+          avatar_url:
+            'https://secure.gravatar.com/avatar/18d31feb03d8981c6c569b9924031f8be04855d7bf40d32a2d66e9093d49cc09?s=80&d=identicon',
+        },
+        isAiReviewCreated: false,
+      },
+      {
+        id: 639386,
+        iid: 30,
+        title: '[feat/#255] 커스텀 프롬프트 수정 및 삭제',
+        state: 'opened',
+        merged_at: null,
+        created_at: '2024-10-26T07:44:37.935Z',
+        updated_at: '2024-10-26T09:23:10.799Z',
+        closed_at: null,
+        source_branch: 'be/S11P31A210-225-커스텀-프롬프트-수정-및-삭제',
+        target_branch: 'be/dev',
+        labels: ['✨ Feature', '🐛 Fix'],
+        has_conflicts: false,
+        assignee: {
+          username: 'fkgnssla',
+          avatar_url: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17530/avatar.png',
+        },
+        reviewer: {
+          username: 'anjs134',
+          avatar_url:
+            'https://secure.gravatar.com/avatar/18d31feb03d8981c6c569b9924031f8be04855d7bf40d32a2d66e9093d49cc09?s=80&d=identicon',
+        },
+        isAiReviewCreated: false,
+      },
+      {
+        id: 639386,
+        iid: 30,
+        title: '[feat/#255] 커스텀 프롬프트 수정 및 삭제',
+        state: 'opened',
+        merged_at: null,
+        created_at: '2024-10-26T07:44:37.935Z',
+        updated_at: '2024-10-26T09:23:10.799Z',
+        closed_at: null,
+        source_branch: 'be/S11P31A210-225-커스텀-프롬프트-수정-및-삭제',
+        target_branch: 'be/dev',
+        labels: ['✨ Feature', '🐛 Fix'],
+        has_conflicts: false,
+        assignee: {
+          username: 'fkgnssla',
+          avatar_url: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17530/avatar.png',
+        },
+        reviewer: {
+          username: 'anjs134',
+          avatar_url:
+            'https://secure.gravatar.com/avatar/18d31feb03d8981c6c569b9924031f8be04855d7bf40d32a2d66e9093d49cc09?s=80&d=identicon',
+        },
+        isAiReviewCreated: false,
+      },
+      {
         id: 639371,
         iid: 29,
         title: '[feat/#261] 로그인 UI 수정 및 페이지네이션 구현',
@@ -209,7 +293,7 @@ export const handlers = [
     const responseData = {
       gitlabMrList,
       totalElements: gitlabMrList.length,
-      totalPages: 1,
+      totalPages: 2,
       isLast: true,
       currPage: 1,
     };
@@ -220,6 +304,42 @@ export const handlers = [
         status: 'SUCCESS',
         data: responseData,
       }),
+    );
+  }),
+  rest.get('/api/best-merge-requests', (req, res, ctx) => {
+    return res(
+      ctx.json([
+        {
+          id: 1,
+          branchName: 'feature/user',
+          title: 'Feat: 회원가입 컴포넌트 구현',
+          assignee: '/images/mocks/profile1.png',
+          reviewer: '/images/mocks/profile2.png',
+          createdAt: '1 week ago',
+          labels: ['feat', 'style'],
+          author: '이보연',
+        },
+        {
+          id: 2,
+          branchName: 'dev',
+          title: 'Fix: 입력폼 수정',
+          assignee: '/images/mocks/profile1.png',
+          reviewer: '/images/mocks/profile2.png',
+          createdAt: '1 week ago',
+          labels: ['fix', 'error'],
+          author: '구승석',
+        },
+        {
+          id: 3,
+          branchName: 'dev',
+          title: 'Fix: 입력폼 수정',
+          assignee: '/images/mocks/profile1.png',
+          reviewer: '/images/mocks/profile2.png',
+          createdAt: '1 week ago',
+          labels: ['fix', 'error'],
+          author: '구승석',
+        },
+      ]),
     );
   }),
 ];

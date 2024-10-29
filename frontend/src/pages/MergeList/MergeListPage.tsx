@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '@components/Header/Header';
 import { useAtom } from 'jotai';
 import { currentPageAtom, totalPagesAtom } from '@store/pagination';
-import { MrSearchBar } from '@components/Mr/MrSearchBar';
+import { CustomSearchBar } from '@components/Mr/MrSearchBar';
 import { MrItem } from '@components/Mr/MrItem';
 import Pagination from '@components/Pagination/Pagination';
 import { MergeRequest } from '@apis/MergeRequest';
@@ -32,9 +32,9 @@ const MergeListPage = () => {
   return (
     <div className="flex flex-col flex-grow overflow-auto px-8 pt-6">
       <div className="max-w-3xl  p-6">
-        <MrSearchBar />
+        <CustomSearchBar></CustomSearchBar>
 
-        <div className="bg-white w-[1000px]">
+        <div className="bg-white w-[1000px] ">
           {mergeRequests.map((mergeRequest) => (
             <div key={mergeRequest.id}>
               <MrItem mergeRequest={mergeRequest} />

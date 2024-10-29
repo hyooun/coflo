@@ -43,6 +43,16 @@ public class UserProjectService {
         return savedProject.getId();
     }
 
+    @Transactional
+    public Long unlinkGitlabProject(User user, Long gitlabProjectId) {
+        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
+        Project project = projectRepository.getByGitlabProjectId(gitlabProjectId);
+        UserProject userProject =
+                userProjectRepository.getByProjectAndGitlabAccount(project, gitlabAccount);
+        userProjectRepository.delete(userProject);
+        return userProject.getId();
+    }
+
     public boolean hasLinkedProject(Long userId) {
         return userProjectRepository.existsByGitlabAccountUserId(userId);
     }

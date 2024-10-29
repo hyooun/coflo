@@ -1,36 +1,42 @@
 import { GitlabMergeRequest, Reviewer } from 'types/mergeRequest.ts';
 
-interface MergeRequestReview extends GitlabMergeRequest {
+export interface MergeRequestReview extends GitlabMergeRequest {
   reviews: Review[];
-  references: Reference[];
 }
 
-interface Review {
+export interface Review {
+  id: number;
   reviewer: Reviewer;
   createdAt: string;
-  content: string;
-  comments: (CodeComment | GeneralComment)[];
+  updatedAt: string;
+  content: string; // 마크다운 형식의 리뷰 내용
+  comments: Comment[];
 }
 
-interface CodeComment {
-  type: 'code';
-  fileName: string;
-  codeChanges: string;
+interface Comment {
+  id: number;
   reviewer: Reviewer;
   createdAt: string;
+  updatedAt: string;
   content: string;
+  resolved?: boolean;
+  resolvable: boolean;
+  replies: CommentReply[];
 }
 
-interface GeneralComment {
-  type: 'general';
-  reviewer: Reviewer;
+interface CommentReply {
+  id: number;
+  author: Reviewer;
+  content: string;
   createdAt: string;
-  content: string;
+  updatedAt: string;
+  system?: boolean;
 }
 
-interface Reference {
+export interface Reference {
   id: number;
   fileName: string;
   type: 'code' | 'text';
   content: string;
+  relevance?: number;
 }

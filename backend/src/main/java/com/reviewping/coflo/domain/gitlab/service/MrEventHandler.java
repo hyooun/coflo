@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.gitlab.service;
 
-import com.reviewping.coflo.domain.gitlab.dto.request.GitlabEventRequest;
+import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabEventRequest;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.review.service.ReviewCreateService;

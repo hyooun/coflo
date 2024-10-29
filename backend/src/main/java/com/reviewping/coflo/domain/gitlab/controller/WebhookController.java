@@ -3,7 +3,7 @@ package com.reviewping.coflo.domain.gitlab.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reviewping.coflo.domain.gitlab.dto.request.GitlabEventRequest;
+import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabEventRequest;
 import com.reviewping.coflo.domain.gitlab.service.MrEventHandler;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;

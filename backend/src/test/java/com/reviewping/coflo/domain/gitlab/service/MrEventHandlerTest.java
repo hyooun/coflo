@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import com.reviewping.coflo.domain.gitlab.dto.request.GitlabEventRequest;
+import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabEventRequest;
 import com.reviewping.coflo.domain.gitlab.fixture.GitlabEventRequestFixture;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.fixture.ProjectFixture;

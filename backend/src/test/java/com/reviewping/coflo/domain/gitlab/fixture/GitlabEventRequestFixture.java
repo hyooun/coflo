@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.gitlab.fixture;
 
-import com.reviewping.coflo.domain.gitlab.dto.request.GitlabEventRequest;
+import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabEventRequest;
 
 public class GitlabEventRequestFixture {
 

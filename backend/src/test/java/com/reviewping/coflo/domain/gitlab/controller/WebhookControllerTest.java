@@ -8,7 +8,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reviewping.coflo.domain.gitlab.dto.request.GitlabEventRequest;
+import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabEventRequest;
 import com.reviewping.coflo.domain.gitlab.fixture.ChatCompletionContentFixture;
 import com.reviewping.coflo.domain.gitlab.fixture.GitlabEventRequestFixture;
 import com.reviewping.coflo.domain.gitlab.fixture.GitlabMrDiffsContentFixture;

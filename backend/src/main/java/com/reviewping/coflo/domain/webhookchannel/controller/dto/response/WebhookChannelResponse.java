@@ -1,9 +1,12 @@
 package com.reviewping.coflo.domain.webhookchannel.controller.dto.response;
 
-import java.util.List;
+import com.reviewping.coflo.domain.webhookchannel.entity.WebhookChannel;
 
-public record WebhookChannelResponse(List<WebhookChannelContent> webhookChannelContentList) {
-    public static WebhookChannelResponse of(List<WebhookChannelContent> webhookChannelContentList) {
-        return new WebhookChannelResponse(webhookChannelContentList);
+public record WebhookChannelResponse(Long webhookChannelId, String channelName, String webhookUrl) {
+    public static WebhookChannelResponse of(WebhookChannel webhookChannel) {
+        return new WebhookChannelResponse(
+                webhookChannel.getId(),
+                webhookChannel.getChannelCode().getName().name(),
+                webhookChannel.getWebhookUrl());
     }
 }

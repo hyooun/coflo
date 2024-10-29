@@ -2,7 +2,6 @@ package com.reviewping.coflo.domain.webhookchannel.service;
 
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
-import com.reviewping.coflo.domain.webhookchannel.controller.dto.response.WebhookChannelContent;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.response.WebhookChannelResponse;
 import com.reviewping.coflo.domain.webhookchannel.entity.ChannelCode;
 import com.reviewping.coflo.domain.webhookchannel.entity.WebhookChannel;
@@ -37,16 +36,13 @@ public class WebhookChannelService {
         webhookChannelRepository.save(webhookChannel);
     }
 
-    public WebhookChannelResponse getWebhookChannelList(Long projectId) {
+    public List<WebhookChannelResponse> getWebhookChannelList(Long projectId) {
         Project project = projectRepository.findProjectById(projectId);
 
         List<WebhookChannel> webhookChannelList =
                 webhookChannelRepository.findAllByProject(project);
-        List<WebhookChannelContent> webhookChannelContentList =
-                webhookChannelList.stream()
-                        .map(webhookChannel -> WebhookChannelContent.of(webhookChannel))
+        return webhookChannelList.stream()
+                        .map(webhookChannel -> WebhookChannelResponse.of(webhookChannel))
                         .toList();
-
-        return WebhookChannelResponse.of(webhookChannelContentList);
     }
 }

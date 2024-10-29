@@ -1,5 +1,7 @@
 package com.reviewping.coflo.domain.webhookchannel.controller;
 
+import java.util.List;
+
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.WebhookChannelRequest;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.response.WebhookChannelResponse;
 import com.reviewping.coflo.domain.webhookchannel.service.WebhookChannelService;
@@ -32,7 +34,7 @@ public class WebhookChannelController {
     }
 
     @GetMapping("/{projectId}")
-    public ApiResponse<WebhookChannelResponse> getWebhookChannelList(
+    public ApiResponse<List<WebhookChannelResponse>> getWebhookChannelList(
             @PathVariable("projectId") Long projectId) {
         return ApiSuccessResponse.success(webhookChannelService.getWebhookChannelList(projectId));
     }

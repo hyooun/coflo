@@ -3,7 +3,7 @@ import {
   SettingIcon,
   MergeListIcon,
   BadgeIcon,
-  CustomTemplateIcon,
+  CustomPromptIcon,
 } from '@components/Sidebar/Icons/index';
 import { NavButton } from '@components/Button/NavButton';
 import { Title } from '@components/Sidebar/Title';
@@ -25,12 +25,9 @@ export const Sidebar = () => {
           Merge Request
         </NavButton>
       </Link>
-      <Link to="/main/custom-template" className="w-full">
-        <NavButton
-          active={location.pathname === '/main/custom-template'}
-          icon={<CustomTemplateIcon />}
-        >
-          Custom template
+      <Link to="/main/custom-prompt" className="w-full">
+        <NavButton active={location.pathname === '/main/custom-prompt'} icon={<CustomPromptIcon />}>
+          Custom Prompt
         </NavButton>
       </Link>
       <div className="h-10 w-full flex flex-col justify-center">

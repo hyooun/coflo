@@ -88,6 +88,7 @@ export default function RepositoryPage() {
         <CommonButton
           className="px-4 w-[100px] h-[50px]"
           active={false}
+          bgColor="bg-primary-500"
           onClick={handleButtonClick}
         >
           시작하기

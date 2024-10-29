@@ -1,10 +1,10 @@
 package com.reviewping.coflo.domain.userproject.service;
 
-import static com.reviewping.coflo.global.error.ErrorCode.LINK_BOT_TOKEN_NOT_EXIST;
 import static com.reviewping.coflo.global.error.ErrorCode.PROJECT_NOT_EXIST;
 
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
+import com.reviewping.coflo.domain.project.service.ProjectService;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
@@ -12,7 +12,6 @@ import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLin
 import com.reviewping.coflo.domain.userproject.controller.dto.response.UserProjectResponse;
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
-import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -25,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserProjectService {
 
-    private final GitLabClient gitLabClient;
+    private final ProjectService projectService;
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
     private final GitlabAccountRepository gitlabAccountRepository;
@@ -66,39 +65,10 @@ public class UserProjectService {
             GitlabAccount gitlabAccount) {
         return projectRepository
                 .findByGitlabProjectId(gitlabProjectId)
-                .orElseGet(() -> createProject(gitlabAccount, gitlabProjectId, projectLinkRequest));
-    }
-
-    private Project createProject(
-            GitlabAccount gitlabAccount,
-            Long gitlabProjectId,
-            ProjectLinkRequest projectLinkRequest) {
-
-        String gitlabProjectName =
-                getProjectNameByBotToken(
-                        gitlabAccount.getDomain(), gitlabProjectId, projectLinkRequest);
-
-        return saveProject(gitlabProjectId, projectLinkRequest.botToken(), gitlabProjectName);
-    }
-
-    private String getProjectNameByBotToken(
-            String domain, Long gitlabProjectId, ProjectLinkRequest projectLinkRequest) {
-        if (projectLinkRequest == null || projectLinkRequest.botToken() == null) {
-            throw new BusinessException(LINK_BOT_TOKEN_NOT_EXIST);
-        }
-        return gitLabClient
-                .getSingleProject(domain, projectLinkRequest.botToken(), gitlabProjectId)
-                .name();
-    }
-
-    private Project saveProject(Long gitlabProjectId, String botToken, String gitlabProjectName) {
-        Project project =
-                Project.builder()
-                        .gitlabProjectId(gitlabProjectId)
-                        .botToken(botToken)
-                        .name(gitlabProjectName)
-                        .build();
-        return projectRepository.save(project);
+                .orElseGet(
+                        () ->
+                                projectService.addProject(
+                                        gitlabAccount, gitlabProjectId, projectLinkRequest));
     }
 
     private void moveCurrentProjectToFront(Long currentProjectId, List<UserProject> userProjects) {

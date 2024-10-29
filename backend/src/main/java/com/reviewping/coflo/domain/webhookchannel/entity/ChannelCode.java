@@ -19,5 +19,5 @@ public class ChannelCode {
     private Long id;
 
     @Enumerated(value = EnumType.STRING)
-    Channel name;
+    ChannelType name;
 }

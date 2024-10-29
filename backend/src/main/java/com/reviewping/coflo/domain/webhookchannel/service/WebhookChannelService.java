@@ -10,8 +10,8 @@ import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.Discord
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.MattermostContent;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.WebhookContent;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.response.WebhookChannelResponse;
-import com.reviewping.coflo.domain.webhookchannel.entity.Channel;
 import com.reviewping.coflo.domain.webhookchannel.entity.ChannelCode;
+import com.reviewping.coflo.domain.webhookchannel.entity.ChannelType;
 import com.reviewping.coflo.domain.webhookchannel.entity.WebhookChannel;
 import com.reviewping.coflo.domain.webhookchannel.repository.ChannelCodeRepository;
 import com.reviewping.coflo.domain.webhookchannel.repository.WebhookChannelRepository;
@@ -76,7 +76,7 @@ public class WebhookChannelService {
 
     private void send(String url, String content, ChannelCode channelCode) {
         HttpHeaders headers = RestTemplateUtils.createHeaders(APPLICATION_JSON_VALUE);
-        WebhookContent webhookContent = getWebhookContent(content, channelCode);
+        WebhookContent webhookContent = getWebhookContent(content, channelCode.getName());
 
         String body;
         try {
@@ -90,11 +90,11 @@ public class WebhookChannelService {
                         url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
-    private static WebhookContent getWebhookContent(String content, ChannelCode channelCode) {
-        switch (channelCode.getName()) {
-            case Channel.MATTERMOST:
+    private static WebhookContent getWebhookContent(String content, ChannelType channelType) {
+        switch (channelType) {
+            case ChannelType.MATTERMOST:
                 return new MattermostContent(content);
-            case Channel.DISCORD:
+            case ChannelType.DISCORD:
                 return new DiscordContent(content);
             default:
                 return null;

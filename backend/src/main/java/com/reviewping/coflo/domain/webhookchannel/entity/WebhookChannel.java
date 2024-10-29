@@ -39,5 +39,7 @@ public class WebhookChannel extends BaseTimeEntity {
         this.project = project;
         this.channelCode = channelCode;
         this.webhookUrl = webhookUrl;
+
+        project.getWebhookChannels().add(this);
     }
 }

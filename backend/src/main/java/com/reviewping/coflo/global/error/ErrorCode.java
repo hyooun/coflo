@@ -72,6 +72,12 @@ public enum ErrorCode {
     CHANNEL_CODE_NOT_EXIST(HttpStatus.BAD_REQUEST, "J001", "존재하지 않는 채널 코드입니다."),
 
     /**
+     * Webhook Channel(K000)
+     */
+    WEBHOOK_REQUEST_SERIALIZATION_ERROR(
+            HttpStatus.INTERNAL_SERVER_ERROR, "K001", "Webhook Content 요청 생성에 오류가 발생했습니다."),
+
+    /**
      * 외부 API(Y000)
      */
     EXTERNAL_API_NOT_FOUND(HttpStatus.NOT_FOUND, "Y001", "외부 API를 찾을 수 없습니다."),

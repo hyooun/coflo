@@ -1,7 +1,7 @@
 package com.reviewping.coflo.domain.mergerequest.controller.dto.response;
 
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabMrDetailContent;
-import com.reviewping.coflo.domain.gitlab.dto.response.GitlabUserInfoContent;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDetailContent;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabUserInfoContent;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;

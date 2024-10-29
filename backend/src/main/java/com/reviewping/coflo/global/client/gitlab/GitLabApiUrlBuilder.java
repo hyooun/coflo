@@ -1,6 +1,6 @@
-package com.reviewping.coflo.domain.gitlab.service;
+package com.reviewping.coflo.global.client.gitlab;
 
-import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
+import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
 
 public class GitLabApiUrlBuilder {
 

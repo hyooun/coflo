@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.gitlab.dto.response;
+package com.reviewping.coflo.global.client.gitlab.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

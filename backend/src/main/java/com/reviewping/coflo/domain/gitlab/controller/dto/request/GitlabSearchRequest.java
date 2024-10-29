@@ -1,3 +1,3 @@
-package com.reviewping.coflo.domain.link.controller.dto.request;
+package com.reviewping.coflo.domain.gitlab.controller.dto.request;
 
 public record GitlabSearchRequest(String keyword, int page, int size) {}

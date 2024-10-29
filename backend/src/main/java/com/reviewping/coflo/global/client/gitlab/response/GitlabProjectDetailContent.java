@@ -1,3 +1,3 @@
-package com.reviewping.coflo.domain.gitlab.dto.response;
+package com.reviewping.coflo.global.client.gitlab.response;
 
 public record GitlabProjectDetailContent(Long id, String description, String name) {}

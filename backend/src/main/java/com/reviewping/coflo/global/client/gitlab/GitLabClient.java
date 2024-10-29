@@ -30,10 +30,6 @@ public class GitLabClient {
 
     private final ObjectMapper objectMapper;
 
-    public void validateToken(String domain, String token) {
-        searchGitlabProjects(domain, token, new GitlabSearchRequest("", 1, 1));
-    }
-
     public GitlabProjectPageContent searchGitlabProjects(
             String gitlabUrl, String token, GitlabSearchRequest gitlabSearchRequest) {
         HttpHeaders headers = makeGitlabHeaders(token);

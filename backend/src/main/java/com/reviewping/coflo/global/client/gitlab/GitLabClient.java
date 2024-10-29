@@ -113,14 +113,14 @@ public class GitLabClient {
 
     public ProjectInfoContent getProjectInfoDetail(
             String gitlabUrl, String token, Long gitlabProjectId) {
-        Long commitCount = getProjectCommitCount(gitlabUrl, token, gitlabProjectId);
+        int commitCount = getProjectCommitCount(gitlabUrl, token, gitlabProjectId);
         Long branchCount = getProjectBranchCount(gitlabUrl, token, gitlabProjectId);
         Long mergerRequestCount = getProjectMRCount(gitlabUrl, token, gitlabProjectId);
         Map<String, Double> languages = getProjectLanguages(gitlabUrl, token, gitlabProjectId);
         return ProjectInfoContent.of(commitCount, branchCount, mergerRequestCount, languages);
     }
 
-    private long getProjectCommitCount(String gitlabUrl, String token, Long gitlabProjectId) {
+    private int getProjectCommitCount(String gitlabUrl, String token, Long gitlabProjectId) {
         String url = GitLabApiUrlBuilder.createProjectCommitsUrl(gitlabUrl, gitlabProjectId);
         HttpHeaders headers = makeGitlabHeaders(token);
 
@@ -133,7 +133,7 @@ public class GitLabClient {
             throw new BusinessException(EXTERNAL_API_BAD_REQUEST);
         }
         Map<String, Object> statistics = (Map<String, Object>) body.get("statistics");
-        return (long) statistics.get("commit_count");
+        return (int) statistics.get("commit_count");
     }
 
     private Map<String, Double> getProjectLanguages(

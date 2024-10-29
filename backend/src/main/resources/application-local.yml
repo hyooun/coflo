@@ -19,7 +19,6 @@ spring:
         format_sql: true
 
   data:
-    # Redis 연결 정보
     redis:
       host: ${DEV_REDIS_HOST}
       port: ${DEV_REDIS_PORT}

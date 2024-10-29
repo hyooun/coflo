@@ -42,19 +42,19 @@ const BestMergeRequestList = () => {
                   <div className="flex items-center space-x-3 mb-2">
                     <div className="flex -space-x-3">
                       <img
-                        src={mr.assignee.avatar_url}
+                        src={mr.assignee.avatarUrl}
                         alt="Assignee"
                         className="w-8 h-8 rounded-full border-2 border-white bg-white shadow-sm"
                       />
                       <img
-                        src={mr.reviewer.avatar_url}
+                        src={mr.reviewer.avatarUrl}
                         alt="Reviewer"
                         className="w-8 h-8 rounded-full border-2 border-white bg-white shadow-sm z-10"
                       />
                     </div>
                     <div className="flex items-center min-w-0">
                       <PullRequestIcon className="w-4 h-4 flex-shrink-0 mr-1" />
-                      <span className="font-bold mr-1">{mr.target_branch}</span>
+                      <span className="font-bold mr-1">{mr.targetBranch}</span>
                       <span className="text-sm font-medium text-gray-700 truncate">{mr.title}</span>
                     </div>
                   </div>
@@ -70,7 +70,7 @@ const BestMergeRequestList = () => {
                       ))}
                     </div>
                     <span className="text-xs text-gray-700 ml-4 flex-shrink-0">
-                      created {mr.closed_at} by {mr.assignee.username}
+                      created {mr.closedAt} by {mr.assignee.username}
                     </span>
                   </div>
                 </div>

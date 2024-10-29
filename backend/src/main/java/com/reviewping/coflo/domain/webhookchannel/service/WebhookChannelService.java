@@ -91,12 +91,13 @@ public class WebhookChannelService {
     }
 
     private static WebhookContent getWebhookContent(String content, ChannelCode channelCode) {
-        WebhookContent webhookContent = null;
-        if (channelCode.getName().equals(Channel.MATTERMOST)) {
-            webhookContent = new MattermostContent(content);
-        } else if (channelCode.getName().equals(Channel.DISCORD)) {
-            webhookContent = new DiscordContent(content);
+        switch (channelCode.getName()) {
+            case Channel.MATTERMOST:
+                return new MattermostContent(content);
+            case Channel.DISCORD:
+                return new DiscordContent(content);
+            default:
+                return null;
         }
-        return webhookContent;
     }
 }

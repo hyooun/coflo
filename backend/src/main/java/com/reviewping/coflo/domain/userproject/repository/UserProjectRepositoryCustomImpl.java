@@ -31,6 +31,7 @@ public class UserProjectRepositoryCustomImpl implements UserProjectRepositoryCus
         return queryFactory
                 .selectFrom(userProject)
                 .join(userProject.project, project)
+                .fetchJoin()
                 .where(userProject.gitlabAccount.id.eq(gitlabAccountId))
                 .orderBy(Expressions.asDateTime(subQuery).desc())
                 .fetch();

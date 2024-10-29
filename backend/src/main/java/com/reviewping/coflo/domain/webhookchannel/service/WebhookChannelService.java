@@ -42,7 +42,7 @@ public class WebhookChannelService {
         List<WebhookChannel> webhookChannelList =
                 webhookChannelRepository.findAllByProject(project);
         return webhookChannelList.stream()
-                        .map(webhookChannel -> WebhookChannelResponse.of(webhookChannel))
+                        .map(WebhookChannelResponse::of)
                         .toList();
     }
 }

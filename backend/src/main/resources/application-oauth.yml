@@ -7,14 +7,14 @@ spring:
             client-id: ${KAKAO_CLIENT_ID}
             client-secret: ${KAKAO_CLIENT_SECRET}
             client-authentication-method: client_secret_post
-            redirect-uri: ${DEV_KAKAO_REDIRECT_URL}
+            redirect-uri: ${KAKAO_REDIRECT_URL}
             authorization-grant-type: authorization_code
             client-name: kakao
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
             client-authentication-method: client_secret_basic
-            redirect-uri: ${DEV_GOOGLE_REDIRECT_URL}
+            redirect-uri: ${GOOGLE_REDIRECT_URL}
             authorization-grant-type: authorization_code
             client-name: google
             scope: email

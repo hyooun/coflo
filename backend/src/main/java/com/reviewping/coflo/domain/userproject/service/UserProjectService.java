@@ -3,7 +3,7 @@ package com.reviewping.coflo.domain.userproject.service;
 import static com.reviewping.coflo.global.error.ErrorCode.LINK_BOT_TOKEN_NOT_EXIST;
 import static com.reviewping.coflo.global.error.ErrorCode.PROJECT_NOT_EXIST;
 
-import com.reviewping.coflo.domain.gitlab.service.GitLabApiService;
+import com.reviewping.coflo.domain.gitlab.service.GitLabClient;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserProjectService {
 
-    private final GitLabApiService gitLabApiService;
+    private final GitLabClient gitLabClient;
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
     private final GitlabAccountRepository gitlabAccountRepository;
@@ -86,7 +86,7 @@ public class UserProjectService {
         if (projectLinkRequest == null || projectLinkRequest.botToken() == null) {
             throw new BusinessException(LINK_BOT_TOKEN_NOT_EXIST);
         }
-        return gitLabApiService
+        return gitLabClient
                 .getSingleProject(domain, projectLinkRequest.botToken(), gitlabProjectId)
                 .name();
     }

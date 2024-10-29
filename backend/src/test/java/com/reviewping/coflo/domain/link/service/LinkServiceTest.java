@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectDetailContent;
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectPageContent;
-import com.reviewping.coflo.domain.gitlab.service.GitLabApiService;
+import com.reviewping.coflo.domain.gitlab.service.GitLabClient;
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectPageResponse;
 import com.reviewping.coflo.domain.project.entity.Project;
@@ -32,7 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class LinkServiceTest {
 
-    @Mock private GitLabApiService gitLabApiService;
+    @Mock private GitLabClient gitLabClient;
     @Mock private ProjectRepository projectRepository;
     @Mock private UserProjectRepository userProjectRepository;
     @Mock private GitlabAccountRepository gitlabAccountRepository;
@@ -47,7 +47,7 @@ class LinkServiceTest {
         GitlabAccount gitlabAccount = mock(GitlabAccount.class);
 
         given(gitlabAccountRepository.getFirstByUserId(userId)).willReturn(gitlabAccount);
-        given(gitLabApiService.searchGitlabProjects(any(), any(), any()))
+        given(gitLabClient.searchGitlabProjects(any(), any(), any()))
                 .willReturn(createGitlabProjectPageContent());
         given(projectRepository.findByGitlabProjectId(anyLong())).willReturn(Optional.empty());
 
@@ -72,7 +72,7 @@ class LinkServiceTest {
         //        given(user.getGitlabAccounts()).willReturn(List.of(gitlabAccount));
         given(gitlabAccount.getId()).willReturn(1L);
         given(project.getId()).willReturn(1L);
-        given(gitLabApiService.searchGitlabProjects(any(), any(), any()))
+        given(gitLabClient.searchGitlabProjects(any(), any(), any()))
                 .willReturn(createGitlabProjectPageContent());
 
         given(projectRepository.findByGitlabProjectId(anyLong())).willReturn(Optional.of(project));

@@ -1,7 +1,7 @@
 package com.reviewping.coflo.domain.review.service;
 
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabMrDiffsContent;
-import com.reviewping.coflo.domain.gitlab.service.GitLabApiService;
+import com.reviewping.coflo.domain.gitlab.service.GitLabClient;
 import com.reviewping.coflo.domain.openai.dto.response.ChatCompletionContent;
 import com.reviewping.coflo.domain.openai.service.OpenaiApiService;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReviewCreateService {
 
-    private final GitLabApiService gitLabApiService;
+    private final GitLabClient gitLabClient;
     private final OpenaiApiService openAIApiService;
     private final ReviewService reviewService;
 
@@ -27,7 +27,7 @@ public class ReviewCreateService {
             Long projectId) {
         // 1. 변경사항가져오기
         List<GitlabMrDiffsContent> mrDiffs =
-                gitLabApiService.getMrDiffs(gitlabUrl, token, gitlabProjectId, iid);
+                gitLabClient.getMrDiffs(gitlabUrl, token, gitlabProjectId, iid);
         // 2. 프롬프트 빌드
         String prompt = buildPrompt(mrDescription, mrDiffs);
         // 2. openAI API 호출
@@ -36,7 +36,7 @@ public class ReviewCreateService {
         // 3. 리뷰 저장
         reviewService.saveReview(projectId, iid, chatMessage);
         // 4. 응답 반환(gitlab service)
-        gitLabApiService.addNoteToMr(gitlabUrl, token, gitlabProjectId, iid, chatMessage);
+        gitLabClient.addNoteToMr(gitlabUrl, token, gitlabProjectId, iid, chatMessage);
     }
 
     // TODO: MR변경사항을 Prompt에 넣을 때 더 좋은 형식으로 넣기

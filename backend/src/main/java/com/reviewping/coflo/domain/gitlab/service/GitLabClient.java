@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GitLabApiService {
+public class GitLabClient {
 
     private static final String PRIVATE_TOKEN = "PRIVATE-TOKEN";
 

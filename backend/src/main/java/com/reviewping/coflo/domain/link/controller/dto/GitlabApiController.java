@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/link")
 @RequiredArgsConstructor
-public class LinkController {
+public class GitlabApiController {
 
     private final LinkService linkService;
 

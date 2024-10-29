@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.review.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabMrDiffsContent;
-import com.reviewping.coflo.domain.gitlab.service.GitLabApiService;
+import com.reviewping.coflo.domain.gitlab.service.GitLabClient;
 import com.reviewping.coflo.domain.openai.dto.response.ChatCompletionContent;
 import com.reviewping.coflo.domain.openai.dto.response.ChatMessage;
 import com.reviewping.coflo.domain.openai.service.OpenaiApiService;
@@ -24,7 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class ReviewCreateServiceTest {
 
-    @Mock private GitLabApiService gitLabApiService;
+    @Mock private GitLabClient gitLabClient;
     @Mock private OpenaiApiService openAIApiService;
     @Mock private ReviewService reviewService;
 
@@ -53,7 +53,7 @@ public class ReviewCreateServiceTest {
         ChatCompletionContent chatCompletionContent =
                 ChatCompletionContent.builder().choices(chatCompletionChoices).build();
 
-        given(gitLabApiService.getMrDiffs(gitlabUrl, token, gitlabProjectId, iid))
+        given(gitLabClient.getMrDiffs(gitlabUrl, token, gitlabProjectId, iid))
                 .willReturn(List.of(mrDiffs));
         given(openAIApiService.chat(anyString())).willReturn(chatCompletionContent);
 
@@ -62,12 +62,10 @@ public class ReviewCreateServiceTest {
                 gitlabUrl, token, gitlabProjectId, iid, mrDescription, projectId);
 
         // then
-        then(gitLabApiService).should().getMrDiffs(gitlabUrl, token, gitlabProjectId, iid);
+        then(gitLabClient).should().getMrDiffs(gitlabUrl, token, gitlabProjectId, iid);
         then(openAIApiService).should().chat(anyString());
         then(reviewService).should().saveReview(projectId, iid, chatResult);
-        then(gitLabApiService)
-                .should()
-                .addNoteToMr(gitlabUrl, token, gitlabProjectId, iid, chatResult);
+        then(gitLabClient).should().addNoteToMr(gitlabUrl, token, gitlabProjectId, iid, chatResult);
     }
 
     @Test
@@ -80,7 +78,7 @@ public class ReviewCreateServiceTest {
         String mrDescription = "This is an MR description";
         Long projectId = 1L;
 
-        given(gitLabApiService.getMrDiffs(gitlabUrl, token, gitlabProjectId, iid))
+        given(gitLabClient.getMrDiffs(gitlabUrl, token, gitlabProjectId, iid))
                 .willThrow(new BusinessException(ErrorCode.EXTERNAL_API_BAD_REQUEST));
 
         // when & then
@@ -92,7 +90,7 @@ public class ReviewCreateServiceTest {
 
         then(openAIApiService).should(never()).chat(anyString());
         then(reviewService).should(never()).saveReview(anyLong(), anyLong(), anyString());
-        then(gitLabApiService)
+        then(gitLabClient)
                 .should(never())
                 .addNoteToMr(anyString(), anyString(), anyLong(), anyLong(), anyString());
     }

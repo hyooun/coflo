@@ -1,7 +1,7 @@
 package com.reviewping.coflo.domain.mergerequest.service;
 
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabMrPageContent;
-import com.reviewping.coflo.domain.gitlab.service.GitLabApiService;
+import com.reviewping.coflo.domain.gitlab.service.GitLabClient;
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrPageResponse;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MergeRequestService {
 
-    private final GitLabApiService gitLabApiService;
+    private final GitLabClient gitLabClient;
     private final GitlabAccountRepository gitlabAccountRepository;
     private final MrInfoRepository mrInfoRepository;
 
@@ -37,7 +37,7 @@ public class MergeRequestService {
                                                 ErrorCode.USER_GITLAB_ACCOUNT_NOT_EXIST));
 
         GitlabMrPageContent gitlabMrPage =
-                gitLabApiService.searchGitlabMergeRequests(
+                gitLabClient.searchGitlabMergeRequests(
                         gitlabAccount.getDomain(),
                         gitlabAccount.getUserToken(),
                         projectId,

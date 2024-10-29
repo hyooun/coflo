@@ -2,7 +2,7 @@ package com.reviewping.coflo.domain.link.service;
 
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectDetailContent;
 import com.reviewping.coflo.domain.gitlab.dto.response.GitlabProjectPageContent;
-import com.reviewping.coflo.domain.gitlab.service.GitLabApiService;
+import com.reviewping.coflo.domain.gitlab.service.GitLabClient;
 import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectPageResponse;
 import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectResponse;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class LinkService {
 
-    private final GitLabApiService gitLabApiService;
+    private final GitLabClient gitLabClient;
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
     private final GitlabAccountRepository gitlabAccountRepository;
@@ -29,7 +29,7 @@ public class LinkService {
             Long userId, GitlabSearchRequest gitlabSearchRequest) {
         GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(userId);
         GitlabProjectPageContent gitlabProjectPage =
-                gitLabApiService.searchGitlabProjects(
+                gitLabClient.searchGitlabProjects(
                         gitlabAccount.getDomain(),
                         gitlabAccount.getUserToken(),
                         gitlabSearchRequest);

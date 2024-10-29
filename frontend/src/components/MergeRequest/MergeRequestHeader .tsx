@@ -1,24 +1,9 @@
-import { useState, useEffect } from 'react';
 import { GitlabMergeRequest } from 'types/mergeRequest.ts';
 import { PullRequestIcon } from '@components/TextDiv/Icons/PullRequestIcon.tsx';
 import { BranchIcon } from '@components/TextDiv/Icons/BranchIcon.tsx';
 import { GitPullRequestClosed } from 'lucide-react';
 
-const MergeRequestHeader = ({ mergeRequestId }: { mergeRequestId: number }) => {
-  const [mergeRequest, setMergeRequest] = useState<GitlabMergeRequest | null>(null);
-
-  useEffect(() => {
-    const fetchMergeRequest = async () => {
-      const response = await fetch(`/api/merge-request/${mergeRequestId}`);
-      const data = await response.json();
-      setMergeRequest(data);
-    };
-
-    fetchMergeRequest();
-  }, [mergeRequestId]);
-
-  if (!mergeRequest) return <div>Loading...</div>;
-
+const MergeRequestHeader = ({ mergeRequest }: { mergeRequest: GitlabMergeRequest }) => {
   const getStatusIcon = (state: GitlabMergeRequest['state']) => {
     switch (state) {
       case 'opened':

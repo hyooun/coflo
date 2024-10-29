@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.link.service;
+package com.reviewping.coflo.domain.gitlab.service;
 
 import static com.reviewping.coflo.global.error.ErrorCode.USER_GITLAB_ACCOUNT_NOT_EXIST;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -8,8 +8,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
-import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectPageResponse;
+import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
+import com.reviewping.coflo.domain.gitlab.controller.dto.response.GitlabProjectPageResponse;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
@@ -30,13 +30,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class LinkServiceTest {
+class GitlabApiServiceTest {
 
     @Mock private GitLabClient gitLabClient;
     @Mock private ProjectRepository projectRepository;
     @Mock private UserProjectRepository userProjectRepository;
     @Mock private GitlabAccountRepository gitlabAccountRepository;
-    @InjectMocks private LinkService linkService;
+    @InjectMocks private GitlabApiService gitlabApiService;
 
     @Test
     @DisplayName("프로젝트를 연동할 수 없는 경우, isLinkable은 false이다.")
@@ -52,7 +52,8 @@ class LinkServiceTest {
         given(projectRepository.findByGitlabProjectId(anyLong())).willReturn(Optional.empty());
 
         // when
-        GitlabProjectPageResponse response = linkService.getGitlabProjects(userId, searchRequest);
+        GitlabProjectPageResponse response =
+                gitlabApiService.getGitlabProjects(userId, searchRequest);
 
         // then
         assertThat(response.gitlabProjectList()).hasSize(1);
@@ -80,7 +81,8 @@ class LinkServiceTest {
                 .willReturn(true);
 
         // when
-        GitlabProjectPageResponse response = linkService.getGitlabProjects(userId, searchRequest);
+        GitlabProjectPageResponse response =
+                gitlabApiService.getGitlabProjects(userId, searchRequest);
 
         // then
         assertThat(response.gitlabProjectList()).hasSize(1);
@@ -97,7 +99,9 @@ class LinkServiceTest {
 
         // when & then
         assertThatThrownBy(
-                        () -> linkService.getGitlabProjects(userId, any(GitlabSearchRequest.class)))
+                        () ->
+                                gitlabApiService.getGitlabProjects(
+                                        userId, any(GitlabSearchRequest.class)))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining(USER_GITLAB_ACCOUNT_NOT_EXIST.getMessage());
     }

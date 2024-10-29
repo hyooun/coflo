@@ -1,8 +1,8 @@
-package com.reviewping.coflo.domain.link.controller.dto;
+package com.reviewping.coflo.domain.gitlab.controller.dto;
 
-import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
-import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectPageResponse;
-import com.reviewping.coflo.domain.link.service.LinkService;
+import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
+import com.reviewping.coflo.domain.gitlab.controller.dto.response.GitlabProjectPageResponse;
+import com.reviewping.coflo.domain.gitlab.service.GitlabApiService;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class GitlabApiController {
 
-    private final LinkService linkService;
+    private final GitlabApiService gitlabApiService;
 
     @GetMapping("/search")
     public ApiResponse<GitlabProjectPageResponse> getGitlabProjects(
@@ -27,7 +27,7 @@ public class GitlabApiController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "10") int size) {
         GitlabProjectPageResponse gitlabProjects =
-                linkService.getGitlabProjects(
+                gitlabApiService.getGitlabProjects(
                         user.getId(), new GitlabSearchRequest(keyword, page, size));
         return ApiSuccessResponse.success(gitlabProjects);
     }

@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.link.controller.dto.response;
+package com.reviewping.coflo.domain.gitlab.controller.dto.response;
 
 import com.reviewping.coflo.global.common.entity.PageDetail;
 import java.util.List;

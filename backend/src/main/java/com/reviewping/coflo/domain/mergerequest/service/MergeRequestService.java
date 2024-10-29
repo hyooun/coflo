@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.mergerequest.service;
 
-import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
+import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrPageResponse;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
 import com.reviewping.coflo.domain.project.repository.MrInfoRepository;

@@ -1,8 +1,8 @@
-package com.reviewping.coflo.domain.link.service;
+package com.reviewping.coflo.domain.gitlab.service;
 
-import com.reviewping.coflo.domain.link.controller.dto.request.GitlabSearchRequest;
-import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectPageResponse;
-import com.reviewping.coflo.domain.link.controller.dto.response.GitlabProjectResponse;
+import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
+import com.reviewping.coflo.domain.gitlab.controller.dto.response.GitlabProjectPageResponse;
+import com.reviewping.coflo.domain.gitlab.controller.dto.response.GitlabProjectResponse;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class LinkService {
+public class GitlabApiService {
 
     private final GitLabClient gitLabClient;
     private final ProjectRepository projectRepository;

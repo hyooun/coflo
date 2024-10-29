@@ -5,6 +5,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
+import com.reviewping.coflo.global.client.gitlab.request.GitlabNoteRequest;
 import com.reviewping.coflo.global.client.gitlab.response.*;
 import com.reviewping.coflo.global.common.entity.PageDetail;
 import com.reviewping.coflo.global.error.ErrorCode;

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { GitlabMergeRequest } from 'types/mergeRequest.ts';
 import { PullRequestIcon } from '@components/TextDiv/Icons/PullRequestIcon.tsx';
+import { BranchIcon } from '@components/TextDiv/Icons/BranchIcon.tsx';
+import { GitPullRequestClosed } from 'lucide-react';
 
 const MergeRequestHeader = ({ mergeRequestId }: { mergeRequestId: number }) => {
   const [mergeRequest, setMergeRequest] = useState<GitlabMergeRequest | null>(null);
@@ -17,16 +19,14 @@ const MergeRequestHeader = ({ mergeRequestId }: { mergeRequestId: number }) => {
 
   if (!mergeRequest) return <div>Loading...</div>;
 
-  const getStatusColor = (state: GitlabMergeRequest['state']) => {
+  const getStatusIcon = (state: GitlabMergeRequest['state']) => {
     switch (state) {
       case 'opened':
-        return <PullRequestIcon />;
-      case 'merged':
         return <PullRequestIcon className="w-4 h-4" />;
+      case 'merged':
+        return <BranchIcon className="w-4 h-4" />;
       case 'closed':
-        return 'bg-red-500';
-      default:
-        return 'bg-gray-500';
+        return <GitPullRequestClosed className="w-4 h-4" />;
     }
   };
   return (
@@ -37,8 +37,8 @@ const MergeRequestHeader = ({ mergeRequestId }: { mergeRequestId: number }) => {
       </div>
 
       <div className="flex items-center gap-1 text-sm ">
-        <div className="flex items-center gap-2 bg-primary-500 text-white rounded-2xl px-2">
-          <span className="">{getStatusColor(mergeRequest.state)}</span>
+        <div className="flex items-center gap-1 bg-primary-500 text-white rounded-2xl px-2">
+          <span className="">{getStatusIcon(mergeRequest.state)}</span>
           <span className="font-bold">{mergeRequest.state}</span>
         </div>
         <div>

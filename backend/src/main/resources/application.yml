@@ -16,4 +16,14 @@ openai:
     organization: ${OPENAI_ORGANIZATION}
     project: ${OPENAI_PROJECT}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
 crypto-key: ${CRYPTO_KEY}

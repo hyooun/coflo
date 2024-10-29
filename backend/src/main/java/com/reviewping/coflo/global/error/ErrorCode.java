@@ -25,7 +25,12 @@ public enum ErrorCode {
     USER_GITLAB_ACCOUNT_NOT_EXIST(HttpStatus.NOT_FOUND, "C001", "사용자의 깃랩 계정이 존재하지 않습니다."),
     GITLAB_REQUEST_SERIALIZATION_ERROR(
             HttpStatus.INTERNAL_SERVER_ERROR, "C002", "GITLAB 요청 생성에 오류가 발생했습니다."),
-
+    UNSUPPORTED_WEBHOOK_ACTION(HttpStatus.NOT_FOUND, "C003", "지원하지 않는 MR 웹훅 요청입니다."),
+    UNSUPPORTED_EVENT_TYPE(HttpStatus.NOT_FOUND, "C004", "지원하지 않는 웹훅 이벤트입니다."),
+    GITLAB_URL_PARSE_ERROR(
+            HttpStatus.INTERNAL_SERVER_ERROR, "C005", "웹훅 REQUEST에서 URL 파싱 중 에러가 발생했습니다."),
+    GITLAB_EVENT_REQUEST_SERIALIZATION_ERROR(
+            HttpStatus.INTERNAL_SERVER_ERROR, "C006", "웹훅 REQUEST 역직렬화 중 에러가 발생했습니다."),
     /**
      * Review(D000)
      */

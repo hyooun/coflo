@@ -25,6 +25,37 @@ spring:
       port: 6379
       password:
 
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: KAKAO_CLIENT_ID
+            client-secret: KAKAO_CLIENT_SECRET
+            client-authentication-method: client_secret_post
+            redirect-uri: DEV_KAKAO_REDIRECT_URL
+            authorization-grant-type: authorization_code
+            client-name: kakao
+          google:
+            client-id: GOOGLE_CLIENT_ID
+            client-secret: GOOGLE_CLIENT_SECRET
+            client-authentication-method: client_secret_basic
+            redirect-uri: DEV_GOOGLE_REDIRECT_URL
+            authorization-grant-type: authorization_code
+            client-name: google
+            scope: email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize?prompt=login
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+
 crypto-key: test_crypto_key_test_crypto_key
 
 jwt:
@@ -39,3 +70,9 @@ jwt:
 
 redirect-regist-url: http://localhost:5173
 redirect-main-url: http://localhost:5173
+
+openai:
+  api:
+    key: openai_test_key
+    organization: openai_test_organization
+    project: openai_test_project

@@ -31,7 +31,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
     private static final String[] whitelist = {
         "/swagger-ui/**",
         "/v3/api-docs/**",
-        "/actuator/prometheus",
+        "/actuator/**",
         "/api/users/me",
         "/favicon.ico",
         "/webhook/*"

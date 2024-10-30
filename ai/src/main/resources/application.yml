@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: coflo-ai
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRES_JDBC_URL}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+    organization: ${OPENAI_ORGANIZATION}
+    project: ${OPENAI_PROJECT}
+
+git-clone-directory: ${GIT_CLONE_DIRECTORY}

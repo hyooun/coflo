@@ -1,0 +1,10 @@
+services:
+  timescale:
+    image: timescale/timescaledb:latest-pg16
+    ports:
+      - "54321:5432"
+    environment:
+      TZ: Asia/Seoul
+      POSTGRES_DB: timescale
+      POSTGRES_USER: timescale
+      POSTGRES_PASSWORD: password

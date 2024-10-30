@@ -1,5 +1,6 @@
 package com.reviewping.coflo.domain.customPrompt.service;
 
+import com.reviewping.coflo.domain.customPrompt.controller.dto.response.CustomPromptResponse;
 import com.reviewping.coflo.domain.customPrompt.entity.CustomPrompt;
 import com.reviewping.coflo.domain.customPrompt.repository.CustomPromptRepository;
 import com.reviewping.coflo.domain.project.entity.Project;
@@ -24,5 +25,16 @@ public class CustomPromptService {
     public void updateCustomPrompt(String content, Long customPromptId) {
         CustomPrompt customPrompt = customPromptRepository.getById(customPromptId);
         customPrompt.updateContent(content);
+    }
+
+    public CustomPromptResponse getCustomPrompt(Long projectId) {
+        CustomPrompt customPrompt = customPromptRepository.getByProjectId(projectId);
+
+        CustomPromptResponse customPromptResponse =
+                CustomPromptResponse.builder()
+                        .customPromptId(customPrompt.getId())
+                        .content(customPrompt.getContent().replace("\n", "<br>"))
+                        .build();
+        return customPromptResponse;
     }
 }

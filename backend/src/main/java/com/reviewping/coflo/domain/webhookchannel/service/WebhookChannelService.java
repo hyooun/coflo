@@ -22,7 +22,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,14 +62,10 @@ public class WebhookChannelService {
         Project project = projectRepository.getById(projectId);
         List<WebhookChannel> webhookChannels = project.getWebhookChannels();
 
-        webhookChannels.stream()
-                .forEach(
-                        webhookChannel -> {
-                            send(
-                                    webhookChannel.getWebhookUrl(),
-                                    content,
-                                    webhookChannel.getChannelCode());
-                        });
+        webhookChannels.forEach(
+                webhookChannel -> {
+                    send(webhookChannel.getWebhookUrl(), content, webhookChannel.getChannelCode());
+                });
     }
 
     @Transactional
@@ -96,19 +91,14 @@ public class WebhookChannelService {
             throw new BusinessException(WEBHOOK_REQUEST_SERIALIZATION_ERROR);
         }
 
-        ResponseEntity<String> response =
-                RestTemplateUtils.sendPostRequest(
-                        url, headers, body, new ParameterizedTypeReference<>() {});
+        RestTemplateUtils.sendPostRequest(
+                url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
     private static WebhookContent getWebhookContent(String content, ChannelType channelType) {
-        switch (channelType) {
-            case ChannelType.MATTERMOST:
-                return new MattermostContent(content);
-            case ChannelType.DISCORD:
-                return new DiscordContent(content);
-            default:
-                return null;
-        }
+        return switch (channelType) {
+            case ChannelType.MATTERMOST -> new MattermostContent(content);
+            case ChannelType.DISCORD -> new DiscordContent(content);
+        };
     }
 }

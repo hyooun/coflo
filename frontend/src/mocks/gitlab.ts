@@ -56,16 +56,19 @@ export const handlers = [
     const { repoId } = req.params;
     const { botToken } = req.body;
 
-    if (!botToken) {
+    // `botToken`이 존재할 때만 검증
+    if (botToken === undefined) {
+      // `botToken` 없이도 성공 응답 반환
       return res(
-        ctx.status(400),
+        ctx.status(200),
         ctx.json({
-          status: 'ERROR',
-          message: '토큰이 필요합니다.',
+          status: 'SUCCESS',
+          message: `리포지토리 ${repoId}가 업데이트되었습니다.`,
         }),
       );
     }
 
+    // `botToken`이 있을 때는 정상적으로 처리
     return res(
       ctx.status(200),
       ctx.json({
@@ -74,7 +77,6 @@ export const handlers = [
       }),
     );
   }),
-
   rest.get('/api/user-project/status', (req, res, ctx) => {
     const isLinked = Math.random() < 0.5;
 
@@ -106,22 +108,22 @@ export const handlers = [
         iid: 32,
         title: '[chore/#270] git hook 수정',
         state: 'opened',
-        merged_at: null,
-        created_at: '2024-10-26T10:00:31.209Z',
-        updated_at: '2024-10-26T10:24:28.281Z',
-        closed_at: null,
-        source_branch: 'etc/S11P31A210-270-git-hook-수정',
-        target_branch: 'be/dev',
+        mergedAt: null,
+        createdAt: '2024-10-26T10:00:31.209Z',
+        updatedAt: '2024-10-26T10:24:28.281Z',
+        closedAt: null,
+        sourceBranch: 'etc/S11P31A210-270-git-hook-수정',
+        targetBranch: 'be/dev',
         labels: ['CI'],
         has_conflicts: false,
         assignee: {
           username: 'ajsthfldu',
-          avatar_url:
+          avatarUrl:
             'https://secure.gravatar.com/avatar/de5618f1a5aedaa97da4da8aea212a4f10088fef603b68a9ef38c7cc3f569930?s=80&d=identicon',
         },
         reviewer: {
           username: 'anjs134',
-          avatar_url:
+          avatarUrl:
             'https://secure.gravatar.com/avatar/18d31feb03d8981c6c569b9924031f8be04855d7bf40d32a2d66e9093d49cc09?s=80&d=identicon',
         },
         isAiReviewCreated: false,
@@ -131,22 +133,22 @@ export const handlers = [
         iid: 31,
         title: '[feat/#272] gitlab에서 mr diff가져오기 dto 및 헤더 수정',
         state: 'opened',
-        merged_at: null,
-        created_at: '2024-10-26T09:36:52.252Z',
-        updated_at: '2024-10-26T09:36:53.62Z',
-        closed_at: null,
-        source_branch: 'be/S11P31A210-272-gitlab-mr정보-가져오기-수정',
-        target_branch: 'be/dev',
+        mergedAt: null,
+        createdAt: '2024-10-26T09:36:52.252Z',
+        updatedAt: '2024-10-26T09:36:53.62Z',
+        closedAt: null,
+        sourceBranch: 'be/S11P31A210-272-gitlab-mr정보-가져오기-수정',
+        targetBranch: 'be/dev',
         labels: ['Backend', '🐛 Fix'],
         has_conflicts: false,
         assignee: {
           username: 'ajsthfldu',
-          avatar_url:
+          avatarUrl:
             'https://secure.gravatar.com/avatar/de5618f1a5aedaa97da4da8aea212a4f10088fef603b68a9ef38c7cc3f569930?s=80&d=identicon',
         },
         reviewer: {
           username: 'anjs134',
-          avatar_url:
+          avatarUrl:
             'https://secure.gravatar.com/avatar/18d31feb03d8981c6c569b9924031f8be04855d7bf40d32a2d66e9093d49cc09?s=80&d=identicon',
         },
         isAiReviewCreated: false,
@@ -156,21 +158,21 @@ export const handlers = [
         iid: 30,
         title: '[feat/#255] 커스텀 프롬프트 수정 및 삭제',
         state: 'opened',
-        merged_at: null,
-        created_at: '2024-10-26T07:44:37.935Z',
-        updated_at: '2024-10-26T09:23:10.799Z',
-        closed_at: null,
-        source_branch: 'be/S11P31A210-225-커스텀-프롬프트-수정-및-삭제',
-        target_branch: 'be/dev',
+        mergedAt: null,
+        createdAt: '2024-10-26T07:44:37.935Z',
+        updatedAt: '2024-10-26T09:23:10.799Z',
+        closedAt: null,
+        sourceBranch: 'be/S11P31A210-225-커스텀-프롬프트-수정-및-삭제',
+        targetBranch: 'be/dev',
         labels: ['✨ Feature', '🐛 Fix'],
         has_conflicts: false,
         assignee: {
           username: 'fkgnssla',
-          avatar_url: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17530/avatar.png',
+          avatarUrl: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17530/avatar.png',
         },
         reviewer: {
           username: 'anjs134',
-          avatar_url:
+          avatarUrl:
             'https://secure.gravatar.com/avatar/18d31feb03d8981c6c569b9924031f8be04855d7bf40d32a2d66e9093d49cc09?s=80&d=identicon',
         },
         isAiReviewCreated: false,
@@ -180,21 +182,21 @@ export const handlers = [
         iid: 30,
         title: '[feat/#255] 커스텀 프롬프트 수정 및 삭제',
         state: 'opened',
-        merged_at: null,
-        created_at: '2024-10-26T07:44:37.935Z',
-        updated_at: '2024-10-26T09:23:10.799Z',
-        closed_at: null,
-        source_branch: 'be/S11P31A210-225-커스텀-프롬프트-수정-및-삭제',
-        target_branch: 'be/dev',
+        mergedAt: null,
+        createdAt: '2024-10-26T07:44:37.935Z',
+        updatedAt: '2024-10-26T09:23:10.799Z',
+        closedAt: null,
+        sourceBranch: 'be/S11P31A210-225-커스텀-프롬프트-수정-및-삭제',
+        targetBranch: 'be/dev',
         labels: ['✨ Feature', '🐛 Fix'],
         has_conflicts: false,
         assignee: {
           username: 'fkgnssla',
-          avatar_url: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17530/avatar.png',
+          avatarUrl: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17530/avatar.png',
         },
         reviewer: {
           username: 'anjs134',
-          avatar_url:
+          avatarUrl:
             'https://secure.gravatar.com/avatar/18d31feb03d8981c6c569b9924031f8be04855d7bf40d32a2d66e9093d49cc09?s=80&d=identicon',
         },
         isAiReviewCreated: false,
@@ -204,21 +206,21 @@ export const handlers = [
         iid: 30,
         title: '[feat/#255] 커스텀 프롬프트 수정 및 삭제',
         state: 'opened',
-        merged_at: null,
-        created_at: '2024-10-26T07:44:37.935Z',
-        updated_at: '2024-10-26T09:23:10.799Z',
-        closed_at: null,
-        source_branch: 'be/S11P31A210-225-커스텀-프롬프트-수정-및-삭제',
-        target_branch: 'be/dev',
+        mergedAt: null,
+        createdAt: '2024-10-26T07:44:37.935Z',
+        updatedAt: '2024-10-26T09:23:10.799Z',
+        closedAt: null,
+        sourceBranch: 'be/S11P31A210-225-커스텀-프롬프트-수정-및-삭제',
+        targetBranch: 'be/dev',
         labels: ['✨ Feature', '🐛 Fix'],
         has_conflicts: false,
         assignee: {
           username: 'fkgnssla',
-          avatar_url: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17530/avatar.png',
+          avatarUrl: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17530/avatar.png',
         },
         reviewer: {
           username: 'anjs134',
-          avatar_url:
+          avatarUrl:
             'https://secure.gravatar.com/avatar/18d31feb03d8981c6c569b9924031f8be04855d7bf40d32a2d66e9093d49cc09?s=80&d=identicon',
         },
         isAiReviewCreated: false,
@@ -228,21 +230,21 @@ export const handlers = [
         iid: 30,
         title: '[feat/#255] 커스텀 프롬프트 수정 및 삭제',
         state: 'opened',
-        merged_at: null,
-        created_at: '2024-10-26T07:44:37.935Z',
-        updated_at: '2024-10-26T09:23:10.799Z',
-        closed_at: null,
-        source_branch: 'be/S11P31A210-225-커스텀-프롬프트-수정-및-삭제',
-        target_branch: 'be/dev',
+        mergedAt: null,
+        createdAt: '2024-10-26T07:44:37.935Z',
+        updatedAt: '2024-10-26T09:23:10.799Z',
+        closedAt: null,
+        sourceBranch: 'be/S11P31A210-225-커스텀-프롬프트-수정-및-삭제',
+        targetBranch: 'be/dev',
         labels: ['✨ Feature', '🐛 Fix'],
         has_conflicts: false,
         assignee: {
           username: 'fkgnssla',
-          avatar_url: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17530/avatar.png',
+          avatarUrl: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17530/avatar.png',
         },
         reviewer: {
           username: 'anjs134',
-          avatar_url:
+          avatarUrl:
             'https://secure.gravatar.com/avatar/18d31feb03d8981c6c569b9924031f8be04855d7bf40d32a2d66e9093d49cc09?s=80&d=identicon',
         },
         isAiReviewCreated: false,
@@ -252,17 +254,17 @@ export const handlers = [
         iid: 29,
         title: '[feat/#261] 로그인 UI 수정 및 페이지네이션 구현',
         state: 'opened',
-        merged_at: null,
-        created_at: '2024-10-25T09:49:12.275Z',
-        updated_at: '2024-10-25T09:49:13.636Z',
-        closed_at: null,
-        source_branch: 'fe/S11P31A210-261-ui-나의-레포지토리-목록',
-        target_branch: 'fe/dev',
+        mergedAt: null,
+        createdAt: '2024-10-25T09:49:12.275Z',
+        updatedAt: '2024-10-25T09:49:13.636Z',
+        closedAt: null,
+        sourceBranch: 'fe/S11P31A210-261-ui-나의-레포지토리-목록',
+        targetBranch: 'fe/dev',
         labels: [],
         has_conflicts: false,
         assignee: {
           username: 'anjs134',
-          avatar_url:
+          avatarUrl:
             'https://secure.gravatar.com/avatar/18d31feb03d8981c6c569b9924031f8be04855d7bf40d32a2d66e9093d49cc09?s=80&d=identicon',
         },
         reviewer: null,
@@ -273,17 +275,17 @@ export const handlers = [
         iid: 27,
         title: '[feat/#220] 프로젝트 연동 API 구현',
         state: 'opened',
-        merged_at: null,
-        created_at: '2024-10-25T08:51:54.913Z',
-        updated_at: '2024-10-26T10:26:34.518Z',
-        closed_at: null,
-        source_branch: 'be/S11P31A210-220-link-project',
-        target_branch: 'be/dev',
+        mergedAt: null,
+        createdAt: '2024-10-25T08:51:54.913Z',
+        updatedAt: '2024-10-26T10:26:34.518Z',
+        closedAt: null,
+        sourceBranch: 'be/S11P31A210-220-link-project',
+        targetBranch: 'be/dev',
         labels: ['Backend', '♻️ Refactor', '✨ Feature', '📬 API'],
         has_conflicts: false,
         assignee: {
           username: 'jimmi219',
-          avatar_url: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17537/avatar.png',
+          avatarUrl: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17537/avatar.png',
         },
         reviewer: null,
         isAiReviewCreated: false,

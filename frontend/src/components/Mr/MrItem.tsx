@@ -10,16 +10,16 @@ export function MrItem({ mergeRequest }: MrItemProps) {
     state,
     assignee,
     reviewer,
-    created_at,
-    updated_at,
-    source_branch,
-    target_branch,
+    createdAt,
+    updatedAt,
+    sourceBranch,
+    targetBranch,
     description,
     labels,
   } = mergeRequest;
 
-  const createTimeAgo = useTimeAgo(created_at);
-  const updateTimeAgo = useTimeAgo(updated_at);
+  const createTimeAgo = useTimeAgo(createdAt);
+  const updateTimeAgo = useTimeAgo(updatedAt);
 
   return (
     <div className="pt-5 pb-5 p-2 w-[1000px] border-b border-gray-300 font-pretendard">
@@ -30,7 +30,7 @@ export function MrItem({ mergeRequest }: MrItemProps) {
             <>
               <Tooltip text={`Assigned to ${assignee.username}`}>
                 <img
-                  src={assignee.avatar_url}
+                  src={assignee.avatarUrl}
                   alt={`${assignee.username}의 아바타`}
                   className="w-5 h-5 rounded-full mr-1 cursor-pointer"
                 />
@@ -43,7 +43,7 @@ export function MrItem({ mergeRequest }: MrItemProps) {
             <>
               <Tooltip text={`Review requested from ${reviewer.username}`}>
                 <img
-                  src={reviewer.avatar_url}
+                  src={reviewer.avatarUrl}
                   alt={`${reviewer.username}의 아바타`}
                   className="w-5 h-5 rounded-full mr-1 cursor-pointer"
                 />
@@ -65,7 +65,7 @@ export function MrItem({ mergeRequest }: MrItemProps) {
             <span className="text-xs text-gray-500 mr-3"></span>
           )}
           <PullRequestIcon className="w-3 h-3 flex-shrink-0 mr-1" />
-          <span className="text-xs font-bold mr-1">{target_branch}</span>
+          <span className="text-xs font-bold mr-1">{targetBranch}</span>
         </div>
         <div className="text-xs mr-1">
           <span>updated {updateTimeAgo}</span>

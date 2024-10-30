@@ -41,9 +41,7 @@ export default function ReviewComment({
         )}
 
         {type ? (
-          <div
-            className={`${type === 'code' ? 'overflow-auto max-h-[220px]' : 'overflow-y-auto max-h-[220px]'}`}
-          >
+          <div className={`${type === 'code' ? 'overflow-auto' : 'overflow-y-auto'} max-h-[220px]`}>
             <ReactMarkdown className={`${type ? '' : 'prose'} max-w-none whitespace-pre-wrap`}>
               {content}
             </ReactMarkdown>

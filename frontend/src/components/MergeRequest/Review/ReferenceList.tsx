@@ -13,7 +13,7 @@ const ReferencesList = ({ references }: ReferencesListProps) => {
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">References</h2>
-        <Link to="/references" className=" hover:text-gray-800 transition-colors">
+        <Link to="/references" className="hover:text-gray-800 transition-colors">
           전체보기
         </Link>
       </div>
@@ -21,14 +21,7 @@ const ReferencesList = ({ references }: ReferencesListProps) => {
       {/* References List */}
       <div className="space-y-4">
         {references.map((reference) => (
-          <div
-            key={reference.id}
-            className={`
-            ${reference.type === 'code' ? 'max-h-[330px]' : 'max-h-[300px]'}
-            rounded-lg
-            border-2 border-secondary
-          `}
-          >
+          <div key={reference.id} className="max-h-[330px] rounded-lg border-2 border-secondary">
             <ReviewComment
               title={reference.fileName}
               content={reference.content}

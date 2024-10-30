@@ -1,25 +1,49 @@
--- code_quality 데이터 삽입
+-- code_quality
 INSERT INTO code_quality (name) VALUES ('가독성'), ('일관성'), ('재사용성'), ('신뢰성'), ('보안성'), ('유지보수성');
 
--- user 데이터 삽입 (created_date와 modified_date는 2024-10-16 09:00:00)
+-- badge
+INSERT INTO badge (name, description, image_url) VALUES
+('첫 모험가', '처음 서비스 가입 시 기본 획득', 'https://example.com/images/badge1.png'),
+('리뷰 탐색자', '첫 AI리뷰 재생성', 'https://example.com/images/badge2.png'),
+('프로젝트 개척자', '연동한 프로젝트 개수 n개 이상 시 획득', 'https://example.com/images/badge3.png'),
+('헌신의 발자국', '커밋 개수 n개 이상 시 획득', 'https://example.com/images/badge4.png'),
+('코드 마스터', 'AI 리뷰평가 리워드 합이 n점 이상 시 획득', 'https://example.com/images/badge5.png'),
+('행운의 발견', '접속 시 3% 확률로 랜덤 획득', 'https://example.com/images/badge6.png'),
+('단골 손님', '서비스 로그인 n회 이상 (1일 1회)', 'https://example.com/images/badge7.png'),
+('성장의 발자취', '직접 작성한 리뷰가 n개 이상 시 획득', 'https://example.com/images/badge8.png'),
+('도전의 기록', 'MR 개수가 n개 이상 시 획득', 'https://example.com/images/badge9.png'),
+('인정받는 리뷰어', '내가 쓴 리뷰 좋아요가 n개 이상 시 획득', 'https://example.com/images/badge10.png'),
+('마스터 리뷰어', '베스트 MR에 n회 이상 선정 시 획득', 'https://example.com/images/badge11.png'),
+('프롬프트 창조자', '커스텀 프롬포트 등록/수정 n회 이상', 'https://example.com/images/badge12.png'),
+('전설의 모험가', '12개의 핑을 모두 획득하면 획득', 'https://example.com/images/badge13.png');
+
+
+-- user
 INSERT INTO "user" (username, profile_image_url, oauth2id, provider, role, created_date, modified_date)
 VALUES ('지민', 'image1.url', '1230', 'KAKAO', 'USER', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        ('보연', 'image2.url', '1231', 'KAKAO', 'USER', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        ('선기', 'image3.url', '1232', 'KAKAO', 'USER', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        ('형민', 'image4.url', '1233', 'KAKAO', 'USER', '2024-10-16 09:00:00', '2024-10-16 09:00:00');
 
--- gitlab_account 데이터 삽입 (created_date와 modified_date는 2024-10-16 09:00:00)
+-- user_badge
+INSERT INTO user_badge (user_id, badge_id, is_selected, created_date, modified_date)
+VALUES (1, 1, true, '2024-10-30 09:00:00', '2024-10-30 09:00:00'),
+       (1, 2, false, '2024-10-30 09:00:00', '2024-10-30 09:00:00'),
+       (2, 3, true, '2024-10-30 09:00:00', '2024-10-30 09:00:00'),
+       (3, 4, true, '2024-10-30 09:00:00', '2024-10-30 09:00:00');
+
+-- gitlab_account
 INSERT INTO gitlab_account (user_id, domain, user_token, created_date, modified_date)
 VALUES (1, 'lab.ssafy.com', 'dklfjaskldjfklwejfklasdldfjkas', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (2, 'lab.ssafy.com', 'asdffklwejfklasdjklfjasldasdfa', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (3, 'lab.ssafy.com', 'qasdfjaskldjklfjasldqweiorfqo', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (4, 'lab.ssafy.com', 'hmmrielfjaskldjaslwi8uqoeidjdaj', '2024-10-16 09:00:00', '2024-10-16 09:00:00');
 
--- project 데이터 삽입 (created_date와 modified_date는 2024-10-16 09:00:00)
+-- project
 INSERT INTO project (bot_token, gitlab_project_id, name, created_date, modified_date)
 VALUES ('mcnsiagfoehcvldsfj', 825246, 'S11P31A210', '2024-10-16 09:00:00', '2024-10-16 09:00:00');
 
--- user_project 데이터 삽입 (created_date와 modified_date는 2024-10-16 09:00:00)
+-- user_project
 INSERT INTO user_project (gitlab_account_id, project_id, created_date, modified_date)
 VALUES (1, 1, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (2, 1, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),

@@ -27,13 +27,14 @@ const MergeRequestHeader = ({ mergeRequest }: { mergeRequest: GitlabMergeRequest
           <span className="font-bold">{mergeRequest.state}</span>
         </div>
         <div>
-          <span className="font-bold">{mergeRequest.assignee.username}</span> requested to merge{' '}
+          <span className="font-bold">{mergeRequest.assignee.username}</span>
+          <span className="mx-1">requested to merge</span>
           <span className="font-SFMono text-xs bg-secondary text-white rounded-2xl px-2">
             {mergeRequest.sourceBranch}
-          </span>{' '}
-          to{' '}
+          </span>
+          <span className="mx-1">to</span>
           <span className="font-SFMono text-xs  bg-secondary text-white rounded-2xl px-2">
-            {mergeRequest.targetBranch}{' '}
+            {mergeRequest.targetBranch}
           </span>
         </div>
       </div>

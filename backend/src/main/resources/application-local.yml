@@ -12,17 +12,22 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+    defer-datasource-initialization: true
 
   data:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
+
+#  sql:
+#    init:
+#      mode: always
 
 redirect-regist-url: ${REDIRECT_REGIST_URL}
 redirect-main-url: ${REDIRECT_MAIN_URL}

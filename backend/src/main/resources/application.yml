@@ -27,3 +27,10 @@ management:
         enabled: true
 
 crypto-key: ${CRYPTO_KEY}
+
+logging:
+  level:
+    com:
+      reviewping:
+        coflo: debug
+    web: debug

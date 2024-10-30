@@ -30,11 +30,9 @@ public class CustomPromptService {
     public CustomPromptResponse getCustomPrompt(Long projectId) {
         CustomPrompt customPrompt = customPromptRepository.getByProjectId(projectId);
 
-        CustomPromptResponse customPromptResponse =
-                CustomPromptResponse.builder()
-                        .customPromptId(customPrompt.getId())
-                        .content(customPrompt.getContent().replace("\n", "<br>"))
-                        .build();
-        return customPromptResponse;
+        return CustomPromptResponse.builder()
+                .customPromptId(customPrompt.getId())
+                .content(customPrompt.getContent().replace("\n", "<br>"))
+                .build();
     }
 }

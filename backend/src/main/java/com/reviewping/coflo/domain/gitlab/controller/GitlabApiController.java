@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.gitlab.controller.dto;
+package com.reviewping.coflo.domain.gitlab.controller;
 
 import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.domain.gitlab.controller.dto.response.GitlabProjectPageResponse;

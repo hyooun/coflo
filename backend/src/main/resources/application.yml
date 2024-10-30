@@ -20,7 +20,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: metrics, prometheus
+        include: "*"
   prometheus:
     metrics:
       export:

@@ -7,9 +7,8 @@ import com.reviewping.coflo.domain.project.repository.MrInfoRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDetailContent;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrPageContent;
-import com.reviewping.coflo.global.error.ErrorCode;
-import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +28,7 @@ public class MergeRequestService {
     public GitlabMrPageResponse getGitlabMergeRequests(
             Long userId, Long projectId, String state, GitlabSearchRequest gitlabSearchRequest) {
         GitlabAccount gitlabAccount =
-                gitlabAccountRepository
-                        .findGitlabAccountByUserIdAndProjectId(userId, projectId)
-                        .orElseThrow(
-                                () ->
-                                        new BusinessException(
-                                                ErrorCode.USER_GITLAB_ACCOUNT_NOT_EXIST));
+                gitlabAccountRepository.getByUserIdAndProjectId(userId, projectId);
 
         GitlabMrPageContent gitlabMrPage =
                 gitLabClient.searchGitlabMergeRequests(
@@ -44,16 +38,19 @@ public class MergeRequestService {
                         state,
                         gitlabSearchRequest);
 
-        List<GitlabMrResponse> gitlabMrResponseList =
-                gitlabMrPage.gitlabMrDetailContents().stream()
-                        .map(
-                                content ->
-                                        GitlabMrResponse.of(
-                                                content,
-                                                mrInfoRepository.existsByGitlabMrIid(
-                                                        content.iid())))
-                        .toList();
+        List<GitlabMrResponse> gitlabMrResponses = buildGitlabMrResponses(gitlabMrPage);
 
-        return GitlabMrPageResponse.of(gitlabMrResponseList, gitlabMrPage.pageDetail());
+        return GitlabMrPageResponse.of(gitlabMrResponses, gitlabMrPage.pageDetail());
+    }
+
+    private List<GitlabMrResponse> buildGitlabMrResponses(GitlabMrPageContent gitlabMrPage) {
+        return gitlabMrPage.gitlabMrDetailContents().stream()
+                .map(this::createGitlabMrResponse)
+                .toList();
+    }
+
+    private GitlabMrResponse createGitlabMrResponse(GitlabMrDetailContent content) {
+        boolean exists = mrInfoRepository.existsByGitlabMrIid(content.iid());
+        return GitlabMrResponse.of(content, exists);
     }
 }

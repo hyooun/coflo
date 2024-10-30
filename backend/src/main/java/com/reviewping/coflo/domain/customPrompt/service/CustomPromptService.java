@@ -1,11 +1,9 @@
 package com.reviewping.coflo.domain.customPrompt.service;
 
-import static com.reviewping.coflo.global.error.ErrorCode.*;
-
+import com.reviewping.coflo.domain.customPrompt.controller.dto.response.CustomPromptResponse;
 import com.reviewping.coflo.domain.customPrompt.entity.CustomPrompt;
 import com.reviewping.coflo.domain.customPrompt.repository.CustomPromptRepository;
 import com.reviewping.coflo.domain.project.entity.Project;
-import com.reviewping.coflo.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +15,7 @@ public class CustomPromptService {
 
     private final CustomPromptRepository customPromptRepository;
 
+    // TODO: 프로젝트 처음 연동 시, 호출 필요
     public void saveCustomPrompt(Project project) {
         CustomPrompt customPrompt = CustomPrompt.builder().project(project).build();
         customPromptRepository.save(customPrompt);
@@ -24,18 +23,16 @@ public class CustomPromptService {
 
     @Transactional
     public void updateCustomPrompt(String content, Long customPromptId) {
-        CustomPrompt customPrompt = findById(customPromptId);
-        customPrompt.setContent(content);
+        CustomPrompt customPrompt = customPromptRepository.getById(customPromptId);
+        customPrompt.updateContent(content);
     }
 
-    public void deleteCustomPrompt(Long customPromptId) {
-        CustomPrompt customPrompt = findById(customPromptId);
-        customPromptRepository.delete(customPrompt);
-    }
+    public CustomPromptResponse getCustomPrompt(Long projectId) {
+        CustomPrompt customPrompt = customPromptRepository.getByProjectId(projectId);
 
-    private CustomPrompt findById(Long customPromptId) {
-        return customPromptRepository
-                .findById(customPromptId)
-                .orElseThrow(() -> new BusinessException(CUSTOM_PROMPT_NOT_EXIST));
+        return CustomPromptResponse.builder()
+                .customPromptId(customPrompt.getId())
+                .content(customPrompt.getContent().replace("\n", "<br>"))
+                .build();
     }
 }

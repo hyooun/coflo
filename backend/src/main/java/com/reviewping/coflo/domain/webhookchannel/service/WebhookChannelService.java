@@ -1,7 +1,7 @@
 package com.reviewping.coflo.domain.webhookchannel.service;
 
-import static com.reviewping.coflo.global.error.ErrorCode.*;
-import static org.springframework.util.MimeTypeUtils.*;
+import static com.reviewping.coflo.global.error.ErrorCode.WEBHOOK_REQUEST_SERIALIZATION_ERROR;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +22,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,23 +54,18 @@ public class WebhookChannelService {
     public List<WebhookChannelResponse> getWebhookChannelList(Long projectId) {
         Project project = projectRepository.getById(projectId);
 
-        List<WebhookChannel> webhookChannelList =
-                webhookChannelRepository.findAllByProject(project);
-        return webhookChannelList.stream().map(WebhookChannelResponse::of).toList();
+        List<WebhookChannel> webhookChannels = webhookChannelRepository.findAllByProject(project);
+        return webhookChannels.stream().map(WebhookChannelResponse::of).toList();
     }
 
     public void sendData(Long projectId, String content) {
         Project project = projectRepository.getById(projectId);
         List<WebhookChannel> webhookChannels = project.getWebhookChannels();
 
-        webhookChannels.stream()
-                .forEach(
-                        webhookChannel -> {
-                            send(
-                                    webhookChannel.getWebhookUrl(),
-                                    content,
-                                    webhookChannel.getChannelCode());
-                        });
+        webhookChannels.forEach(
+                webhookChannel -> {
+                    send(webhookChannel.getWebhookUrl(), content, webhookChannel.getChannelCode());
+                });
     }
 
     @Transactional
@@ -97,19 +91,14 @@ public class WebhookChannelService {
             throw new BusinessException(WEBHOOK_REQUEST_SERIALIZATION_ERROR);
         }
 
-        ResponseEntity<String> response =
-                RestTemplateUtils.sendPostRequest(
-                        url, headers, body, new ParameterizedTypeReference<>() {});
+        RestTemplateUtils.sendPostRequest(
+                url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
     private static WebhookContent getWebhookContent(String content, ChannelType channelType) {
-        switch (channelType) {
-            case ChannelType.MATTERMOST:
-                return new MattermostContent(content);
-            case ChannelType.DISCORD:
-                return new DiscordContent(content);
-            default:
-                return null;
-        }
+        return switch (channelType) {
+            case ChannelType.MATTERMOST -> new MattermostContent(content);
+            case ChannelType.DISCORD -> new DiscordContent(content);
+        };
     }
 }

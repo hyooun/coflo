@@ -6,8 +6,6 @@ import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabUserInfoContent;
-import com.reviewping.coflo.global.error.ErrorCode;
-import com.reviewping.coflo.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,20 +22,14 @@ public class UserService {
 
     @Transactional
     public void addGitlabAccount(String domain, String userToken, Long userId) {
-        User user =
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXIST));
+        User user = userRepository.getById(userId);
         gitlabAccountRepository.save(
                 GitlabAccount.builder().user(user).domain(domain).userToken(userToken).build());
     }
 
     @Transactional
     public void synchronizeUserInfo(Long userId) {
-        User user =
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXIST));
+        User user = userRepository.getById(userId);
         GitlabUserInfoContent userInfo =
                 gitLabClient.getUserInfo(
                         user.getGitlabAccounts().getFirst().getDomain(),

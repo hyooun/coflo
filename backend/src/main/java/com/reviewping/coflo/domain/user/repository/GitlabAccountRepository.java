@@ -25,4 +25,9 @@ public interface GitlabAccountRepository extends JpaRepository<GitlabAccount, Lo
         return findFirstByUserIdOrderByIdAsc(userId)
                 .orElseThrow(() -> new BusinessException(USER_GITLAB_ACCOUNT_NOT_EXIST));
     }
+
+    default GitlabAccount getByUserIdAndProjectId(Long userId, Long projectId) {
+        return findGitlabAccountByUserIdAndProjectId(userId, projectId)
+                .orElseThrow(() -> new BusinessException(USER_GITLAB_ACCOUNT_NOT_EXIST));
+    }
 }

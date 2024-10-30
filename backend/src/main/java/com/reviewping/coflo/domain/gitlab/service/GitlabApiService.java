@@ -34,15 +34,20 @@ public class GitlabApiService {
                         gitlabAccount.getUserToken(),
                         gitlabSearchRequest);
 
-        List<GitlabProjectResponse> gitlabProjectList =
-                gitlabProjectPage.gitlabProjectDetailContents().stream()
-                        .map(project -> buildGitlabProjectResponse(project, gitlabAccount.getId()))
-                        .toList();
+        List<GitlabProjectResponse> gitlabProjects =
+                buildGitlabProjectResponses(gitlabProjectPage, gitlabAccount);
 
-        return GitlabProjectPageResponse.of(gitlabProjectList, gitlabProjectPage.pageDetail());
+        return GitlabProjectPageResponse.of(gitlabProjects, gitlabProjectPage.pageDetail());
     }
 
-    private GitlabProjectResponse buildGitlabProjectResponse(
+    private List<GitlabProjectResponse> buildGitlabProjectResponses(
+            GitlabProjectPageContent gitlabProjectPage, GitlabAccount gitlabAccount) {
+        return gitlabProjectPage.gitlabProjectDetailContents().stream()
+                .map(project -> createGitlabProjectResponse(project, gitlabAccount.getId()))
+                .toList();
+    }
+
+    private GitlabProjectResponse createGitlabProjectResponse(
             GitlabProjectDetailContent content, Long gitlabAccountId) {
         return projectRepository
                 .findByGitlabProjectId(content.id())

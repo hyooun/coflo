@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.userproject.entity;
 
-import com.reviewping.coflo.domain.softwarequality.entity.SoftwareQuality;
+import com.reviewping.coflo.domain.codequality.entity.CodeQuality;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,16 +22,16 @@ public class UserProjectScore extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "software_quality_id")
-    private SoftwareQuality softwareQuality;
+    private CodeQuality codeQuality;
 
     private Long week;
     private Long totalScore;
 
     @Builder
-    public UserProjectScore(UserProject userProject, SoftwareQuality softwareQuality) {
+    public UserProjectScore(UserProject userProject, CodeQuality codeQuality) {
         this.totalScore = 0L;
         this.userProject = userProject;
-        this.softwareQuality = softwareQuality;
+        this.codeQuality = codeQuality;
         userProject.getUserProjectScores().add(this);
     }
 }

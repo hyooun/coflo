@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.softwarequality.entity;
+package com.reviewping.coflo.domain.codequality.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class SoftwareQuality {
+public class CodeQuality {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

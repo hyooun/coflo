@@ -34,6 +34,7 @@ export default {
           500: '#ebecef',
           600: '#cccccc',
           700: '#919191',
+          800: '#a5a5a5',
         },
         background: {
           navy: '#e3d8f6',
@@ -45,5 +46,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 };

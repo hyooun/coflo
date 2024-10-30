@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { ApiResponse } from 'types/api';
 import instance from '@config/apiConfig';
-import { GitlabMrListResponse } from 'types/mr';
+import { GitlabMrListResponse } from 'types/mergeRequest';
 
 const responseBody = <T>(response: AxiosResponse<ApiResponse<T>>) => response.data;
 

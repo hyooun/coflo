@@ -22,7 +22,7 @@ build_FE:
   image: node
   before_script:
     - echo "[INFO] YML Settings"
-    - cd frontend/coflo
+    - cd frontend
     - printenv | grep 'VITE_' > .env
   script:
     - yarn install

@@ -11,13 +11,6 @@ const SearchInput = ({ searchTerm, setSearchTerm, handleSaveSearch }: SearchInpu
     setSearchTerm(e.target.value);
   };
 
-  const handleIconClick = () => {
-    if (searchTerm.trim()) {
-      handleSaveSearch(searchTerm);
-      setSearchTerm('');
-    }
-  };
-
   useEffect(() => {
     if (textareaRef.current) {
       const newHeight = textareaRef.current.scrollHeight;
@@ -51,10 +44,6 @@ const SearchInput = ({ searchTerm, setSearchTerm, handleSaveSearch }: SearchInpu
             overflowY: height >= maxHeight ? 'scroll' : 'hidden',
           }}
         />
-
-        <div className="absolute right-4 bottom-2 cursor-pointer" onClick={handleIconClick}>
-          <SearchIcon />
-        </div>
       </div>
 
       <div className="mt-2 text-right text-gray-600">

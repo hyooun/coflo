@@ -1,4 +1,4 @@
-export function CustomTemplateIcon(props: React.SVGProps<SVGSVGElement>) {
+export function CustomPromptIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       width="20"

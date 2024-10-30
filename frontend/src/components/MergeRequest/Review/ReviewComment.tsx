@@ -1,5 +1,6 @@
 import ReactMarkdown from 'react-markdown';
 import { ReviewCommentProps } from 'types/review.ts';
+import useTimeAgo from '@hooks/time.ts';
 
 export default function ReviewComment({
   name,
@@ -10,6 +11,8 @@ export default function ReviewComment({
   reviewer,
   backgroundColor = 'bg-white',
 }: ReviewCommentProps) {
+  const createTimeAgo = useTimeAgo(createdAt || '');
+
   return (
     <div className="flex flex-col">
       <div
@@ -35,7 +38,7 @@ export default function ReviewComment({
             <img src={reviewer.avatarUrl} alt={reviewer.name} className="w-6 h-6 rounded-full" />
             <span className="font-bold">{reviewer.name}</span>
             <span className="text-gray-600">
-              @{reviewer.username} {createdAt}
+              @{reviewer.username} {createTimeAgo}
             </span>
           </div>
         )}

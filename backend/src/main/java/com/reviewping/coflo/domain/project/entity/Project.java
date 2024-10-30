@@ -3,6 +3,7 @@ package com.reviewping.coflo.domain.project.entity;
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.domain.webhookchannel.entity.WebhookChannel;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
+import com.reviewping.coflo.global.crypto.CryptoConverter;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class Project extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Convert(converter = CryptoConverter.class)
     @Column(nullable = false, unique = true)
     private String botToken;
 

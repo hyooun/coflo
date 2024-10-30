@@ -25,7 +25,7 @@ export const Link = {
   ): Promise<ApiResponse<GitlabProjectListResponse>> =>
     apiRequests.get<GitlabProjectListResponse>('gitlab/search', { keyword, page, size }),
 
-  updateRepository: (repoId: number, data: { botToken: string }): Promise<ApiResponse<any>> =>
+  updateRepository: (repoId: number, data: { botToken?: string }): Promise<ApiResponse<any>> =>
     apiRequests.post(`user-project/${repoId}`, data),
 
   getLinkStatus: (): Promise<ApiResponse<{ isLinked: boolean }>> =>

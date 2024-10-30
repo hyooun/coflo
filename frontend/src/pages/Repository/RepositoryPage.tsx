@@ -42,8 +42,13 @@ export default function RepositoryPage() {
     if (repo.isLinkable) {
       if (repo.isLinked) {
         await Link.deleteRepository(repo.gitlabProjectId);
-        setRepositories((prev) => prev.filter((_, i) => i !== index));
+        setRepositories((prev) => {
+          const updatedRepos = [...prev];
+          updatedRepos[index] = { ...updatedRepos[index], isLinked: false };
+          return updatedRepos;
+        });
       } else {
+        await Link.updateRepository(repo.gitlabProjectId, {});
         setRepositories((prev) => {
           const updatedRepos = [...prev];
           updatedRepos[index] = { ...updatedRepos[index], isLinked: true };

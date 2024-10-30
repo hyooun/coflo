@@ -1,11 +1,11 @@
 export interface Assignee {
   username: string;
-  avatar_url: string;
+  avatarUrl: string;
 }
 
 export interface Reviewer {
   username: string;
-  avatar_url: string;
+  avatarUrl: string;
 }
 
 export interface GitlabMergeRequest {
@@ -14,12 +14,12 @@ export interface GitlabMergeRequest {
   title: string;
   description: string;
   state: 'opened' | 'closed' | 'merged';
-  merged_at: string | null;
-  created_at: string;
-  updated_at: string;
-  closed_at: string | null;
-  source_branch: string;
-  target_branch: string;
+  mergedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  closedAt: string | null;
+  sourceBranch: string;
+  targetBranch: string;
   labels: string[];
   has_conflicts: boolean;
   assignee: Assignee;

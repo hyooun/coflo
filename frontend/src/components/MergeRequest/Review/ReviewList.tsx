@@ -1,11 +1,10 @@
 // components/MergeRequestDetail/ReviewList.tsx
 import { Review } from 'types/review.ts';
-import ReactMarkdown from 'react-markdown';
 import ReviewComment from './ReviewComment';
 
 const ReviewList = ({ reviews }: { reviews: Review[] }) => {
   return (
-    <div className="font-pretendard">
+    <div className="font-pretendard w-[700px]">
       {reviews.map((review, index) => (
         <div key={index} className="relative pl-6 border-l-2 py-6 border-secondary">
           {/* 리뷰어 정보 헤더 - 깃 트리의 시작점 */}
@@ -28,7 +27,6 @@ const ReviewList = ({ reviews }: { reviews: Review[] }) => {
           <div className="bg-white rounded-t-lg border-2 border-secondary rounded-lg -ml-10">
             <ReviewComment
               name={review.reviewer.name}
-              username={review.reviewer.username}
               content={review.content}
               createdAt={review.createdAt}
             />
@@ -40,7 +38,6 @@ const ReviewList = ({ reviews }: { reviews: Review[] }) => {
               <div className="border-2 border-secondary rounded-lg" key={comment.id}>
                 <ReviewComment
                   name={comment.reviewer.name}
-                  username={comment.reviewer.username}
                   content={comment.content}
                   createdAt={comment.createdAt}
                   backgroundColor="bg-secondary/30"

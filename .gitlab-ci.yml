@@ -1,0 +1,35 @@
+stages:
+  - build
+ 
+build_BE:
+  stage: build
+  image: gradle:8.8-jdk21
+  before_script:
+    - echo "[INFO] YML Settings"
+    - chmod +x backend/gradlew
+  script:
+    - cd backend
+    - ./gradlew clean build -x test -Dspring.profiles.active=prod
+    - cp build/libs/coflo-0.0.1-SNAPSHOT.jar ~/coflo/spring-docker
+    - sh ~/coflo/spring-docker/spring.sh
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "be/dev"'
+  tags: 
+    - prod
+ 
+build_FE:
+  stage: build
+  image: node
+  before_script:
+    - echo "[INFO] YML Settings"
+    - cd frontend/coflo
+    - printenv | grep 'VITE_' > .env
+  script:
+    - yarn install
+    - yarn build
+    - sudo cp -R dist ~/coflo/coflo-fe
+    - sh ~/coflo/coflo-fe/react.sh
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "fe/dev"'
+  tags: 
+    - prod

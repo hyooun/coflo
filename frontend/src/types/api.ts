@@ -7,5 +7,5 @@ export interface ApiResponse<T> {
 }
 
 export interface UpdateRepositoryRequest {
-  token: string;
+  botToken?: string;
 }

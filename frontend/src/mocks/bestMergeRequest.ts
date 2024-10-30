@@ -86,7 +86,7 @@ export const handlers = [
           createdAt: '2023-10-01T12:34:56Z',
           updatedAt: '2023-10-01T12:34:56Z',
           content:
-            '## 코드 리뷰 요약\n\n- 상태 관리와 조건부 렌더링이 잘 되어 있습니다.\n- Tailwind CSS를 효과적으로 사용하였습니다.',
+            '## 코드 리뷰 요약\n- 상태 관리와 조건부 렌더링이 잘 되어 있습니다.\n- Tailwind CSS를 효과적으로 사용하였습니다.',
           comments: [
             {
               id: 1,
@@ -99,7 +99,7 @@ export const handlers = [
               createdAt: '2023-10-01T12:35:00Z',
               updatedAt: '2023-10-01T12:35:00Z',
               content:
-                '### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.',
+                '### 개선사항\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.`useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다. `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다. `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다. `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.  \n### 개선사항\n\n - `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.',
               resolved: false,
               resolvable: true,
               replies: [

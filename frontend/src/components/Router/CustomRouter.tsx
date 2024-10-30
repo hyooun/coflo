@@ -2,7 +2,7 @@ import App from 'App';
 import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '@pages/Home/HomePage';
 import MergeListPage from '@pages/MergeList/MergeListPage';
-import CustomTemplatePage from '@pages/CustomTemplate/CustomTemplatePage';
+import CustomPromptPage from '@pages/CustomPrompt/CustomPromptPage';
 import BadgePage from '@pages/Badge/BadgePage';
 import SettingsPage from '@pages/Setting/SettingPage';
 import MainLayout from '@components/Layout/MainLayout';
@@ -45,8 +45,8 @@ const customRouter = createBrowserRouter([
         element: <MergeRequestReviewPage />,
       },
       {
-        path: 'custom-template',
-        element: <CustomTemplatePage />,
+        path: 'custom-prompt',
+        element: <CustomPromptPage />,
       },
       {
         path: 'badge',

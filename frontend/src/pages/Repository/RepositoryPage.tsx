@@ -36,14 +36,25 @@ export default function RepositoryPage() {
     fetchProjects();
   }, [currentPage, setTotalPages]);
 
-  const handleToggleChange = (index: number) => {
+  const handleToggleChange = async (index: number) => {
     const repo = repositories[index];
+
     if (repo.isLinkable) {
-      setRepositories((prev) => {
-        const updatedRepos = [...prev];
-        updatedRepos[index] = { ...updatedRepos[index], isLinked: !updatedRepos[index].isLinked };
-        return updatedRepos;
-      });
+      if (repo.isLinked) {
+        await Link.deleteRepository(repo.gitlabProjectId);
+        setRepositories((prev) => {
+          const updatedRepos = [...prev];
+          updatedRepos[index] = { ...updatedRepos[index], isLinked: false };
+          return updatedRepos;
+        });
+      } else {
+        await Link.updateRepository(repo.gitlabProjectId, {});
+        setRepositories((prev) => {
+          const updatedRepos = [...prev];
+          updatedRepos[index] = { ...updatedRepos[index], isLinked: true };
+          return updatedRepos;
+        });
+      }
     } else {
       setSelectedRepo(repo);
       setIsModalOpen(true);
@@ -52,7 +63,7 @@ export default function RepositoryPage() {
 
   const handleModalConfirm = async () => {
     if (selectedRepo) {
-      await Link.updateRepository(selectedRepo.gitlabProjectId, { token: inputValue });
+      await Link.updateRepository(selectedRepo.gitlabProjectId, { botToken: inputValue });
 
       setRepositories((prev) => {
         const updatedRepos = [...prev];
@@ -69,18 +80,26 @@ export default function RepositoryPage() {
     }
   };
 
-  const handleButtonClick = () => {
-    navigate('/main');
+  const handleButtonClick = async () => {
+    const response = await Link.getLinkStatus();
+    const isLinked = response.data?.isLinked;
+
+    if (isLinked) {
+      navigate('/main');
+    } else {
+      alert('연동되지 않았습니다. 먼저 연동을 완료해주세요.');
+    }
   };
 
   return (
     <div className="max-w-3xl ml-[80px] p-6">
-      <h1 className="text-3xl ml-[20px] font-bold mb-3">Repository</h1>
+      <h1 className="text-3xl  font-bold mb-3">Repository</h1>
       <div className="flex items-center justify-between w-[1000px]">
         <h2 className="text-xl mb-3">내 프로젝트에서 리뷰할 프로젝트를 선택합니다.</h2>
         <CommonButton
           className="px-4 w-[100px] h-[50px]"
           active={false}
+          bgColor="bg-primary-500"
           onClick={handleButtonClick}
         >
           시작하기

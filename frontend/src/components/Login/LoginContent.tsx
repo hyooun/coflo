@@ -2,13 +2,11 @@ import LoginButton from '@pages/Login/LoginButton.tsx';
 
 const LoginContent = () => {
   const handleKakaoLogin = () => {
-    // login('kakao')
-    console.log('카카오');
+    window.location.href = 'http://localhost:8080/api/oauth2/authorization/kakao';
   };
 
   const handleGoogleLogin = () => {
-    // login('google')
-    console.log('구글');
+    window.location.href = 'http://localhost:8080/api/oauth2/authorization/google';
   };
   return (
     <div className="flex mobile:flex-col flex-row gap-20 h-full items-center justify-center ">
@@ -24,7 +22,7 @@ const LoginContent = () => {
         <div className="flex flex-col items-start mb-12">
           <div className="flex flex-wrap text-2xl md:text-3xl font-bold">
             <span>오늘도</span>
-            <span className="text-secondary mx-1">CoFlo</span>
+            <span className="text-secondary mx-1">coFlo</span>
             <span>할까요?</span>
           </div>
           <p className="mt-2">플로핑과 함께 내 프로젝트 코드를 리뷰하세요.</p>

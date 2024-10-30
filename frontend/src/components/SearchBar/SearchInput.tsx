@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { SearchIcon } from './Icons/Search';
 
-const SearchInput = ({ searchTerm, setSearchTerm, handleSaveSearch }: SearchInputProps) => {
+const SearchInput = ({ searchTerm, setSearchTerm }: SearchInputProps) => {
   const [height, setHeight] = useState<number>(40);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const maxHeight = 1000;

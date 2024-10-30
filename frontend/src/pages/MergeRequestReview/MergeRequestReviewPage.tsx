@@ -5,6 +5,7 @@ import ReviewList from '@components/MergeRequest/Review/ReviewList.tsx';
 import { GitlabMergeRequest } from 'types/mergeRequest.ts';
 import { MergeRequestReview, Reference } from 'types/review.ts';
 import { useEffect, useState } from 'react';
+import ReferencesList from '@components/MergeRequest/Review/ReferenceList.tsx';
 
 const MergeRequestReviewPage = () => {
   const { id } = useParams();
@@ -35,9 +36,18 @@ const MergeRequestReviewPage = () => {
   if (!mergeRequest) return <div>Loading...</div>;
 
   return (
-    <div>
-      <MergeRequestHeader mergeRequest={mergeRequest} />
-      <ReviewList reviews={reviews} />
+    <div className="p-8 flex flex-col">
+      <div className="w-full">
+        <MergeRequestHeader mergeRequest={mergeRequest} />
+      </div>
+      <div className="flex gap-12 ml-4">
+        <div className="flex-1">
+          <ReviewList reviews={reviews} />
+        </div>
+        <div className="">
+          <ReferencesList references={references} />
+        </div>
+      </div>
     </div>
   );
 };

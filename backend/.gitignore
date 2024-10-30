@@ -35,3 +35,13 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### env ###
+.env
+env
+
+### spotlesCheck ###
+spotless_check_output.txt
+
+### queryDsl ###
+src/main/generated/

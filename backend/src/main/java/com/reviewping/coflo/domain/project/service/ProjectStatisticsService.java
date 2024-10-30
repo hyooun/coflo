@@ -1,5 +1,6 @@
 package com.reviewping.coflo.domain.project.service;
 
+import com.reviewping.coflo.domain.badge.entity.Badge;
 import com.reviewping.coflo.domain.badge.entity.UserBadge;
 import com.reviewping.coflo.domain.badge.repository.UserBadgeRepository;
 import com.reviewping.coflo.domain.project.controller.response.ProjectTeamDetailResponse;
@@ -19,6 +20,7 @@ import com.reviewping.coflo.global.client.gitlab.response.ProjectInfoContent;
 import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,35 +49,40 @@ public class ProjectStatisticsService {
         return ProjectTeamDetailResponse.of(projectInfoContent, aiReviewCount);
     }
 
-    public ProjectTeamRewardResponse getTeamReward(Long projectId) {
+    public ProjectTeamRewardResponse getTeamScore(Long projectId) {
         Project project = projectRepository.getById(projectId);
         LocalDate projectCreatedDate = project.getCreatedDate().toLocalDate();
         int previousWeek = getPreviousWeek(projectCreatedDate);
         LocalDate[] startAndEndDates =
                 ProjectDateUtil.calculateWeekStartAndEndDates(projectCreatedDate, previousWeek);
-
-        List<UserProject> userProjects = userProjectRepository.findByProject(project);
         List<UserScoreInfoResponse> userScoreInfoResponses =
-                userProjects.stream()
-                        .map(
-                                userProject -> {
-                                    User user = userProject.getGitlabAccount().getUser();
-                                    UserBadge userBadge =
-                                            userBadgeRepository
-                                                    .findSelectedBadgeByUser(user)
-                                                    .orElseGet(null);
-                                    List<UserProjectScore> scoreForPreviousWeek =
-                                            userProjectScoreRepository.findByUserProjectAndWeek(
-                                                    userProject, previousWeek);
-                                    return UserScoreInfoResponse.of(
-                                            user, userBadge, scoreForPreviousWeek);
-                                })
-                        .toList();
+                generateUserScoreInfoResponses(project, previousWeek);
         return ProjectTeamRewardResponse.of(startAndEndDates, userScoreInfoResponses);
     }
 
     private int getPreviousWeek(LocalDate projectCreatedDate) {
         int currentWeek = ProjectDateUtil.calculateWeekNumber(projectCreatedDate, LocalDate.now());
         return Math.max(1, currentWeek - 1);
+    }
+
+    private List<UserScoreInfoResponse> generateUserScoreInfoResponses(
+            Project project, int previousWeek) {
+        return userProjectRepository.findByProject(project).stream()
+                .map(userProject -> createUserScoreInfoResponse(userProject, previousWeek))
+                .toList();
+    }
+
+    private UserScoreInfoResponse createUserScoreInfoResponse(
+            UserProject userProject, int previousWeek) {
+        User user = userProject.getGitlabAccount().getUser();
+        Badge badge = getUserRepresentativeBadge(user);
+        List<UserProjectScore> scoreForPreviousWeek =
+                userProjectScoreRepository.findByUserProjectAndWeek(userProject, previousWeek);
+        return UserScoreInfoResponse.of(user, badge, scoreForPreviousWeek);
+    }
+
+    private Badge getUserRepresentativeBadge(User user) {
+        Optional<UserBadge> optionalUserBadge = userBadgeRepository.findSelectedBadgeByUser(user);
+        return optionalUserBadge.map(UserBadge::getBadge).orElse(null);
     }
 }

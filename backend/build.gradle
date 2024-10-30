@@ -99,19 +99,29 @@ spotless {
     }
 }
 
-// spotlessJava 태스크가 compileJava 태스크에 의존하도록 설정
-tasks.named("spotlessJava") {
-    dependsOn tasks.named("compileJava")
-}
 
 def generated = 'src/main/generated'
 
-tasks.withType(JavaCompile) {
-    options.getGeneratedSourceOutputDirectory().set(file(generated))
+tasks.register('generateQueryDSL', JavaCompile) {
+    destinationDirectory.set(file(generated))
+    source = sourceSets.main.java
+    classpath = sourceSets.main.compileClasspath
+}
+
+tasks.named('compileJava') {
+    dependsOn tasks.named('generateQueryDSL')
 }
 
 sourceSets {
-    main.java.srcDirs += [generated]
+    main {
+        java {
+            srcDirs += generated
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
 }
 
 clean {

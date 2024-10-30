@@ -42,4 +42,8 @@ public class WebhookChannel extends BaseTimeEntity {
 
         project.getWebhookChannels().add(this);
     }
+
+    public void updateWebhookUrl(String webhookUrl) {
+        this.webhookUrl = webhookUrl;
+    }
 }

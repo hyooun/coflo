@@ -17,3 +17,10 @@ openai:
     project: ${OPENAI_PROJECT}
 
 crypto-key: ${CRYPTO_KEY}
+
+logging:
+  level:
+    com:
+      reviewping:
+        coflo: debug
+    web: debug

@@ -1,11 +1,8 @@
 package com.reviewping.coflo.domain.customPrompt.service;
 
-import static com.reviewping.coflo.global.error.ErrorCode.CUSTOM_PROMPT_NOT_EXIST;
-
 import com.reviewping.coflo.domain.customPrompt.entity.CustomPrompt;
 import com.reviewping.coflo.domain.customPrompt.repository.CustomPromptRepository;
 import com.reviewping.coflo.domain.project.entity.Project;
-import com.reviewping.coflo.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +14,7 @@ public class CustomPromptService {
 
     private final CustomPromptRepository customPromptRepository;
 
+    // TODO: 프로젝트 처음 연동 시, 호출 필요
     public void saveCustomPrompt(Project project) {
         CustomPrompt customPrompt = CustomPrompt.builder().project(project).build();
         customPromptRepository.save(customPrompt);
@@ -24,18 +22,12 @@ public class CustomPromptService {
 
     @Transactional
     public void updateCustomPrompt(String content, Long customPromptId) {
-        CustomPrompt customPrompt = findById(customPromptId);
+        CustomPrompt customPrompt = customPromptRepository.getById(customPromptId);
         customPrompt.updateContent(content);
     }
 
     public void deleteCustomPrompt(Long customPromptId) {
-        CustomPrompt customPrompt = findById(customPromptId);
+        CustomPrompt customPrompt = customPromptRepository.getById(customPromptId);
         customPromptRepository.delete(customPrompt);
-    }
-
-    private CustomPrompt findById(Long customPromptId) {
-        return customPromptRepository
-                .findById(customPromptId)
-                .orElseThrow(() -> new BusinessException(CUSTOM_PROMPT_NOT_EXIST));
     }
 }

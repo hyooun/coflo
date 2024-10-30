@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.customPrompt.service;
 
-import static com.reviewping.coflo.global.error.ErrorCode.*;
+import static com.reviewping.coflo.global.error.ErrorCode.CUSTOM_PROMPT_NOT_EXIST;
 
 import com.reviewping.coflo.domain.customPrompt.entity.CustomPrompt;
 import com.reviewping.coflo.domain.customPrompt.repository.CustomPromptRepository;
@@ -25,7 +25,7 @@ public class CustomPromptService {
     @Transactional
     public void updateCustomPrompt(String content, Long customPromptId) {
         CustomPrompt customPrompt = findById(customPromptId);
-        customPrompt.setContent(content);
+        customPrompt.updateContent(content);
     }
 
     public void deleteCustomPrompt(Long customPromptId) {

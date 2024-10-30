@@ -2,13 +2,7 @@ package com.reviewping.coflo.domain.customPrompt.entity;
 
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,7 +27,7 @@ public class CustomPrompt extends BaseTimeEntity {
         this.project = project;
     }
 
-    public void setContent(String content) {
+    public void updateContent(String content) {
         this.content = content;
     }
 }

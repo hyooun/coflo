@@ -1,10 +1,44 @@
-export interface MergeRequest {
+export interface Assignee {
   id: number;
-  branchName: string;
+  username: string;
+  name: string;
+  avatarUrl: string;
+}
+
+export interface Reviewer {
+  id: number;
+  username: string;
+  name: string;
+  avatarUrl: string;
+}
+
+export interface GitlabMergeRequest {
+  id: number;
+  iid: number;
   title: string;
-  assignee: string;
-  reviewer: string;
+  description: string;
+  state: 'opened' | 'closed' | 'merged';
+  mergedAt: string | null;
   createdAt: string;
+  updatedAt: string;
+  closedAt: string | null;
+  sourceBranch: string;
+  targetBranch: string;
   labels: string[];
-  author: string;
+  hasConflicts: boolean;
+  assignee: Assignee;
+  reviewer: Reviewer;
+  isAiReviewCreated: boolean;
+}
+
+export interface GitlabMrListResponse {
+  gitlabMrList: GitlabMergeRequest[];
+  totalPages: number;
+  totalElements: number;
+  isLast: boolean;
+  currPage: number;
+}
+
+export interface MrItemProps {
+  mergeRequest: GitlabMergeRequest;
 }

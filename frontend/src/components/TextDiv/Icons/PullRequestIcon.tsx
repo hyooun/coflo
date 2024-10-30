@@ -1,8 +1,4 @@
-interface PullRequestIconProps {
-  className?: string;
-}
-
-export function PullRequestIcon({ className = '' }: PullRequestIconProps) {
+export function PullRequestIcon({ className = '' }: IconWithClassNameProps) {
   return (
     <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path

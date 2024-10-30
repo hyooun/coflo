@@ -3,3 +3,7 @@ interface IconWithTextProps {
   text: string;
   count: number;
 }
+
+interface IconWithClassNameProps {
+  className?: string;
+}

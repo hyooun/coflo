@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MergeRequest } from 'types/mergeRequest.ts';
+import { GitlabMergeRequest } from 'types/mergeRequest.ts';
 import { PullRequestIcon } from '@components/TextDiv/Icons/PullRequestIcon.tsx';
 
 const BestMergeRequestList = () => {
-  const [bestMergeRequests, setBestMergeRequests] = useState<MergeRequest[]>([]);
+  const [bestMergeRequests, setBestMergeRequests] = useState<GitlabMergeRequest[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const BestMergeRequestList = () => {
   }, []);
 
   const handleItemClick = (id: number) => {
-    navigate(`/review/${id}`);
+    navigate(`/main/merge-request/reviews/${id}`);
   };
 
   return (
@@ -42,19 +42,19 @@ const BestMergeRequestList = () => {
                   <div className="flex items-center space-x-3 mb-2">
                     <div className="flex -space-x-3">
                       <img
-                        src={mr.assignee}
+                        src={mr.assignee.avatarUrl}
                         alt="Assignee"
                         className="w-8 h-8 rounded-full border-2 border-white bg-white shadow-sm"
                       />
                       <img
-                        src={mr.reviewer}
+                        src={mr.reviewer.avatarUrl}
                         alt="Reviewer"
                         className="w-8 h-8 rounded-full border-2 border-white bg-white shadow-sm z-10"
                       />
                     </div>
                     <div className="flex items-center min-w-0">
                       <PullRequestIcon className="w-4 h-4 flex-shrink-0 mr-1" />
-                      <span className="font-bold mr-1">{mr.branchName}</span>
+                      <span className="font-bold mr-1">{mr.targetBranch}</span>
                       <span className="text-sm font-medium text-gray-700 truncate">{mr.title}</span>
                     </div>
                   </div>
@@ -70,7 +70,7 @@ const BestMergeRequestList = () => {
                       ))}
                     </div>
                     <span className="text-xs text-gray-700 ml-4 flex-shrink-0">
-                      created {mr.createdAt} by {mr.author}
+                      created {mr.closedAt} by {mr.assignee.username}
                     </span>
                   </div>
                 </div>

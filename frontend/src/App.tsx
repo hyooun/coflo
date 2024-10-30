@@ -1,10 +1,9 @@
-import ProjectCard from '@components/Project/ProjectCard';
-import { Plus } from '@components/Plus/Plus';
-import Navbar from '@components/Nav/Navbar/Navbar';
-import { Sidebar } from '@components/Sidebar/Sidebar';
-import RepositoryPage from '@pages/Repository/RepositoryPage';
-import { Outlet } from 'react-router-dom';
-import CodeEditor from '@components/CodeEditor/CodeEditor';
+// import ProjectCard from '@components/Project/ProjectCard';
+// import { Plus } from '@components/Plus/Plus';
+// import Navbar from '@components/Nav/Navbar/Navbar';
+// import { Sidebar } from '@components/Sidebar/Sidebar';
+// import { Outlet } from 'react-router-dom';
+// import CodeEditor from '@components/CodeEditor/CodeEditor';
 
 const App = () => {
   return (
@@ -30,7 +29,7 @@ const App = () => {
     // </div>
 
     <div className="flex  flex-row h-full w-full">
-      <CodeEditor></CodeEditor>
+      {/*<CodeEditor></CodeEditor>*/}
     </div>
   );
 };

@@ -25,9 +25,4 @@ public class CustomPromptService {
         CustomPrompt customPrompt = customPromptRepository.getById(customPromptId);
         customPrompt.updateContent(content);
     }
-
-    public void deleteCustomPrompt(Long customPromptId) {
-        CustomPrompt customPrompt = customPromptRepository.getById(customPromptId);
-        customPromptRepository.delete(customPrompt);
-    }
 }

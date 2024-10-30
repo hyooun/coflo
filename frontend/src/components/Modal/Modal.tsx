@@ -1,6 +1,7 @@
 import tokenintro from '@assets/tokenintro.png';
+import { ModalProps } from 'types/modal.ts';
 
-export const Modal = ({ repo, inputValue, setInputValue, onConfirm, onClose }: ModalProps) => {
+export const Modal = ({ inputValue, setInputValue, onConfirm, onClose }: ModalProps) => {
   return (
     <div className="fixed inset-0 border bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-8 border-2 border-[#2C365B] rounded-xl w-[600px] h-[650px] relative">

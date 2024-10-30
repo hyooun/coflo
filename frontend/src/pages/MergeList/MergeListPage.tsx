@@ -5,15 +5,15 @@ import { CustomSearchBar } from '@components/Mr/MrSearchBar';
 import { MrItem } from '@components/Mr/MrItem';
 import Pagination from '@components/Pagination/Pagination';
 import { MergeRequest } from '@apis/MergeRequest';
-import { useNavigate } from 'react-router-dom';
-import { GitlabMergeRequest } from 'types/mr';
+// import { useNavigate } from 'react-router-dom';
+import { GitlabMergeRequest } from 'types/mergeRequest';
 
 const MergeListPage = () => {
-  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
-  const [totalPages, setTotalPages] = useAtom(totalPagesAtom);
+  const [currentPage] = useAtom(currentPageAtom);
+  const [setTotalPages] = useAtom(totalPagesAtom);
   const [mergeRequests, setMergeRequests] = useState<GitlabMergeRequest[]>([]);
   const itemsPerPage = 5;
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMergeRequests = async () => {
@@ -21,7 +21,7 @@ const MergeListPage = () => {
 
       if (response && response.data) {
         setMergeRequests(response.data.gitlabMrList);
-        setTotalPages(response.data.totalPages);
+        // setTotalPages(response.data.totalPages);
       }
     };
 

@@ -1,10 +1,10 @@
-// interface ModalProps {
-//   repo: any;
-//   inputValue: string;
-//   setInputValue: (value: string) => void;
-//   onConfirm: () => void;
-//   onClose: () => void;
-// }
+export interface ModalProps {
+  repo: any;
+  inputValue: string;
+  setInputValue: (value: string) => void;
+  onConfirm: () => void;
+  onClose: () => void;
+}
 
 export interface GuideModalProps {
   repo?: any;

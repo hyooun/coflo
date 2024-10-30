@@ -1,4 +1,4 @@
-import { MrItemProps } from 'types/mr';
+import { MrItemProps } from 'types/mergeRequest';
 import LabelList from './LabelList';
 import useTimeAgo from '@hooks/time';
 import { PullRequestIcon } from '@components/TextDiv/Icons/PullRequestIcon';
@@ -7,14 +7,14 @@ import { Tooltip } from '@components/ToolTip/ToolTip';
 export function MrItem({ mergeRequest }: MrItemProps) {
   const {
     title,
-    state,
+    // state,
     assignee,
     reviewer,
     createdAt,
     updatedAt,
-    sourceBranch,
+    // sourceBranch,
     targetBranch,
-    description,
+    // description,
     labels,
   } = mergeRequest;
 

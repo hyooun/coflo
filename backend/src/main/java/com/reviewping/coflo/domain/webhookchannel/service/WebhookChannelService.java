@@ -1,7 +1,7 @@
 package com.reviewping.coflo.domain.webhookchannel.service;
 
-import static com.reviewping.coflo.global.error.ErrorCode.*;
-import static org.springframework.util.MimeTypeUtils.*;
+import static com.reviewping.coflo.global.error.ErrorCode.WEBHOOK_REQUEST_SERIALIZATION_ERROR;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,9 +55,8 @@ public class WebhookChannelService {
     public List<WebhookChannelResponse> getWebhookChannelList(Long projectId) {
         Project project = projectRepository.getById(projectId);
 
-        List<WebhookChannel> webhookChannelList =
-                webhookChannelRepository.findAllByProject(project);
-        return webhookChannelList.stream().map(WebhookChannelResponse::of).toList();
+        List<WebhookChannel> webhookChannels = webhookChannelRepository.findAllByProject(project);
+        return webhookChannels.stream().map(WebhookChannelResponse::of).toList();
     }
 
     public void sendData(Long projectId, String content) {

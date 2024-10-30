@@ -76,9 +76,9 @@ public class ProjectStatisticsService {
             UserProject userProject, int previousWeek) {
         User user = userProject.getGitlabAccount().getUser();
         Badge badge = getUserRepresentativeBadge(user);
-        List<UserProjectScore> scoreForPreviousWeek =
+        List<UserProjectScore> previousWeekScores =
                 userProjectScoreRepository.findByUserProjectAndWeek(userProject, previousWeek);
-        return UserScoreInfoResponse.of(user, badge, scoreForPreviousWeek);
+        return UserScoreInfoResponse.of(user, badge, previousWeekScores);
     }
 
     private Badge getUserRepresentativeBadge(User user) {

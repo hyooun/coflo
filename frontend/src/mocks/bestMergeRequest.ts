@@ -170,6 +170,66 @@ export const handlers = [
         type: 'text',
         content: 'Some text content here...',
       },
+      {
+        id: 3,
+        fileName: 'docs/example.md',
+        type: 'text',
+        content:
+          'Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...',
+      },
+      {
+        id: 4,
+        fileName: 'src/components/Album/Detail.tsx',
+        type: 'code',
+        title: 'src/components/Album/Detail.tsx',
+        content: `export default function AlbumDetail() {
+      const [albumData, setAlbumData] = useState<AlbumType | null>(null);
+      const [isLoading, setIsLoading] = useState(true);
+      const { id } = useParams();
+    
+      useEffect(() => {
+        async function fetchAlbumData() {
+          try {
+            const response = await axios.get(\`/api/albums/\${id}\`);
+            setAlbumData(response.data);
+          } catch (error) {
+            console.error('Failed to fetch album data:', error);
+          } finally {
+            setIsLoading(false);
+          }
+        }
+    
+        fetchAlbumData();
+      }, [id]);
+    
+      if (isLoading) {
+        return <LoadingSpinner />;
+      }
+    
+      if (!albumData) {
+        return <div>앨범을 찾을 수 없습니다.</div>;
+      }
+    
+      return (
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="w-full md:w-1/3">
+              <img
+                src={albumData.coverImage}
+                alt={albumData.title}
+                className="w-full rounded-lg shadow-lg"
+              />
+            </div>
+            <div className="w-full md:w-2/3">
+              <h1 className="text-3xl font-bold mb-4">{albumData.title}</h1>
+              <p className="text-gray-600 mb-6">{albumData.description}</p>
+              {/* Additional album details */}
+            </div>
+          </div>
+        </div>
+      );
+    }`,
+      },
     ];
 
     return res(ctx.status(200), ctx.json(mockReferences));

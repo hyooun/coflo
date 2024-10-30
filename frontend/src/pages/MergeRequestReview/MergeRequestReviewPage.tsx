@@ -5,7 +5,7 @@ import ReviewList from '@components/MergeRequest/Review/ReviewList.tsx';
 import { GitlabMergeRequest } from 'types/mergeRequest.ts';
 import { MergeRequestReview, Reference } from 'types/review.ts';
 import { useEffect, useState } from 'react';
-import ReferencesList from '@components/MergeRequest/Review/ReferenceList.tsx';
+import ReferencesList from '@components/MergeRequest/Review/ReviewReferenceList.tsx';
 
 const MergeRequestReviewPage = () => {
   const { id } = useParams();

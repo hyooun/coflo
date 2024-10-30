@@ -3,11 +3,11 @@ import { Link, useParams } from 'react-router-dom';
 import { Reference } from 'types/review';
 import ReviewComment from 'components/MergeRequest/Review/ReviewComment';
 
-interface ReferencesListProps {
+interface ReviewReferencesListProps {
   references: Reference[];
 }
 
-const ReferencesList = ({ references }: ReferencesListProps) => {
+const ReviewReferencesList = ({ references }: ReviewReferencesListProps) => {
   const { id } = useParams();
 
   return (
@@ -39,4 +39,4 @@ const ReferencesList = ({ references }: ReferencesListProps) => {
   );
 };
 
-export default ReferencesList;
+export default ReviewReferencesList;

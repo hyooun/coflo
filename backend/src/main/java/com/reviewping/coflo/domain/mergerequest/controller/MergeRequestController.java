@@ -20,7 +20,7 @@ public class MergeRequestController {
     @GetMapping
     public ApiResponse<GitlabMrPageResponse> getGitlabMergeRequests(
             @AuthUser User user,
-            @RequestParam(name = "project_id") Long projectId,
+            @RequestParam(name = "projectId") Long projectId,
             @RequestParam(name = "state") String state,
             @RequestBody GitlabSearchRequest gitlabSearchRequest) {
         GitlabMrPageResponse gitlabMergeRequests =

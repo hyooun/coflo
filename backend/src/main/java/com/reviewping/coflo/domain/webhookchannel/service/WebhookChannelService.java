@@ -77,7 +77,7 @@ public class WebhookChannelService {
     @Transactional
     public void updateWebhookChannel(Long webhookChannelId, String webhookUrl) {
         WebhookChannel webhookChannel = webhookChannelRepository.getById(webhookChannelId);
-        webhookChannel.setWebhookUrl(webhookUrl);
+        webhookChannel.updateWebhookUrl(webhookUrl);
     }
 
     @Transactional

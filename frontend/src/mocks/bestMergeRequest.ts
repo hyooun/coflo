@@ -155,8 +155,6 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(mockReviewData));
   }),
   rest.get('/api/reviews/:reviewId/retrivals', (req, res, ctx) => {
-    const { reviewId } = req.params;
-
     const mockReferences = [
       {
         id: 1,

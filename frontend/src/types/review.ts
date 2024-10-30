@@ -33,16 +33,20 @@ interface CommentReply {
   system?: boolean;
 }
 
+export type ReferenceType = 'code' | 'text';
+
 export interface Reference {
   id: number;
   fileName: string;
-  type: 'code' | 'text';
+  type: ReferenceType;
   content: string;
   relevance?: number;
 }
 
 export interface ReviewCommentProps {
-  name: string;
+  name?: string;
+  title?: string;
+  type?: ReferenceType;
   content: string;
   createdAt?: string;
   backgroundColor?: string;

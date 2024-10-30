@@ -77,6 +77,12 @@ public enum ErrorCode {
     WEBHOOK_REQUEST_SERIALIZATION_ERROR(
             HttpStatus.INTERNAL_SERVER_ERROR, "K001", "Webhook Content 요청 생성에 오류가 발생했습니다."),
     WEBHOOK_CHANNEL_NOT_EXIST(HttpStatus.INTERNAL_SERVER_ERROR, "K002", "존재하지 않는 웹훅 채널입니다."),
+
+    /**
+     * user badge(L000)
+     */
+    USER_BADGE_NOT_EXIST(HttpStatus.INTERNAL_SERVER_ERROR, "L001", "존재하지 않는 사용자 뱃지입니다."),
+
     /**
      * 외부 API(Y000)
      */

@@ -25,12 +25,24 @@ public class BadgeService {
         List<BadgeDetail> badgeDetails = new ArrayList<>();
 
         for (UserBadge userBadge : userBadges) {
-            badgeDetails.add(BadgeDetail.of(userBadge.getBadge()));
+            badgeDetails.add(BadgeDetail.of(userBadge.getId(), userBadge.getBadge()));
             if (userBadge.isSelected()) {
-                mainBadgeId = userBadge.getBadge().getId();
+                mainBadgeId = userBadge.getId();
             }
         }
 
         return BadgeResponse.of(mainBadgeId, badgeDetails);
+    }
+
+    @Transactional
+    public void updateMainBadge(User user, Long badgeId) {
+        userBadgeRepository
+                .findSelectedBadgeByUser(user)
+                .ifPresent(oldMainBadge -> oldMainBadge.updateIsSelected(false));
+
+        if (badgeId != null) {
+            UserBadge newMainBadge = userBadgeRepository.getById(badgeId);
+            newMainBadge.updateIsSelected(true);
+        }
     }
 }

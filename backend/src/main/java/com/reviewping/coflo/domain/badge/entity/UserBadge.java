@@ -32,4 +32,8 @@ public class UserBadge extends BaseTimeEntity {
         this.badge = badge;
         user.getUserBadges().add(this);
     }
+
+    public void updateIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
 }

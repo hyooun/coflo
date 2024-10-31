@@ -10,7 +10,7 @@ const TextReference = ({ content, onEdit }: TextReferenceProps) => {
     <textarea
       value={content}
       onChange={(e) => onEdit(e.target.value)}
-      className="w-full min-h-[200px] p-2 border rounded"
+      className="w-full min-h-[200px] h-auto p-2 border rounded resize-none max-h-[420px] overflow-y-auto focus:outline-none"
     />
   );
 };

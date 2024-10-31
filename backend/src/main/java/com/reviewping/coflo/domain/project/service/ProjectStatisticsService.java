@@ -21,7 +21,6 @@ import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,6 +92,6 @@ public class ProjectStatisticsService {
                                     languageCodeRepository.findColorByNameOrDefault(language);
                             return new LanguageResponse(language, percentage, color);
                         })
-                .collect(Collectors.toList());
+                .toList();
     }
 }

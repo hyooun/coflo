@@ -39,7 +39,7 @@ const CommonReference = ({
   };
 
   return (
-    <div className="rounded-lg border-2 border-primary-500 w-full min-w-[350px]">
+    <div className="rounded-lg border-2 border-primary-500 w-full ">
       <div className="flex flex-wrap justify-between items-center p-2 bg-white rounded-t-lg border-b-2 border-primary-500">
         <h3 className={`font-bold ${type === 'CODE' ? 'font-SFMono text-sm' : ''} overflow-hidden`}>
           {fileName}

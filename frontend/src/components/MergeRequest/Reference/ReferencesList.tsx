@@ -1,6 +1,7 @@
 import { Reference } from 'types/review.ts';
 import CommonReference from '@components/MergeRequest/Reference/CommonReference.tsx';
 import { CommonButton } from '@components/Button/CommonButton';
+import { Plus } from 'lucide-react';
 
 interface ReferencesListProps {
   references: Reference[];
@@ -19,8 +20,12 @@ const ReferencesList = ({ references }: ReferencesListProps) => {
     console.log('리뷰 재생성');
   };
 
+  const handleAddReference = () => {
+    console.log('참고 추가');
+  };
+
   return (
-    <div className="w-full my-4">
+    <div className="w-full my-4 min-w-[350px]">
       <div className="space-y-4">
         {references.map((reference) => (
           <CommonReference
@@ -34,6 +39,13 @@ const ReferencesList = ({ references }: ReferencesListProps) => {
             onDelete={handleDelete}
           />
         ))}
+        <div
+          className="flex flex-col justify-center items-center border-2 rounded-lg border-primary-500 py-10 space-y-4 hover:cursor-pointer"
+          onClick={handleAddReference}
+        >
+          <Plus className="text-primary-500 w-14 h-14" strokeWidth={4} />
+          <span className="text-primary-500 text-2xl"> 참고자료 추가하기 </span>
+        </div>
       </div>
 
       <div className="flex justify-end my-4">

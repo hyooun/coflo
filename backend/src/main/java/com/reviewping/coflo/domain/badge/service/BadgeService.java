@@ -27,19 +27,19 @@ public class BadgeService {
         List<UserBadge> userBadges = userBadgeRepository.findAllByUser(user);
 
         BadgeCode mainBadgeCode = user.getMainBadgeCode();
-        Long mainBadgeId = mainBadgeCode != null ? mainBadgeCode.getId() : null;
+        Long mainbadgeCodeId = mainBadgeCode != null ? mainBadgeCode.getId() : null;
         List<BadgeDetail> badgeDetails = new ArrayList<>();
 
         for (UserBadge userBadge : userBadges) {
             badgeDetails.add(BadgeDetail.of(userBadge.getBadgeCode()));
         }
 
-        return BadgeResponse.of(mainBadgeId, badgeDetails);
+        return BadgeResponse.of(mainbadgeCodeId, badgeDetails);
     }
 
     @Transactional
-    public void updateMainBadge(User user, Long badgeId) {
-        BadgeCode badgeCode = badgeCodeRepository.getById(badgeId);
+    public void updateMainBadge(User user, Long badgeCodeId) {
+        BadgeCode badgeCode = badgeCodeRepository.getById(badgeCodeId);
         userRepository.updateBadge(user, badgeCode);
     }
 

@@ -12,7 +12,6 @@ import com.reviewping.coflo.domain.project.repository.MrInfoRepository;
 import com.reviewping.coflo.domain.review.entity.Review;
 import com.reviewping.coflo.domain.review.repository.ReviewRepository;
 import com.reviewping.coflo.global.error.exception.BusinessException;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,8 +35,7 @@ public class ReviewServiceTest {
         String chatResult = "This is a review";
 
         MrInfo mrInfo = MrInfo.builder().project(Project.builder().build()).build();
-        given(mrInfoRepository.findByProjectIdAndGitlabMrIid(projectId, iid))
-                .willReturn(Optional.of(mrInfo));
+        given(mrInfoRepository.getByProjectIdAndGitlabMrIid(projectId, iid)).willReturn(mrInfo);
 
         // when
         reviewService.saveReview(projectId, iid, chatResult);
@@ -53,10 +51,8 @@ public class ReviewServiceTest {
         Long iid = 100L;
         String chatResult = "This is a review";
 
-        given(mrInfoRepository.findByProjectIdAndGitlabMrIid(projectId, iid))
-                .willReturn(Optional.empty());
-
-        // when & then
+        given(mrInfoRepository.getByProjectIdAndGitlabMrIid(projectId, iid))
+                .willThrow(BusinessException.class);
         assertThrows(
                 BusinessException.class,
                 () -> {

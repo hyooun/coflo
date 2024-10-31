@@ -1,22 +1,79 @@
 -- code_quality
-INSERT INTO code_quality (name) VALUES ('가독성'), ('일관성'), ('재사용성'), ('신뢰성'), ('보안성'), ('유지보수성');
+INSERT INTO code_quality_code (id, name) VALUES (1,'가독성'), (2, '일관성'), (3, '재사용성'), (4, '신뢰성'), (5, '보안성'), (6, '유지보수성');
 
 -- badge
-INSERT INTO badge (name, description, image_url) VALUES
-('첫 모험가', '처음 서비스 가입 시 기본 획득', 'https://example.com/images/badge1.png'),
-('리뷰 탐색자', '첫 AI리뷰 재생성', 'https://example.com/images/badge2.png'),
-('프로젝트 개척자', '연동한 프로젝트 개수 n개 이상 시 획득', 'https://example.com/images/badge3.png'),
-('헌신의 발자국', '커밋 개수 n개 이상 시 획득', 'https://example.com/images/badge4.png'),
-('코드 마스터', 'AI 리뷰평가 리워드 합이 n점 이상 시 획득', 'https://example.com/images/badge5.png'),
-('행운의 발견', '접속 시 3% 확률로 랜덤 획득', 'https://example.com/images/badge6.png'),
-('단골 손님', '서비스 로그인 n회 이상 (1일 1회)', 'https://example.com/images/badge7.png'),
-('성장의 발자취', '직접 작성한 리뷰가 n개 이상 시 획득', 'https://example.com/images/badge8.png'),
-('도전의 기록', 'MR 개수가 n개 이상 시 획득', 'https://example.com/images/badge9.png'),
-('인정받는 리뷰어', '내가 쓴 리뷰 좋아요가 n개 이상 시 획득', 'https://example.com/images/badge10.png'),
-('마스터 리뷰어', '베스트 MR에 n회 이상 선정 시 획득', 'https://example.com/images/badge11.png'),
-('프롬프트 창조자', '커스텀 프롬포트 등록/수정 n회 이상', 'https://example.com/images/badge12.png'),
-('전설의 모험가', '12개의 핑을 모두 획득하면 획득', 'https://example.com/images/badge13.png');
+INSERT INTO badge (id, name, description, image_url) VALUES
+(1, '첫 모험가', '처음 서비스 가입 시 기본 획득', 'https://example.com/images/badge1.png'),
+(2, '리뷰 탐색자', '첫 AI리뷰 재생성', 'https://example.com/images/badge2.png'),
+(3, '프로젝트 개척자', '연동한 프로젝트 개수 n개 이상 시 획득', 'https://example.com/images/badge3.png'),
+(4, '헌신의 발자국', '커밋 개수 n개 이상 시 획득', 'https://example.com/images/badge4.png'),
+(5, '코드 마스터', 'AI 리뷰평가 리워드 합이 n점 이상 시 획득', 'https://example.com/images/badge5.png'),
+(6, '행운의 발견', '접속 시 3% 확률로 랜덤 획득', 'https://example.com/images/badge6.png'),
+(7, '단골 손님', '서비스 로그인 n회 이상 (1일 1회)', 'https://example.com/images/badge7.png'),
+(8, '성장의 발자취', '직접 작성한 리뷰가 n개 이상 시 획득', 'https://example.com/images/badge8.png'),
+(9, '도전의 기록', 'MR 개수가 n개 이상 시 획득', 'https://example.com/images/badge9.png'),
+(10, '인정받는 리뷰어', '내가 쓴 리뷰 좋아요가 n개 이상 시 획득', 'https://example.com/images/badge10.png'),
+(11, '마스터 리뷰어', '베스트 MR에 n회 이상 선정 시 획득', 'https://example.com/images/badge11.png'),
+(12, '프롬프트 창조자', '커스텀 프롬포트 등록/수정 n회 이상', 'https://example.com/images/badge12.png'),
+(13, '전설의 모험가', '12개의 핑을 모두 획득하면 획득', 'https://example.com/images/badge13.png');
 
+-- channel_code
+INSERT INTO channel_code (id, name) VALUES (1, 'MATTERMOST'), (2, 'DISCORD');
+
+-- language_code
+INSERT INTO language_code (id, name, color) VALUES
+(1, 'Mercury', '#abcdef'),
+(2, 'TypeScript', '#31859c'),
+(3, 'PureBasic', '#5a6986'),
+(4, 'Objective-C++', '#4886FC'),
+(5, 'Self', '#0579aa'),
+(6, 'edn', '#db5855'),
+(7, 'NewLisp', '#eedd66'),
+(8, 'Rebol', '#358a5b'),
+(9, 'Frege', '#00cafe'),
+(10, 'Dart', '#98BAD6'),
+(11, 'AspectJ', '#1957b0'),
+(12, 'Shell', '#89e051'),
+(13, 'Web Ontology Language', '#3994bc'),
+(14, 'xBase', '#3a4040'),
+(15, 'Eiffel', '#946d57'),
+(16, 'Nix', '#7070ff'),
+(17, 'SuperCollider', '#46390b'),
+(18, 'MTML', '#0095d9'),
+(19, 'Racket', '#ae17ff'),
+(20, 'Elixir', '#6e4a7e'),
+(21, 'SAS', '#1E90FF'),
+(22, 'Agda', '#467C91'),
+(23, 'D', '#fcd46d'),
+(24, 'Opal', '#f7ede0'),
+(25, 'Standard ML', '#dc566d'),
+(26, 'Objective-C', '#438eff'),
+(27, 'ColdFusion CFC', '#ed2cd6'),
+(28, 'Oz', '#fcaf3e'),
+(29, 'Mirah', '#c7a938'),
+(30, 'Objective-J', '#ff0c5a'),
+(31, 'Gosu', '#82937f'),
+(32, 'Ruby', '#701516'),
+(33, 'Component Pascal', '#b0ce4e'),
+(34, 'Arc', '#ca2afe'),
+(35, 'SystemVerilog', '#343761'),
+(36, 'APL', '#8a0707'),
+(37, 'Go', '#375eab'),
+(38, 'Visual Basic', '#945db7'),
+(39, 'PHP', '#4F5D95'),
+(40, 'Cirru', '#aaaaff'),
+(41, 'SQF', '#FFCB1F'),
+(42, 'Glyph', '#e4cc98'),
+(43, 'Java', '#b07219'),
+(44, 'Scala', '#7dd3b0'),
+(45, 'ColdFusion', '#ed2cd6'),
+(46, 'Perl', '#0298c3'),
+(47, 'Elm', '#60B5CC'),
+(48, 'Lua', '#fa1fa1'),
+(49, 'Verilog', '#848bf3'),
+(50, 'Factor', '#636746');
+
+-- //============================================================================// --
 
 -- user
 INSERT INTO "user" (username, profile_image_url, oauth2id, provider, role, created_date, modified_date)

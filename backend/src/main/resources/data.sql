@@ -195,7 +195,7 @@ INSERT INTO language_code (id, name, color) VALUES
 
 ---- user
 --INSERT INTO "user" (username, profile_image_url, oauth2id, provider, role, created_date, modified_date)
---VALUES ('지민', 'image1.url', '3763330566', 'KAKAO', 'USER', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
+--VALUES ('지민', 'image1.url', '1230', 'KAKAO', 'USER', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
 --       ('보연', 'image2.url', '1231', 'KAKAO', 'USER', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
 --       ('선기', 'image3.url', '1232', 'KAKAO', 'USER', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
 --       ('형민', 'image4.url', '1233', 'KAKAO', 'USER', '2024-10-16 09:00:00', '2024-10-16 09:00:00');
@@ -209,7 +209,7 @@ INSERT INTO language_code (id, name, color) VALUES
 --
 ---- gitlab_account
 --INSERT INTO gitlab_account (user_id, domain, user_token, created_date, modified_date)
---VALUES (1, 'lab.ssafy.com', 'Ya1ywMsx1UbAjj3Iv/BVEpbtH56KNSXNCXNry9ao5Ns=', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
+--VALUES (1, 'lab.ssafy.com', 'ngddafsdklwejfklasdjklfjasldas', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
 --       (2, 'lab.ssafy.com', 'asdffklwejfklasdjklfjasldasdfa', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
 --       (3, 'lab.ssafy.com', 'qasdfjaskldjklfjasldqweiorfqo', '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
 --       (4, 'lab.ssafy.com', 'hmmrielfjaskldjaslwi8uqoeidjdaj', '2024-10-16 09:00:00', '2024-10-16 09:00:00');

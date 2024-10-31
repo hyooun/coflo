@@ -42,4 +42,9 @@ public class BadgeService {
         Badge badge = badgeRepository.getById(badgeId);
         userRepository.updateBadge(user, badge);
     }
+
+    @Transactional
+    public void deleteMainBadge(User user) {
+        userRepository.updateBadge(user, null);
+    }
 }

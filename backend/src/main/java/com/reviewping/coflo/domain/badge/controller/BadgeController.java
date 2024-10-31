@@ -8,6 +8,7 @@ import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +31,12 @@ public class BadgeController {
     public ApiResponse<Void> updateMainBadge(
             @AuthUser User user, @RequestBody MainBadgeRequest mainBadgeRequest) {
         badgeService.updateMainBadge(user, mainBadgeRequest.badgeId());
+        return ApiSuccessResponse.success();
+    }
+
+    @DeleteMapping
+    public ApiResponse<Void> deleteMainBadge(@AuthUser User user) {
+        badgeService.deleteMainBadge(user);
         return ApiSuccessResponse.success();
     }
 }

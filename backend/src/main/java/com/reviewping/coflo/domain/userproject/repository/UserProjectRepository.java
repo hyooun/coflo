@@ -31,18 +31,18 @@ public interface UserProjectRepository
     @Query(
             value =
                     """
-            SELECT up.*
-            FROM user_project_score ups
-            JOIN user_project up ON ups.user_project_id = up.id
-            JOIN gitlab_account ga ON up.gitlab_account_id = ga.id
-            JOIN "user" u ON ga.user_id = u.id
-            WHERE up.project_id = :projectId
-            AND ups.week = :week
-            AND u.id != :userId
-            GROUP BY up.id
-            ORDER BY SUM(ups.total_score) DESC
-            LIMIT 2
-            """,
+                            SELECT up.*
+                            FROM user_project_score ups
+                            JOIN user_project up ON ups.user_project_id = up.id
+                            JOIN gitlab_account ga ON up.gitlab_account_id = ga.id
+                            JOIN "user" u ON ga.user_id = u.id
+                            WHERE up.project_id = :projectId
+                            AND ups.week = :week
+                            AND u.id != :userId
+                            GROUP BY up.id
+                            ORDER BY SUM(ups.total_score) DESC
+                            LIMIT 5
+                            """,
             nativeQuery = true)
     List<UserProject> findTopScoreUserProjectsOfWeek(
             @Param("projectId") Long projectId,

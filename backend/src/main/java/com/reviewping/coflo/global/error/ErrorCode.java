@@ -84,6 +84,11 @@ public enum ErrorCode {
     USER_BADGE_NOT_EXIST(HttpStatus.INTERNAL_SERVER_ERROR, "L001", "존재하지 않는 사용자 뱃지입니다."),
 
     /**
+     * badge(M000)
+     */
+    BADGE_NOT_EXIST(HttpStatus.INTERNAL_SERVER_ERROR, "M001", "존재하지 않는 뱃지입니다."),
+
+    /**
      * 외부 API(Y000)
      */
     EXTERNAL_API_NOT_FOUND(HttpStatus.NOT_FOUND, "Y001", "외부 API를 찾을 수 없습니다."),

@@ -1,5 +1,6 @@
 package com.reviewping.coflo.domain.user.entity;
 
+import com.reviewping.coflo.domain.badge.entity.Badge;
 import com.reviewping.coflo.domain.badge.entity.UserBadge;
 import com.reviewping.coflo.domain.user.enums.Provider;
 import com.reviewping.coflo.domain.user.enums.Role;
@@ -44,6 +45,10 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user")
     private List<UserBadge> userBadges = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "main_badge_id")
+    private Badge badge;
+
     @Builder
     public User(
             String username,
@@ -61,5 +66,9 @@ public class User extends BaseTimeEntity {
     public void updateUserInfo(String username, String profileImageUrl) {
         this.username = username;
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public void updateBadge(Badge badge) {
+        this.badge = badge;
     }
 }

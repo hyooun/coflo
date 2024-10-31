@@ -1,9 +1,8 @@
-package com.reviewping.coflo.domain.codequality.entity;
+package com.reviewping.coflo.domain.project.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +10,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class CodeQuality {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Table(name = "language_code")
+public class LanguageCode {
+    @Id private Long id;
 
     private String name;
+    private String color;
 }

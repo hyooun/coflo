@@ -47,14 +47,14 @@ const CodeEditor = ({
 
   return (
     <div className="group relative flex flex-col w-full bg-black">
-      <div className="flex justify-between items-center px-4 py-2">
+      <div className="flex justify-between items-center px-4">
         <div className="flex items-center gap-2">
           <Code2 className="w-4 h-4 text-gray-500" />
           <LanguageSelector language={language} onSelect={setLanguage} />
         </div>
         <button
           onClick={handleCopyCode}
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-white transition-colors px-2 py-1 rounded hover:bg-secondary"
+          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-white transition-colors px-2 rounded-lg hover:bg-secondary"
         >
           {isCopied ? (
             <>

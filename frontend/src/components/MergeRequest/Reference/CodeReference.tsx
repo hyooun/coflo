@@ -1,48 +1,22 @@
-import { useState } from 'react';
 import CodeEditor from '@components/CodeEditor/CodeEditor';
 
 interface CodeReferenceProps {
-  id: number;
+  id?: number;
   content: string;
   language?: string;
-  onEdit: (id: number, content: string) => void;
+  onEdit: (content: string) => void;
   onCancel: () => void;
 }
 
-const CodeReference = ({
-  id,
-  content,
-  language = 'javascript',
-  onEdit,
-  onCancel,
-}: CodeReferenceProps) => {
-  const [editedContent, setEditedContent] = useState(content);
-
-  const handleSubmit = () => {
-    onEdit(id, editedContent);
-    onCancel();
-  };
-
+const CodeReference = ({ content, language = 'javascript', onEdit }: CodeReferenceProps) => {
   return (
-    <div>
-      <div className="mb-2">
-        <CodeEditor
-          defaultValue={editedContent}
-          defaultLanguage={language}
-          height="200px"
-          width="100%"
-          //   onChange={(value) => setEditedContent(value || '')}
-        />
-      </div>
-      <div className="flex justify-end gap-2">
-        <button onClick={onCancel} className="px-3 py-1 border rounded">
-          취소
-        </button>
-        <button onClick={handleSubmit} className="px-3 py-1 bg-primary text-white rounded">
-          저장
-        </button>
-      </div>
-    </div>
+    <CodeEditor
+      defaultValue={content}
+      defaultLanguage={language}
+      height="400px"
+      width="100%"
+      onChange={(value) => onEdit(value || '')}
+    />
   );
 };
 

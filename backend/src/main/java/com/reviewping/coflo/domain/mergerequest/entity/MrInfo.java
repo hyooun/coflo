@@ -1,5 +1,6 @@
-package com.reviewping.coflo.domain.project.entity;
+package com.reviewping.coflo.domain.mergerequest.entity;
 
+import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.review.entity.Review;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;

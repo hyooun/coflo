@@ -1,6 +1,6 @@
-package com.reviewping.coflo.domain.project.repository;
+package com.reviewping.coflo.domain.mergerequest.repository;
 
-import com.reviewping.coflo.domain.project.entity.MrInfo;
+import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.Optional;

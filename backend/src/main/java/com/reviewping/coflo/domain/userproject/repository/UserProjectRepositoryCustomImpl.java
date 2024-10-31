@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.userproject.repository;
 
-import static com.reviewping.coflo.domain.project.entity.QMrInfo.mrInfo;
+import static com.reviewping.coflo.domain.mergerequest.entity.QMrInfo.*;
 import static com.reviewping.coflo.domain.project.entity.QProject.project;
 import static com.reviewping.coflo.domain.userproject.entity.QUserProject.userProject;
 

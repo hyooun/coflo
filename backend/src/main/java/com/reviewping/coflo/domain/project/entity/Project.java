@@ -1,5 +1,6 @@
 package com.reviewping.coflo.domain.project.entity;
 
+import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.domain.webhookchannel.entity.WebhookChannel;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;

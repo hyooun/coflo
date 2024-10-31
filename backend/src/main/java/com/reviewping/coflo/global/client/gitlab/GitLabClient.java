@@ -6,6 +6,8 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
+import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
+import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.global.client.gitlab.request.GitlabNoteRequest;
 import com.reviewping.coflo.global.client.gitlab.response.*;
 import com.reviewping.coflo.global.common.entity.PageDetail;
@@ -13,6 +15,7 @@ import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -69,6 +72,23 @@ public class GitLabClient {
 
         PageDetail pageDetail = createPageDetail(response.getHeaders());
         return new GitlabMrPageContent(response.getBody(), pageDetail);
+    }
+
+    public List<GitlabMrResponse> getTop3MrList(
+            String gitlabUrl, String token, Long gitlabProjectId, List<MrInfo> mrInfoList) {
+        List<GitlabMrResponse> top3MrList = new ArrayList<>();
+        HttpHeaders headers = makeGitlabHeaders(token);
+        for (MrInfo mrInfo : mrInfoList) {
+            String url =
+                    GitLabApiUrlBuilder.createGetMergeRequestsUrl(
+                            gitlabUrl, gitlabProjectId, mrInfo.getGitlabMrIid());
+            ResponseEntity<GitlabMrResponse> response =
+                    RestTemplateUtils.sendGetRequest(
+                            url, headers, new ParameterizedTypeReference<>() {});
+            GitlabMrResponse gitlabMrResponse = response.getBody();
+            top3MrList.add(gitlabMrResponse);
+        }
+        return top3MrList;
     }
 
     public GitlabProjectDetailContent getSingleProject(

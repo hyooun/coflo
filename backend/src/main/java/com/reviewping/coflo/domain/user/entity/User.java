@@ -47,7 +47,7 @@ public class User extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "main_badge_id")
-    private Badge badge;
+    private Badge mainBadge;
 
     @Builder
     public User(
@@ -66,9 +66,5 @@ public class User extends BaseTimeEntity {
     public void updateUserInfo(String username, String profileImageUrl) {
         this.username = username;
         this.profileImageUrl = profileImageUrl;
-    }
-
-    public void updateBadge(Badge badge) {
-        this.badge = badge;
     }
 }

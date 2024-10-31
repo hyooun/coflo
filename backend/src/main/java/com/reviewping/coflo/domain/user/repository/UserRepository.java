@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByOauth2Id(String oauth2Id);
 
     @Modifying
-    @Query("UPDATE User u SET u.badge = :badge WHERE u = :user")
+    @Query("UPDATE User u SET u.mainBadge = :badge WHERE u = :user")
     void updateBadge(@Param("user") User user, @Param("badge") Badge badge);
 
     default User getById(Long userId) {

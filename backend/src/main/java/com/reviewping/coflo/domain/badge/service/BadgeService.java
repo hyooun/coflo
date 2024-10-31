@@ -26,7 +26,7 @@ public class BadgeService {
     public BadgeResponse getBadgeInfo(User user) {
         List<UserBadge> userBadges = userBadgeRepository.findAllByUser(user);
 
-        Badge mainBadge = user.getBadge();
+        Badge mainBadge = user.getMainBadge();
         Long mainBadgeId = mainBadge != null ? mainBadge.getId() : null;
         List<BadgeDetail> badgeDetails = new ArrayList<>();
 

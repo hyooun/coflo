@@ -1,5 +1,7 @@
 package com.reviewping.coflo.domain.badge.service;
 
+import static com.reviewping.coflo.domain.badge.entity.BadgeType.*;
+
 import com.reviewping.coflo.domain.badge.entity.UserBadge;
 import com.reviewping.coflo.domain.badge.repository.BadgeCodeRepository;
 import com.reviewping.coflo.domain.badge.repository.UserBadgeRepository;
@@ -20,7 +22,10 @@ public class BadgeEventService {
 
     public void addFirstLogin(User user) {
         UserBadge userBadge =
-                UserBadge.builder().user(user).badgeCode(badgeCodeRepository.getById(1L)).build();
+                UserBadge.builder()
+                        .user(user)
+                        .badgeCode(badgeCodeRepository.getById(FIRST_ADVENTURER.getId()))
+                        .build();
 
         userBadgeRepository.save(userBadge);
     }

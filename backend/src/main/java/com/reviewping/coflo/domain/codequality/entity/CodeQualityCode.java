@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class CodeQuality {
+public class CodeQualityCode {
     @Id private Long id;
 
     private String name;

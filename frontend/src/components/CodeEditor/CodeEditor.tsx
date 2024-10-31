@@ -7,22 +7,25 @@ import { Code2, Copy, Check } from 'lucide-react';
 
 interface CodeQueryEditorProps {
   defaultValue?: string;
-  defaultLanguage?: string;
+  defaultLanguage: string;
+  language?: string;
   height?: string;
   width?: string;
   onChange?: (value: string | undefined) => void;
+  isLanguageSelectable?: boolean;
 }
 
 const CodeEditor = ({
   defaultValue = '',
   defaultLanguage = 'javascript',
+  language,
   height = '400px',
   width = '100%',
   onChange,
+  isLanguageSelectable = true,
 }: CodeQueryEditorProps) => {
   const monacoInstance = useMonaco();
   const [value, setValue] = useState(defaultValue || CODE_SNIPPETS[defaultLanguage] || '');
-  const [language, setLanguage] = useState(defaultLanguage);
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
@@ -45,12 +48,20 @@ const CodeEditor = ({
     }
   };
 
+  const setLanguage = (lang: string) => {
+    setLanguage(lang);
+  };
+
   return (
     <div className="group relative flex flex-col w-full bg-black">
       <div className="flex justify-between items-center px-4">
         <div className="flex items-center gap-2">
           <Code2 className="w-4 h-4 text-gray-500" />
-          <LanguageSelector language={language} onSelect={setLanguage} />
+          {isLanguageSelectable ? (
+            <LanguageSelector language={language || defaultLanguage} onSelect={setLanguage} />
+          ) : (
+            <span className="text-sm font-medium text-gray-600">{language || defaultLanguage}</span>
+          )}
         </div>
         <button
           onClick={handleCopyCode}
@@ -73,7 +84,7 @@ const CodeEditor = ({
         height={height}
         width={width}
         defaultLanguage={defaultLanguage}
-        language={language}
+        language={language || defaultLanguage}
         defaultValue={value}
         value={value}
         onChange={handleChange}

@@ -49,6 +49,7 @@ export interface Reference {
   id: number;
   fileName: string;
   type: ReferenceType;
+  language: string;
   content: string;
   relevance?: number;
 }

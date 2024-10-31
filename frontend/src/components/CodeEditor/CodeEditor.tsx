@@ -53,7 +53,7 @@ const CodeEditor = ({
   };
 
   return (
-    <div className="group relative flex flex-col w-full bg-black">
+    <div className="group relative flex flex-col w-full bg-black overflow-hidden">
       <div className="flex justify-between items-center px-4">
         <div className="flex items-center gap-2">
           <Code2 className="w-4 h-4 text-gray-500" />
@@ -80,33 +80,37 @@ const CodeEditor = ({
           )}
         </button>
       </div>
-      <Editor
-        height={height}
-        width={width}
-        defaultLanguage={defaultLanguage}
-        language={language || defaultLanguage}
-        defaultValue={value}
-        value={value}
-        onChange={handleChange}
-        theme="vs-dark"
-        options={{
-          minimap: { enabled: false },
-          padding: { top: 16, bottom: 16 },
-          fontSize: 14,
-          lineHeight: 1.5,
-          scrollBeyondLastLine: false,
-          wordWrap: 'on',
-          wrappingIndent: 'indent',
-          automaticLayout: true,
-          readOnly: false,
-          fontFamily: 'Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace',
-          renderLineHighlight: 'none',
-          scrollbar: {
-            vertical: 'hidden',
-            horizontal: 'hidden',
-          },
-        }}
-      />
+      <div className="w-full overflow-hidden">
+        <Editor
+          height={height}
+          width={width}
+          defaultLanguage={defaultLanguage}
+          language={language || defaultLanguage}
+          defaultValue={value}
+          value={value}
+          onChange={handleChange}
+          theme="vs-dark"
+          options={{
+            minimap: { enabled: false },
+            padding: { top: 16, bottom: 16 },
+            fontSize: 14,
+            lineHeight: 1.5,
+            scrollBeyondLastLine: false,
+            wordWrap: 'on',
+            wrappingIndent: 'indent',
+            automaticLayout: true,
+            readOnly: false,
+            fontFamily: 'Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace',
+            renderLineHighlight: 'none',
+            scrollbar: {
+              vertical: 'hidden',
+              horizontal: 'hidden',
+            },
+            fixedOverflowWidgets: true,
+          }}
+          className="max-w-full"
+        />
+      </div>
     </div>
   );
 };

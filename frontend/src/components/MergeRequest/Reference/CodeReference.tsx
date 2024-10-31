@@ -14,8 +14,6 @@ const CodeReference = ({ content, language, onEdit }: CodeReferenceProps) => {
       defaultValue={content}
       defaultLanguage={language}
       language={language}
-      height="400px"
-      width="100%"
       onChange={(value) => onEdit(value || '')}
       isLanguageSelectable={false}
     />

@@ -39,9 +39,11 @@ const CommonReference = ({
   };
 
   return (
-    <div className="rounded-lg border-2 border-primary-500">
-      <div className="flex justify-between items-center p-2 bg-white rounded-t-lg border-b-2 border-primary-500">
-        <h3 className={`font-bold ${type === 'CODE' ? 'font-SFMono text-sm' : ''}`}>{fileName}</h3>
+    <div className="rounded-lg border-2 border-primary-500 w-full min-w-[350px]">
+      <div className="flex flex-wrap justify-between items-center p-2 bg-white rounded-t-lg border-b-2 border-primary-500">
+        <h3 className={`font-bold ${type === 'CODE' ? 'font-SFMono text-sm' : ''} overflow-hidden`}>
+          {fileName}
+        </h3>
         <div className="flex gap-2">
           {isEditing ? (
             <>
@@ -79,7 +81,7 @@ const CommonReference = ({
           )}
         </div>
       </div>
-      <div>
+      <div className="w-full overflow-hidden">
         {isEditing ? (
           type === 'CODE' ? (
             <CodeReference
@@ -99,7 +101,9 @@ const CommonReference = ({
           )
         ) : (
           <div
-            className={`${type === 'CODE' ? 'font-SFMono bg-secondary/30' : ''} p-4 whitespace-break-spaces max-h-[420px] overflow-y-auto`}
+            className={`${
+              type === 'CODE' ? 'font-SFMono bg-secondary/30 text-sm' : ''
+            } p-4 whitespace-break-spaces max-h-[420px] overflow-y-auto w-full`}
           >
             {editedContent}
           </div>

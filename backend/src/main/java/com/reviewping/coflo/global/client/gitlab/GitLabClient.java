@@ -82,11 +82,13 @@ public class GitLabClient {
             String url =
                     GitLabApiUrlBuilder.createGetMergeRequestsUrl(
                             gitlabUrl, gitlabProjectId, mrInfo.getGitlabMrIid());
-            ResponseEntity<GitlabMrResponse> response =
+            ResponseEntity<GitlabMrDetailContent> response =
                     RestTemplateUtils.sendGetRequest(
                             url, headers, new ParameterizedTypeReference<>() {});
-            GitlabMrResponse gitlabMrResponse = response.getBody();
-            top3MrList.add(gitlabMrResponse);
+            GitlabMrDetailContent gitlabMrDetailContent = response.getBody();
+            if (gitlabMrDetailContent != null) {
+                top3MrList.add(GitlabMrResponse.of(gitlabMrDetailContent, false));
+            }
         }
         return top3MrList;
     }

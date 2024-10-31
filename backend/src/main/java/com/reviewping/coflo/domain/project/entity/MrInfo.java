@@ -32,14 +32,23 @@ public class MrInfo extends BaseTimeEntity {
 
     private LocalDateTime gitlabCreatedDate;
 
-    // TODO: skillN_score 이름정하기
+    private Integer readabilityScore;
+
+    private Integer consistencyScore;
+
+    private Integer reusabilityScore;
+
+    private Integer reliabilityScore;
+
+    private Integer securityScore;
+
+    private Integer maintainabilityScore;
 
     @Builder
     public MrInfo(Project project, Long gitlabMrIid, LocalDateTime gitlabCreatedDate) {
         this.project = project;
         this.gitlabMrIid = gitlabMrIid;
         this.gitlabCreatedDate = gitlabCreatedDate;
-
         this.project.getMrInfos().add(this);
     }
 }

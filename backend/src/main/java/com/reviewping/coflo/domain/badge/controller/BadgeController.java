@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.badge.controller;
 
-import com.reviewping.coflo.domain.badge.controller.dto.request.UserBadgeRequest;
+import com.reviewping.coflo.domain.badge.controller.dto.request.MainBadgeRequest;
 import com.reviewping.coflo.domain.badge.controller.dto.response.BadgeResponse;
 import com.reviewping.coflo.domain.badge.service.BadgeService;
 import com.reviewping.coflo.domain.user.entity.User;
@@ -28,8 +28,8 @@ public class BadgeController {
 
     @PatchMapping
     public ApiResponse<Void> updateMainBadge(
-            @AuthUser User user, @RequestBody UserBadgeRequest userBadgeRequest) {
-        badgeService.updateMainBadge(user, userBadgeRequest.userBadgeId());
+            @AuthUser User user, @RequestBody MainBadgeRequest mainBadgeRequest) {
+        badgeService.updateMainBadge(user, mainBadgeRequest.badgeId());
         return ApiSuccessResponse.success();
     }
 }

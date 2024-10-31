@@ -22,12 +22,15 @@ public interface MrInfoRepository extends JpaRepository<MrInfo, Long> {
 
     @Query(
             value =
-                    "SELECT * FROM mr_info m WHERE m.gitlab_created_date BETWEEN :startDate AND"
-                        + " :endDate ORDER BY (COALESCE(m.readability_score, 0) +"
-                        + " COALESCE(m.consistency_score, 0) + COALESCE(m.reusability_score, 0) +"
-                        + " COALESCE(m.reliability_score, 0) + COALESCE(m.security_score, 0) +"
-                        + " COALESCE(m.maintainability_score, 0)) DESC LIMIT 3",
+                    "SELECT * FROM mr_info m WHERE m.project_id = :projectId AND"
+                        + " m.gitlab_created_date BETWEEN :startDate AND :endDate ORDER BY"
+                        + " (COALESCE(m.readability_score, 0) + COALESCE(m.consistency_score, 0) +"
+                        + " COALESCE(m.reusability_score, 0) + COALESCE(m.reliability_score, 0) +"
+                        + " COALESCE(m.security_score, 0) + COALESCE(m.maintainability_score, 0))"
+                        + " DESC LIMIT 3",
             nativeQuery = true)
     List<MrInfo> findTop3MrInfoList(
-            @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+            @Param("projectId") Long projectId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
 }

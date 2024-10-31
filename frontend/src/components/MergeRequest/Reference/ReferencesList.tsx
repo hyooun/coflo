@@ -28,6 +28,7 @@ const ReferencesList = ({ references }: ReferencesListProps) => {
             id={reference.id}
             fileName={reference.fileName}
             content={reference.content}
+            language={reference.language}
             type={reference.type}
             onEdit={handleEdit}
             onDelete={handleDelete}

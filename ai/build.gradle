@@ -60,7 +60,6 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-
 spotless {
     format 'misc', {
         target '*.gradle'

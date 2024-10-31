@@ -22,7 +22,7 @@ const ReferencesPage = () => {
   if (!references) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-col p-10">
+    <div className="flex flex-col p-10 w-full overflow-auto">
       <ReferenceHeader />
       <ReferencesList references={references} />
     </div>

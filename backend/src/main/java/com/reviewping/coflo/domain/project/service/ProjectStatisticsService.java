@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.project.service;
 
-import com.reviewping.coflo.domain.badge.entity.Badge;
+import com.reviewping.coflo.domain.badge.entity.BadgeCode;
 import com.reviewping.coflo.domain.badge.repository.UserBadgeRepository;
 import com.reviewping.coflo.domain.project.controller.response.ProjectTeamDetailResponse;
 import com.reviewping.coflo.domain.project.controller.response.ProjectTeamRewardResponse;
@@ -73,9 +73,9 @@ public class ProjectStatisticsService {
     private UserScoreInfoResponse createUserScoreInfoResponse(
             UserProject userProject, int previousWeek) {
         User user = userProject.getGitlabAccount().getUser();
-        Badge badge = user.getMainBadge();
+        BadgeCode badgeCode = user.getMainBadgeCode();
         List<UserProjectScore> previousWeekScores =
                 userProjectScoreRepository.findByUserProjectAndWeek(userProject, previousWeek);
-        return UserScoreInfoResponse.of(user, badge, previousWeekScores);
+        return UserScoreInfoResponse.of(user, badgeCode, previousWeekScores);
     }
 }

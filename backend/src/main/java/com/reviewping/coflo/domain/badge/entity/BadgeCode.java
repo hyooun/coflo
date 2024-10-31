@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class Badge {
+public class BadgeCode {
     @Id private Long id;
 
     @Column(nullable = false, unique = true)

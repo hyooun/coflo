@@ -2,7 +2,7 @@
 INSERT INTO code_quality_code (id, name) VALUES (1,'가독성'), (2, '일관성'), (3, '재사용성'), (4, '신뢰성'), (5, '보안성'), (6, '유지보수성');
 
 -- badge
-INSERT INTO badge (id, name, description, image_url) VALUES
+INSERT INTO badge_code (id, name, description, image_url) VALUES
 (1, '첫 모험가', '처음 서비스 가입 시 기본 획득', 'https://example.com/images/badge1.png'),
 (2, '리뷰 탐색자', '첫 AI리뷰 재생성', 'https://example.com/images/badge2.png'),
 (3, '프로젝트 개척자', '연동한 프로젝트 개수 n개 이상 시 획득', 'https://example.com/images/badge3.png'),
@@ -21,7 +21,7 @@ INSERT INTO badge (id, name, description, image_url) VALUES
 INSERT INTO channel_code (id, name) VALUES (1, 'MATTERMOST'), (2, 'DISCORD');
 
 -- language_code
-INSERT INTO LanguageCode (id, name, color) VALUES
+INSERT INTO language_code (id, name, color) VALUES
 (1, 'Mercury', '#abcdef'),
 (2, 'TypeScript', '#31859c'),
 (3, 'PureBasic', '#5a6986'),
@@ -201,7 +201,7 @@ VALUES ('지민', 'image1.url', '1230', 'KAKAO', 'USER', '2024-10-16 09:00:00', 
        ('형민', 'image4.url', '1233', 'KAKAO', 'USER', '2024-10-16 09:00:00', '2024-10-16 09:00:00');
 
 -- user_badge
-INSERT INTO user_badge (user_id, badge_id, created_date, modified_date)
+INSERT INTO user_badge (user_id, badge_code_id, created_date, modified_date)
 VALUES (1, 1, '2024-10-30 09:00:00', '2024-10-30 09:00:00'),
        (1, 2, '2024-10-30 09:00:00', '2024-10-30 09:00:00'),
        (2, 3, '2024-10-30 09:00:00', '2024-10-30 09:00:00'),

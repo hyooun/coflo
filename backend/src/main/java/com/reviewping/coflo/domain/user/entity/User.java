@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.user.entity;
 
-import com.reviewping.coflo.domain.badge.entity.Badge;
+import com.reviewping.coflo.domain.badge.entity.BadgeCode;
 import com.reviewping.coflo.domain.badge.entity.UserBadge;
 import com.reviewping.coflo.domain.user.enums.Provider;
 import com.reviewping.coflo.domain.user.enums.Role;
@@ -46,8 +46,8 @@ public class User extends BaseTimeEntity {
     private List<UserBadge> userBadges = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "main_badge_id")
-    private Badge mainBadge;
+    @JoinColumn(name = "main_badge_code_id")
+    private BadgeCode mainBadgeCode;
 
     @Builder
     public User(

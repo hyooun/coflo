@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  font-family: Pretendard, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Pretendard, SFMono, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 }
@@ -56,6 +56,42 @@
   src:
     url('./assets/fonts/Pretendard-Black.woff2') format('woff2'),
     url('./assets/fonts/Pretendard-Black.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 300;
+  src: url('./assets/fonts/sf-mono/SFMonoLight.otf') format('otf');
+}
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 400;
+  src: url('./assets/fonts/sf-mono/SFMonoRegular.otf') format('otf');
+}
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 500;
+  src: url('./assets/fonts/sf-mono/SFMonoMedium.otf') format('otf');
+}
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 600;
+  src: url('./assets/fonts/sf-mono/SFMonoSemibold.otf') format('otf');
+}
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 700;
+  src: url('./assets/fonts/sf-mono/SFMonoBold.otf') format('otf');
+}
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 800;
+  src: url('./assets/fonts/sf-mono/SFMonoBold.otf') format('otf');
+}
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 900;
+  src: url('./assets/fonts/sf-mono/SFMonoHeavy.otf') format('otf');
 }
 
 * {

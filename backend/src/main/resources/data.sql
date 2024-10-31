@@ -226,7 +226,7 @@ VALUES (1, 1, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (4, 1, '2024-10-16 09:00:00', '2024-10-16 09:00:00');
 
 -- 지민의 1주차, 2주차, 3주차 user_project_score
-INSERT INTO user_project_score (user_project_id, code_quality_id, week, total_score, created_date, modified_date)
+INSERT INTO user_project_score (user_project_id, code_quality_code_id, week, total_score, created_date, modified_date)
 VALUES (1, 1, 1, 8, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (1, 2, 1, 7, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (1, 3, 1, 9, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
@@ -249,7 +249,7 @@ VALUES (1, 1, 1, 8, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (1, 6, 3, 8, '2024-10-28 09:00:00', '2024-10-30 09:00:00');
 
 -- 보연의 1주차, 2주차, 3주차 user_project_score
-INSERT INTO user_project_score (user_project_id, code_quality_id, week, total_score, created_date, modified_date)
+INSERT INTO user_project_score (user_project_id, code_quality_code_id, week, total_score, created_date, modified_date)
 VALUES (2, 1, 1, 8, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (2, 2, 1, 7, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (2, 3, 1, 9, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
@@ -272,7 +272,7 @@ VALUES (2, 1, 1, 8, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (2, 6, 3, 8, '2024-10-28 09:00:00', '2024-10-30 09:00:00');
 
 -- 선기의 1주차, 2주차, 3주차 user_project_score
-INSERT INTO user_project_score (user_project_id, code_quality_id, week, total_score, created_date, modified_date)
+INSERT INTO user_project_score (user_project_id, code_quality_code_id, week, total_score, created_date, modified_date)
 VALUES (3, 1, 1, 7, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (3, 2, 1, 6, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (3, 3, 1, 8, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
@@ -295,7 +295,7 @@ VALUES (3, 1, 1, 7, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (3, 6, 3, 7, '2024-10-28 09:00:00', '2024-10-30 09:00:00');
 
 -- 형민의 1주차, 2주차, 3주차 user_project_score
-INSERT INTO user_project_score (user_project_id, code_quality_id, week, total_score, created_date, modified_date)
+INSERT INTO user_project_score (user_project_id, code_quality_code_id, week, total_score, created_date, modified_date)
 VALUES (4, 1, 1, 6, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (4, 2, 1, 7, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),
        (4, 3, 1, 8, '2024-10-16 09:00:00', '2024-10-16 09:00:00'),

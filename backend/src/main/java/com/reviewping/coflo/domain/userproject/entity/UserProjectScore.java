@@ -21,7 +21,7 @@ public class UserProjectScore extends BaseTimeEntity {
     private UserProject userProject;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "code_quality_id")
+    @JoinColumn(name = "code_quality_code_id")
     private CodeQualityCode codeQualityCode;
 
     private Long week;

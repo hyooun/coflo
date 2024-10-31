@@ -33,7 +33,17 @@ interface CommentReply {
   system?: boolean;
 }
 
-export type ReferenceType = 'code' | 'text';
+export interface ReviewCommentProps {
+  name?: string;
+  title?: string;
+  type?: ReferenceType;
+  content: string;
+  createdAt?: string;
+  backgroundColor?: string;
+  reviewer?: Reviewer;
+}
+
+export type ReferenceType = 'CODE' | 'TEXT';
 
 export interface Reference {
   id: number;
@@ -43,12 +53,12 @@ export interface Reference {
   relevance?: number;
 }
 
-export interface ReviewCommentProps {
-  name?: string;
-  title?: string;
-  type?: ReferenceType;
-  content: string;
+export interface ReferenceProps extends Reference {
   createdAt?: string;
   backgroundColor?: string;
-  reviewer?: Reviewer;
+}
+
+export interface CommonReferenceProps extends ReferenceProps {
+  onEdit: (id: string, content: string) => void;
+  onDelete: (id: string) => void;
 }

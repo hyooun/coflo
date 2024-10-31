@@ -19,6 +19,7 @@ import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.ProjectInfoContent;
 import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -50,14 +51,14 @@ public class ProjectStatisticsService {
         return ProjectTeamDetailResponse.of(projectInfoContent, languages, aiReviewCount);
     }
 
-    public ProjectTeamRewardResponse getTeamScore(Long projectId) {
+    public ProjectTeamRewardResponse getTeamScore(User user, Long projectId) {
         Project project = projectRepository.getById(projectId);
         LocalDate projectCreatedDate = project.getCreatedDate().toLocalDate();
         int previousWeek = getPreviousWeek(projectCreatedDate);
         LocalDate[] startAndEndDates =
                 ProjectDateUtil.calculateWeekStartAndEndDates(projectCreatedDate, previousWeek);
         List<UserScoreInfoResponse> userScoreInfoResponses =
-                generateUserScoreInfoResponses(project, previousWeek);
+                getTopUserScoreInfoResponses(user, project, previousWeek);
         return ProjectTeamRewardResponse.of(startAndEndDates, userScoreInfoResponses);
     }
 
@@ -66,11 +67,26 @@ public class ProjectStatisticsService {
         return Math.max(1, currentWeek - 1);
     }
 
-    private List<UserScoreInfoResponse> generateUserScoreInfoResponses(
-            Project project, int previousWeek) {
-        return userProjectRepository.findByProject(project).stream()
+    private List<UserScoreInfoResponse> getTopUserScoreInfoResponses(
+            User user, Project project, int previousWeek) {
+        List<UserProject> topScoreUserProject = new ArrayList<>();
+
+        UserProject currentUserProject = getCurrentUserProject(user, project);
+        topScoreUserProject.add(currentUserProject);
+
+        List<UserProject> top5ScoreUserProjects =
+                userProjectRepository.findTopScoreUserProjectsOfWeek(
+                        project.getId(), previousWeek, user.getId());
+        topScoreUserProject.addAll(top5ScoreUserProjects);
+
+        return topScoreUserProject.stream()
                 .map(userProject -> createUserScoreInfoResponse(userProject, previousWeek))
                 .toList();
+    }
+
+    private UserProject getCurrentUserProject(User user, Project project) {
+        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
+        return userProjectRepository.getByProjectAndGitlabAccount(project, gitlabAccount);
     }
 
     private UserScoreInfoResponse createUserScoreInfoResponse(

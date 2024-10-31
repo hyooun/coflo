@@ -12,8 +12,8 @@ public interface LanguageCodeRepository extends JpaRepository<LanguageCode, Long
     @Query(
             "SELECT lc.color "
                     + "FROM LanguageCode lc "
-                    + "WHERE lc.name = :name "
-                    + "OR lc.name = 'Other' "
-                    + "ORDER BY CASE WHEN lc.name = :name THEN 0 ELSE 1 END")
+                    + "WHERE lc.name = :name OR lc.name = 'Other' "
+                    + "ORDER BY CASE WHEN lc.name = :name THEN 0 ELSE 1 END "
+                    + "LIMIT 1")
     String findColorByNameOrDefault(@Param("name") String name);
 }

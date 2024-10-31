@@ -24,8 +24,6 @@ public class UserBadge extends BaseTimeEntity {
     @JoinColumn(name = "badge_id")
     private Badge badge;
 
-    private boolean isSelected;
-
     @Builder
     public UserBadge(User user, Badge badge) {
         this.user = user;

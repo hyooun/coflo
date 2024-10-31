@@ -26,11 +26,11 @@ VALUES ('지민', 'image1.url', '1230', 'KAKAO', 'USER', '2024-10-16 09:00:00', 
        ('형민', 'image4.url', '1233', 'KAKAO', 'USER', '2024-10-16 09:00:00', '2024-10-16 09:00:00');
 
 -- user_badge
-INSERT INTO user_badge (user_id, badge_id, is_selected, created_date, modified_date)
-VALUES (1, 1, true, '2024-10-30 09:00:00', '2024-10-30 09:00:00'),
-       (1, 2, false, '2024-10-30 09:00:00', '2024-10-30 09:00:00'),
-       (2, 3, true, '2024-10-30 09:00:00', '2024-10-30 09:00:00'),
-       (3, 4, true, '2024-10-30 09:00:00', '2024-10-30 09:00:00');
+INSERT INTO user_badge (user_id, badge_id, created_date, modified_date)
+VALUES (1, 1, '2024-10-30 09:00:00', '2024-10-30 09:00:00'),
+       (1, 2, '2024-10-30 09:00:00', '2024-10-30 09:00:00'),
+       (2, 3, '2024-10-30 09:00:00', '2024-10-30 09:00:00'),
+       (3, 4, '2024-10-30 09:00:00', '2024-10-30 09:00:00');
 
 -- gitlab_account
 INSERT INTO gitlab_account (user_id, domain, user_token, created_date, modified_date)

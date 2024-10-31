@@ -59,6 +59,6 @@ export interface ReferenceProps extends Reference {
 }
 
 export interface CommonReferenceProps extends ReferenceProps {
-  onEdit: (id: string, content: string) => void;
-  onDelete: (id: string) => void;
+  onEdit: (id: number, content: string) => void;
+  onDelete: (id: number) => void;
 }

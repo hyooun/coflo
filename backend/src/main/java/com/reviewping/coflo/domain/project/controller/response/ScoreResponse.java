@@ -6,6 +6,6 @@ public record ScoreResponse(String name, Long score) {
 
     public static ScoreResponse of(UserProjectScore userProjectScore) {
         return new ScoreResponse(
-                userProjectScore.getCodeQuality().getName(), userProjectScore.getTotalScore());
+                userProjectScore.getCodeQualityCode().getName(), userProjectScore.getTotalScore());
     }
 }

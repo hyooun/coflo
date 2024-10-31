@@ -12,6 +12,8 @@ import com.reviewping.coflo.global.common.entity.PageDetail;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 public class GitLabClient {
 
     private static final String PRIVATE_TOKEN = "PRIVATE-TOKEN";
+    private static final String KST_OFFSET = "+09:00";
 
     private final ObjectMapper objectMapper;
 
@@ -51,11 +54,16 @@ public class GitLabClient {
             String token,
             Long gitlabProjectId,
             String mergeRequestState,
-            GitlabSearchRequest gitlabSearchRequest) {
+            GitlabSearchRequest gitlabSearchRequest,
+            LocalDateTime createdAt) {
         HttpHeaders headers = makeGitlabHeaders(token);
         String url =
                 GitLabApiUrlBuilder.createSearchMergeRequestUrl(
-                        gitlabUrl, gitlabProjectId, mergeRequestState, gitlabSearchRequest);
+                        gitlabUrl,
+                        gitlabProjectId,
+                        mergeRequestState,
+                        gitlabSearchRequest,
+                        this.convertToGitlabDateFormat(createdAt));
         ResponseEntity<List<GitlabMrDetailContent>> response =
                 RestTemplateUtils.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
@@ -179,5 +187,9 @@ public class GitLabClient {
         headers.set(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.set(PRIVATE_TOKEN, token);
         return headers;
+    }
+
+    private String convertToGitlabDateFormat(LocalDateTime localDateTime) {
+        return localDateTime.toString() + KST_OFFSET;
     }
 }

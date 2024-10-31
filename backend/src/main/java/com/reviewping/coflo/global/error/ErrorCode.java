@@ -11,7 +11,7 @@ public enum ErrorCode {
     /**
      * USER(A000)
      */
-    USER_NOT_EXIST(HttpStatus.BAD_REQUEST, "A001", "존재하지 않는 유저입니다"),
+    USER_NOT_EXIST(HttpStatus.NOT_FOUND, "A001", "존재하지 않는 유저입니다"),
     LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "A002", "로그인 도중 오류가 발생했습니다."),
 
     /**
@@ -65,28 +65,24 @@ public enum ErrorCode {
      * USER-PROJECT(I00)
      */
     LINK_BOT_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "I001", "연동에 필요한 Bot 토큰이 존재하지 않습니다."),
-    USER_PROJECT_NOT_EXIST(HttpStatus.BAD_REQUEST, "I002", "존재하지 않는 프로젝트입니다."),
+    USER_PROJECT_NOT_EXIST(HttpStatus.NOT_FOUND, "I002", "존재하지 않는 프로젝트입니다."),
     /**
      * (J000)
      */
-    CHANNEL_CODE_NOT_EXIST(HttpStatus.BAD_REQUEST, "J001", "존재하지 않는 채널 코드입니다."),
+    CHANNEL_CODE_NOT_EXIST(HttpStatus.NOT_FOUND, "J001", "존재하지 않는 채널 코드입니다."),
 
     /**
      * Webhook Channel(K000)
      */
     WEBHOOK_REQUEST_SERIALIZATION_ERROR(
             HttpStatus.INTERNAL_SERVER_ERROR, "K001", "Webhook Content 요청 생성에 오류가 발생했습니다."),
-    WEBHOOK_CHANNEL_NOT_EXIST(HttpStatus.INTERNAL_SERVER_ERROR, "K002", "존재하지 않는 웹훅 채널입니다."),
+    WEBHOOK_CHANNEL_NOT_EXIST(HttpStatus.NOT_FOUND, "K002", "존재하지 않는 웹훅 채널입니다."),
 
     /**
      * user badge(L000)
      */
-    USER_BADGE_NOT_EXIST(HttpStatus.INTERNAL_SERVER_ERROR, "L001", "존재하지 않는 사용자 뱃지입니다."),
-
-    /**
-     * badge(M000)
-     */
-    BADGE_NOT_EXIST(HttpStatus.INTERNAL_SERVER_ERROR, "M001", "존재하지 않는 뱃지입니다."),
+    USER_BADGE_NOT_EXIST(HttpStatus.NOT_FOUND, "L001", "존재하지 않는 사용자 뱃지입니다."),
+    BADGE_NOT_EXIST(HttpStatus.NOT_FOUND, "L002", "존재하지 않는 뱃지입니다."),
 
     /**
      * 외부 API(Y000)

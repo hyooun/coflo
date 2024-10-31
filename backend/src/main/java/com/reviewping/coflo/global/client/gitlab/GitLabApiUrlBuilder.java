@@ -106,4 +106,14 @@ public class GitLabApiUrlBuilder {
                 + gitlabProjectId
                 + "?statistics=true";
     }
+
+    public static String createGetMergeRequestsUrl(
+            String gitlabUrl, Long gitlabProjectId, Long gitlabMrIid) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + SINGLE_PROJECT_ENDPOINT
+                + gitlabProjectId
+                + "/merge_requests/"
+                + gitlabMrIid;
+    }
 }

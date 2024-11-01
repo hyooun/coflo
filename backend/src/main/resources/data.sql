@@ -1,6 +1,25 @@
 -- code_quality
 INSERT INTO code_quality_code (id, name) VALUES (1,'가독성'), (2, '일관성'), (3, '재사용성'), (4, '신뢰성'), (5, '보안성'), (6, '유지보수성');
 
+-- language
+INSERT INTO Language (type) VALUES
+('TYPESCRIPT'),
+('JAVASCRIPT'),
+('PYTHON'),
+('JAVA'),
+('C'),
+('CPP'),
+('CSHARP'),
+('GO'),
+('RUBY'),
+('RUST'),
+('SWIFT'),
+('PHP'),
+('SHELL'),
+('SQL'),
+('HTML'),
+('CSS');
+
 -- badge
 INSERT INTO badge_code (id, name, description, image_url) VALUES
 (1, '첫 모험가', '처음 서비스 가입 시 기본 획득', 'https://example.com/images/badge1.png'),

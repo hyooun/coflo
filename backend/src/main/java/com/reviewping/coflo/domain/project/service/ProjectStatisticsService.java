@@ -11,7 +11,6 @@ import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
-import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.domain.userproject.entity.UserProjectScore;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectScoreRepository;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
@@ -36,7 +35,6 @@ public class ProjectStatisticsService {
     private final ProjectRepository projectRepository;
     private final UserProjectScoreRepository userProjectScoreRepository;
     private final LanguageCodeRepository languageCodeRepository;
-    private final UserRepository userRepository;
 
     public ProjectTeamDetailResponse getTeamDetail(User user, Long projectId) {
         GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
@@ -51,8 +49,7 @@ public class ProjectStatisticsService {
         return ProjectTeamDetailResponse.of(projectInfoContent, languages, aiReviewCount);
     }
 
-    public ProjectTeamRewardResponse getTeamScore(Long userId, Long projectId) {
-        User user = userRepository.getById(userId);
+    public ProjectTeamRewardResponse getTeamScore(User user, Long projectId) {
         Project project = projectRepository.getById(projectId);
         LocalDate projectCreatedDate = project.getCreatedDate().toLocalDate();
         int previousWeek = getPreviousWeek(projectCreatedDate);

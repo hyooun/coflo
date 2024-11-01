@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ProjectStatisticsService {
+public class ProjectTeamStatisticsService {
 
     private final GitLabClient gitLabClient;
     private final GitlabAccountRepository gitlabAccountRepository;

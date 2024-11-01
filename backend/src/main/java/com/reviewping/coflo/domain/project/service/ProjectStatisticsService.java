@@ -34,10 +34,9 @@ public class ProjectStatisticsService {
     private final GitlabAccountRepository gitlabAccountRepository;
     private final ProjectRepository projectRepository;
     private final UserProjectScoreRepository userProjectScoreRepository;
-    private final UserBadgeRepository userBadgeRepository;
-    private final ProjectDateUtil projectDateUtil;
     private final LanguageCodeRepository languageCodeRepository;
-    
+    private final ProjectDateUtil projectDateUtil;
+
     public ProjectTeamDetailResponse getTeamDetail(User user, Long projectId) {
         GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
         Project project = projectRepository.getById(projectId);
@@ -62,27 +61,6 @@ public class ProjectStatisticsService {
         return ProjectTeamRewardResponse.of(startAndEndDates, userScoreInfoResponses);
     }
 
-    private int getPreviousWeek(LocalDate projectCreatedDate) {
-        int currentWeek = projectDateUtil.calculateWeekNumber(projectCreatedDate, LocalDate.now());
-        return Math.max(1, currentWeek - 1);
-    }
-
-    private List<UserScoreInfoResponse> generateUserScoreInfoResponses(
-            Project project, int previousWeek) {
-        return userProjectRepository.findByProject(project).stream()
-                .map(userProject -> createUserScoreInfoResponse(userProject, previousWeek))
-                .toList();
-    }
-
-    private UserScoreInfoResponse createUserScoreInfoResponse(
-            UserProject userProject, int previousWeek) {
-        User user = userProject.getGitlabAccount().getUser();
-        BadgeCode badgeCode = user.getMainBadgeCode();
-        List<UserProjectScore> previousWeekScores =
-                userProjectScoreRepository.findByUserProjectAndWeek(userProject, previousWeek);
-        return UserScoreInfoResponse.of(user, badgeCode, previousWeekScores);
-    }
-
     private List<LanguageResponse> createLanguageResponse(Map<String, Double> languages) {
         return languages.entrySet().stream()
                 .map(
@@ -97,7 +75,7 @@ public class ProjectStatisticsService {
     }
 
     private int getPreviousWeek(LocalDate projectCreatedDate) {
-        int currentWeek = ProjectDateUtil.calculateWeekNumber(projectCreatedDate, LocalDate.now());
+        int currentWeek = projectDateUtil.calculateWeekNumber(projectCreatedDate, LocalDate.now());
         return Math.max(1, currentWeek - 1);
     }
 

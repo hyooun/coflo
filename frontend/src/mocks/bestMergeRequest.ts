@@ -167,12 +167,14 @@ export const handlers = [
         id: 2,
         fileName: 'docs/specifications.md',
         type: 'TEXT',
+        language: 'plaintext',
         content: 'Some text content here...',
       },
       {
         id: 3,
         fileName: 'docs/example.md',
         type: 'TEXT',
+        language: 'plaintext',
         content:
           'Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...',
       },

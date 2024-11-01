@@ -20,7 +20,7 @@ public enum LanguageType {
     SQL("sql"),
     HTML("html"),
     CSS("css"),
-    TEXT("text");
+    PLAINTEXT("plaintext");
 
     private final String type;
 

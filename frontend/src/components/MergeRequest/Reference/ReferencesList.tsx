@@ -5,17 +5,40 @@ import CommonReference from '@components/MergeRequest/Reference/CommonReference.
 import { CommonButton } from '@components/Button/CommonButton';
 import AddReferenceModal from '@components/Modal/AddReferenceModal';
 import { Reference, ReferencesListProps } from 'types/reference.ts';
+import AlertModal from '@components/Modal/AlertModal';
 
 const ReferencesList = ({ references: initialReferences }: ReferencesListProps) => {
   const [references, setReferences] = useState<Reference[]>(initialReferences || []);
   const [isAddReferenceModalOpen, setIsAddReferenceModalOpen] = useState(false);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [alertModalContent, setAlertModalContent] = useState<string[]>([]);
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
 
   useEffect(() => {
     setReferences(initialReferences || []);
   }, [initialReferences]);
 
   const handleEdit = (id: number, content: string) => {
-    // API 호출 및 상태 업데이트 로직
+    // API 호출 및 상태 업데이트 로직이 필요한가?
+  };
+
+  const handleDeleteClick = (id: number) => {
+    setDeleteTargetId(id);
+    setAlertModalContent(['정말 삭제하시겠습니까?']);
+    setIsAlertModalOpen(true);
+  };
+
+  const handleAlertModalConfirm = () => {
+    if (deleteTargetId !== null) {
+      handleDelete(deleteTargetId);
+      setDeleteTargetId(null);
+    }
+    setIsAlertModalOpen(false);
+  };
+
+  const handleAlertModalCancel = () => {
+    setDeleteTargetId(null);
+    setIsAlertModalOpen(false);
   };
 
   const handleDelete = (id: number) => {
@@ -56,7 +79,7 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
             language={reference.language}
             type={reference.type}
             onEdit={handleEdit}
-            onDelete={handleDelete}
+            onDelete={handleDeleteClick}
           />
         ))}
         <div
@@ -73,6 +96,15 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
         onClose={() => setIsAddReferenceModalOpen(false)}
         onSubmit={handleAddReferenceSubmit}
       />
+
+      {isAlertModalOpen && (
+        <AlertModal
+          content={alertModalContent}
+          onConfirm={handleAlertModalConfirm}
+          onCancel={handleAlertModalCancel}
+          className="w-72 h-44"
+        />
+      )}
 
       <div className="flex justify-end my-4">
         <CommonButton

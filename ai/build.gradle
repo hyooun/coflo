@@ -41,6 +41,9 @@ dependencies {
     // Postgresql
     runtimeOnly 'org.postgresql:postgresql'
 
+    // Pgvector
+    implementation 'com.pgvector:pgvector:0.1.6'
+
     // JGit
     implementation 'org.eclipse.jgit:org.eclipse.jgit:7.0.0.202409031743-r'
 

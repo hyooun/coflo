@@ -19,7 +19,8 @@ public enum LanguageType {
     SHELL("shell"),
     SQL("sql"),
     HTML("html"),
-    CSS("css");
+    CSS("css"),
+    TEXT("text");
 
     private final String type;
 

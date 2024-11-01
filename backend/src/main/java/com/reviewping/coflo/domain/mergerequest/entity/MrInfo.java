@@ -1,5 +1,6 @@
-package com.reviewping.coflo.domain.project.entity;
+package com.reviewping.coflo.domain.mergerequest.entity;
 
+import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.review.entity.Review;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -32,14 +33,23 @@ public class MrInfo extends BaseTimeEntity {
 
     private LocalDateTime gitlabCreatedDate;
 
-    // TODO: skillN_score 이름정하기
+    private Integer readabilityScore;
+
+    private Integer consistencyScore;
+
+    private Integer reusabilityScore;
+
+    private Integer reliabilityScore;
+
+    private Integer securityScore;
+
+    private Integer maintainabilityScore;
 
     @Builder
     public MrInfo(Project project, Long gitlabMrIid, LocalDateTime gitlabCreatedDate) {
         this.project = project;
         this.gitlabMrIid = gitlabMrIid;
         this.gitlabCreatedDate = gitlabCreatedDate;
-
         this.project.getMrInfos().add(this);
     }
 }

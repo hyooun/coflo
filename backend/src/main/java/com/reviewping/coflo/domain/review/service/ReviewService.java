@@ -1,7 +1,7 @@
 package com.reviewping.coflo.domain.review.service;
 
-import com.reviewping.coflo.domain.project.entity.MrInfo;
-import com.reviewping.coflo.domain.project.repository.MrInfoRepository;
+import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
+import com.reviewping.coflo.domain.mergerequest.repository.MrInfoRepository;
 import com.reviewping.coflo.domain.review.entity.Review;
 import com.reviewping.coflo.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;

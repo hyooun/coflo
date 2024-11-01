@@ -48,7 +48,8 @@ public class GitLabApiUrlBuilder {
             String gitlabUrl,
             Long gitlabProjectId,
             String mergeRequestState,
-            GitlabSearchRequest gitlabSearchRequest) {
+            GitlabSearchRequest gitlabSearchRequest,
+            String createAt) {
         return URL_PROTOCOL_HTTPS
                 + gitlabUrl
                 + SINGLE_PROJECT_ENDPOINT
@@ -61,7 +62,9 @@ public class GitLabApiUrlBuilder {
                 + "&page="
                 + gitlabSearchRequest.page()
                 + "&per_page="
-                + gitlabSearchRequest.size();
+                + gitlabSearchRequest.size()
+                + "&created_after="
+                + createAt;
     }
 
     public static String createSingleProjectUrl(String gitlabUrl, Long gitlabProjectId) {
@@ -102,5 +105,15 @@ public class GitLabApiUrlBuilder {
                 + SINGLE_PROJECT_ENDPOINT
                 + gitlabProjectId
                 + "?statistics=true";
+    }
+
+    public static String createGetMergeRequestsUrl(
+            String gitlabUrl, Long gitlabProjectId, Long gitlabMrIid) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + SINGLE_PROJECT_ENDPOINT
+                + gitlabProjectId
+                + "/merge_requests/"
+                + gitlabMrIid;
     }
 }

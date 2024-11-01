@@ -34,8 +34,10 @@ public class ProjectStatisticsService {
     private final GitlabAccountRepository gitlabAccountRepository;
     private final ProjectRepository projectRepository;
     private final UserProjectScoreRepository userProjectScoreRepository;
+    private final UserBadgeRepository userBadgeRepository;
+    private final ProjectDateUtil projectDateUtil;
     private final LanguageCodeRepository languageCodeRepository;
-
+    
     public ProjectTeamDetailResponse getTeamDetail(User user, Long projectId) {
         GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
         Project project = projectRepository.getById(projectId);
@@ -54,10 +56,31 @@ public class ProjectStatisticsService {
         LocalDate projectCreatedDate = project.getCreatedDate().toLocalDate();
         int previousWeek = getPreviousWeek(projectCreatedDate);
         LocalDate[] startAndEndDates =
-                ProjectDateUtil.calculateWeekStartAndEndDates(projectCreatedDate, previousWeek);
+                projectDateUtil.calculateWeekStartAndEndDates(projectCreatedDate, previousWeek);
         List<UserScoreInfoResponse> userScoreInfoResponses =
                 getCurrentUserAndTopUserScore(user, project, previousWeek);
         return ProjectTeamRewardResponse.of(startAndEndDates, userScoreInfoResponses);
+    }
+
+    private int getPreviousWeek(LocalDate projectCreatedDate) {
+        int currentWeek = projectDateUtil.calculateWeekNumber(projectCreatedDate, LocalDate.now());
+        return Math.max(1, currentWeek - 1);
+    }
+
+    private List<UserScoreInfoResponse> generateUserScoreInfoResponses(
+            Project project, int previousWeek) {
+        return userProjectRepository.findByProject(project).stream()
+                .map(userProject -> createUserScoreInfoResponse(userProject, previousWeek))
+                .toList();
+    }
+
+    private UserScoreInfoResponse createUserScoreInfoResponse(
+            UserProject userProject, int previousWeek) {
+        User user = userProject.getGitlabAccount().getUser();
+        BadgeCode badgeCode = user.getMainBadgeCode();
+        List<UserProjectScore> previousWeekScores =
+                userProjectScoreRepository.findByUserProjectAndWeek(userProject, previousWeek);
+        return UserScoreInfoResponse.of(user, badgeCode, previousWeekScores);
     }
 
     private List<LanguageResponse> createLanguageResponse(Map<String, Double> languages) {

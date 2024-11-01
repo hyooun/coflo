@@ -11,7 +11,7 @@ const ReviewReferencesList = ({ references }: ReviewReferencesListProps) => {
   const { id } = useParams();
 
   return (
-    <div className="p-4 font-pretendard w-[500px]">
+    <div className="p-4 font-pretendard flex-[3] min-w-[330px]">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">References</h2>

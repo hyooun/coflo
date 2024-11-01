@@ -37,15 +37,11 @@ const MergeRequestReviewPage = () => {
   if (!mergeRequest) return <div>Loading...</div>;
 
   return (
-    <div className="p-8 flex flex-col overflow-auto">
-      <div className="w-full">
+    <div className="p-8 flex flex-col w-full overflow-auto items-center">
+      <div className="w-full border-b-2 border-secondary">
         <MergeRequestHeader mergeRequest={mergeRequest} />
-      </div>
-      <div className="flex gap-12 ml-4 border-b-2 border-secondary">
-        <div className="flex-1">
+        <div className="flex gap-12 w-full">
           <ReviewList reviews={reviews} />
-        </div>
-        <div className="">
           <ReferencesList references={references} />
         </div>
       </div>

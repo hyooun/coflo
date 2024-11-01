@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import CodeReference from './CodeReference';
 import TextReference from './TextReference';
-import { CommonReferenceProps } from 'types/review.ts';
+import { CommonReferenceProps } from 'types/reference.ts';
 import { PencilIcon } from '@components/TextDiv/Icons/PencilIcon';
 import { TrashIcon } from '@components/TextDiv/Icons/TrashIcon';
 import { CheckIcon, ArrowDownToLine, Undo2 } from 'lucide-react';
@@ -15,17 +15,27 @@ const CommonReference = ({
   language,
   onEdit,
   onDelete,
+  onLanguageChange,
 }: CommonReferenceProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
   const [showSaveMessage, setShowSaveMessage] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState(language);
 
   const handleEdit = (newContent: string) => {
     setEditedContent(newContent);
   };
 
+  // const handleLanguageChange = (newLanguage: string) => {
+  //   setCurrentLanguage(newLanguage);
+  //   onLanguageChange(newLanguage);
+  // };
+
   const handleSave = () => {
     onEdit(id, editedContent);
+    if (type === 'CODE' && onLanguageChange) {
+      onLanguageChange(currentLanguage);
+    }
     setShowSaveMessage(true);
     setTimeout(() => {
       setShowSaveMessage(false);

@@ -1,6 +1,6 @@
 // components/references/ReferencesList.tsx
 import { Link, useParams } from 'react-router-dom';
-import { Reference } from 'types/review';
+import { Reference } from 'types/reference';
 import ReviewComment from 'components/MergeRequest/Review/ReviewComment';
 
 interface ReviewReferencesListProps {

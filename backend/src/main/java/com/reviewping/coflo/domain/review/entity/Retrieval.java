@@ -1,5 +1,6 @@
 package com.reviewping.coflo.domain.review.entity;
 
+import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,11 +17,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Retrieval {
+public class Retrieval extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
@@ -31,12 +32,16 @@ public class Retrieval {
     private Language language;
 
     @Column(columnDefinition = "TEXT")
+    private String fileName;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Builder
-    public Retrieval(Review review, Language language, String content) {
+    public Retrieval(Review review, Language language, String fileName, String content) {
         this.review = review;
         this.language = language;
+        this.fileName = fileName;
         this.content = content;
         review.getRetrievals().add(this);
         language.getRetrievals().add(this);

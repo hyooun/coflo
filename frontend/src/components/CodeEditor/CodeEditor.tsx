@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
-import { CODE_SNIPPETS } from '@constants/codeEditor';
+import { CODE_SNIPPETS, LANGUAGE_VERSIONS } from '@constants/codeEditor';
 import { useState } from 'react';
-import LanguageSelector from './LanguageSelector';
 import { Code2, Copy, Check } from 'lucide-react';
+import CommonSelector from '@components/Common/CommonSelector';
 
 interface CodeQueryEditorProps {
   defaultValue?: string;
@@ -12,6 +12,7 @@ interface CodeQueryEditorProps {
   height?: string;
   width?: string;
   onChange?: (value: string | undefined) => void;
+  onLanguageChange?: (language: string) => void;
   isLanguageSelectable?: boolean;
 }
 
@@ -22,10 +23,12 @@ const CodeEditor = ({
   height = '400px',
   width = '100%',
   onChange,
+  onLanguageChange,
   isLanguageSelectable = true,
 }: CodeQueryEditorProps) => {
   const monacoInstance = useMonaco();
   const [value, setValue] = useState(defaultValue || CODE_SNIPPETS[defaultLanguage] || '');
+  const [selectedLanguage, setSelectedLanguage] = useState(language || defaultLanguage);
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
@@ -42,23 +45,33 @@ const CodeEditor = ({
     try {
       await navigator.clipboard.writeText(value);
       setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000);
+      setTimeout(() => setIsCopied(false), 1000);
     } catch (err) {
       console.error('Failed to copy code:', err);
     }
   };
 
-  const setLanguage = (lang: string) => {
-    setLanguage(lang);
+  const handleSelectLanguage = (lang: string) => {
+    setSelectedLanguage(lang);
+    onLanguageChange?.(lang);
   };
 
   return (
-    <div className="group relative flex flex-col w-full bg-black overflow-hidden">
+    <div className="group relative flex flex-col w-full bg-black overflow-hidden max-h-[420px]">
       <div className="flex justify-between items-center px-4">
         <div className="flex items-center gap-2">
           <Code2 className="w-4 h-4 text-gray-500" />
           {isLanguageSelectable ? (
-            <LanguageSelector language={language || defaultLanguage} onSelect={setLanguage} />
+            <>
+              <CommonSelector<string>
+                selectedItem={selectedLanguage}
+                items={Object.keys(LANGUAGE_VERSIONS)}
+                onSelect={handleSelectLanguage}
+                displayValue={(lang) => lang}
+                searchPlaceholder="언어 검색..."
+                isEqual={(item1, item2) => item1 === item2}
+              />
+            </>
           ) : (
             <span className="text-sm font-medium text-gray-600">{language || defaultLanguage}</span>
           )}

@@ -25,7 +25,12 @@ const ReviewItem = ({ review }: { review: Review }) => {
 
       {/* 메인 리뷰 코멘트 - 깃 트리와 살짝 겹치게 */}
       <div className="bg-white rounded-t-lg border-2 border-secondary rounded-lg -ml-10">
-        <ReviewComment name={review.reviewer.name} content={review.content} createdAt={timeAgo} />
+        <ReviewComment
+          name={review.reviewer.name}
+          content={review.content}
+          createdAt={timeAgo}
+          reviewer={review.reviewer}
+        />
       </div>
 
       {/* 코드 리뷰 코멘트들 - 깃 트리 오른쪽에 표시 */}

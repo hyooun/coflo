@@ -35,7 +35,7 @@ public class BadgeEventService {
         Integer count = gitlabAccountRepository.countByUser(user);
         badgeCode = badgeCodeRepository.getById(FIRST_ADVENTURER.getId());
 
-        if (count == 0 && userBadgeRepository.findByUserAndBadgeCode(user, badgeCode) == null) {
+        if (count == 0 && !userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
         }
@@ -49,7 +49,7 @@ public class BadgeEventService {
         Long projectCount = userProjectRepository.countByGitlabAccountIds(gitlabAccountIds);
 
         if (projectCount == PROJECT_LINK_TARGET_COUNT
-                && userBadgeRepository.findByUserAndBadgeCode(user, badgeCode) == null) {
+                && !userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
         }

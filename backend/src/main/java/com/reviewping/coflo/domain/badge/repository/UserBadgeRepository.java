@@ -15,7 +15,7 @@ public interface UserBadgeRepository extends JpaRepository<UserBadge, Long> {
     @EntityGraph(attributePaths = {"badgeCode"})
     List<UserBadge> findAllByUser(User user);
 
-    UserBadge findByUserAndBadgeCode(User user, BadgeCode badgeCode);
+    boolean existsByUserAndBadgeCode(User user, BadgeCode badgeCode);
 
     default UserBadge getById(Long id) {
         return findById(id).orElseThrow(() -> new BusinessException(USER_BADGE_NOT_EXIST));

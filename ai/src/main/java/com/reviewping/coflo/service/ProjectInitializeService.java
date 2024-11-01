@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,8 +38,12 @@ public class ProjectInitializeService {
         this.gitCloneDirectory = gitCloneDirectory;
     }
 
-    public void initializeKnowledgeBase(
-            Long projectId, String gitUrl, String branch, String token) {
+    @ServiceActivator(inputChannel = "initializeChannel")
+    public void initializeKnowledgeBase(InitMessage initMessage) {
+        Long projectId = initMessage.projectId();
+        String gitUrl = initMessage.gitUrl();
+        String branch = initMessage.branch();
+        String token = initMessage.token();
         // 1. git clone
         String localPath = gitCloneDirectory + projectId + "/" + branch;
         gitUtil.shallowCloneOrPull(gitUrl, branch, token, localPath);

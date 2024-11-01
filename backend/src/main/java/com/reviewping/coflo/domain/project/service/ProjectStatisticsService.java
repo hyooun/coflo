@@ -19,9 +19,9 @@ import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.ProjectInfoContent;
 import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +58,7 @@ public class ProjectStatisticsService {
         LocalDate[] startAndEndDates =
                 ProjectDateUtil.calculateWeekStartAndEndDates(projectCreatedDate, previousWeek);
         List<UserScoreInfoResponse> userScoreInfoResponses =
-                getTopUserScoreInfoResponses(user, project, previousWeek);
+                getTopUserScoreInfoResponsesV2(user, project, previousWeek);
         return ProjectTeamRewardResponse.of(startAndEndDates, userScoreInfoResponses);
     }
 
@@ -67,6 +67,7 @@ public class ProjectStatisticsService {
         return Math.max(1, currentWeek - 1);
     }
 
+    /*
     private List<UserScoreInfoResponse> getTopUserScoreInfoResponses(
             User user, Project project, int previousWeek) {
         List<UserProject> topScoreUserProject = new ArrayList<>();
@@ -98,6 +99,8 @@ public class ProjectStatisticsService {
         return UserScoreInfoResponse.of(user, badgeCode, previousWeekScores);
     }
 
+     */
+
     private List<LanguageResponse> createLanguageResponse(Map<String, Double> languages) {
         return languages.entrySet().stream()
                 .map(
@@ -109,5 +112,33 @@ public class ProjectStatisticsService {
                             return new LanguageResponse(language, percentage, color);
                         })
                 .toList();
+    }
+
+    // V2 =============================================
+    private List<UserScoreInfoResponse> getTopUserScoreInfoResponsesV2(
+            User user, Project project, int previousWeek) {
+
+        List<UserProjectScore> topScoreUserProjectsWithScores =
+                userProjectScoreRepository.findTopUserProjectScores(
+                        project.getId(), previousWeek, user.getId());
+
+        return topScoreUserProjectsWithScores.stream()
+                .collect(Collectors.groupingBy(UserProjectScore::getUserProject))
+                .entrySet()
+                .stream()
+                .map(
+                        entry -> {
+                            UserProject userProject = entry.getKey();
+                            List<UserProjectScore> scores = entry.getValue();
+                            return createUserScoreInfoResponseV2(userProject, scores);
+                        })
+                .toList();
+    }
+
+    private UserScoreInfoResponse createUserScoreInfoResponseV2(
+            UserProject userProject, List<UserProjectScore> previousWeekScores) {
+        User user = userProject.getGitlabAccount().getUser();
+        BadgeCode badgeCode = user.getMainBadgeCode();
+        return UserScoreInfoResponse.of(user, badgeCode, previousWeekScores);
     }
 }

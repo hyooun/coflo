@@ -25,8 +25,7 @@ public class UserProjectController {
             @PathVariable("gitlabProjectId") Long gitlabProjectId,
             @RequestBody(required = false) ProjectLinkRequest projectLinkRequest) {
         Long projectId =
-                userProjectService.linkGitlabProject(
-                        user.getId(), gitlabProjectId, projectLinkRequest);
+                userProjectService.linkGitlabProject(user, gitlabProjectId, projectLinkRequest);
         return ApiSuccessResponse.success("projectId", projectId);
     }
 

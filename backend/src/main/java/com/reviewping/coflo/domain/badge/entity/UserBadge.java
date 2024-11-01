@@ -1,5 +1,7 @@
 package com.reviewping.coflo.domain.badge.entity;
 
+import static com.reviewping.coflo.domain.badge.entity.BadgeType.*;
+
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -28,6 +30,9 @@ public class UserBadge extends BaseTimeEntity {
     public UserBadge(User user, BadgeCode badgeCode) {
         this.user = user;
         this.badgeCode = badgeCode;
-        user.getUserBadges().add(this);
+    }
+
+    public static UserBadge of(User user, BadgeCode badgeCode) {
+        return UserBadge.builder().user(user).badgeCode(badgeCode).build();
     }
 }

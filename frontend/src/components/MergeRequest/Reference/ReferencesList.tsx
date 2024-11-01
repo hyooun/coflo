@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
 
 import CommonReference from '@components/MergeRequest/Reference/CommonReference.tsx';
@@ -10,12 +10,16 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
   const [references, setReferences] = useState<Reference[]>(initialReferences || []);
   const [isAddReferenceModalOpen, setIsAddReferenceModalOpen] = useState(false);
 
+  useEffect(() => {
+    setReferences(initialReferences || []);
+  }, [initialReferences]);
+
   const handleEdit = (id: number, content: string) => {
     // API 호출 및 상태 업데이트 로직
   };
 
   const handleDelete = (id: number) => {
-    // API 호출 및 상태 업데이트 로직
+    setReferences((prevReferences) => prevReferences.filter((reference) => reference.id !== id));
   };
 
   const handleRegistReference = () => {

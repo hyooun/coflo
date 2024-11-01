@@ -5,7 +5,7 @@ import CommonReference from '@components/MergeRequest/Reference/CommonReference.
 import { CommonButton } from '@components/Button/CommonButton';
 import AddReferenceModal from '@components/Modal/AddReferenceModal';
 import { Reference, ReferencesListProps } from 'types/reference.ts';
-import AlertModal from '@components/Modal/AlertModal';
+import ConfirmModal from '@components/Modal/ConfirmModal.tsx';
 
 const ReferencesList = ({ references: initialReferences }: ReferencesListProps) => {
   const [references, setReferences] = useState<Reference[]>(initialReferences || []);
@@ -97,7 +97,7 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
       />
 
       {isAlertModalOpen && (
-        <AlertModal
+        <ConfirmModal
           content={alertModalContent}
           onConfirm={handleAlertModalConfirm}
           onCancel={handleAlertModalCancel}

@@ -4,7 +4,7 @@ import ReviewItem from './ReviewItem';
 
 const ReviewList = ({ reviews }: { reviews: Review[] }) => {
   return (
-    <div className="font-pretendard w-[700px]">
+    <div className="font-pretendard flex-[4] pl-4 min-w-[500px]">
       {reviews.map((review, index) => (
         <ReviewItem key={index} review={review} />
       ))}

@@ -1,13 +1,15 @@
-import { Reference } from 'types/review.ts';
-import CommonReference from '@components/MergeRequest/Reference/CommonReference.tsx';
-import { CommonButton } from '@components/Button/CommonButton';
+import { useState } from 'react';
 import { Plus } from 'lucide-react';
 
-interface ReferencesListProps {
-  references: Reference[];
-}
+import CommonReference from '@components/MergeRequest/Reference/CommonReference.tsx';
+import { CommonButton } from '@components/Button/CommonButton';
+import AddReferenceModal from '@components/Modal/AddReferenceModal';
+import { Reference, ReferencesListProps } from 'types/reference.ts';
 
-const ReferencesList = ({ references }: ReferencesListProps) => {
+const ReferencesList = ({ references: initialReferences }: ReferencesListProps) => {
+  const [references, setReferences] = useState<Reference[]>(initialReferences || []);
+  const [isAddReferenceModalOpen, setIsAddReferenceModalOpen] = useState(false);
+
   const handleEdit = (id: number, content: string) => {
     // API 호출 및 상태 업데이트 로직
   };
@@ -21,7 +23,21 @@ const ReferencesList = ({ references }: ReferencesListProps) => {
   };
 
   const handleAddReference = () => {
-    console.log('참고 추가');
+    setIsAddReferenceModalOpen(true);
+  };
+
+  const handleAddReferenceSubmit = (language: string, content: string, fileName: string) => {
+    console.log(language, content);
+    const newReference: Reference = {
+      id: Date.now(), // 임시 ID, API 응답에서 실제 ID를 받아야 함
+      fileName: fileName, // 파일 이름도 필요하다면 모달에서 입력받을 수 있음
+      content,
+      language: language.toLowerCase(),
+      type: 'CODE', // 또는 'TEXT'로 구분이 필요하다면 모달에서 선택할 수 있게 수정
+    };
+
+    setReferences((prev) => [...prev, newReference]);
+    setIsAddReferenceModalOpen(false);
   };
 
   return (
@@ -47,6 +63,12 @@ const ReferencesList = ({ references }: ReferencesListProps) => {
           <span className="text-primary-500 text-2xl"> 참고자료 추가하기 </span>
         </div>
       </div>
+
+      <AddReferenceModal
+        isOpen={isAddReferenceModalOpen}
+        onClose={() => setIsAddReferenceModalOpen(false)}
+        onSubmit={handleAddReferenceSubmit}
+      />
 
       <div className="flex justify-end my-4">
         <CommonButton

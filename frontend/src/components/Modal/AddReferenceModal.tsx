@@ -29,7 +29,6 @@ const AddReferenceModal = ({ isOpen, onClose, onSubmit }: AddReferenceModalProps
 
     onSubmit(selectedLanguage, content, fileName);
     setFileName('');
-    setContent('');
     setIsWarning(false);
     onClose();
   };

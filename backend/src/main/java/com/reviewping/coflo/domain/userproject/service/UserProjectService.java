@@ -43,7 +43,7 @@ public class UserProjectService {
                                 .gitlabAccount(gitlabAccount)
                                 .build());
 
-        badgeEventService.eventProjectMaster(user);
+        badgeEventService.eventProjectLinkAchievement(user);
         return savedProject.getId();
     }
 

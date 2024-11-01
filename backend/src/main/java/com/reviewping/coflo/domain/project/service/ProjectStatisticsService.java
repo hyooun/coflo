@@ -11,7 +11,6 @@ import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
-import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.domain.userproject.entity.UserProjectScore;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectScoreRepository;
@@ -19,6 +18,7 @@ import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.ProjectInfoContent;
 import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,7 +58,7 @@ public class ProjectStatisticsService {
         LocalDate[] startAndEndDates =
                 ProjectDateUtil.calculateWeekStartAndEndDates(projectCreatedDate, previousWeek);
         List<UserScoreInfoResponse> userScoreInfoResponses =
-                getTopUserScoreInfoResponsesV2(user, project, previousWeek);
+                getCurrentUserAndTopUserScore(user, project, previousWeek);
         return ProjectTeamRewardResponse.of(startAndEndDates, userScoreInfoResponses);
     }
 
@@ -115,9 +115,24 @@ public class ProjectStatisticsService {
     }
 
     // V2 =============================================
-    private List<UserScoreInfoResponse> getTopUserScoreInfoResponsesV2(
-            User user, Project project, int previousWeek) {
 
+    private List<UserScoreInfoResponse> getCurrentUserAndTopUserScore(
+            User user, Project project, int previousWeek) {
+        List<UserScoreInfoResponse> totalCurrentUserAndTop5UserScores = new ArrayList<>();
+        totalCurrentUserAndTop5UserScores.add(getUserScoreInfo(user, project, previousWeek));
+        totalCurrentUserAndTop5UserScores.addAll(getTop5UserScoreInfo(user, project, previousWeek));
+        return totalCurrentUserAndTop5UserScores;
+    }
+
+    private UserScoreInfoResponse getUserScoreInfo(User user, Project project, int week) {
+        List<UserProjectScore> userScores =
+                userProjectScoreRepository.findUserProjectScores(
+                        user.getId(), project.getId(), week);
+        return createUserScoreInfoResponse(user, userScores);
+    }
+
+    private List<UserScoreInfoResponse> getTop5UserScoreInfo(
+            User user, Project project, int previousWeek) {
         List<UserProjectScore> topScoreUserProjectsWithScores =
                 userProjectScoreRepository.findTopUserProjectScores(
                         user.getId(), project.getId(), previousWeek, 5);
@@ -128,16 +143,15 @@ public class ProjectStatisticsService {
                 .stream()
                 .map(
                         entry -> {
-                            UserProject userProject = entry.getKey();
+                            User topUser = entry.getKey().getGitlabAccount().getUser();
                             List<UserProjectScore> scores = entry.getValue();
-                            return createUserScoreInfoResponseV2(userProject, scores);
+                            return createUserScoreInfoResponse(topUser, scores);
                         })
                 .toList();
     }
 
-    private UserScoreInfoResponse createUserScoreInfoResponseV2(
-            UserProject userProject, List<UserProjectScore> previousWeekScores) {
-        User user = userProject.getGitlabAccount().getUser();
+    private UserScoreInfoResponse createUserScoreInfoResponse(
+            User user, List<UserProjectScore> previousWeekScores) {
         BadgeCode badgeCode = user.getMainBadgeCode();
         return UserScoreInfoResponse.of(user, badgeCode, previousWeekScores);
     }

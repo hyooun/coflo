@@ -17,6 +17,22 @@ public class UserProjectScoreRepositoryCustomImpl implements UserProjectScoreRep
 
     private final JPAQueryFactory queryFactory;
 
+    public List<UserProjectScore> findUserProjectScores(Long userId, Long projectId, int week) {
+        return queryFactory
+                .selectFrom(userProjectScore)
+                .join(userProjectScore.userProject, userProject)
+                .fetchJoin()
+                .where(
+                        userProjectScore
+                                .userProject
+                                .project
+                                .id
+                                .eq(projectId)
+                                .and(userProjectScore.week.eq((long) week))
+                                .and(userProjectScore.userProject.gitlabAccount.user.id.eq(userId)))
+                .fetch();
+    }
+
     @Override
     public List<UserProjectScore> findTopUserProjectScores(
             Long userId, Long projectId, int week, int limit) {

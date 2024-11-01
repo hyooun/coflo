@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -31,10 +32,10 @@ public class TreeSitterUtil {
     }
 
     private List<ChunkedCode> chunkJava(File file) {
-        String code = getCode(file);
+        byte[] code = getCodeBytes(file);
         TSLanguage java = new TreeSitterJava();
         parser.setLanguage(java);
-        TSTree tree = parser.parseString(null, code);
+        TSTree tree = parser.parseString(null, new String(code));
         TSNode rootNode = tree.getRootNode();
         List<ChunkedCode> chunks = new ArrayList<>();
 
@@ -49,8 +50,11 @@ public class TreeSitterUtil {
 
                         if ("method_declaration".equals(methodNode.getType())) {
                             String methodCode =
-                                    code.substring(
-                                            methodNode.getStartByte(), methodNode.getEndByte());
+                                    new String(
+                                            Arrays.copyOfRange(
+                                                    code,
+                                                    methodNode.getStartByte(),
+                                                    methodNode.getEndByte()));
 
                             chunks.add(new ChunkedCode(methodCode, file.getName(), file.getPath()));
                         }
@@ -61,11 +65,11 @@ public class TreeSitterUtil {
         return chunks;
     }
 
-    private String getCode(File file) {
+    private byte[] getCodeBytes(File file) {
         try {
-            return new String(Files.readAllBytes(Paths.get(file.getPath())));
+            return Files.readAllBytes(Paths.get(file.getPath()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileReadException("파일을 불러오지 못했습니다.", e);
         }
     }
 

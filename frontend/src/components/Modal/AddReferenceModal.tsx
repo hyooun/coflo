@@ -11,7 +11,7 @@ interface AddReferenceModalProps {
 }
 
 const AddReferenceModal = ({ isOpen, onClose, onSubmit }: AddReferenceModalProps) => {
-  const [selectedLanguage, setSelectedLanguage] = useState('JavaScript');
+  const [selectedLanguage, setSelectedLanguage] = useState('javascript');
   const [content, setContent] = useState('');
   const [fileName, setFileName] = useState('');
   const [isWarning, setIsWarning] = useState(false);

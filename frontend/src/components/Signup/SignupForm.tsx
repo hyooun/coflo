@@ -52,6 +52,7 @@ const SignupForm = () => {
                   onChange={handleUrlChange}
                   isWarning={!isUrlValid}
                   warningMessage="유효하지 않은 URL 형식입니다. (ex: lab.ssafy. ...)"
+                  className="border-2"
                 />
               </div>
               <div className="h-28">
@@ -63,6 +64,7 @@ const SignupForm = () => {
                   onChange={handleTokenChange}
                   isWarning={!isTokenValid}
                   warningMessage="유효하지 않은 토큰입니다. 다시 한 번 입력해주세요."
+                  className="border-2"
                   icon={
                     <button
                       type="button"

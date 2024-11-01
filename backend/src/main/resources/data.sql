@@ -19,7 +19,7 @@ INSERT INTO Language (type) VALUES
 ('SQL'),
 ('HTML'),
 ('CSS'),
-('TEXT');
+('PLAINTEXT');
 
 -- badge
 INSERT INTO badge_code (id, name, description, image_url) VALUES

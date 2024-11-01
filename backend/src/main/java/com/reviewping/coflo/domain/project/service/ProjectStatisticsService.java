@@ -120,7 +120,7 @@ public class ProjectStatisticsService {
 
         List<UserProjectScore> topScoreUserProjectsWithScores =
                 userProjectScoreRepository.findTopUserProjectScores(
-                        project.getId(), previousWeek, user.getId());
+                        user.getId(), project.getId(), previousWeek, 5);
 
         return topScoreUserProjectsWithScores.stream()
                 .collect(Collectors.groupingBy(UserProjectScore::getUserProject))

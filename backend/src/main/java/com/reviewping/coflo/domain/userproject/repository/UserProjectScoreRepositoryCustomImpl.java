@@ -18,7 +18,8 @@ public class UserProjectScoreRepositoryCustomImpl implements UserProjectScoreRep
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<UserProjectScore> findTopUserProjectScores(Long projectId, int week, Long userId) {
+    public List<UserProjectScore> findTopUserProjectScores(
+            Long userId, Long projectId, int week, int limit) {
         List<Long> topUserProjectIds =
                 queryFactory
                         .select(userProjectScore.userProject.id)
@@ -34,7 +35,7 @@ public class UserProjectScoreRepositoryCustomImpl implements UserProjectScoreRep
                                         .and(gitlabAccount.user.id.ne(userId)))
                         .groupBy(userProjectScore.userProject.id)
                         .orderBy(userProjectScore.totalScore.sum().desc())
-                        .limit(2)
+                        .limit(limit)
                         .fetch();
 
         if (topUserProjectIds.isEmpty()) {

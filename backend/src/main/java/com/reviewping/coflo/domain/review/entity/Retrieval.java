@@ -31,10 +31,10 @@ public class Retrieval extends BaseTimeEntity {
     @JoinColumn(name = "language_id")
     private Language language;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false)
     private String fileName;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Builder

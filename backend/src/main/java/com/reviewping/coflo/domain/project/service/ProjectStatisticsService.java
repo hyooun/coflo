@@ -11,8 +11,8 @@ import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
+import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.domain.userproject.entity.UserProjectScore;
-import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectScoreRepository;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.ProjectInfoContent;
@@ -34,9 +34,9 @@ public class ProjectStatisticsService {
     private final GitLabClient gitLabClient;
     private final GitlabAccountRepository gitlabAccountRepository;
     private final ProjectRepository projectRepository;
-    private final UserProjectRepository userProjectRepository;
     private final UserProjectScoreRepository userProjectScoreRepository;
     private final LanguageCodeRepository languageCodeRepository;
+    private final UserRepository userRepository;
 
     public ProjectTeamDetailResponse getTeamDetail(User user, Long projectId) {
         GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
@@ -51,7 +51,8 @@ public class ProjectStatisticsService {
         return ProjectTeamDetailResponse.of(projectInfoContent, languages, aiReviewCount);
     }
 
-    public ProjectTeamRewardResponse getTeamScore(User user, Long projectId) {
+    public ProjectTeamRewardResponse getTeamScore(Long userId, Long projectId) {
+        User user = userRepository.getById(userId);
         Project project = projectRepository.getById(projectId);
         LocalDate projectCreatedDate = project.getCreatedDate().toLocalDate();
         int previousWeek = getPreviousWeek(projectCreatedDate);
@@ -61,45 +62,6 @@ public class ProjectStatisticsService {
                 getCurrentUserAndTopUserScore(user, project, previousWeek);
         return ProjectTeamRewardResponse.of(startAndEndDates, userScoreInfoResponses);
     }
-
-    private int getPreviousWeek(LocalDate projectCreatedDate) {
-        int currentWeek = ProjectDateUtil.calculateWeekNumber(projectCreatedDate, LocalDate.now());
-        return Math.max(1, currentWeek - 1);
-    }
-
-    /*
-    private List<UserScoreInfoResponse> getTopUserScoreInfoResponses(
-            User user, Project project, int previousWeek) {
-        List<UserProject> topScoreUserProject = new ArrayList<>();
-
-        UserProject currentUserProject = getCurrentUserProject(user, project);
-        topScoreUserProject.add(currentUserProject);
-
-        List<UserProject> top5ScoreUserProjects =
-                userProjectRepository.findTopScoreUserProjectsOfWeek(
-                        project.getId(), previousWeek, user.getId());
-        topScoreUserProject.addAll(top5ScoreUserProjects);
-
-        return topScoreUserProject.stream()
-                .map(userProject -> createUserScoreInfoResponse(userProject, previousWeek))
-                .toList();
-    }
-
-    private UserProject getCurrentUserProject(User user, Project project) {
-        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
-        return userProjectRepository.getByProjectAndGitlabAccount(project, gitlabAccount);
-    }
-
-    private UserScoreInfoResponse createUserScoreInfoResponse(
-            UserProject userProject, int previousWeek) {
-        User user = userProject.getGitlabAccount().getUser();
-        BadgeCode badgeCode = user.getMainBadgeCode();
-        List<UserProjectScore> previousWeekScores =
-                userProjectScoreRepository.findByUserProjectAndWeek(userProject, previousWeek);
-        return UserScoreInfoResponse.of(user, badgeCode, previousWeekScores);
-    }
-
-     */
 
     private List<LanguageResponse> createLanguageResponse(Map<String, Double> languages) {
         return languages.entrySet().stream()
@@ -114,7 +76,10 @@ public class ProjectStatisticsService {
                 .toList();
     }
 
-    // V2 =============================================
+    private int getPreviousWeek(LocalDate projectCreatedDate) {
+        int currentWeek = ProjectDateUtil.calculateWeekNumber(projectCreatedDate, LocalDate.now());
+        return Math.max(1, currentWeek - 1);
+    }
 
     private List<UserScoreInfoResponse> getCurrentUserAndTopUserScore(
             User user, Project project, int previousWeek) {
@@ -135,7 +100,7 @@ public class ProjectStatisticsService {
             User user, Project project, int previousWeek) {
         List<UserProjectScore> topScoreUserProjectsWithScores =
                 userProjectScoreRepository.findTopUserProjectScores(
-                        user.getId(), project.getId(), previousWeek, 5);
+                        user.getId(), project.getId(), previousWeek, 2);
 
         return topScoreUserProjectsWithScores.stream()
                 .collect(Collectors.groupingBy(UserProjectScore::getUserProject))

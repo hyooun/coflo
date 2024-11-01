@@ -29,6 +29,7 @@ public class ProjectController {
     @GetMapping("/{projectId}/scores")
     public ApiResponse<ProjectTeamRewardResponse> getProjectTeamScore(
             @AuthUser User user, @PathVariable("projectId") Long projectId) {
-        return ApiSuccessResponse.success(projectStatisticsService.getTeamScore(user, projectId));
+        return ApiSuccessResponse.success(
+                projectStatisticsService.getTeamScore(user.getId(), projectId));
     }
 }

@@ -21,7 +21,7 @@ public class UserProjectScoreRepositoryCustomImpl implements UserProjectScoreRep
         return queryFactory
                 .selectFrom(userProjectScore)
                 .join(userProjectScore.userProject, userProject)
-                .fetchJoin()
+                .join(userProject.gitlabAccount, gitlabAccount)
                 .where(
                         userProjectScore
                                 .userProject
@@ -29,7 +29,7 @@ public class UserProjectScoreRepositoryCustomImpl implements UserProjectScoreRep
                                 .id
                                 .eq(projectId)
                                 .and(userProjectScore.week.eq((long) week))
-                                .and(userProjectScore.userProject.gitlabAccount.user.id.eq(userId)))
+                                .and(gitlabAccount.user.id.eq(userId)))
                 .fetch();
     }
 

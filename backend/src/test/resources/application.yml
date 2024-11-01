@@ -77,3 +77,7 @@ openai:
     key: openai_test_key
     organization: openai_test_organization
     project: openai_test_project
+
+sql:
+  init:
+    mode: always

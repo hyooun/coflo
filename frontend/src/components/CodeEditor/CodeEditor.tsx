@@ -27,7 +27,7 @@ const CodeEditor = ({
   isLanguageSelectable = true,
 }: CodeQueryEditorProps) => {
   const monacoInstance = useMonaco();
-  const [value, setValue] = useState(defaultValue || CODE_SNIPPETS[defaultLanguage] || '');
+  const [value, setValue] = useState(defaultValue || CODE_SNIPPETS[defaultLanguage]);
   const [selectedLanguage, setSelectedLanguage] = useState(language || defaultLanguage);
   const [isCopied, setIsCopied] = useState(false);
 
@@ -52,6 +52,8 @@ const CodeEditor = ({
   };
 
   const handleSelectLanguage = (lang: string) => {
+    setValue(CODE_SNIPPETS[lang] || '');
+    onChange?.(CODE_SNIPPETS[lang] || '');
     setSelectedLanguage(lang);
     onLanguageChange?.(lang);
   };

@@ -31,3 +31,13 @@ export interface GuideModalProps {
     text: string;
   };
 }
+
+export interface AlertModalProps {
+  content: string[];
+  onConfirm: () => void;
+  className?: string;
+}
+
+export interface ConfirmModalProps extends AlertModalProps {
+  onCancel: () => void;
+}

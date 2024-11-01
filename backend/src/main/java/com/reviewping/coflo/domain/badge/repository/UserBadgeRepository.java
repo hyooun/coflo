@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserBadgeRepository extends JpaRepository<UserBadge, Long> {
 
-    @EntityGraph(attributePaths = {"badge"})
+    @EntityGraph(attributePaths = {"badgeCode"})
     List<UserBadge> findAllByUser(User user);
 
     default UserBadge getById(Long id) {

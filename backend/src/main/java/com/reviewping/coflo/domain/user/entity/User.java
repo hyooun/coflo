@@ -67,4 +67,8 @@ public class User extends BaseTimeEntity {
         this.username = username;
         this.profileImageUrl = profileImageUrl;
     }
+
+    public boolean checkFirstLogin() {
+        return gitlabAccounts.size() <= 0;
+    }
 }

@@ -1,7 +1,7 @@
 import ReferenceHeader from '@components/MergeRequest/Reference/ReferenceHeader.tsx';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Reference } from 'types/review.ts';
+import { Reference } from 'types/reference.ts';
 import ReferencesList from '@components/MergeRequest/Reference/ReferencesList.tsx';
 
 const ReferencesPage = () => {

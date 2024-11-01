@@ -24,7 +24,7 @@ public class UserProjectScore extends BaseTimeEntity {
     @JoinColumn(name = "code_quality_code_id")
     private CodeQualityCode codeQualityCode;
 
-    private Long week;
+    private int week;
     private Long totalScore;
 
     @Builder

@@ -1,6 +1,7 @@
 package com.reviewping.coflo.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reviewping.coflo.domain.user.service.LoginHistoryService;
 import com.reviewping.coflo.global.auth.jwt.filter.JwtExceptionFilter;
 import com.reviewping.coflo.global.auth.jwt.filter.JwtVerifyFilter;
 import com.reviewping.coflo.global.auth.oauth.handler.CommonLoginFailHandler;
@@ -35,6 +36,7 @@ public class SecurityConfig {
     private final OAuth2UserService oAuth2UserService;
     private final CookieUtil cookieUtil;
     private final AuthenticationService authenticationService;
+    private final LoginHistoryService loginHistoryService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,7 +45,7 @@ public class SecurityConfig {
 
     @Bean
     public CommonLoginSuccessHandler commonLoginSuccessHandler() {
-        return new CommonLoginSuccessHandler(redisUtil, cookieUtil);
+        return new CommonLoginSuccessHandler(redisUtil, cookieUtil, loginHistoryService);
     }
 
     @Bean

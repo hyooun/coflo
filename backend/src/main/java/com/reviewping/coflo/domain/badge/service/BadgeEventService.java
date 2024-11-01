@@ -9,6 +9,7 @@ import com.reviewping.coflo.domain.badge.repository.UserBadgeRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
+import com.reviewping.coflo.domain.user.repository.LoginHistoryRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +22,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class BadgeEventService {
 
     private static final Long PROJECT_LINK_TARGET_COUNT = 1L;
+    private static final Long LOGIN_TARGET_COUNT = 1L;
 
     private final UserBadgeRepository userBadgeRepository;
     private final BadgeCodeRepository badgeCodeRepository;
     private final GitlabAccountRepository gitlabAccountRepository;
     private final UserProjectRepository userProjectRepository;
+    private final LoginHistoryRepository loginHistoryRepository;
 
     private UserBadge userBadge;
     private BadgeCode badgeCode;
 
-    // 처음 서비스 가입 시 획득
+    // 첫 모험가 - 처음 서비스 가입 시 획득
     public void eventFirstLogin(User user) {
         badgeCode = badgeCodeRepository.getById(FIRST_ADVENTURER.getId());
         if (userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) return;
@@ -43,7 +46,7 @@ public class BadgeEventService {
         }
     }
 
-    // 연동한 프로젝트 개수 n개 이상 시 획득
+    // 프로젝트 마스터 - 연동한 프로젝트 개수 n개 이상 시 획득
     public void eventProjectLinkAchievement(User user) {
         badgeCode = badgeCodeRepository.getById(PROJECT_MASTER.getId());
         if (userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) return;
@@ -53,6 +56,18 @@ public class BadgeEventService {
         Long projectCount = userProjectRepository.countByGitlabAccountIds(gitlabAccountIds);
 
         if (projectCount == PROJECT_LINK_TARGET_COUNT) {
+            userBadge = UserBadge.of(user, badgeCode);
+            userBadgeRepository.save(userBadge);
+        }
+    }
+
+    // 단골 손님 - 서비스 로그인 n회 이상 (1일 1회)
+    public void eventLoginCount(User user) {
+        badgeCode = badgeCodeRepository.getById(REGULAR_CUSTOMER.getId());
+        if (userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) return;
+
+        long loginCount = loginHistoryRepository.countByUserId(user.getId());
+        if (loginCount >= LOGIN_TARGET_COUNT) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
         }

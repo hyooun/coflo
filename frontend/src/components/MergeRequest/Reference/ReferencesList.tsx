@@ -46,7 +46,7 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
   };
 
   const handleRegistReference = () => {
-    console.log('리뷰 재생성');
+    console.log('리뷰 재생성 : ', references);
   };
 
   const handleAddReference = () => {
@@ -54,13 +54,12 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
   };
 
   const handleAddReferenceSubmit = (language: string, content: string, fileName: string) => {
-    console.log(language, content);
     const newReference: Reference = {
-      id: Date.now(), // 임시 ID, API 응답에서 실제 ID를 받아야 함
-      fileName: fileName, // 파일 이름도 필요하다면 모달에서 입력받을 수 있음
+      id: Date.now(),
+      fileName: fileName,
       content,
       language: language.toLowerCase(),
-      type: 'CODE', // 또는 'TEXT'로 구분이 필요하다면 모달에서 선택할 수 있게 수정
+      type: language.toLowerCase() === 'plaintext' ? 'TEXT' : 'CODE',
     };
 
     setReferences((prev) => [...prev, newReference]);

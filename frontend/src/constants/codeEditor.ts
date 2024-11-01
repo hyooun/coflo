@@ -15,6 +15,7 @@ export const LANGUAGE_VERSIONS = {
   sql: 'mysql-8.0',
   html: '5',
   css: '3',
+  plaintext: 'text',
 };
 
 interface CodeSnippets {
@@ -22,7 +23,7 @@ interface CodeSnippets {
 }
 
 export const CODE_SNIPPETS: CodeSnippets = {
-  typescript: `\n// TypeScript\nconsole.log("Hello, World!");\n`,
+  typescript: `// TypeScript\nconsole.log("Hello, World!");\n`,
   javascript: `// JavaScript
 console.log("Hello, World!");
 `,
@@ -117,4 +118,7 @@ h1 {
     font-size: 2em;
 }
 `,
+  plaintext: `This is a plain text file.
+No syntax highlighting needed.
+Just write your text here.`,
 };

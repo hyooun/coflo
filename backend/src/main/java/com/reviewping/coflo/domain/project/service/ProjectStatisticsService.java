@@ -35,10 +35,9 @@ public class ProjectStatisticsService {
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
     private final UserProjectScoreRepository userProjectScoreRepository;
-    private final UserBadgeRepository userBadgeRepository;
     private final ProjectDateUtil projectDateUtil;
     private final LanguageCodeRepository languageCodeRepository;
-    
+
     public ProjectTeamDetailResponse getTeamDetail(User user, Long projectId) {
         GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
         Project project = projectRepository.getById(projectId);

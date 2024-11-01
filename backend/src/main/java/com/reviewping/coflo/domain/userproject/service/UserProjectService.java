@@ -2,6 +2,7 @@ package com.reviewping.coflo.domain.userproject.service;
 
 import static com.reviewping.coflo.global.error.ErrorCode.PROJECT_NOT_EXIST;
 
+import com.reviewping.coflo.domain.badge.service.BadgeEventService;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.project.service.ProjectService;
@@ -28,11 +29,12 @@ public class UserProjectService {
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
     private final GitlabAccountRepository gitlabAccountRepository;
+    private final BadgeEventService badgeEventService;
 
     @Transactional
     public Long linkGitlabProject(
-            Long userId, Long gitlabProjectId, ProjectLinkRequest projectLinkRequest) {
-        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(userId);
+            User user, Long gitlabProjectId, ProjectLinkRequest projectLinkRequest) {
+        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
         Project project = getOrCreateProject(gitlabProjectId, projectLinkRequest, gitlabAccount);
         UserProject savedProject =
                 userProjectRepository.save(
@@ -40,6 +42,8 @@ public class UserProjectService {
                                 .project(project)
                                 .gitlabAccount(gitlabAccount)
                                 .build());
+
+        badgeEventService.eventProjectMaster(user);
         return savedProject.getId();
     }
 

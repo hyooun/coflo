@@ -32,10 +32,12 @@ public class BadgeEventService {
 
     // 처음 서비스 가입 시 획득
     public void eventFirstLogin(User user) {
-        Integer count = gitlabAccountRepository.countByUser(user);
         badgeCode = badgeCodeRepository.getById(FIRST_ADVENTURER.getId());
+        if (userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) return;
 
-        if (count == 0 && !userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
+        Integer count = gitlabAccountRepository.countByUser(user);
+
+        if (count == 0) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
         }
@@ -43,13 +45,14 @@ public class BadgeEventService {
 
     // 연동한 프로젝트 개수 n개 이상 시 획득
     public void eventProjectLinkAchievement(User user) {
+        badgeCode = badgeCodeRepository.getById(PROJECT_MASTER.getId());
+        if (userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) return;
+
         List<GitlabAccount> gitlabAccounts = gitlabAccountRepository.findAllByUser(user);
         List<Long> gitlabAccountIds = gitlabAccounts.stream().map(GitlabAccount::getId).toList();
-        badgeCode = badgeCodeRepository.getById(PROJECT_MASTER.getId());
         Long projectCount = userProjectRepository.countByGitlabAccountIds(gitlabAccountIds);
 
-        if (projectCount == PROJECT_LINK_TARGET_COUNT
-                && !userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
+        if (projectCount == PROJECT_LINK_TARGET_COUNT) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
         }

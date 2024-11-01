@@ -1,3 +1,15 @@
+-- 데이터 삭제 (초기화)
+DELETE FROM user_project_score;
+DELETE FROM user_project;
+DELETE FROM project;
+DELETE FROM gitlab_account;
+DELETE FROM user_badge;
+DELETE FROM "user";
+DELETE FROM language_code;
+DELETE FROM channel_code;
+DELETE FROM badge_code;
+DELETE FROM code_quality_code;
+
 -- code_quality
 INSERT INTO code_quality_code (id, name) VALUES (1,'가독성'), (2, '일관성'), (3, '재사용성'), (4, '신뢰성'), (5, '보안성'), (6, '유지보수성');
 

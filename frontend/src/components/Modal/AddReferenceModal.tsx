@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import CodeEditor from '@components/CodeEditor/CodeEditor';
 import CommonInput from '@components/Input/CommonInput';
+import AlertModal from '@components/Modal/AlertModal.tsx';
 
 interface AddReferenceModalProps {
   isOpen: boolean;
@@ -14,6 +15,8 @@ const AddReferenceModal = ({ isOpen, onClose, onSubmit }: AddReferenceModalProps
   const [content, setContent] = useState('');
   const [fileName, setFileName] = useState('');
   const [isWarning, setIsWarning] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string[]>([]);
 
   if (!isOpen) return null;
 
@@ -23,7 +26,8 @@ const AddReferenceModal = ({ isOpen, onClose, onSubmit }: AddReferenceModalProps
       return;
     }
     if (!content.trim()) {
-      // TODO: 코드 에디터에 입력된 내용이 없을 경우 경고 띄우기
+      setAlertMessage(['내용을 입력해주세요.']);
+      setIsAlertOpen(true);
       return;
     }
 
@@ -66,6 +70,14 @@ const AddReferenceModal = ({ isOpen, onClose, onSubmit }: AddReferenceModalProps
             onLanguageChange={(lang) => setSelectedLanguage(lang)}
           />
         </div>
+
+        {isAlertOpen && (
+          <AlertModal
+            content={alertMessage}
+            onConfirm={() => setIsAlertOpen(false)}
+            className="w-64 h-52"
+          />
+        )}
 
         <div className="flex justify-end">
           <button

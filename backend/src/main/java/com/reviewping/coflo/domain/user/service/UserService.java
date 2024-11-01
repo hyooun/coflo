@@ -25,10 +25,7 @@ public class UserService {
     @Transactional
     public void addGitlabAccount(String domain, String userToken, Long userId) {
         User user = userRepository.getById(userId);
-        if (user.checkFirstLogin()) {
-            badgeEventService.addFirstLogin(user);
-        }
-
+        badgeEventService.eventFirstLogin(user);
         gitlabAccountRepository.save(
                 GitlabAccount.builder().user(user).domain(domain).userToken(userToken).build());
     }

@@ -6,12 +6,16 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
+import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
+import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.global.client.gitlab.request.GitlabNoteRequest;
 import com.reviewping.coflo.global.client.gitlab.response.*;
 import com.reviewping.coflo.global.common.entity.PageDetail;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -29,6 +33,7 @@ import org.springframework.stereotype.Service;
 public class GitLabClient {
 
     private static final String PRIVATE_TOKEN = "PRIVATE-TOKEN";
+    private static final String KST_OFFSET = "+09:00";
 
     private final ObjectMapper objectMapper;
 
@@ -51,17 +56,41 @@ public class GitLabClient {
             String token,
             Long gitlabProjectId,
             String mergeRequestState,
-            GitlabSearchRequest gitlabSearchRequest) {
+            GitlabSearchRequest gitlabSearchRequest,
+            LocalDateTime createdAt) {
         HttpHeaders headers = makeGitlabHeaders(token);
         String url =
                 GitLabApiUrlBuilder.createSearchMergeRequestUrl(
-                        gitlabUrl, gitlabProjectId, mergeRequestState, gitlabSearchRequest);
+                        gitlabUrl,
+                        gitlabProjectId,
+                        mergeRequestState,
+                        gitlabSearchRequest,
+                        this.convertToGitlabDateFormat(createdAt));
         ResponseEntity<List<GitlabMrDetailContent>> response =
                 RestTemplateUtils.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
 
         PageDetail pageDetail = createPageDetail(response.getHeaders());
         return new GitlabMrPageContent(response.getBody(), pageDetail);
+    }
+
+    public List<GitlabMrResponse> getTop3MrList(
+            String gitlabUrl, String token, Long gitlabProjectId, List<MrInfo> mrInfoList) {
+        List<GitlabMrResponse> top3MrList = new ArrayList<>();
+        HttpHeaders headers = makeGitlabHeaders(token);
+        for (MrInfo mrInfo : mrInfoList) {
+            String url =
+                    GitLabApiUrlBuilder.createGetMergeRequestsUrl(
+                            gitlabUrl, gitlabProjectId, mrInfo.getGitlabMrIid());
+            ResponseEntity<GitlabMrDetailContent> response =
+                    RestTemplateUtils.sendGetRequest(
+                            url, headers, new ParameterizedTypeReference<>() {});
+            GitlabMrDetailContent gitlabMrDetailContent = response.getBody();
+            if (gitlabMrDetailContent != null) {
+                top3MrList.add(GitlabMrResponse.of(gitlabMrDetailContent, false));
+            }
+        }
+        return top3MrList;
     }
 
     public GitlabProjectDetailContent getSingleProject(
@@ -179,5 +208,9 @@ public class GitLabClient {
         headers.set(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.set(PRIVATE_TOKEN, token);
         return headers;
+    }
+
+    private String convertToGitlabDateFormat(LocalDateTime localDateTime) {
+        return localDateTime.toString() + KST_OFFSET;
     }
 }

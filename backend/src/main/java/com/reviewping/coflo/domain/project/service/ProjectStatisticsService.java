@@ -35,8 +35,10 @@ public class ProjectStatisticsService {
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
     private final UserProjectScoreRepository userProjectScoreRepository;
+    private final UserBadgeRepository userBadgeRepository;
+    private final ProjectDateUtil projectDateUtil;
     private final LanguageCodeRepository languageCodeRepository;
-
+    
     public ProjectTeamDetailResponse getTeamDetail(User user, Long projectId) {
         GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
         Project project = projectRepository.getById(projectId);
@@ -55,14 +57,14 @@ public class ProjectStatisticsService {
         LocalDate projectCreatedDate = project.getCreatedDate().toLocalDate();
         int previousWeek = getPreviousWeek(projectCreatedDate);
         LocalDate[] startAndEndDates =
-                ProjectDateUtil.calculateWeekStartAndEndDates(projectCreatedDate, previousWeek);
+                projectDateUtil.calculateWeekStartAndEndDates(projectCreatedDate, previousWeek);
         List<UserScoreInfoResponse> userScoreInfoResponses =
                 generateUserScoreInfoResponses(project, previousWeek);
         return ProjectTeamRewardResponse.of(startAndEndDates, userScoreInfoResponses);
     }
 
     private int getPreviousWeek(LocalDate projectCreatedDate) {
-        int currentWeek = ProjectDateUtil.calculateWeekNumber(projectCreatedDate, LocalDate.now());
+        int currentWeek = projectDateUtil.calculateWeekNumber(projectCreatedDate, LocalDate.now());
         return Math.max(1, currentWeek - 1);
     }
 

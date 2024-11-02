@@ -1,10 +1,12 @@
 package com.reviewping.coflo.domain.project.service;
 
-import com.reviewping.coflo.domain.codequality.entity.CodeQualityCode;
 import com.reviewping.coflo.domain.project.controller.response.CodeQualityScoreResponse;
 import com.reviewping.coflo.domain.project.controller.response.ScoreOfWeekResponse;
 import com.reviewping.coflo.domain.project.controller.response.UserProjectIndividualScoreResponse;
 import com.reviewping.coflo.domain.project.controller.response.UserProjectTotalScoreResponse;
+import com.reviewping.coflo.domain.project.domain.statistics.IndividualStatistics;
+import com.reviewping.coflo.domain.project.domain.statistics.TotalStatistics;
+import com.reviewping.coflo.domain.project.domain.statistics.UserStatistics;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
@@ -18,10 +20,6 @@ import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,11 +62,13 @@ public class ProjectUserStatisticsService {
 
         List<CodeQualityScoreResponse> codeQualityScores =
                 getCumulativeCodeQualityScoreResponse(startWeek, endWeek, userProject.getId());
+
         LocalDate[] dateRange =
                 projectDateUtil.calculateDateRange(
                         userProject.getProject().getCreatedDate().toLocalDate(),
                         startWeek,
                         endWeek);
+
         return new UserProjectIndividualScoreResponse(
                 dateRange[0], dateRange[1], codeQualityScores);
     }
@@ -163,19 +163,7 @@ public class ProjectUserStatisticsService {
         List<UserProjectScore> userProjectScores =
                 userProjectScoreRepository.findByUserProjectIdAndWeekRange(
                         userProjectId, startWeek, endWeek);
-
-        return collectAndMapResponses(
-                userProjectScores,
-                Collectors.groupingBy(UserProjectScore::getWeek),
-                entry -> {
-                    Integer week = entry.getKey();
-                    List<UserProjectScore> userProjectScoresOfWeek = entry.getValue();
-                    long totalScoreOfWeekSum =
-                            userProjectScoresOfWeek.stream()
-                                    .mapToLong(UserProjectScore::getTotalScore)
-                                    .sum();
-                    return new ScoreOfWeekResponse(week, totalScoreOfWeekSum);
-                });
+        return processStatistics(userProjectScores, new TotalStatistics());
     }
 
     private List<CodeQualityScoreResponse> getCodeQualityScoreResponse(
@@ -183,26 +171,13 @@ public class ProjectUserStatisticsService {
         List<UserProjectScore> userProjectScores =
                 userProjectScoreRepository.findByUserProjectIdAndWeekRange(
                         userProjectId, startWeek, endWeek);
-        return collectAndMapResponses(
-                userProjectScores,
-                Collectors.groupingBy(UserProjectScore::getCodeQualityCode),
-                entry -> {
-                    CodeQualityCode codeQuality = entry.getKey();
-                    List<UserProjectScore> scoresOfCodeQuality = entry.getValue();
-                    List<ScoreOfWeekResponse> scoreOfWeekResponses =
-                            scoresOfCodeQuality.stream().map(ScoreOfWeekResponse::of).toList();
-                    return new CodeQualityScoreResponse(
-                            codeQuality.getName(), scoreOfWeekResponses);
-                });
+        return processStatistics(userProjectScores, new IndividualStatistics());
     }
 
-    public <K, R> List<R> collectAndMapResponses(
-            List<UserProjectScore> userProjectScores,
-            Collector<UserProjectScore, ?, Map<K, List<UserProjectScore>>> collector,
-            Function<Map.Entry<K, List<UserProjectScore>>, R> mapper) {
-
-        return userProjectScores.stream().collect(collector).entrySet().stream()
-                .map(mapper)
+    public <K, T> List<T> processStatistics(
+            List<UserProjectScore> userProjectScores, UserStatistics<K, T> userStatistics) {
+        return userProjectScores.stream().collect(userStatistics.getCollector()).entrySet().stream()
+                .map(userStatistics.getMapper())
                 .toList();
     }
 }

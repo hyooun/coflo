@@ -80,8 +80,12 @@ public class ProjectUserStatisticsService {
         int startWeek = Math.max(1, currentWeek - period);
         int endWeek = currentWeek - 1;
 
+        List<UserProjectScore> userProjectScores =
+                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
+                        userProject.getId(), startWeek, endWeek);
         List<ScoreOfWeekResponse> scoreOfWeek =
-                getScoreOfWeekResponses(startWeek, endWeek, userProject.getId());
+                processStatistics(userProjectScores, new TotalStatistics());
+
         LocalDate[] dateRange =
                 projectDateUtil.calculateDateRange(
                         userProject.getProject().getCreatedDate().toLocalDate(),
@@ -98,8 +102,12 @@ public class ProjectUserStatisticsService {
         int startWeek = Math.max(1, currentWeek - period);
         int endWeek = currentWeek - 1;
 
+        List<UserProjectScore> userProjectScores =
+                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
+                        userProject.getId(), startWeek, endWeek);
         List<CodeQualityScoreResponse> codeQualityScores =
-                getCodeQualityScoreResponse(startWeek, endWeek, userProject.getId());
+                processStatistics(userProjectScores, new IndividualStatistics());
+
         LocalDate[] dateRange =
                 projectDateUtil.calculateDateRange(
                         userProject.getProject().getCreatedDate().toLocalDate(),
@@ -109,21 +117,13 @@ public class ProjectUserStatisticsService {
                 dateRange[0], dateRange[1], codeQualityScores);
     }
 
-    private UserProject getUserProject(User user, Long projectId) {
-        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
-        Project project = projectRepository.getById(projectId);
-        return userProjectRepository.getByProjectAndGitlabAccount(project, gitlabAccount);
-    }
-
-    private int getCurrentProjectWeek(Project project) {
-        return projectDateUtil.calculateWeekNumber(
-                project.getCreatedDate().toLocalDate(), LocalDate.now());
-    }
-
     private List<ScoreOfWeekResponse> getCumulativeScoreOfWeekResponses(
             int startWeek, int endWeek, Long userProjectId) {
+        List<UserProjectScore> userProjectScores =
+                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
+                        userProjectId, startWeek, endWeek);
         List<ScoreOfWeekResponse> weeklyScores =
-                getScoreOfWeekResponses(startWeek, endWeek, userProjectId);
+                processStatistics(userProjectScores, new TotalStatistics());
 
         List<ScoreOfWeekResponse> cumulativeScores = new ArrayList<>();
         long cumulativeScore = 0;
@@ -137,8 +137,11 @@ public class ProjectUserStatisticsService {
 
     private List<CodeQualityScoreResponse> getCumulativeCodeQualityScoreResponse(
             int startWeek, int endWeek, Long userProjectId) {
+        List<UserProjectScore> userProjectScores =
+                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
+                        userProjectId, startWeek, endWeek);
         List<CodeQualityScoreResponse> codeQualityScoreResponses =
-                getCodeQualityScoreResponse(startWeek, endWeek, userProjectId);
+                processStatistics(userProjectScores, new IndividualStatistics());
 
         List<CodeQualityScoreResponse> cumulativeCodeQualityScores = new ArrayList<>();
         for (CodeQualityScoreResponse codeQualityScore : codeQualityScoreResponses) {
@@ -158,23 +161,18 @@ public class ProjectUserStatisticsService {
         return cumulativeCodeQualityScores;
     }
 
-    private List<ScoreOfWeekResponse> getScoreOfWeekResponses(
-            int startWeek, int endWeek, Long userProjectId) {
-        List<UserProjectScore> userProjectScores =
-                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
-                        userProjectId, startWeek, endWeek);
-        return processStatistics(userProjectScores, new TotalStatistics());
+    private UserProject getUserProject(User user, Long projectId) {
+        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
+        Project project = projectRepository.getById(projectId);
+        return userProjectRepository.getByProjectAndGitlabAccount(project, gitlabAccount);
     }
 
-    private List<CodeQualityScoreResponse> getCodeQualityScoreResponse(
-            int startWeek, int endWeek, Long userProjectId) {
-        List<UserProjectScore> userProjectScores =
-                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
-                        userProjectId, startWeek, endWeek);
-        return processStatistics(userProjectScores, new IndividualStatistics());
+    private int getCurrentProjectWeek(Project project) {
+        return projectDateUtil.calculateWeekNumber(
+                project.getCreatedDate().toLocalDate(), LocalDate.now());
     }
 
-    public <K, T> List<T> processStatistics(
+    private <K, T> List<T> processStatistics(
             List<UserProjectScore> userProjectScores, UserStatistics<K, T> userStatistics) {
         return userProjectScores.stream().collect(userStatistics.getCollector()).entrySet().stream()
                 .map(userStatistics.getMapper())

@@ -36,29 +36,33 @@ public class ProjectController {
                 projectTeamStatisticsService.getTeamScore(user, projectId));
     }
 
-    @GetMapping("/{projectId}/acquisition")
+    @GetMapping("/{projectId}/cumulative")
     ApiResponse<?> getProjectUserCumulativeScore(
             @AuthUser User user,
             @PathVariable("projectId") Long projectId,
-            @RequestParam(name = "type", required = false) GraphType type) {
+            @RequestParam(name = "type", required = false) GraphType type,
+            @RequestParam(name = "period", required = false, defaultValue = "7") Integer period) {
         if (type == GraphType.INDIVIDUAL) {
             return ApiSuccessResponse.success(
-                    projectUserStatisticsService.getIndividualCumulativeScore(user, projectId));
+                    projectUserStatisticsService.getIndividualCumulativeScore(
+                            user, projectId, period));
         }
         return ApiSuccessResponse.success(
-                projectUserStatisticsService.getTotalCumulativeScore(user, projectId));
+                projectUserStatisticsService.getTotalCumulativeScore(user, projectId, period));
     }
 
     @GetMapping("/{projectId}/acquisition")
     ApiResponse<?> getProjectUserAcquisitionScore(
             @AuthUser User user,
             @PathVariable("projectId") Long projectId,
-            @RequestParam(name = "type", required = false) GraphType type) {
+            @RequestParam(name = "type", required = false) GraphType type,
+            @RequestParam(name = "period", required = false, defaultValue = "7") Integer period) {
         if (type == GraphType.INDIVIDUAL) {
             return ApiSuccessResponse.success(
-                    projectUserStatisticsService.getIndividualAcquisitionScore(user, projectId));
+                    projectUserStatisticsService.getIndividualAcquisitionScore(
+                            user, projectId, period));
         }
         return ApiSuccessResponse.success(
-                projectUserStatisticsService.getTotalAcquisitionScore(user, projectId));
+                projectUserStatisticsService.getTotalAcquisitionScore(user, projectId, period));
     }
 }

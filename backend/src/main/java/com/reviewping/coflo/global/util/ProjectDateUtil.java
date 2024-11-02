@@ -18,9 +18,8 @@ public class ProjectDateUtil {
     }
 
     /**
-     *
      * @param projectCreatedDate 프로젝트 연동일
-     * @param weekNumber n주차
+     * @param weekNumber         n주차
      * @return 시작일, 종료일
      */
     public LocalDate[] calculateWeekStartAndEndDates(LocalDate projectCreatedDate, int weekNumber) {
@@ -32,9 +31,8 @@ public class ProjectDateUtil {
     }
 
     /**
-     *
      * @param projectCreatedDate 프로젝트 연동일
-     * @param currentDate 오늘 날짜
+     * @param currentDate        오늘 날짜
      * @return 시작일, 종료일
      */
     public LocalDate[] calculateWeekStartAndEndDates(
@@ -45,5 +43,22 @@ public class ProjectDateUtil {
         LocalDate endOfWeek =
                 startOfWeek.with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY));
         return new LocalDate[] {startOfWeek, endOfWeek};
+    }
+
+    /**
+     * @param projectCreatedDate 프로젝트 연동일
+     * @param startWeek          시작 주차
+     * @param endWeek            종료 주차
+     * @return 시작 주차의 시작일과 종료 주차의 종료일
+     */
+    public LocalDate[] calculateDateRange(
+            LocalDate projectCreatedDate, int startWeek, int endWeek) {
+        LocalDate projectStartMonday = projectCreatedDate.with(java.time.DayOfWeek.MONDAY);
+        LocalDate startDate = projectStartMonday.plusWeeks(startWeek - 1);
+        LocalDate endDate =
+                projectStartMonday
+                        .plusWeeks(endWeek - 1)
+                        .with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY));
+        return new LocalDate[] {startDate, endDate};
     }
 }

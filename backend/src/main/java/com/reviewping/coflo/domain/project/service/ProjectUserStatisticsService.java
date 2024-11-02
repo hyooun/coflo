@@ -12,11 +12,11 @@ import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
+import com.reviewping.coflo.domain.userproject.entity.UserProjectScore;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectScoreRepository;
 import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +53,7 @@ public class ProjectUserStatisticsService {
         int endWeek = currentWeek - 1;
 
         List<ScoreOfWeekResponse> scoreOfWeek =
-                getScoreOfWeekResponses(startWeek, endWeek, userProject);
+                getScoreOfWeekResponses(startWeek, endWeek, userProject.getId());
         LocalDate[] dateRange =
                 projectDateUtil.calculateDateRange(
                         userProject.getProject().getCreatedDate().toLocalDate(),
@@ -93,37 +93,49 @@ public class ProjectUserStatisticsService {
     }
 
     private List<ScoreOfWeekResponse> getScoreOfWeekResponses(
-            int startWeek, int endWeek, UserProject userProject) {
-        List<ScoreOfWeekResponse> scoreOfWeek = new ArrayList<>();
-        for (int week = startWeek; week <= endWeek; week++) {
-            Long totalScoreSum =
-                    userProjectScoreRepository.getTotalScoreSumByUserProjectIdAndWeek(
-                            userProject.getId(), week);
-            scoreOfWeek.add(new ScoreOfWeekResponse(week, totalScoreSum));
-        }
-        return scoreOfWeek;
+            int startWeek, int endWeek, Long userProjectId) {
+        List<UserProjectScore> userProjectScores =
+                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
+                        userProjectId, startWeek, endWeek);
+
+        return userProjectScores.stream()
+                .collect(Collectors.groupingBy(UserProjectScore::getWeek))
+                .entrySet()
+                .stream()
+                .map(
+                        entry -> {
+                            Integer week = entry.getKey();
+                            List<UserProjectScore> userProjectScoresOfWeek = entry.getValue();
+                            long totalScoreOfWeekSum =
+                                    userProjectScoresOfWeek.stream()
+                                            .mapToLong(UserProjectScore::getTotalScore)
+                                            .sum();
+                            return new ScoreOfWeekResponse(week, totalScoreOfWeekSum);
+                        })
+                .toList();
     }
 
     private List<CodeQualityScoreResponse> getCodeQualityScoreResponse(
             int startWeek, int endWeek, Long userProjectId) {
-        List<CodeQualityCode> codeQualityCodes = codeQualityCodeRepository.findAll();
-        return codeQualityCodes.stream()
+        List<UserProjectScore> userProjectScores =
+                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
+                        userProjectId, startWeek, endWeek);
+        return userProjectScores.stream()
+                .collect(Collectors.groupingBy(UserProjectScore::getCodeQualityCode))
+                .entrySet()
+                .stream()
                 .map(
-                        codeQuality ->
-                                getCodeQualityScoreResponse(
-                                        startWeek, endWeek, userProjectId, codeQuality))
-                .collect(Collectors.toList());
-    }
-
-    private CodeQualityScoreResponse getCodeQualityScoreResponse(
-            int startWeek, int endWeek, Long userProjectId, CodeQualityCode codeQuality) {
-        List<ScoreOfWeekResponse> scoresOfWeek =
-                userProjectScoreRepository
-                        .findByUserProjectIdAndCodeQualityIdAndWeekRange(
-                                userProjectId, codeQuality.getId(), startWeek, endWeek)
-                        .stream()
-                        .map(ScoreOfWeekResponse::of)
-                        .toList();
-        return new CodeQualityScoreResponse(codeQuality.getName(), scoresOfWeek);
+                        entry -> {
+                            CodeQualityCode codeQuality = entry.getKey();
+                            List<UserProjectScore> userProjectScoresOfCodeQuality =
+                                    entry.getValue();
+                            List<ScoreOfWeekResponse> scoreOfWeekResponses =
+                                    userProjectScoresOfCodeQuality.stream()
+                                            .map(ScoreOfWeekResponse::of)
+                                            .toList();
+                            return new CodeQualityScoreResponse(
+                                    codeQuality.getName(), scoreOfWeekResponses);
+                        })
+                .toList();
     }
 }

@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.project.domain.statistics;
+package com.reviewping.coflo.domain.project.domain.mapper;
 
 import com.reviewping.coflo.domain.project.controller.response.ScoreOfWeekResponse;
 import com.reviewping.coflo.domain.userproject.entity.UserProjectScore;
@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class TotalStatistics extends UserStatistics<Integer, ScoreOfWeekResponse> {
+public class TotalMapper extends ScoreMapper<Integer, ScoreOfWeekResponse> {
     @Override
     public Collector<UserProjectScore, ?, Map<Integer, List<UserProjectScore>>> getCollector() {
         return Collectors.groupingBy(UserProjectScore::getWeek);

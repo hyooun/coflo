@@ -4,9 +4,9 @@ import com.reviewping.coflo.domain.project.controller.response.CodeQualityScoreR
 import com.reviewping.coflo.domain.project.controller.response.ScoreOfWeekResponse;
 import com.reviewping.coflo.domain.project.controller.response.UserProjectIndividualScoreResponse;
 import com.reviewping.coflo.domain.project.controller.response.UserProjectTotalScoreResponse;
-import com.reviewping.coflo.domain.project.domain.statistics.IndividualStatistics;
-import com.reviewping.coflo.domain.project.domain.statistics.TotalStatistics;
-import com.reviewping.coflo.domain.project.domain.statistics.UserStatistics;
+import com.reviewping.coflo.domain.project.domain.mapper.IndividualMapper;
+import com.reviewping.coflo.domain.project.domain.mapper.ScoreMapper;
+import com.reviewping.coflo.domain.project.domain.mapper.TotalMapper;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
@@ -41,14 +41,14 @@ public class ProjectUserStatisticsService {
         int currentWeek = getCurrentProjectWeek(userProject.getProject());
         int startWeek = Math.max(1, currentWeek - period);
         int endWeek = currentWeek - 1;
-
-        List<ScoreOfWeekResponse> scoreOfWeek =
-                getCumulativeScoreOfWeekResponses(startWeek, endWeek, userProject.getId());
         LocalDate[] dateRange =
                 projectDateUtil.calculateDateRange(
                         userProject.getProject().getCreatedDate().toLocalDate(),
                         startWeek,
                         endWeek);
+
+        List<ScoreOfWeekResponse> scoreOfWeek =
+                getCumulativeScoreOfWeekResponses(startWeek, endWeek, userProject.getId());
 
         return new UserProjectTotalScoreResponse(dateRange[0], dateRange[1], scoreOfWeek);
     }
@@ -59,15 +59,14 @@ public class ProjectUserStatisticsService {
         int currentWeek = getCurrentProjectWeek(userProject.getProject());
         int startWeek = Math.max(1, currentWeek - period);
         int endWeek = currentWeek - 1;
-
-        List<CodeQualityScoreResponse> codeQualityScores =
-                getCumulativeCodeQualityScoreResponse(startWeek, endWeek, userProject.getId());
-
         LocalDate[] dateRange =
                 projectDateUtil.calculateDateRange(
                         userProject.getProject().getCreatedDate().toLocalDate(),
                         startWeek,
                         endWeek);
+
+        List<CodeQualityScoreResponse> codeQualityScores =
+                getCumulativeCodeQualityScoreResponse(startWeek, endWeek, userProject.getId());
 
         return new UserProjectIndividualScoreResponse(
                 dateRange[0], dateRange[1], codeQualityScores);
@@ -80,17 +79,18 @@ public class ProjectUserStatisticsService {
         int startWeek = Math.max(1, currentWeek - period);
         int endWeek = currentWeek - 1;
 
-        List<UserProjectScore> userProjectScores =
-                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
-                        userProject.getId(), startWeek, endWeek);
-        List<ScoreOfWeekResponse> scoreOfWeek =
-                processStatistics(userProjectScores, new TotalStatistics());
-
         LocalDate[] dateRange =
                 projectDateUtil.calculateDateRange(
                         userProject.getProject().getCreatedDate().toLocalDate(),
                         startWeek,
                         endWeek);
+
+        List<UserProjectScore> userProjectScores =
+                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
+                        userProject.getId(), startWeek, endWeek);
+
+        List<ScoreOfWeekResponse> scoreOfWeek =
+                processStatistics(userProjectScores, new TotalMapper());
 
         return new UserProjectTotalScoreResponse(dateRange[0], dateRange[1], scoreOfWeek);
     }
@@ -101,18 +101,19 @@ public class ProjectUserStatisticsService {
         int currentWeek = getCurrentProjectWeek(userProject.getProject());
         int startWeek = Math.max(1, currentWeek - period);
         int endWeek = currentWeek - 1;
-
-        List<UserProjectScore> userProjectScores =
-                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
-                        userProject.getId(), startWeek, endWeek);
-        List<CodeQualityScoreResponse> codeQualityScores =
-                processStatistics(userProjectScores, new IndividualStatistics());
-
         LocalDate[] dateRange =
                 projectDateUtil.calculateDateRange(
                         userProject.getProject().getCreatedDate().toLocalDate(),
                         startWeek,
                         endWeek);
+
+        List<UserProjectScore> userProjectScores =
+                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
+                        userProject.getId(), startWeek, endWeek);
+
+        List<CodeQualityScoreResponse> codeQualityScores =
+                processStatistics(userProjectScores, new IndividualMapper());
+
         return new UserProjectIndividualScoreResponse(
                 dateRange[0], dateRange[1], codeQualityScores);
     }
@@ -123,7 +124,7 @@ public class ProjectUserStatisticsService {
                 userProjectScoreRepository.findByUserProjectIdAndWeekRange(
                         userProjectId, startWeek, endWeek);
         List<ScoreOfWeekResponse> weeklyScores =
-                processStatistics(userProjectScores, new TotalStatistics());
+                processStatistics(userProjectScores, new TotalMapper());
 
         List<ScoreOfWeekResponse> cumulativeScores = new ArrayList<>();
         long cumulativeScore = 0;
@@ -141,7 +142,7 @@ public class ProjectUserStatisticsService {
                 userProjectScoreRepository.findByUserProjectIdAndWeekRange(
                         userProjectId, startWeek, endWeek);
         List<CodeQualityScoreResponse> codeQualityScoreResponses =
-                processStatistics(userProjectScores, new IndividualStatistics());
+                processStatistics(userProjectScores, new IndividualMapper());
 
         List<CodeQualityScoreResponse> cumulativeCodeQualityScores = new ArrayList<>();
         for (CodeQualityScoreResponse codeQualityScore : codeQualityScoreResponses) {
@@ -173,9 +174,9 @@ public class ProjectUserStatisticsService {
     }
 
     private <K, T> List<T> processStatistics(
-            List<UserProjectScore> userProjectScores, UserStatistics<K, T> userStatistics) {
-        return userProjectScores.stream().collect(userStatistics.getCollector()).entrySet().stream()
-                .map(userStatistics.getMapper())
+            List<UserProjectScore> userProjectScores, ScoreMapper<K, T> scoreMapper) {
+        return userProjectScores.stream().collect(scoreMapper.getCollector()).entrySet().stream()
+                .map(scoreMapper.getMapper())
                 .toList();
     }
 }

@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.project.domain.statistics;
+package com.reviewping.coflo.domain.project.domain.mapper;
 
 import com.reviewping.coflo.domain.codequality.entity.CodeQualityCode;
 import com.reviewping.coflo.domain.project.controller.response.CodeQualityScoreResponse;
@@ -10,8 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class IndividualStatistics
-        extends UserStatistics<CodeQualityCode, CodeQualityScoreResponse> {
+public class IndividualMapper extends ScoreMapper<CodeQualityCode, CodeQualityScoreResponse> {
     @Override
     public Collector<UserProjectScore, ?, Map<CodeQualityCode, List<UserProjectScore>>>
             getCollector() {

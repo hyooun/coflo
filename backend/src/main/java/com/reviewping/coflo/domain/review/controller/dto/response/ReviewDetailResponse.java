@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public record ReviewDetailResponse(
         Long id, String content, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-    public static ReviewDetailResponse of(Review review) {
+    public static ReviewDetailResponse from(Review review) {
         return new ReviewDetailResponse(
                 review.getId(),
                 review.getContent(),

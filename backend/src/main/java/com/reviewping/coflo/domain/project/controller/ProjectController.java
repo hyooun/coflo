@@ -41,10 +41,8 @@ public class ProjectController {
     ApiResponse<?> getProjectUserStatisticsScore(
             @AuthUser User user,
             @PathVariable("projectId") Long projectId,
-            @RequestParam(name = "calculationType", required = false)
-                    CalculationType calculationType,
-            @RequestParam(name = "scoreDisplayType", required = false)
-                    ScoreDisplayType scoreDisplayType,
+            @RequestParam(name = "calculationType") CalculationType calculationType,
+            @RequestParam(name = "scoreDisplayType") ScoreDisplayType scoreDisplayType,
             @RequestParam(name = "period", required = false, defaultValue = "7") Integer period) {
         if (scoreDisplayType == ScoreDisplayType.INDIVIDUAL) {
             return ApiSuccessResponse.success(

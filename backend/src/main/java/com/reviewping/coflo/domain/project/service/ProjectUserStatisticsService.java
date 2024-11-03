@@ -5,6 +5,7 @@ import com.reviewping.coflo.domain.project.controller.response.UserProjectTotalS
 import com.reviewping.coflo.domain.project.domain.CalculationType;
 import com.reviewping.coflo.domain.project.domain.ProjectWeek;
 import com.reviewping.coflo.domain.project.domain.calculator.IndividualScoreCalculator;
+import com.reviewping.coflo.domain.project.domain.calculator.ScoreCalculator;
 import com.reviewping.coflo.domain.project.domain.calculator.TotalScoreCalculator;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
@@ -35,23 +36,17 @@ public class ProjectUserStatisticsService {
 
     public UserProjectTotalScoreResponse calculateTotalScore(
             User user, Long projectId, Integer period, CalculationType calculationType) {
-        UserProject userProject = getUserProject(user, projectId);
-        ProjectWeek projectWeek =
-                projectDateUtil.calculateWeekRange(
-                        userProject.getProject().getCreatedDate().toLocalDate(),
-                        period,
-                        LocalDate.now());
-
-        List<UserProjectScore> userProjectScores =
-                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
-                        userProject.getId(), projectWeek.startWeek(), projectWeek.endWeek());
-
-        TotalScoreCalculator calculator = new TotalScoreCalculator(calculationType);
-        return calculator.calculateScore(projectWeek, userProjectScores);
+        return calculateScore(user, projectId, period, new TotalScoreCalculator(calculationType));
     }
 
     public UserProjectIndividualScoreResponse calculateIndividualScore(
             User user, Long projectId, Integer period, CalculationType calculationType) {
+        return calculateScore(
+                user, projectId, period, new IndividualScoreCalculator(calculationType));
+    }
+
+    private <R> R calculateScore(
+            User user, Long projectId, Integer period, ScoreCalculator<R> calculator) {
         UserProject userProject = getUserProject(user, projectId);
         ProjectWeek projectWeek =
                 projectDateUtil.calculateWeekRange(
@@ -63,7 +58,6 @@ public class ProjectUserStatisticsService {
                 userProjectScoreRepository.findByUserProjectIdAndWeekRange(
                         userProject.getId(), projectWeek.startWeek(), projectWeek.endWeek());
 
-        IndividualScoreCalculator calculator = new IndividualScoreCalculator(calculationType);
         return calculator.calculateScore(projectWeek, userProjectScores);
     }
 

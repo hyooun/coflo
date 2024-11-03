@@ -1,17 +1,17 @@
 package com.reviewping.coflo.domain.project.domain.calculator;
 
+import com.reviewping.coflo.domain.project.domain.CalculationType;
 import com.reviewping.coflo.domain.project.domain.ProjectWeek;
-import com.reviewping.coflo.domain.project.domain.ScoreType;
 import com.reviewping.coflo.domain.project.domain.mapper.ScoreMapper;
 import com.reviewping.coflo.domain.userproject.entity.UserProjectScore;
 import java.util.List;
 
 public abstract class ScoreCalculator<R> {
 
-    protected final ScoreType scoreType;
+    protected final CalculationType calculationType;
 
-    public ScoreCalculator(ScoreType scoreType) {
-        this.scoreType = scoreType;
+    public ScoreCalculator(CalculationType calculationType) {
+        this.calculationType = calculationType;
     }
 
     public <K, T> List<T> processMapper(

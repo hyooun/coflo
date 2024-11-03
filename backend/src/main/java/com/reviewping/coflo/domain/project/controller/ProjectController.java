@@ -2,8 +2,8 @@ package com.reviewping.coflo.domain.project.controller;
 
 import com.reviewping.coflo.domain.project.controller.response.ProjectTeamDetailResponse;
 import com.reviewping.coflo.domain.project.controller.response.ProjectTeamRewardResponse;
-import com.reviewping.coflo.domain.project.domain.GraphType;
-import com.reviewping.coflo.domain.project.domain.ScoreType;
+import com.reviewping.coflo.domain.project.domain.CalculationType;
+import com.reviewping.coflo.domain.project.domain.ScoreDisplayType;
 import com.reviewping.coflo.domain.project.service.ProjectTeamStatisticsService;
 import com.reviewping.coflo.domain.project.service.ProjectUserStatisticsService;
 import com.reviewping.coflo.domain.user.entity.User;
@@ -41,31 +41,31 @@ public class ProjectController {
     ApiResponse<?> getProjectUserCumulativeScore(
             @AuthUser User user,
             @PathVariable("projectId") Long projectId,
-            @RequestParam(name = "type", required = false) GraphType type,
+            @RequestParam(name = "type", required = false) ScoreDisplayType type,
             @RequestParam(name = "period", required = false, defaultValue = "7") Integer period) {
-        if (type == GraphType.INDIVIDUAL) {
+        if (type == ScoreDisplayType.INDIVIDUAL) {
             return ApiSuccessResponse.success(
                     projectUserStatisticsService.calculateIndividualScore(
-                            user, projectId, period, ScoreType.CUMULATIVE));
+                            user, projectId, period, CalculationType.CUMULATIVE));
         }
         return ApiSuccessResponse.success(
                 projectUserStatisticsService.calculateTotalScore(
-                        user, projectId, period, ScoreType.CUMULATIVE));
+                        user, projectId, period, CalculationType.CUMULATIVE));
     }
 
     @GetMapping("/{projectId}/acquisition")
     ApiResponse<?> getProjectUserAcquisitionScore(
             @AuthUser User user,
             @PathVariable("projectId") Long projectId,
-            @RequestParam(name = "type", required = false) GraphType type,
+            @RequestParam(name = "type", required = false) ScoreDisplayType type,
             @RequestParam(name = "period", required = false, defaultValue = "7") Integer period) {
-        if (type == GraphType.INDIVIDUAL) {
+        if (type == ScoreDisplayType.INDIVIDUAL) {
             return ApiSuccessResponse.success(
                     projectUserStatisticsService.calculateIndividualScore(
-                            user, projectId, period, ScoreType.ACQUISITION));
+                            user, projectId, period, CalculationType.ACQUISITION));
         }
         return ApiSuccessResponse.success(
                 projectUserStatisticsService.calculateTotalScore(
-                        user, projectId, period, ScoreType.ACQUISITION));
+                        user, projectId, period, CalculationType.ACQUISITION));
     }
 }

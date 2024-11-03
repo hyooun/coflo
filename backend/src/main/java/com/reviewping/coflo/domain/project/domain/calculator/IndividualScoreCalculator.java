@@ -3,8 +3,8 @@ package com.reviewping.coflo.domain.project.domain.calculator;
 import com.reviewping.coflo.domain.project.controller.response.CodeQualityScoreResponse;
 import com.reviewping.coflo.domain.project.controller.response.ScoreOfWeekResponse;
 import com.reviewping.coflo.domain.project.controller.response.UserProjectIndividualScoreResponse;
+import com.reviewping.coflo.domain.project.domain.CalculationType;
 import com.reviewping.coflo.domain.project.domain.ProjectWeek;
-import com.reviewping.coflo.domain.project.domain.ScoreType;
 import com.reviewping.coflo.domain.project.domain.mapper.IndividualMapper;
 import com.reviewping.coflo.domain.userproject.entity.UserProjectScore;
 import java.util.ArrayList;
@@ -12,8 +12,8 @@ import java.util.List;
 
 public class IndividualScoreCalculator extends ScoreCalculator<UserProjectIndividualScoreResponse> {
 
-    public IndividualScoreCalculator(ScoreType scoreType) {
-        super(scoreType);
+    public IndividualScoreCalculator(CalculationType calculationType) {
+        super(calculationType);
     }
 
     public UserProjectIndividualScoreResponse calculateScore(
@@ -28,7 +28,7 @@ public class IndividualScoreCalculator extends ScoreCalculator<UserProjectIndivi
 
     private List<CodeQualityScoreResponse> calculateCumulativeCodeQualityScores(
             List<CodeQualityScoreResponse> codeQualityScores) {
-        if (scoreType == ScoreType.ACQUISITION) return codeQualityScores;
+        if (calculationType == CalculationType.ACQUISITION) return codeQualityScores;
 
         List<CodeQualityScoreResponse> cumulativeCodeQualityScores = new ArrayList<>();
         for (CodeQualityScoreResponse codeQualityScore : codeQualityScores) {

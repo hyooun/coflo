@@ -5,7 +5,7 @@ import com.reviewping.coflo.domain.review.entity.Retrieval;
 
 public record RetrievalDetailResponse(
         Long id, String fileName, String content, LanguageType language) {
-    public static RetrievalDetailResponse of(Retrieval retrieval) {
+    public static RetrievalDetailResponse from(Retrieval retrieval) {
         return new RetrievalDetailResponse(
                 retrieval.getId(),
                 retrieval.getFileName(),

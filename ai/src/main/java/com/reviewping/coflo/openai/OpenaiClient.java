@@ -4,16 +4,23 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 import com.reviewping.coflo.json.JsonUtil;
+import com.reviewping.coflo.openai.dto.*;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
 public class OpenaiClient {
-    // TODO
+    private static final String CHAT_URL = "https://api.openai.com/v1/chat/completions";
     private static final String EMBEDDING_URL = "https://api.openai.com/v1/embeddings";
-    private static final String EMBEDDING_MODEL = "text-embedding-3-small";
+
+    private static final String GPT_4O_MINI = "gpt-4o-mini";
+    private static final String TEXT_EMBEDDING_3_SMALL = "text-embedding-3-small";
+
+    private static final String ROLE_USER = "user";
 
     private final RestTemplate restTemplate;
     private final JsonUtil jsonUtil;
@@ -35,12 +42,24 @@ public class OpenaiClient {
     }
 
     public EmbeddingResponse generateEmbedding(String content) {
-        EmbeddingRequest embeddingRequest = new EmbeddingRequest(content, EMBEDDING_MODEL);
+        EmbeddingRequest embeddingRequest = new EmbeddingRequest(content, TEXT_EMBEDDING_3_SMALL);
         String body = jsonUtil.toJson(embeddingRequest);
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
         ResponseEntity<EmbeddingResponse> exchange =
                 restTemplate.exchange(
                         EMBEDDING_URL, HttpMethod.POST, entity, EmbeddingResponse.class);
+        return exchange.getBody();
+    }
+
+    public ChatCompletionResponse chat(String prompt) {
+
+        ChatCompletionRequest chatCompletionRequest =
+                new ChatCompletionRequest(GPT_4O_MINI, List.of(new ChatMessage(ROLE_USER, prompt)));
+        String body = jsonUtil.toJson(chatCompletionRequest);
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+        ResponseEntity<ChatCompletionResponse> exchange =
+                restTemplate.exchange(
+                        CHAT_URL, HttpMethod.POST, entity, new ParameterizedTypeReference<>() {});
         return exchange.getBody();
     }
 }

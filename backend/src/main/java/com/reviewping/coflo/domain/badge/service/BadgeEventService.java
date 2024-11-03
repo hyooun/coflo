@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BadgeEventService {
 
+    // TODO: 운영시에 count 바꾸기
     private static final Long PROJECT_LINK_TARGET_COUNT = 1L;
     private static final Long LOGIN_TARGET_COUNT = 1L;
 

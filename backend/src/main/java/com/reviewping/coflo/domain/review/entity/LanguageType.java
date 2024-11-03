@@ -4,23 +4,23 @@ import lombok.Getter;
 
 @Getter
 public enum LanguageType {
-    TYPESCRIPT("typescript"),
-    JAVASCRIPT("javascript"),
-    PYTHON("python"),
+    TYPESCRIPT("ts"),
+    JAVASCRIPT("js"),
+    PYTHON("py"),
     JAVA("java"),
     C("c"),
     CPP("cpp"),
-    CSHARP("csharp"),
+    CSHARP("cs"),
     GO("go"),
-    RUBY("ruby"),
-    RUST("rust"),
+    RUBY("rb"),
+    RUST("rs"),
     SWIFT("swift"),
     PHP("php"),
-    SHELL("shell"),
+    SHELL("sh"),
     SQL("sql"),
     HTML("html"),
     CSS("css"),
-    PLAINTEXT("plaintext");
+    PLAINTEXT("txt");
 
     private final String type;
 

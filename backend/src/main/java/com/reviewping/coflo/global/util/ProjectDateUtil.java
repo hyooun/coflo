@@ -1,5 +1,6 @@
 package com.reviewping.coflo.global.util;
 
+import com.reviewping.coflo.domain.project.domain.ProjectWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
@@ -45,20 +46,19 @@ public class ProjectDateUtil {
         return new LocalDate[] {startOfWeek, endOfWeek};
     }
 
-    /**
-     * @param projectCreatedDate 프로젝트 연동일
-     * @param startWeek          시작 주차
-     * @param endWeek            종료 주차
-     * @return 시작 주차의 시작일과 종료 주차의 종료일
-     */
-    public LocalDate[] calculateDateRange(
-            LocalDate projectCreatedDate, int startWeek, int endWeek) {
+    public ProjectWeek calculateWeekRange(
+            LocalDate projectCreatedDate, int period, LocalDate currentDate) {
+        int currentWeek = calculateWeekNumber(projectCreatedDate, currentDate);
+        int startWeek = Math.max(1, currentWeek - period);
+        int endWeek = currentWeek - 1;
+
         LocalDate projectStartMonday = projectCreatedDate.with(java.time.DayOfWeek.MONDAY);
         LocalDate startDate = projectStartMonday.plusWeeks(startWeek - 1);
         LocalDate endDate =
                 projectStartMonday
                         .plusWeeks(endWeek - 1)
                         .with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY));
-        return new LocalDate[] {startDate, endDate};
+
+        return new ProjectWeek(startWeek, endWeek, startDate, endDate);
     }
 }

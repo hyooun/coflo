@@ -4,6 +4,7 @@ import com.reviewping.coflo.domain.project.controller.response.CodeQualityScoreR
 import com.reviewping.coflo.domain.project.controller.response.ScoreOfWeekResponse;
 import com.reviewping.coflo.domain.project.controller.response.UserProjectIndividualScoreResponse;
 import com.reviewping.coflo.domain.project.controller.response.UserProjectTotalScoreResponse;
+import com.reviewping.coflo.domain.project.domain.ProjectWeek;
 import com.reviewping.coflo.domain.project.domain.mapper.IndividualMapper;
 import com.reviewping.coflo.domain.project.domain.mapper.ScoreMapper;
 import com.reviewping.coflo.domain.project.domain.mapper.TotalMapper;
@@ -38,84 +39,74 @@ public class ProjectUserStatisticsService {
     public UserProjectTotalScoreResponse getTotalCumulativeScore(
             User user, Long projectId, Integer period) {
         UserProject userProject = getUserProject(user, projectId);
-        int currentWeek = getCurrentProjectWeek(userProject.getProject());
-        int startWeek = Math.max(1, currentWeek - period);
-        int endWeek = currentWeek - 1;
-        LocalDate[] dateRange =
-                projectDateUtil.calculateDateRange(
+        ProjectWeek projectWeek =
+                projectDateUtil.calculateWeekRange(
                         userProject.getProject().getCreatedDate().toLocalDate(),
-                        startWeek,
-                        endWeek);
+                        period,
+                        LocalDate.now());
 
         List<ScoreOfWeekResponse> scoreOfWeek =
-                getCumulativeScoreOfWeekResponses(startWeek, endWeek, userProject.getId());
+                getCumulativeScoreOfWeekResponses(
+                        projectWeek.startWeek(), projectWeek.endWeek(), userProject.getId());
 
-        return new UserProjectTotalScoreResponse(dateRange[0], dateRange[1], scoreOfWeek);
+        return new UserProjectTotalScoreResponse(
+                projectWeek.startDate(), projectWeek.endDate(), scoreOfWeek);
     }
 
     public UserProjectIndividualScoreResponse getIndividualCumulativeScore(
             User user, Long projectId, Integer period) {
         UserProject userProject = getUserProject(user, projectId);
-        int currentWeek = getCurrentProjectWeek(userProject.getProject());
-        int startWeek = Math.max(1, currentWeek - period);
-        int endWeek = currentWeek - 1;
-        LocalDate[] dateRange =
-                projectDateUtil.calculateDateRange(
+        ProjectWeek projectWeek =
+                projectDateUtil.calculateWeekRange(
                         userProject.getProject().getCreatedDate().toLocalDate(),
-                        startWeek,
-                        endWeek);
+                        period,
+                        LocalDate.now());
 
         List<CodeQualityScoreResponse> codeQualityScores =
-                getCumulativeCodeQualityScoreResponse(startWeek, endWeek, userProject.getId());
+                getCumulativeCodeQualityScoreResponse(
+                        projectWeek.startWeek(), projectWeek.endWeek(), userProject.getId());
 
         return new UserProjectIndividualScoreResponse(
-                dateRange[0], dateRange[1], codeQualityScores);
+                projectWeek.startDate(), projectWeek.endDate(), codeQualityScores);
     }
 
     public UserProjectTotalScoreResponse getTotalAcquisitionScore(
             User user, Long projectId, Integer period) {
         UserProject userProject = getUserProject(user, projectId);
-        int currentWeek = getCurrentProjectWeek(userProject.getProject());
-        int startWeek = Math.max(1, currentWeek - period);
-        int endWeek = currentWeek - 1;
-
-        LocalDate[] dateRange =
-                projectDateUtil.calculateDateRange(
+        ProjectWeek projectWeek =
+                projectDateUtil.calculateWeekRange(
                         userProject.getProject().getCreatedDate().toLocalDate(),
-                        startWeek,
-                        endWeek);
+                        period,
+                        LocalDate.now());
 
         List<UserProjectScore> userProjectScores =
                 userProjectScoreRepository.findByUserProjectIdAndWeekRange(
-                        userProject.getId(), startWeek, endWeek);
+                        userProject.getId(), projectWeek.startWeek(), projectWeek.endWeek());
 
-        List<ScoreOfWeekResponse> scoreOfWeek =
-                processStatistics(userProjectScores, new TotalMapper());
+        List<ScoreOfWeekResponse> scoreOfWeek = processMapper(userProjectScores, new TotalMapper());
 
-        return new UserProjectTotalScoreResponse(dateRange[0], dateRange[1], scoreOfWeek);
+        return new UserProjectTotalScoreResponse(
+                projectWeek.startDate(), projectWeek.endDate(), scoreOfWeek);
     }
 
     public UserProjectIndividualScoreResponse getIndividualAcquisitionScore(
             User user, Long projectId, Integer period) {
         UserProject userProject = getUserProject(user, projectId);
-        int currentWeek = getCurrentProjectWeek(userProject.getProject());
-        int startWeek = Math.max(1, currentWeek - period);
-        int endWeek = currentWeek - 1;
-        LocalDate[] dateRange =
-                projectDateUtil.calculateDateRange(
+        ProjectWeek projectWeek =
+                projectDateUtil.calculateWeekRange(
                         userProject.getProject().getCreatedDate().toLocalDate(),
-                        startWeek,
-                        endWeek);
+                        period,
+                        LocalDate.now());
 
         List<UserProjectScore> userProjectScores =
                 userProjectScoreRepository.findByUserProjectIdAndWeekRange(
-                        userProject.getId(), startWeek, endWeek);
+                        userProject.getId(), projectWeek.startWeek(), projectWeek.endWeek());
 
         List<CodeQualityScoreResponse> codeQualityScores =
-                processStatistics(userProjectScores, new IndividualMapper());
+                processMapper(userProjectScores, new IndividualMapper());
 
         return new UserProjectIndividualScoreResponse(
-                dateRange[0], dateRange[1], codeQualityScores);
+                projectWeek.startDate(), projectWeek.endDate(), codeQualityScores);
     }
 
     private List<ScoreOfWeekResponse> getCumulativeScoreOfWeekResponses(
@@ -124,7 +115,7 @@ public class ProjectUserStatisticsService {
                 userProjectScoreRepository.findByUserProjectIdAndWeekRange(
                         userProjectId, startWeek, endWeek);
         List<ScoreOfWeekResponse> weeklyScores =
-                processStatistics(userProjectScores, new TotalMapper());
+                processMapper(userProjectScores, new TotalMapper());
 
         List<ScoreOfWeekResponse> cumulativeScores = new ArrayList<>();
         long cumulativeScore = 0;
@@ -142,7 +133,7 @@ public class ProjectUserStatisticsService {
                 userProjectScoreRepository.findByUserProjectIdAndWeekRange(
                         userProjectId, startWeek, endWeek);
         List<CodeQualityScoreResponse> codeQualityScoreResponses =
-                processStatistics(userProjectScores, new IndividualMapper());
+                processMapper(userProjectScores, new IndividualMapper());
 
         List<CodeQualityScoreResponse> cumulativeCodeQualityScores = new ArrayList<>();
         for (CodeQualityScoreResponse codeQualityScore : codeQualityScoreResponses) {
@@ -168,12 +159,7 @@ public class ProjectUserStatisticsService {
         return userProjectRepository.getByProjectAndGitlabAccount(project, gitlabAccount);
     }
 
-    private int getCurrentProjectWeek(Project project) {
-        return projectDateUtil.calculateWeekNumber(
-                project.getCreatedDate().toLocalDate(), LocalDate.now());
-    }
-
-    private <K, T> List<T> processStatistics(
+    private <K, T> List<T> processMapper(
             List<UserProjectScore> userProjectScores, ScoreMapper<K, T> scoreMapper) {
         return userProjectScores.stream().collect(scoreMapper.getCollector()).entrySet().stream()
                 .map(scoreMapper.getMapper())

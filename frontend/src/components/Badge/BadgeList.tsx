@@ -11,17 +11,26 @@ interface BadgeListProps {
 
 const BadgeList = ({ badges, onBadgeClick }: BadgeListProps) => {
   return (
-    <div className="grid grid-cols-4 grid-rows-3 gap-4">
-      {badges.map((badge) => (
-        <div
-          key={badge.id}
-          onClick={() => onBadgeClick(badge)}
-          className={`w-full aspect-square flex items-center justify-center border rounded-lg cursor-pointer
-              ${badge.isAcquired ? 'hover:bg-gray-100' : 'bg-gray-200'}`}
-        >
-          <img src={badge.image} alt={`뱃지 ${badge.id}`} className="w-3/4 h-3/4 object-contain" />
-        </div>
-      ))}
+    <div className="flex flex-col items-center">
+      <div className="flex flex-row justify-start w-full my-4">
+        <p className="text-2xl font-bold">All Badges</p>
+      </div>
+      <div className="grid grid-cols-4 grid-rows-3 gap-4 rounded-xl bg-gray-900">
+        {badges.map((badge) => (
+          <div
+            key={badge.id}
+            onClick={() => onBadgeClick(badge)}
+            className={`w-full aspect-square flex items-center justify-center rounded-xl 
+              ${badge.isAcquired ? 'hover:bg-secondary cursor-pointer' : ''}`}
+          >
+            <img
+              src={badge.image}
+              alt={`뱃지 ${badge.id}`}
+              className="w-3/4 h-3/4 object-contain"
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

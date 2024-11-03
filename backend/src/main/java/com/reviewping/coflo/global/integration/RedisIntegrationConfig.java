@@ -78,6 +78,9 @@ public class RedisIntegrationConfig {
         SpelExpressionParser parser = new SpelExpressionParser();
         Expression topicExpression = parser.parseExpression("headers['topic']");
         handler.setTopicExpression(topicExpression);
+        Jackson2JsonRedisSerializer<Object> serializer =
+                new Jackson2JsonRedisSerializer<>(Object.class);
+        handler.setSerializer(serializer);
         return handler;
     }
 

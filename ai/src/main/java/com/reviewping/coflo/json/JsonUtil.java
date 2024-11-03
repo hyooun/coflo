@@ -15,7 +15,7 @@ public class JsonUtil {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            throw new JsonSerializationException(e.getMessage());
+            throw new JsonSerializationException("직렬화 중 예외가 발생했습니다.", e);
         }
     }
 
@@ -23,7 +23,7 @@ public class JsonUtil {
         try {
             return objectMapper.readValue(json, typeRef);
         } catch (JsonProcessingException e) {
-            throw new JsonDeserializationException(e.getMessage());
+            throw new JsonDeserializationException("역직렬화 중 예외가 발생했습니다.", e);
         }
     }
 }

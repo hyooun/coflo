@@ -37,35 +37,22 @@ public class ProjectController {
                 projectTeamStatisticsService.getTeamScore(user, projectId));
     }
 
-    @GetMapping("/{projectId}/cumulative")
-    ApiResponse<?> getProjectUserCumulativeScore(
+    @GetMapping("/{projectId}/statistics")
+    ApiResponse<?> getProjectUserStatisticsScore(
             @AuthUser User user,
             @PathVariable("projectId") Long projectId,
-            @RequestParam(name = "type", required = false) ScoreDisplayType type,
+            @RequestParam(name = "calculationType", required = false)
+                    CalculationType calculationType,
+            @RequestParam(name = "scoreDisplayType", required = false)
+                    ScoreDisplayType scoreDisplayType,
             @RequestParam(name = "period", required = false, defaultValue = "7") Integer period) {
-        if (type == ScoreDisplayType.INDIVIDUAL) {
+        if (scoreDisplayType == ScoreDisplayType.INDIVIDUAL) {
             return ApiSuccessResponse.success(
                     projectUserStatisticsService.calculateIndividualScore(
-                            user, projectId, period, CalculationType.CUMULATIVE));
+                            user, projectId, period, calculationType));
         }
         return ApiSuccessResponse.success(
                 projectUserStatisticsService.calculateTotalScore(
-                        user, projectId, period, CalculationType.CUMULATIVE));
-    }
-
-    @GetMapping("/{projectId}/acquisition")
-    ApiResponse<?> getProjectUserAcquisitionScore(
-            @AuthUser User user,
-            @PathVariable("projectId") Long projectId,
-            @RequestParam(name = "type", required = false) ScoreDisplayType type,
-            @RequestParam(name = "period", required = false, defaultValue = "7") Integer period) {
-        if (type == ScoreDisplayType.INDIVIDUAL) {
-            return ApiSuccessResponse.success(
-                    projectUserStatisticsService.calculateIndividualScore(
-                            user, projectId, period, CalculationType.ACQUISITION));
-        }
-        return ApiSuccessResponse.success(
-                projectUserStatisticsService.calculateTotalScore(
-                        user, projectId, period, CalculationType.ACQUISITION));
+                        user, projectId, period, calculationType));
     }
 }

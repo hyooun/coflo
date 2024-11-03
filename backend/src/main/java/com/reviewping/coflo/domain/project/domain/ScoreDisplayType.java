@@ -1,5 +1,8 @@
 package com.reviewping.coflo.domain.project.domain;
 
+import static com.reviewping.coflo.global.error.ErrorCode.PROJECT_SCORE_DISPLAY_TYPE_NOT_EXIST;
+
+import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.Arrays;
 
 public enum ScoreDisplayType {
@@ -16,6 +19,6 @@ public enum ScoreDisplayType {
         return Arrays.stream(ScoreDisplayType.values())
                 .filter(gt -> gt.type.equals(typeStr))
                 .findFirst()
-                .orElse(TOTAL);
+                .orElseThrow(() -> new BusinessException(PROJECT_SCORE_DISPLAY_TYPE_NOT_EXIST));
     }
 }

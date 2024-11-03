@@ -60,6 +60,9 @@ public enum ErrorCode {
      * project(H000)
      */
     PROJECT_NOT_EXIST(HttpStatus.NOT_FOUND, "H001", "존재하지 않는 프로젝트입니다."),
+    PROJECT_CALCULATION_TYPE_NOT_EXIST(HttpStatus.BAD_REQUEST, "H001", "잘못된 CalculationType 값입니다."),
+    PROJECT_SCORE_DISPLAY_TYPE_NOT_EXIST(
+            HttpStatus.BAD_REQUEST, "H001", "잘못된 ScoreDisplayType 값입니다."),
 
     /**
      * USER-PROJECT(I00)

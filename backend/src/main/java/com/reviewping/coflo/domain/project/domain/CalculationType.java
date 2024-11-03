@@ -1,5 +1,8 @@
 package com.reviewping.coflo.domain.project.domain;
 
+import static com.reviewping.coflo.global.error.ErrorCode.PROJECT_CALCULATION_TYPE_NOT_EXIST;
+
+import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.Arrays;
 
 public enum CalculationType {
@@ -16,6 +19,6 @@ public enum CalculationType {
         return Arrays.stream(CalculationType.values())
                 .filter(st -> st.type.equals(typeStr))
                 .findFirst()
-                .orElse(CUMULATIVE);
+                .orElseThrow(() -> new BusinessException(PROJECT_CALCULATION_TYPE_NOT_EXIST));
     }
 }

@@ -39,11 +39,7 @@ public class ProjectDateUtil {
     public LocalDate[] calculateWeekStartAndEndDates(
             LocalDate projectCreatedDate, LocalDate currentDate) {
         int weekNumber = this.calculateWeekNumber(projectCreatedDate, currentDate);
-        LocalDate projectStartMonday = projectCreatedDate.with(java.time.DayOfWeek.MONDAY);
-        LocalDate startOfWeek = projectStartMonday.plusWeeks(weekNumber - 1);
-        LocalDate endOfWeek =
-                startOfWeek.with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY));
-        return new LocalDate[] {startOfWeek, endOfWeek};
+        return calculateWeekStartAndEndDates(projectCreatedDate, weekNumber);
     }
 
     public ProjectWeek calculateWeekRange(

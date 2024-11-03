@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.project.entity;
+package com.reviewping.coflo.domain.project.domain;
 
 import java.util.Arrays;
 

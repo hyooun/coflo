@@ -1,6 +1,6 @@
 package com.reviewping.coflo.global.Converter;
 
-import com.reviewping.coflo.domain.project.entity.GraphType;
+import com.reviewping.coflo.domain.project.domain.GraphType;
 import org.springframework.core.convert.converter.Converter;
 
 public class GraphTypeConverter implements Converter<String, GraphType> {

@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.redis.inbound.RedisInboundChannelAdapter;
@@ -19,6 +21,7 @@ import org.springframework.messaging.MessageHandler;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
+@IntegrationComponentScan(basePackages = "com.reviewping.coflo")
 public class RedisIntegrationConfig {
 
     private final RedisConnectionFactory redisConnectionFactory;

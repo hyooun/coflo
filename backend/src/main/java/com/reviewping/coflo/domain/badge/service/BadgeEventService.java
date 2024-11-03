@@ -6,6 +6,7 @@ import com.reviewping.coflo.domain.badge.entity.BadgeCode;
 import com.reviewping.coflo.domain.badge.entity.UserBadge;
 import com.reviewping.coflo.domain.badge.repository.BadgeCodeRepository;
 import com.reviewping.coflo.domain.badge.repository.UserBadgeRepository;
+import com.reviewping.coflo.domain.customPrompt.repository.PromptHistoryRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
@@ -24,12 +25,14 @@ public class BadgeEventService {
     // TODO: 운영시에 count 바꾸기
     private static final Long PROJECT_LINK_TARGET_COUNT = 1L;
     private static final Long LOGIN_TARGET_COUNT = 1L;
+    private static final Long PROMTPT_UPDATE_TARGET_COUNT = 2L;
 
     private final UserBadgeRepository userBadgeRepository;
     private final BadgeCodeRepository badgeCodeRepository;
     private final GitlabAccountRepository gitlabAccountRepository;
     private final UserProjectRepository userProjectRepository;
     private final LoginHistoryRepository loginHistoryRepository;
+    private final PromptHistoryRepository promptHistoryRepository;
 
     private UserBadge userBadge;
     private BadgeCode badgeCode;
@@ -69,6 +72,18 @@ public class BadgeEventService {
 
         long loginCount = loginHistoryRepository.countByUserId(user.getId());
         if (loginCount >= LOGIN_TARGET_COUNT) {
+            userBadge = UserBadge.of(user, badgeCode);
+            userBadgeRepository.save(userBadge);
+        }
+    }
+
+    // 프롬프트 창조자 - 커스텀 프롬프트 수정 n회 이상
+    public void eventUpdateCustomPrompt(User user) {
+        badgeCode = badgeCodeRepository.getById(PROMPT_CREATER.getId());
+        if (userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) return;
+
+        long promptCount = promptHistoryRepository.countByUserId(user.getId());
+        if (promptCount >= PROMTPT_UPDATE_TARGET_COUNT) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
         }

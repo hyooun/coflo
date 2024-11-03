@@ -3,6 +3,8 @@ package com.reviewping.coflo.domain.customPrompt.controller;
 import com.reviewping.coflo.domain.customPrompt.controller.dto.request.CustomPromptRequest;
 import com.reviewping.coflo.domain.customPrompt.controller.dto.response.CustomPromptResponse;
 import com.reviewping.coflo.domain.customPrompt.service.CustomPromptService;
+import com.reviewping.coflo.domain.user.entity.User;
+import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +25,11 @@ public class CustomPromptController {
 
     @PutMapping("/{customPromptId}")
     public ApiResponse<Void> updateCustomPrompt(
+            @AuthUser User user,
             @PathVariable("customPromptId") Long customPromptId,
             @ModelAttribute CustomPromptRequest customPromptRequest) {
-        customPromptService.updateCustomPrompt(customPromptRequest.contents(), customPromptId);
+        customPromptService.updateCustomPrompt(
+                user, customPromptRequest.contents(), customPromptId);
         return ApiSuccessResponse.success();
     }
 }

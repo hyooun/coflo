@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum BadgeType {
     FIRST_ADVENTURER(1L),
     PROJECT_MASTER(3L),
-    REGULAR_CUSTOMER(7L);
+    REGULAR_CUSTOMER(7L),
+    PROMPT_CREATER(12L);
 
     private final Long id;
 

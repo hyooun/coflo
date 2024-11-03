@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum BadgeType {
     FIRST_ADVENTURER(1L),
-    PROJECT_MASTER(3L);
+    PROJECT_MASTER(3L),
+    REGULAR_CUSTOMER(7L);
 
     private final Long id;
 

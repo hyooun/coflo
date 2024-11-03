@@ -6,7 +6,6 @@ import com.reviewping.coflo.domain.customPrompt.entity.CustomPrompt;
 import com.reviewping.coflo.domain.customPrompt.entity.PromptHistory;
 import com.reviewping.coflo.domain.customPrompt.repository.CustomPromptRepository;
 import com.reviewping.coflo.domain.customPrompt.repository.PromptHistoryRepository;
-import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.user.entity.User;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +20,6 @@ public class CustomPromptService {
     private final CustomPromptRepository customPromptRepository;
     private final PromptHistoryRepository promptHistoryRepository;
     private final BadgeEventService badgeEventService;
-
-    // TODO: 프로젝트 처음 연동 시, 호출 필요
-    public void saveCustomPrompt(Project project) {
-        CustomPrompt customPrompt = CustomPrompt.builder().project(project).build();
-        customPromptRepository.save(customPrompt);
-    }
 
     @Transactional
     public void updateCustomPrompt(User user, String content, Long customPromptId) {

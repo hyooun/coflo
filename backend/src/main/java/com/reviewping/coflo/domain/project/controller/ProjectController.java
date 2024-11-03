@@ -5,7 +5,7 @@ import com.reviewping.coflo.domain.project.controller.response.ProjectTeamReward
 import com.reviewping.coflo.domain.project.domain.GraphType;
 import com.reviewping.coflo.domain.project.domain.ScoreType;
 import com.reviewping.coflo.domain.project.service.ProjectTeamStatisticsService;
-import com.reviewping.coflo.domain.project.service.ProjectUserStatisticsServiceV2;
+import com.reviewping.coflo.domain.project.service.ProjectUserStatisticsService;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
 
     private final ProjectTeamStatisticsService projectTeamStatisticsService;
-    private final ProjectUserStatisticsServiceV2 projectUserStatisticsService;
+    private final ProjectUserStatisticsService projectUserStatisticsService;
 
     @GetMapping("/{projectId}")
     public ApiResponse<ProjectTeamDetailResponse> getProjectInfoDetail(

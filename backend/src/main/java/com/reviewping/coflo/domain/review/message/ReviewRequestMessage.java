@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.review.message;
 
-public record ReviewRequest(
+public record ReviewRequestMessage(
         Long projectId,
         Long mrInfoId,
         String branch,

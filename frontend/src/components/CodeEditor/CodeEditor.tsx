@@ -14,6 +14,7 @@ interface CodeQueryEditorProps {
   onChange?: (value: string | undefined) => void;
   onLanguageChange?: (language: string) => void;
   isLanguageSelectable?: boolean;
+  maxLength?: number;
 }
 
 const CodeEditor = ({
@@ -25,6 +26,7 @@ const CodeEditor = ({
   onChange,
   onLanguageChange,
   isLanguageSelectable = true,
+  maxLength,
 }: CodeQueryEditorProps) => {
   const monacoInstance = useMonaco();
   const [value, setValue] = useState(defaultValue || CODE_SNIPPETS[defaultLanguage]);
@@ -37,7 +39,9 @@ const CodeEditor = ({
   }, [monacoInstance]);
 
   const handleChange = (newValue: string | undefined) => {
-    setValue(newValue || '');
+    if (!newValue) return;
+
+    setValue(newValue);
     onChange?.(newValue);
   };
 
@@ -52,7 +56,7 @@ const CodeEditor = ({
   };
 
   const handleSelectLanguage = (lang: string) => {
-    setValue(CODE_SNIPPETS[lang] || '');
+    setValue(CODE_SNIPPETS[lang]);
     onChange?.(CODE_SNIPPETS[lang] || '');
     setSelectedLanguage(lang);
     onLanguageChange?.(lang);
@@ -78,6 +82,13 @@ const CodeEditor = ({
             <span className="text-sm font-medium text-gray-600">{language || defaultLanguage}</span>
           )}
         </div>
+        {maxLength && (
+          <span
+            className={`text-sm ${value.length > maxLength ? 'text-state-warning' : 'text-gray-500'}`}
+          >
+            {value.length} / {maxLength}
+          </span>
+        )}
         <button
           onClick={handleCopyCode}
           className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-white transition-colors px-2 rounded-lg hover:bg-secondary"

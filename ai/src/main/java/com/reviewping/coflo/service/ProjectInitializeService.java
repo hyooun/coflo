@@ -5,7 +5,7 @@ import com.reviewping.coflo.git.GitUtil;
 import com.reviewping.coflo.openai.OpenaiClient;
 import com.reviewping.coflo.openai.dto.EmbeddingResponse;
 import com.reviewping.coflo.repository.VectorRepository;
-import com.reviewping.coflo.service.dto.InitRequestMessage;
+import com.reviewping.coflo.service.dto.request.InitRequestMessage;
 import com.reviewping.coflo.treesitter.TreeSitterUtil;
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +42,7 @@ public class ProjectInitializeService {
     @ServiceActivator(inputChannel = "initializeChannel")
     public void initializeKnowledgeBase(InitRequestMessage initRequest) {
         Long projectId = initRequest.projectId();
+        Long branchId = initRequest.branchId();
         String gitUrl = initRequest.gitUrl();
         String branch = initRequest.branch();
         String token = initRequest.token();
@@ -51,7 +52,7 @@ public class ProjectInitializeService {
         // 2. 전처리: 메소드 단위 청킹 + 메타데이터 추가
         List<ChunkedCode> chunkedCodes = preprocessData(localPath);
         // 3. 벡터DB에 저장: batch로 작업
-        vectorRepository.saveAllChunkedCodes(projectId, chunkedCodes);
+        vectorRepository.saveAllChunkedCodes(projectId, branchId, chunkedCodes);
     }
 
     private List<ChunkedCode> preprocessData(String localPath) {

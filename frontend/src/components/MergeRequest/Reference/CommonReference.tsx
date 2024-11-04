@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { CheckIcon, ArrowDownToLine, Undo2 } from 'lucide-react';
 
 import CodeReference from './CodeReference';
 import TextReference from './TextReference';
 import { CommonReferenceProps } from 'types/reference.ts';
 import { PencilIcon } from '@components/TextDiv/Icons/PencilIcon';
 import { TrashIcon } from '@components/TextDiv/Icons/TrashIcon';
-import { CheckIcon, ArrowDownToLine, Undo2 } from 'lucide-react';
+import AlertModal from '@components/Modal/AlertModal';
 
 const CommonReference = ({
   id,
@@ -15,27 +16,24 @@ const CommonReference = ({
   language,
   onEdit,
   onDelete,
-  // onLanguageChange,
+  maxLength = 2000,
 }: CommonReferenceProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
   const [showSaveMessage, setShowSaveMessage] = useState(false);
-  // const [currentLanguage, setCurrentLanguage] = useState(language);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
   const handleEdit = (newContent: string) => {
     setEditedContent(newContent);
   };
 
-  // const handleLanguageChange = (newLanguage: string) => {
-  //   setCurrentLanguage(newLanguage);
-  //   onLanguageChange(newLanguage);
-  // };
-
   const handleSave = () => {
+    if (editedContent.length > maxLength) {
+      setIsAlertModalOpen(true);
+      return;
+    }
+
     onEdit(id, editedContent);
-    // if (type === 'CODE' && onLanguageChange) {
-    //   onLanguageChange(currentLanguage);
-    // }
     setShowSaveMessage(true);
     setTimeout(() => {
       setShowSaveMessage(false);
@@ -48,6 +46,9 @@ const CommonReference = ({
     setIsEditing(false);
   };
 
+  const handleAlertModalConfirm = () => {
+    setIsAlertModalOpen(false);
+  };
   return (
     <div className="rounded-lg border-2 border-primary-500 w-full ">
       <div className="flex flex-wrap justify-between items-center p-2 bg-white rounded-t-lg border-b-2 border-primary-500">
@@ -100,6 +101,7 @@ const CommonReference = ({
               onEdit={handleEdit}
               onCancel={handleCancel}
               language={language}
+              maxLength={maxLength}
             />
           ) : (
             <TextReference
@@ -107,6 +109,7 @@ const CommonReference = ({
               content={editedContent}
               onEdit={handleEdit}
               onCancel={handleCancel}
+              maxLength={maxLength}
             />
           )
         ) : (
@@ -119,6 +122,14 @@ const CommonReference = ({
           </div>
         )}
       </div>
+
+      {isAlertModalOpen && (
+        <AlertModal
+          content={['글자 수가 제한을 초과했습니다.', `최대 길이는 ${maxLength}자입니다.`]}
+          onConfirm={handleAlertModalConfirm}
+          className="w-84 h-60"
+        />
+      )}
     </div>
   );
 };

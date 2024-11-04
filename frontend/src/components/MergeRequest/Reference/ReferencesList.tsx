@@ -79,6 +79,7 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
             type={reference.type}
             onEdit={handleEdit}
             onDelete={handleDeleteClick}
+            maxLength={3000}
           />
         ))}
         <div
@@ -105,7 +106,7 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
         />
       )}
 
-      <div className="flex justify-end my-4">
+      <div className="flex justify-center my-8">
         <CommonButton
           className="w-fit px-10 py-4 cursor-pointer"
           bgColor="bg-primary-500"

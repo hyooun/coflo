@@ -27,4 +27,8 @@ public class Language {
 
     @OneToMany(mappedBy = "language")
     private List<Retrieval> retrievals = new ArrayList<>();
+
+    public Language(LanguageType type) {
+        this.type = type;
+    }
 }

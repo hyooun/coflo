@@ -40,10 +40,17 @@ public class Project extends BaseTimeEntity {
     @OneToMany(mappedBy = "project")
     private List<WebhookChannel> webhookChannels = new ArrayList<>();
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Branch> branches = new ArrayList<>();
+
     @Builder
     public Project(String botToken, Long gitlabProjectId, String name) {
         this.botToken = botToken;
         this.gitlabProjectId = gitlabProjectId;
         this.name = name;
+    }
+
+    public void addBranch(Branch branch) {
+        branches.add(branch);
     }
 }

@@ -116,4 +116,12 @@ public class GitLabApiUrlBuilder {
                 + "/merge_requests/"
                 + gitlabMrIid;
     }
+
+    public static String createProjectWebhookUrl(String gitlabUrl, Long gitlabProjectId) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + SINGLE_PROJECT_ENDPOINT
+                + gitlabProjectId
+                + "/hooks";
+    }
 }

@@ -9,10 +9,14 @@ import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.domain.mergerequest.repository.MrInfoRepository;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
+import com.reviewping.coflo.domain.review.controller.dto.request.RegenerateReviewRequest.RetrievalContent;
 import com.reviewping.coflo.domain.review.controller.dto.response.RetrievalDetailResponse;
 import com.reviewping.coflo.domain.review.controller.dto.response.ReviewDetailResponse;
 import com.reviewping.coflo.domain.review.controller.dto.response.ReviewResponse;
+import com.reviewping.coflo.domain.review.entity.LanguageType;
 import com.reviewping.coflo.domain.review.entity.Review;
+import com.reviewping.coflo.domain.review.message.RetrievalMessage;
+import com.reviewping.coflo.domain.review.message.ReviewRegenerateRequestMessage;
 import com.reviewping.coflo.domain.review.message.ReviewRequestMessage;
 import com.reviewping.coflo.domain.review.message.ReviewRequestMessage.MrContent;
 import com.reviewping.coflo.domain.review.message.ReviewResponseMessage;
@@ -100,6 +104,52 @@ public class ReviewService {
                         gitlabUrl);
         redisGateway.sendReviewRequest(reviewRequest);
         // 6. TODO: 리뷰 평가 요청
+    }
+
+    @Transactional
+    public void regenerateReview(Long userId, Long mrInfoId, List<RetrievalContent> retrievals) {
+        MrInfo mrInfo = mrInfoRepository.getById(mrInfoId);
+        Project project = mrInfo.getProject();
+
+        GitlabAccount gitlabAccount =
+                gitlabAccountRepository.getByUserIdAndProjectId(userId, project.getId());
+
+        List<GitlabMrDiffsContent> mrDiffs =
+                gitLabClient.getMrDiffs(
+                        gitlabAccount.getDomain(),
+                        gitlabAccount.getUserToken(),
+                        project.getGitlabProjectId(),
+                        mrInfo.getGitlabMrIid());
+
+        GitlabMrResponse gitlabMrResponse =
+                gitLabClient.getSingleMergeRequest(
+                        gitlabAccount.getDomain(),
+                        gitlabAccount.getUserToken(),
+                        project.getGitlabProjectId(),
+                        mrInfo.getGitlabMrIid());
+
+        CustomPrompt customPrompt = customPromptRepository.getByProjectId(project.getId());
+
+        MrContent mrContent = new MrContent(gitlabMrResponse.description(), mrDiffs.toString());
+
+        ReviewRegenerateRequestMessage regenerateRequest =
+                new ReviewRegenerateRequestMessage(
+                        project.getId(),
+                        mrInfo.getId(),
+                        gitlabMrResponse.targetBranch(),
+                        mrContent,
+                        customPrompt.getContent(),
+                        gitlabAccount.getDomain(),
+                        retrievals.stream()
+                                .map(
+                                        retrieval ->
+                                                new RetrievalMessage(
+                                                        retrieval.content(),
+                                                        retrieval.fileName(),
+                                                        LanguageType.valueOf(retrieval.language())
+                                                                .getType()))
+                                .toList());
+        redisGateway.sendReviewRegenerateRequest(regenerateRequest);
     }
 
     @Transactional

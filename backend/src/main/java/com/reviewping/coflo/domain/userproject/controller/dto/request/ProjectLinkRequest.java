@@ -1,3 +1,5 @@
 package com.reviewping.coflo.domain.userproject.controller.dto.request;
 
-public record ProjectLinkRequest(String botToken) {}
+import java.util.List;
+
+public record ProjectLinkRequest(String botToken, List<String> branches) {}

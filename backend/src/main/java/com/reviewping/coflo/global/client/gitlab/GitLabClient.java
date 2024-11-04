@@ -1,6 +1,7 @@
 package com.reviewping.coflo.global.client.gitlab;
 
 import static com.reviewping.coflo.global.error.ErrorCode.EXTERNAL_API_BAD_REQUEST;
+import static com.reviewping.coflo.global.error.ErrorCode.EXTERNAL_API_NOT_FOUND;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,10 +16,7 @@ import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.util.RestTemplateUtils;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -77,20 +75,29 @@ public class GitLabClient {
     public List<GitlabMrResponse> getTop3MrList(
             String gitlabUrl, String token, Long gitlabProjectId, List<MrInfo> mrInfoList) {
         List<GitlabMrResponse> top3MrList = new ArrayList<>();
-        HttpHeaders headers = makeGitlabHeaders(token);
         for (MrInfo mrInfo : mrInfoList) {
-            String url =
-                    GitLabApiUrlBuilder.createGetMergeRequestsUrl(
-                            gitlabUrl, gitlabProjectId, mrInfo.getGitlabMrIid());
-            ResponseEntity<GitlabMrDetailContent> response =
-                    RestTemplateUtils.sendGetRequest(
-                            url, headers, new ParameterizedTypeReference<>() {});
-            GitlabMrDetailContent gitlabMrDetailContent = response.getBody();
-            if (gitlabMrDetailContent != null) {
-                top3MrList.add(GitlabMrResponse.of(gitlabMrDetailContent, false));
-            }
+            GitlabMrResponse singleMergeRequest =
+                    getSingleMergeRequest(
+                            gitlabUrl, token, gitlabProjectId, mrInfo.getGitlabMrIid());
+            top3MrList.add(singleMergeRequest);
         }
         return top3MrList;
+    }
+
+    public GitlabMrResponse getSingleMergeRequest(
+            String gitlabUrl, String token, Long gitlabProjectId, Long mergeRequestIid) {
+        HttpHeaders headers = makeGitlabHeaders(token);
+        String url =
+                GitLabApiUrlBuilder.createGetMergeRequestsUrl(
+                        gitlabUrl, gitlabProjectId, mergeRequestIid);
+        ResponseEntity<GitlabMrDetailContent> response =
+                RestTemplateUtils.sendGetRequest(
+                        url, headers, new ParameterizedTypeReference<>() {});
+        GitlabMrDetailContent gitlabMrDetailContent = response.getBody();
+        if (gitlabMrDetailContent == null) {
+            throw new BusinessException(EXTERNAL_API_NOT_FOUND);
+        }
+        return GitlabMrResponse.of(gitlabMrDetailContent, false);
     }
 
     public GitlabProjectDetailContent getSingleProject(
@@ -149,6 +156,57 @@ public class GitLabClient {
         return ProjectInfoContent.of(commitCount, branchCount, mergeRequestCount, languages);
     }
 
+    public void addProjectWebhook(
+            String gitlabUrl,
+            String token,
+            Long gitlabProjectId,
+            String webhookUrl,
+            Map<String, Boolean> eventSettings) {
+        HttpHeaders headers = makeGitlabHeaders(token);
+        String url = GitLabApiUrlBuilder.createProjectWebhookUrl(gitlabUrl, gitlabProjectId);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("url", webhookUrl);
+        requestBody.putAll(eventSettings);
+
+        String body;
+        try {
+            body = objectMapper.writeValueAsString(requestBody);
+        } catch (JsonProcessingException e) {
+            throw new BusinessException(ErrorCode.GITLAB_REQUEST_SERIALIZATION_ERROR);
+        }
+
+        RestTemplateUtils.sendPostRequest(
+                url, headers, body, new ParameterizedTypeReference<>() {});
+    }
+
+    public List<String> getAllBranchNames(String gitlabUrl, String token, Long gitlabProjectId) {
+        HttpHeaders headers = makeGitlabHeaders(token);
+        String branchUrl = GitLabApiUrlBuilder.createProjectBranchesUrl(gitlabUrl, gitlabProjectId);
+
+        int page = 1;
+        int totalPages = 0;
+        List<String> allBranches = new ArrayList<>();
+        do {
+            String url = branchUrl + "?page=" + page + "&per_page=100";
+            ResponseEntity<List<GitlabBranchContent>> response =
+                    RestTemplateUtils.sendGetRequest(
+                            url, headers, new ParameterizedTypeReference<>() {});
+
+            List<GitlabBranchContent> branches = response.getBody();
+            if (branches != null) {
+                branches.forEach(branch -> allBranches.add(branch.name()));
+            }
+
+            if (totalPages == 0) {
+                totalPages = getTotalPages(response.getHeaders());
+            }
+            page++;
+        } while (page <= totalPages);
+
+        return allBranches;
+    }
+
     private int getProjectCommitCount(String gitlabUrl, String token, Long gitlabProjectId) {
         String url = GitLabApiUrlBuilder.createProjectCommitsUrl(gitlabUrl, gitlabProjectId);
         HttpHeaders headers = makeGitlabHeaders(token);
@@ -176,7 +234,9 @@ public class GitLabClient {
     }
 
     private long getProjectBranchCount(String gitlabUrl, String token, Long gitlabProjectId) {
-        String url = GitLabApiUrlBuilder.createProjectBranchesUrl(gitlabUrl, gitlabProjectId);
+        String url =
+                GitLabApiUrlBuilder.createProjectBranchesUrl(gitlabUrl, gitlabProjectId)
+                        + "?per_page=1";
         return getTotalByHeader(token, url);
     }
 
@@ -212,5 +272,9 @@ public class GitLabClient {
 
     private String convertToGitlabDateFormat(LocalDateTime localDateTime) {
         return localDateTime.toString() + KST_OFFSET;
+    }
+
+    private static int getTotalPages(HttpHeaders responseHeaders) {
+        return Integer.parseInt(Objects.requireNonNull(responseHeaders.getFirst("X-Total-Pages")));
     }
 }

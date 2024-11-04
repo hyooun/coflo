@@ -1,5 +1,6 @@
 package com.reviewping.coflo.global.util;
 
+import com.reviewping.coflo.domain.project.domain.ProjectWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
@@ -18,9 +19,8 @@ public class ProjectDateUtil {
     }
 
     /**
-     *
      * @param projectCreatedDate 프로젝트 연동일
-     * @param weekNumber n주차
+     * @param weekNumber         n주차
      * @return 시작일, 종료일
      */
     public LocalDate[] calculateWeekStartAndEndDates(LocalDate projectCreatedDate, int weekNumber) {
@@ -32,18 +32,29 @@ public class ProjectDateUtil {
     }
 
     /**
-     *
      * @param projectCreatedDate 프로젝트 연동일
-     * @param currentDate 오늘 날짜
+     * @param currentDate        오늘 날짜
      * @return 시작일, 종료일
      */
     public LocalDate[] calculateWeekStartAndEndDates(
             LocalDate projectCreatedDate, LocalDate currentDate) {
         int weekNumber = this.calculateWeekNumber(projectCreatedDate, currentDate);
+        return calculateWeekStartAndEndDates(projectCreatedDate, weekNumber);
+    }
+
+    public ProjectWeek calculateWeekRange(
+            LocalDate projectCreatedDate, int period, LocalDate currentDate) {
+        int currentWeek = calculateWeekNumber(projectCreatedDate, currentDate);
+        int startWeek = Math.max(1, currentWeek - period);
+        int endWeek = currentWeek - 1;
+
         LocalDate projectStartMonday = projectCreatedDate.with(java.time.DayOfWeek.MONDAY);
-        LocalDate startOfWeek = projectStartMonday.plusWeeks(weekNumber - 1);
-        LocalDate endOfWeek =
-                startOfWeek.with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY));
-        return new LocalDate[] {startOfWeek, endOfWeek};
+        LocalDate startDate = projectStartMonday.plusWeeks(startWeek - 1);
+        LocalDate endDate =
+                projectStartMonday
+                        .plusWeeks(endWeek - 1)
+                        .with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY));
+
+        return new ProjectWeek(startWeek, endWeek, startDate, endDate);
     }
 }

@@ -3,6 +3,8 @@ package com.reviewping.coflo.domain.review.entity;
 import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +22,10 @@ public class Review extends BaseTimeEntity {
     @JoinColumn(name = "mr_info_id")
     private MrInfo mrInfo;
 
-    @Column(nullable = false)
+    @OneToMany(mappedBy = "review")
+    private List<Retrieval> retrievals = new ArrayList<>();
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Builder

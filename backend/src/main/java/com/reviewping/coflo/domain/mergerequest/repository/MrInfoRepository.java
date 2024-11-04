@@ -20,6 +20,10 @@ public interface MrInfoRepository extends JpaRepository<MrInfo, Long> {
                 .orElseThrow(() -> new BusinessException(ErrorCode.MR_INFO_NOT_EXIST));
     }
 
+    default MrInfo getById(Long id) {
+        return findById(id).orElseThrow(() -> new BusinessException(ErrorCode.MR_INFO_NOT_EXIST));
+    }
+
     @Query(
             value =
                     "SELECT * FROM mr_info m WHERE m.project_id = :projectId AND"

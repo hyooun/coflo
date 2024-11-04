@@ -88,7 +88,7 @@ public class GitLabApiUrlBuilder {
                 + gitlabUrl
                 + SINGLE_PROJECT_ENDPOINT
                 + gitlabProjectId
-                + "/repository/branches?per_page=1";
+                + "/repository/branches";
     }
 
     public static String createProjectMRUrl(String gitlabUrl, Long gitlabProjectId) {
@@ -115,5 +115,13 @@ public class GitLabApiUrlBuilder {
                 + gitlabProjectId
                 + "/merge_requests/"
                 + gitlabMrIid;
+    }
+
+    public static String createProjectWebhookUrl(String gitlabUrl, Long gitlabProjectId) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + SINGLE_PROJECT_ENDPOINT
+                + gitlabProjectId
+                + "/hooks";
     }
 }

@@ -26,11 +26,16 @@ management:
       export:
         enabled: true
 
-crypto-key: ${CRYPTO_KEY}
-
 logging:
   level:
     com:
       reviewping:
         coflo: debug
     web: debug
+
+crypto-key: ${CRYPTO_KEY}
+
+redirect-regist-url: ${REDIRECT_REGIST_URL}
+redirect-main-url: ${REDIRECT_MAIN_URL}
+
+domain-webhook-url: ${COFLO_WEBHOOK_URL}

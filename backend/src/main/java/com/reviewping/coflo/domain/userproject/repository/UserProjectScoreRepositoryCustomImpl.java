@@ -28,7 +28,7 @@ public class UserProjectScoreRepositoryCustomImpl implements UserProjectScoreRep
                                 .project
                                 .id
                                 .eq(projectId)
-                                .and(userProjectScore.week.eq((long) week))
+                                .and(userProjectScore.week.eq(week))
                                 .and(gitlabAccount.user.id.eq(userId)))
                 .fetch();
     }
@@ -47,7 +47,7 @@ public class UserProjectScoreRepositoryCustomImpl implements UserProjectScoreRep
                                         .project
                                         .id
                                         .eq(projectId)
-                                        .and(userProjectScore.week.eq((long) week))
+                                        .and(userProjectScore.week.eq(week))
                                         .and(gitlabAccount.user.id.ne(userId)))
                         .groupBy(userProjectScore.userProject.id)
                         .orderBy(userProjectScore.totalScore.sum().desc())
@@ -67,7 +67,7 @@ public class UserProjectScoreRepositoryCustomImpl implements UserProjectScoreRep
                                 .userProject
                                 .id
                                 .in(topUserProjectIds)
-                                .and(userProjectScore.week.eq((long) week)))
+                                .and(userProjectScore.week.eq(week)))
                 .fetch();
     }
 }

@@ -1,16 +1,16 @@
 package com.reviewping.coflo.domain.userproject.entity;
 
-import com.reviewping.coflo.domain.codequality.entity.CodeQualityCode;
+import com.reviewping.coflo.domain.project.entity.CodeQualityCode;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserProjectScore extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class UserProjectScore extends BaseTimeEntity {
     @JoinColumn(name = "code_quality_code_id")
     private CodeQualityCode codeQualityCode;
 
-    private Long week;
+    private int week;
     private Long totalScore;
 
     @Builder

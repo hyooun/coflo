@@ -8,12 +8,16 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
     defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
 
   h2:
     console:
@@ -77,7 +81,3 @@ openai:
     key: openai_test_key
     organization: openai_test_organization
     project: openai_test_project
-
-sql:
-  init:
-    mode: always

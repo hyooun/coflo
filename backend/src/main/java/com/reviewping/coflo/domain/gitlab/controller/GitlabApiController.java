@@ -7,11 +7,9 @@ import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/gitlab")
@@ -30,5 +28,12 @@ public class GitlabApiController {
                 gitlabApiService.getGitlabProjects(
                         user.getId(), new GitlabSearchRequest(keyword, page, size));
         return ApiSuccessResponse.success(gitlabProjects);
+    }
+
+    @GetMapping("/{gitlabProjectId}/branches")
+    public ApiResponse<List<String>> getGitlabProjectBranched(
+            @AuthUser User user, @PathVariable("gitlabProjectId") Long gitlabProjectId) {
+        return ApiSuccessResponse.success(
+                gitlabApiService.getGitlabProjectBranches(user.getId(), gitlabProjectId));
     }
 }

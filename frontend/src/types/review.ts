@@ -1,4 +1,5 @@
 import { GitlabMergeRequest, Reviewer } from 'types/mergeRequest.ts';
+import { ReferenceType } from 'types/reference.ts';
 
 export interface MergeRequestReview extends GitlabMergeRequest {
   reviews: Review[];
@@ -31,16 +32,6 @@ interface CommentReply {
   createdAt: string;
   updatedAt: string;
   system?: boolean;
-}
-
-export type ReferenceType = 'code' | 'text';
-
-export interface Reference {
-  id: number;
-  fileName: string;
-  type: ReferenceType;
-  content: string;
-  relevance?: number;
 }
 
 export interface ReviewCommentProps {

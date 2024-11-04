@@ -43,7 +43,7 @@ public class ProjectService {
 
         Project savedProject = projectRepository.save(project);
         saveBasicCustomPrompt(savedProject);
-        addGitlabProjectWebhooks(gitlabAccount, savedProject);
+        addGitlabProjectWebhooks(gitlabAccount.getDomain(), savedProject);
         return savedProject;
     }
 
@@ -87,13 +87,13 @@ public class ProjectService {
         customPromptRepository.save(customPrompt);
     }
 
-    private void addGitlabProjectWebhooks(GitlabAccount gitlabAccount, Project project) {
+    private void addGitlabProjectWebhooks(String projectDomain, Project project) {
         String webhookUrl = domainWebhookUrl + "/" + project.getId();
         Map<String, Boolean> eventSettings = new HashMap<>();
         eventSettings.put("merge_requests_events", true);
         eventSettings.put("push_events", true);
         gitLabClient.addProjectWebhook(
-                gitlabAccount.getDomain(),
+                projectDomain,
                 project.getBotToken(),
                 project.getGitlabProjectId(),
                 webhookUrl,

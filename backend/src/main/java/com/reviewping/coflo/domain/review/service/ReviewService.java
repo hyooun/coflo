@@ -2,8 +2,8 @@ package com.reviewping.coflo.domain.review.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reviewping.coflo.domain.customPrompt.entity.CustomPrompt;
-import com.reviewping.coflo.domain.customPrompt.repository.CustomPromptRepository;
+import com.reviewping.coflo.domain.customprompt.entity.CustomPrompt;
+import com.reviewping.coflo.domain.customprompt.repository.CustomPromptRepository;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
 import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.domain.mergerequest.repository.MrInfoRepository;

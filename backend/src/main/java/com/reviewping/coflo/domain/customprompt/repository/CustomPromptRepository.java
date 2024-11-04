@@ -1,8 +1,8 @@
-package com.reviewping.coflo.domain.customPrompt.repository;
+package com.reviewping.coflo.domain.customprompt.repository;
 
 import static com.reviewping.coflo.global.error.ErrorCode.CUSTOM_PROMPT_NOT_EXIST;
 
-import com.reviewping.coflo.domain.customPrompt.entity.CustomPrompt;
+import com.reviewping.coflo.domain.customprompt.entity.CustomPrompt;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

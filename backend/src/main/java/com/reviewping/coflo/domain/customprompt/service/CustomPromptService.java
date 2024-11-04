@@ -1,11 +1,11 @@
-package com.reviewping.coflo.domain.customPrompt.service;
+package com.reviewping.coflo.domain.customprompt.service;
 
 import com.reviewping.coflo.domain.badge.service.BadgeEventService;
-import com.reviewping.coflo.domain.customPrompt.controller.dto.response.CustomPromptResponse;
-import com.reviewping.coflo.domain.customPrompt.entity.CustomPrompt;
-import com.reviewping.coflo.domain.customPrompt.entity.PromptHistory;
-import com.reviewping.coflo.domain.customPrompt.repository.CustomPromptRepository;
-import com.reviewping.coflo.domain.customPrompt.repository.PromptHistoryRepository;
+import com.reviewping.coflo.domain.customprompt.controller.dto.response.CustomPromptResponse;
+import com.reviewping.coflo.domain.customprompt.entity.CustomPrompt;
+import com.reviewping.coflo.domain.customprompt.entity.PromptHistory;
+import com.reviewping.coflo.domain.customprompt.repository.CustomPromptRepository;
+import com.reviewping.coflo.domain.customprompt.repository.PromptHistoryRepository;
 import com.reviewping.coflo.domain.user.entity.User;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;

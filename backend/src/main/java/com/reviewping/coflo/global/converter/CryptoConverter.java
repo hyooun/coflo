@@ -1,4 +1,4 @@
-package com.reviewping.coflo.global.Converter;
+package com.reviewping.coflo.global.converter;
 
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;

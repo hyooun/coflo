@@ -1,18 +1,9 @@
 package com.reviewping.coflo.domain.user.entity;
 
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
-import com.reviewping.coflo.global.Converter.CryptoConverter;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import com.reviewping.coflo.global.converter.CryptoConverter;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;

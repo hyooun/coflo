@@ -11,7 +11,10 @@ import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.error.exception.BusinessException;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProjectService {
+
+    @Value("${domain-webhook-url}")
+    private String domainWebhookUrl;
 
     private final GitLabClient gitLabClient;
     private final ProjectRepository projectRepository;
@@ -43,6 +49,7 @@ public class ProjectService {
 
         saveProjectBranches(projectLinkRequest, project);
         saveBasicCustomPrompt(project);
+        addGitlabProjectWebhooks(gitlabAccount, project.getGitlabProjectId(), project.getId());
         return projectRepository.save(project);
     }
 
@@ -61,8 +68,7 @@ public class ProjectService {
         customPromptRepository.save(customPrompt);
     }
 
-    private static void saveProjectBranches(
-            ProjectLinkRequest projectLinkRequest, Project project) {
+    private void saveProjectBranches(ProjectLinkRequest projectLinkRequest, Project project) {
         projectLinkRequest
                 .branches()
                 .forEach(
@@ -71,5 +77,19 @@ public class ProjectService {
                                     Branch.builder().name(branchName).project(project).build();
                             project.addBranch(branch);
                         });
+    }
+
+    private void addGitlabProjectWebhooks(
+            GitlabAccount gitlabAccount, Long gitlabProjectId, Long projectId) {
+        String webhookUrl = domainWebhookUrl + "/" + projectId;
+        Map<String, Boolean> eventSettings = new HashMap<>();
+        eventSettings.put("merge_requests_events", true);
+        eventSettings.put("push_events", true);
+        gitLabClient.addProjectWebhook(
+                gitlabAccount.getDomain(),
+                gitlabAccount.getUserToken(),
+                gitlabProjectId,
+                webhookUrl,
+                eventSettings);
     }
 }

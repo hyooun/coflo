@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import CodeEditor from '@components/CodeEditor/CodeEditor';
 import CommonInput from '@components/Input/CommonInput';
 import AlertModal from '@components/Modal/AlertModal.tsx';
+import { CODE_SNIPPETS } from '@constants/codeEditor';
 
 interface AddReferenceModalProps {
   isOpen: boolean;
@@ -12,7 +13,7 @@ interface AddReferenceModalProps {
 
 const AddReferenceModal = ({ isOpen, onClose, onSubmit }: AddReferenceModalProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(CODE_SNIPPETS[selectedLanguage]);
   const [fileName, setFileName] = useState('');
   const [isWarning, setIsWarning] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);

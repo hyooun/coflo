@@ -100,7 +100,7 @@ public enum ErrorCode {
     /**
      * language (O000)
      */
-    LANGUAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "N001", "지원하지 않는 언어입니다."),
+    LANGUAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "O001", "지원하지 않는 언어입니다."),
 
     /**
      * 외부 API(Y000)

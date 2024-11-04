@@ -34,12 +34,12 @@ public class ProjectUserStatisticsService {
     private final UserProjectScoreRepository userProjectScoreRepository;
     private final ProjectDateUtil projectDateUtil;
 
-    public UserProjectTotalScoreResponse calculateTotalScore(
+    public UserProjectTotalScoreResponse getTotalScore(
             User user, Long projectId, Integer period, CalculationType calculationType) {
         return calculateScore(user, projectId, period, new TotalScoreCalculator(calculationType));
     }
 
-    public UserProjectIndividualScoreResponse calculateIndividualScore(
+    public UserProjectIndividualScoreResponse getIndividualScore(
             User user, Long projectId, Integer period, CalculationType calculationType) {
         return calculateScore(
                 user, projectId, period, new IndividualScoreCalculator(calculationType));

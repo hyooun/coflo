@@ -6,8 +6,8 @@ import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.Arrays;
 
 public enum CalculationType {
-    CUMULATIVE("cumulative"),
-    ACQUISITION("acquisition");
+    ACQUISITION("acquisition"),
+    CUMULATIVE("cumulative");
 
     private final String type;
 

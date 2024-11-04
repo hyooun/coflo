@@ -85,7 +85,7 @@ public enum ErrorCode {
     BADGE_NOT_EXIST(HttpStatus.NOT_FOUND, "K002", "존재하지 않는 뱃지입니다."),
 
     /**
-     * 외부 API(Y000)
+     * EXTERNAL API(Y000)
      */
     EXTERNAL_API_NOT_FOUND(HttpStatus.NOT_FOUND, "Y001", "외부 API를 찾을 수 없습니다."),
     EXTERNAL_API_METHOD_NOT_ALLOWED(
@@ -98,7 +98,7 @@ public enum ErrorCode {
     EXTERNAL_API_UNAUTHORIZED(HttpStatus.BAD_REQUEST, "Y006", "외부 API 토큰이 유효하지 않습니다."),
 
     /**
-     * Etc(Z000)
+     * ETC(Z000)
      */
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "Z009", "잘못된 파라미터가 포함되었습니다.");
 

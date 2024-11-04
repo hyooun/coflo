@@ -2,6 +2,8 @@ package com.reviewping.coflo.domain.project.service;
 
 import static com.reviewping.coflo.global.error.ErrorCode.LINK_BOT_TOKEN_NOT_EXIST;
 
+import com.reviewping.coflo.domain.customPrompt.entity.CustomPrompt;
+import com.reviewping.coflo.domain.customPrompt.repository.CustomPromptRepository;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
@@ -19,6 +21,7 @@ public class ProjectService {
 
     private final GitLabClient gitLabClient;
     private final ProjectRepository projectRepository;
+    private final CustomPromptRepository customPromptRepository;
 
     @Transactional
     public Project addProject(
@@ -37,6 +40,8 @@ public class ProjectService {
                         .name(gitlabProjectName)
                         .build();
 
+        CustomPrompt customPrompt = CustomPrompt.builder().project(project).build();
+        customPromptRepository.save(customPrompt);
         return projectRepository.save(project);
     }
 

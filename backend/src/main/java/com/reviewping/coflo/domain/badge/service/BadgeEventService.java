@@ -12,8 +12,8 @@ import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.user.repository.LoginHistoryRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
-import com.reviewping.coflo.global.util.RandomUtil;
 import java.util.List;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +27,8 @@ public class BadgeEventService {
     private static final Long PROJECT_LINK_TARGET_COUNT = 1L;
     private static final Long LOGIN_TARGET_COUNT = 1L;
     private static final Long PROMTPT_UPDATE_TARGET_COUNT = 2L;
+    private static final int PERCENT = 1;
+    private static final Random random = new Random();
 
     private final UserBadgeRepository userBadgeRepository;
     private final BadgeCodeRepository badgeCodeRepository;
@@ -34,8 +36,6 @@ public class BadgeEventService {
     private final UserProjectRepository userProjectRepository;
     private final LoginHistoryRepository loginHistoryRepository;
     private final PromptHistoryRepository promptHistoryRepository;
-
-    private final RandomUtil randomUtil;
 
     private UserBadge userBadge;
     private BadgeCode badgeCode;
@@ -90,8 +90,9 @@ public class BadgeEventService {
 
     // 행운의 발견 - 접속 시 1% 확률로 랜덤 획득
     @Transactional
-    public void eventRandomLucky(User user) {
-        if (!randomUtil.random()) return;
+    public void eventRandom(User user) {
+        int value = random.nextInt(100);
+        if (value >= PERCENT) return;
 
         badgeCode = badgeCodeRepository.getById(LUCKY_FIND.getId());
         if (!userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {

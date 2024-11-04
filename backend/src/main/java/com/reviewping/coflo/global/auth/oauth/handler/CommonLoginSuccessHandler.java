@@ -64,7 +64,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         redisUtil.set(userId.toString(), refreshToken, JwtConstants.REFRESH_EXP_TIME);
         loginHistoryService.recordLogin(user);
-        badgeEventService.eventRandomLucky(user);
+        badgeEventService.eventRandom(user);
 
         if (principal.getName().equals("empty")) {
             response.sendRedirect(registUrl);

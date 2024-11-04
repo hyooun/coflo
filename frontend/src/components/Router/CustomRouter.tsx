@@ -10,6 +10,7 @@ import RepositoryLayout from '@components/Layout/RepositoryLayout';
 import LoginPage from '@pages/Login/LoginPage';
 import SignupPage from '@pages/Signup/SignupPage.tsx';
 import MergeRequestReviewPage from '@pages/MergeRequestReview/MergeRequestReviewPage.tsx';
+import ReferencesPage from '@pages/MergeRequestReview/ReferencesPage';
 
 const customRouter = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const customRouter = createBrowserRouter([
       {
         path: 'merge-request/reviews/:id',
         element: <MergeRequestReviewPage />,
+      },
+      {
+        path: 'merge-request/reviews/:id/references',
+        element: <ReferencesPage />,
       },
       {
         path: 'custom-prompt',

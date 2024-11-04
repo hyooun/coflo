@@ -1,5 +1,6 @@
 import ReactMarkdown from 'react-markdown';
 import { ReviewCommentProps } from 'types/review.ts';
+import useTimeAgo from '@hooks/time.ts';
 
 export default function ReviewComment({
   name,
@@ -10,6 +11,8 @@ export default function ReviewComment({
   reviewer,
   backgroundColor = 'bg-white',
 }: ReviewCommentProps) {
+  const createTimeAgo = useTimeAgo(createdAt || '');
+
   return (
     <div className="flex flex-col">
       <div
@@ -23,25 +26,25 @@ export default function ReviewComment({
         )}
 
         {title && (
-          <span className={`${type === 'code' ? 'font-SFMono text-sm' : ''} font-bold`}>
+          <span className={`${type === 'CODE' ? 'font-SFMono text-sm' : ''} font-bold`}>
             {title}
           </span>
         )}
       </div>
       {/* 코멘트 내용 */}
-      <div className={` p-4 ${type === 'code' ? 'bg-secondary/30 font-SFMono text-sm' : ''}`}>
+      <div className={` p-4 ${type === 'CODE' ? 'bg-secondary/30 font-SFMono text-sm' : ''}`}>
         {reviewer && (
           <div className="flex items-center gap-2 mb-2">
             <img src={reviewer.avatarUrl} alt={reviewer.name} className="w-6 h-6 rounded-full" />
             <span className="font-bold">{reviewer.name}</span>
             <span className="text-gray-600">
-              @{reviewer.username} {createdAt}
+              @{reviewer.username} {createTimeAgo}
             </span>
           </div>
         )}
 
         {type ? (
-          <div className={`${type === 'code' ? 'overflow-auto' : 'overflow-y-auto'} max-h-[220px]`}>
+          <div className={`${type === 'CODE' ? 'overflow-auto' : 'overflow-y-auto'} max-h-[220px]`}>
             <ReactMarkdown className={`${type ? '' : 'prose'} max-w-none`}>{content}</ReactMarkdown>
           </div>
         ) : (

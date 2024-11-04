@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import arrowIcon from '@assets/arrow-icon.svg';
+import arrowIcon from '@assets/icons/arrow-icon.svg';
 
 export function CustomSearchBar() {
   const [isOpen, setIsOpen] = useState(false);

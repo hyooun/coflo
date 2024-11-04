@@ -19,7 +19,7 @@ function CommonInput({
           type={type}
           placeholder={placeholder}
           className={twMerge(
-            'w-full px-4 py-3 border-2 rounded-xl text-primary-500 placeholder-primary-500/50 placeholder:text-lg',
+            'w-full px-4 py-3 rounded-xl text-primary-500 placeholder-primary-500/50 placeholder:text-lg',
             'border-primary-500 bg-transparent',
             'focus:outline-none',
             icon && 'pr-12', // 아이콘이 있을 경우 오른쪽 패딩 추가

@@ -158,28 +158,31 @@ export const handlers = [
     const mockReferences = [
       {
         id: 1,
-        fileName: 'src/components/Album/Detail.tsx',
-        type: 'code',
+        fileName: 'src/components/Album/Detail.java',
+        type: 'CODE',
+        language: 'java',
         content: 'Some code content here...',
       },
       {
         id: 2,
         fileName: 'docs/specifications.md',
-        type: 'text',
+        type: 'TEXT',
+        language: 'plaintext',
         content: 'Some text content here...',
       },
       {
         id: 3,
         fileName: 'docs/example.md',
-        type: 'text',
+        type: 'TEXT',
+        language: 'plaintext',
         content:
           'Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...Some text content here...',
       },
       {
         id: 4,
         fileName: 'src/components/Album/Detail.tsx',
-        type: 'code',
-        title: 'src/components/Album/Detail.tsx',
+        type: 'CODE',
+        language: 'typescript',
         content: `export default function AlbumDetail() {
       const [albumData, setAlbumData] = useState<AlbumType | null>(null);
       const [isLoading, setIsLoading] = useState(true);

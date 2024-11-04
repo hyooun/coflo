@@ -10,6 +10,7 @@ import com.reviewping.coflo.openai.OpenaiClient;
 import com.reviewping.coflo.openai.dto.ChatCompletionResponse;
 import com.reviewping.coflo.openai.dto.EmbeddingResponse;
 import com.reviewping.coflo.repository.VectorRepository;
+import com.reviewping.coflo.service.dto.request.ReviewRegenerateRequestMessage;
 import com.reviewping.coflo.service.dto.request.ReviewRequestMessage;
 import com.reviewping.coflo.service.dto.response.RetrievalMessage;
 import com.reviewping.coflo.service.dto.response.ReviewResponseMessage;
@@ -54,7 +55,30 @@ public class ReviewCreateService {
                         reviewRequest.gitlabUrl(),
                         reviewRequest.mrInfoId(),
                         chatMessage,
-                        List.of());
+                        retrievals);
+        redisGateway.sendReview(reviewResponse);
+    }
+
+    @ServiceActivator(inputChannel = "reviewRegenerateRequestChannel")
+    public void regenerateReview(String reviewRegenerateRequestMessage) {
+        ReviewRegenerateRequestMessage reviewRequest =
+                jsonUtil.fromJson(reviewRegenerateRequestMessage, new TypeReference<>() {});
+        // 1. 프롬프트 생성
+        String prompt =
+                buildPrompt(
+                        reviewRequest.mrContent(),
+                        reviewRequest.customPrompt(),
+                        reviewRequest.retrievals());
+        // 2. 리뷰 생성
+        ChatCompletionResponse chatCompletionResponse = openaiClient.chat(prompt);
+        String chatMessage = chatCompletionResponse.choices().getFirst().message().content();
+        // 3. 리뷰 생성 완료
+        ReviewResponseMessage reviewResponse =
+                new ReviewResponseMessage(
+                        reviewRequest.gitlabUrl(),
+                        reviewRequest.mrInfoId(),
+                        chatMessage,
+                        reviewRequest.retrievals());
         redisGateway.sendReview(reviewResponse);
     }
 

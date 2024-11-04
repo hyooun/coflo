@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -81,6 +82,9 @@ public class RedisIntegrationConfig {
         SpelExpressionParser parser = new SpelExpressionParser();
         Expression topicExpression = parser.parseExpression("headers['topic']");
         handler.setTopicExpression(topicExpression);
+        Jackson2JsonRedisSerializer<Object> serializer =
+                new Jackson2JsonRedisSerializer<>(Object.class);
+        handler.setSerializer(serializer);
         return handler;
     }
 

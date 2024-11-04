@@ -1,5 +1,6 @@
 package com.reviewping.coflo.gateway;
 
+import com.reviewping.coflo.service.dto.ReviewResponseMessage;
 import org.springframework.integration.annotation.Gateway;
 import org.springframework.integration.annotation.GatewayHeader;
 import org.springframework.integration.annotation.MessagingGateway;
@@ -8,7 +9,7 @@ import org.springframework.integration.annotation.MessagingGateway;
 public interface RedisGateway {
 
     @Gateway(headers = @GatewayHeader(name = "topic", value = "review-response"))
-    void sendReview(String message);
+    void sendReview(ReviewResponseMessage reviewResponse);
 
     @Gateway(headers = @GatewayHeader(name = "topic", value = "mr-eval-response"))
     void sendEval(String message);

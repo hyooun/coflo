@@ -47,7 +47,7 @@ public class GitUtil {
             git.close();
 
         } catch (GitAPIException e) {
-            throw new GitUtilException("Git clone failed: " + e.getMessage());
+            throw new GitUtilException("Git clone이 실패했습니다.", e);
         }
     }
 
@@ -61,7 +61,7 @@ public class GitUtil {
                             .setRemoteBranchName(branch);
             pullCommand.call();
         } catch (Exception e) {
-            throw new GitUtilException("Git pull failed: " + e.getMessage());
+            throw new GitUtilException("Git pull이 실패했습니다.", e);
         }
     }
 

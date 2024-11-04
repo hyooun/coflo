@@ -1,4 +1,4 @@
-package com.reviewping.coflo.openai;
+package com.reviewping.coflo.openai.dto;
 
 import java.util.List;
 

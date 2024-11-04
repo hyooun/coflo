@@ -2,9 +2,10 @@ package com.reviewping.coflo.service;
 
 import com.reviewping.coflo.entity.ChunkedCode;
 import com.reviewping.coflo.git.GitUtil;
-import com.reviewping.coflo.openai.EmbeddingResponse;
 import com.reviewping.coflo.openai.OpenaiClient;
+import com.reviewping.coflo.openai.dto.EmbeddingResponse;
 import com.reviewping.coflo.repository.VectorRepository;
+import com.reviewping.coflo.service.dto.InitRequestMessage;
 import com.reviewping.coflo.treesitter.TreeSitterUtil;
 import java.io.File;
 import java.io.IOException;
@@ -39,11 +40,11 @@ public class ProjectInitializeService {
     }
 
     @ServiceActivator(inputChannel = "initializeChannel")
-    public void initializeKnowledgeBase(InitMessage initMessage) {
-        Long projectId = initMessage.projectId();
-        String gitUrl = initMessage.gitUrl();
-        String branch = initMessage.branch();
-        String token = initMessage.token();
+    public void initializeKnowledgeBase(InitRequestMessage initRequest) {
+        Long projectId = initRequest.projectId();
+        String gitUrl = initRequest.gitUrl();
+        String branch = initRequest.branch();
+        String token = initRequest.token();
         // 1. git clone
         String localPath = gitCloneDirectory + projectId + "/" + branch;
         gitUtil.shallowCloneOrPull(gitUrl, branch, token, localPath);

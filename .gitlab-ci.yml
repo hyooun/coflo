@@ -22,11 +22,11 @@ build_FE:
   image: node
   before_script:
     - echo "[INFO] YML Settings"
-    - cd frontend/coflo
+    - cd frontend
     - printenv | grep 'VITE_' > .env
   script:
-    - yarn install
-    - yarn build
+    - npm install
+    - npm run build
     - sudo cp -R dist ~/coflo/coflo-fe
     - sh ~/coflo/coflo-fe/react.sh
   rules:

@@ -3,10 +3,10 @@ package com.reviewping.coflo.domain.customprompt.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PromptHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

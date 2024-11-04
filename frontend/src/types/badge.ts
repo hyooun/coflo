@@ -16,3 +16,9 @@ export interface BadgeProps {
     showDescription?: boolean;
   };
 }
+
+export interface RepresentativeBadgeProps {
+  selectedBadge: string | null;
+  onSave: () => void;
+  onDefault: () => void;
+}

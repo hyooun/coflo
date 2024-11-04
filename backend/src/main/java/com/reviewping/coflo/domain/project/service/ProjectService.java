@@ -14,10 +14,12 @@ import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -41,7 +43,7 @@ public class ProjectService {
 
         Project savedProject = projectRepository.save(project);
         saveBasicCustomPrompt(savedProject);
-        addGitlabProjectWebhooks(gitlabAccount, project.getGitlabProjectId(), savedProject.getId());
+        addGitlabProjectWebhooks(gitlabAccount, savedProject);
         return savedProject;
     }
 
@@ -85,16 +87,15 @@ public class ProjectService {
         customPromptRepository.save(customPrompt);
     }
 
-    private void addGitlabProjectWebhooks(
-            GitlabAccount gitlabAccount, Long gitlabProjectId, Long projectId) {
-        String webhookUrl = domainWebhookUrl + "/" + projectId;
+    private void addGitlabProjectWebhooks(GitlabAccount gitlabAccount, Project project) {
+        String webhookUrl = domainWebhookUrl + "/" + project.getId();
         Map<String, Boolean> eventSettings = new HashMap<>();
         eventSettings.put("merge_requests_events", true);
         eventSettings.put("push_events", true);
         gitLabClient.addProjectWebhook(
                 gitlabAccount.getDomain(),
-                gitlabAccount.getUserToken(),
-                gitlabProjectId,
+                project.getBotToken(),
+                project.getGitlabProjectId(),
                 webhookUrl,
                 eventSettings);
     }

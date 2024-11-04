@@ -39,7 +39,7 @@ const SignupForm = () => {
       <div className="absolute inset-0 backdrop-blur-md rounded-3xl"></div>
 
       {/* SignupForm 콘텐츠 */}
-      <div className="bg-white/50 rounded-3xl p-10 py-20 relative z-10 font-pretendard">
+      <div className="bg-white/50 rounded-3xl p-10 py-20 relative z-10 font-pretendard border-2 border-primary-500">
         <div className="text-5xl font-bold mb-10 mt-20">회원 가입</div>
         <form>
           <div className="space-y-14">

@@ -66,7 +66,7 @@ public class MergeRequestService {
     }
 
     public List<String> getUsernameBestMergeRequests(Project project) {
-        Long userId = project.getUserProjects().get(0).getGitlabAccount().getUser().getId();
+        Long userId = project.getUserProjects().getFirst().getGitlabAccount().getUser().getId();
         List<GitlabMrResponse> top3MrList = getBestMergeRequests(userId, project.getId());
 
         List<String> findUsernames =

@@ -88,7 +88,7 @@ public class ProjectService {
     }
 
     private void addGitlabProjectWebhooks(String projectDomain, Project project) {
-        String webhookUrl = domainWebhookUrl + "/" + project.getId();
+        String eventWebhookUrl = domainWebhookUrl + "/" + project.getId();
         Map<String, Boolean> eventSettings = new HashMap<>();
         eventSettings.put("merge_requests_events", true);
         eventSettings.put("push_events", true);
@@ -96,7 +96,7 @@ public class ProjectService {
                 projectDomain,
                 project.getBotToken(),
                 project.getGitlabProjectId(),
-                webhookUrl,
+                eventWebhookUrl,
                 eventSettings);
     }
 }

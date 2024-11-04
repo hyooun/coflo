@@ -6,11 +6,14 @@ import com.reviewping.coflo.domain.customprompt.entity.CustomPrompt;
 import com.reviewping.coflo.domain.customprompt.repository.CustomPromptRepository;
 import com.reviewping.coflo.domain.project.entity.Branch;
 import com.reviewping.coflo.domain.project.entity.Project;
+import com.reviewping.coflo.domain.project.message.InitRequestMessage;
+import com.reviewping.coflo.domain.project.repository.BranchRepository;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.error.exception.BusinessException;
+import com.reviewping.coflo.global.integration.RedisGateway;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ProjectService {
 
+    private final RedisGateway redisGateway;
+    private final BranchRepository branchRepository;
+
     @Value("${domain-webhook-url}")
     private String domainWebhookUrl;
 
@@ -40,14 +46,32 @@ public class ProjectService {
             ProjectLinkRequest projectLinkRequest) {
 
         Project project = createProject(gitlabAccount, gitlabProjectId, projectLinkRequest);
+        List<Branch> branches = List.of();
         if (projectLinkRequest.branches() != null) {
-            saveProjectBranches(projectLinkRequest.branches(), project);
+            branches = saveProjectBranches(projectLinkRequest.branches(), project);
         }
-
         Project savedProject = projectRepository.save(project);
         saveBasicCustomPrompt(savedProject);
         addGitlabProjectWebhooks(gitlabAccount.getDomain(), savedProject);
+        initProject(
+                savedProject, branches, projectLinkRequest.botToken(), gitlabAccount.getDomain());
         return savedProject;
+    }
+
+    private void initProject(
+            Project project, List<Branch> branches, String token, String gitlabDomain) {
+        String gitlabUrl = "https://" + gitlabDomain + "/" + project.getName();
+        branches.forEach(
+                branch -> {
+                    InitRequestMessage initRequest =
+                            new InitRequestMessage(
+                                    project.getId(),
+                                    branch.getId(),
+                                    gitlabUrl,
+                                    branch.getName(),
+                                    token);
+                    redisGateway.sendInitRequest(initRequest);
+                });
     }
 
     private Project createProject(
@@ -74,12 +98,10 @@ public class ProjectService {
                 .name();
     }
 
-    private void saveProjectBranches(List<String> branches, Project project) {
-        branches.forEach(
-                branchName -> {
-                    Branch branch = Branch.builder().name(branchName).project(project).build();
-                    project.addBranch(branch);
-                });
+    private List<Branch> saveProjectBranches(List<String> branchNames, Project project) {
+        List<Branch> branches =
+                branchNames.stream().map(branchName -> new Branch(project, branchName)).toList();
+        return branchRepository.saveAll(branches);
     }
 
     private void saveBasicCustomPrompt(Project project) {

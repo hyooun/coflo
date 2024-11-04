@@ -62,7 +62,7 @@ public enum ErrorCode {
     PROJECT_NOT_EXIST(HttpStatus.NOT_FOUND, "H001", "존재하지 않는 프로젝트입니다."),
 
     /**
-     * USER-PROJECT(I00)
+     * USER-PROJECT(I000)
      */
     LINK_BOT_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "I001", "연동에 필요한 Bot 토큰이 존재하지 않습니다."),
     USER_PROJECT_NOT_EXIST(HttpStatus.NOT_FOUND, "I002", "존재하지 않는 프로젝트입니다."),
@@ -83,6 +83,11 @@ public enum ErrorCode {
      */
     USER_BADGE_NOT_EXIST(HttpStatus.NOT_FOUND, "L001", "존재하지 않는 사용자 뱃지입니다."),
     BADGE_NOT_EXIST(HttpStatus.NOT_FOUND, "L002", "존재하지 않는 뱃지입니다."),
+
+    /**
+     * review (M000)
+     */
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 리뷰입니다."),
 
     /**
      * 외부 API(Y000)

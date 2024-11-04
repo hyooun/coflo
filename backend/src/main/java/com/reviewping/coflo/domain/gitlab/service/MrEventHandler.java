@@ -1,9 +1,9 @@
 package com.reviewping.coflo.domain.gitlab.service;
 
-import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabEventRequest;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
-import com.reviewping.coflo.domain.review.service.ReviewCreateService;
+import com.reviewping.coflo.domain.review.service.ReviewService;
+import com.reviewping.coflo.global.client.gitlab.request.GitlabEventRequest;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import jakarta.annotation.PostConstruct;
@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Component;
 public class MrEventHandler {
 
     private final Map<String, BiConsumer<Long, GitlabEventRequest>> handlers = new HashMap<>();
-    private final ReviewCreateService reviewCreateService;
+    private final ReviewService reviewCreateService;
     private final ProjectRepository projectRepository;
 
     @PostConstruct
@@ -46,27 +47,25 @@ public class MrEventHandler {
     private void handleOpen(Long projectId, GitlabEventRequest gitlabEventRequest) {
         // 1. 필요한 정보 추출
         String gitlabUrl = getGitlabUrl(gitlabEventRequest);
-        Long gitlabProjectId = getGitlabProjectId(gitlabEventRequest);
-        Long iid = getIid(gitlabEventRequest);
-        String mrDescription = getMrDescription(gitlabEventRequest);
+        Long gitlabProjectId = gitlabEventRequest.project().id();
+        Long iid = gitlabEventRequest.objectAttributes().iid();
+        String mrDescription = gitlabEventRequest.objectAttributes().description();
+        String targetBranch = gitlabEventRequest.objectAttributes().targetBranch();
+        LocalDateTime gitlabCreatedDate =
+                gitlabEventRequest.objectAttributes().createdAt().toLocalDateTime();
         // 2. gitlab project token 찾기
         Project project = projectRepository.getById(projectId);
         String token = project.getBotToken();
         // 3. 리뷰 달기
         reviewCreateService.makeCodeReviewWhenCalledByWebhook(
-                gitlabUrl, token, gitlabProjectId, iid, mrDescription, projectId);
-    }
-
-    private String getMrDescription(GitlabEventRequest gitlabEventRequest) {
-        return gitlabEventRequest.objectAttributes().description();
-    }
-
-    private Long getIid(GitlabEventRequest gitlabEventRequest) {
-        return gitlabEventRequest.objectAttributes().iid();
-    }
-
-    private Long getGitlabProjectId(GitlabEventRequest gitlabEventRequest) {
-        return gitlabEventRequest.project().id();
+                gitlabUrl,
+                token,
+                gitlabProjectId,
+                iid,
+                mrDescription,
+                targetBranch,
+                gitlabCreatedDate,
+                projectId);
     }
 
     private String getGitlabUrl(GitlabEventRequest gitlabEventRequest) {

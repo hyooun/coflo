@@ -4,12 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabEventRequest;
 import com.reviewping.coflo.domain.gitlab.fixture.GitlabEventRequestFixture;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.fixture.ProjectFixture;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
-import com.reviewping.coflo.domain.review.service.ReviewCreateService;
+import com.reviewping.coflo.domain.review.service.ReviewService;
+import com.reviewping.coflo.global.client.gitlab.request.GitlabEventRequest;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MrEventHandlerTest {
 
-    @Mock private ReviewCreateService reviewCreateService;
+    @Mock private ReviewService reviewService;
 
     @Mock private ProjectRepository projectRepository;
 
@@ -44,7 +44,7 @@ class MrEventHandlerTest {
         mrEventHandler.handle(projectId, openActionRequest);
 
         // then
-        then(reviewCreateService)
+        then(reviewService)
                 .should()
                 .makeCodeReviewWhenCalledByWebhook(
                         "gitlab.example.com",
@@ -52,6 +52,8 @@ class MrEventHandlerTest {
                         openActionRequest.project().id(),
                         openActionRequest.objectAttributes().iid(),
                         openActionRequest.objectAttributes().description(),
+                        openActionRequest.objectAttributes().targetBranch(),
+                        openActionRequest.objectAttributes().createdAt().toLocalDateTime(),
                         projectId);
     }
 

@@ -25,7 +25,7 @@ public class Review extends BaseTimeEntity {
     @OneToMany(mappedBy = "review")
     private List<Retrieval> retrievals = new ArrayList<>();
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Builder

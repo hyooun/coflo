@@ -79,6 +79,7 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
             type={reference.type}
             onEdit={handleEdit}
             onDelete={handleDeleteClick}
+            maxLength={3000}
           />
         ))}
         <div

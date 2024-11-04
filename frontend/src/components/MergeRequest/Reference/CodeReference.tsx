@@ -7,9 +7,16 @@ interface CodeReferenceProps {
   onEdit: (content: string) => void;
   onLanguageChange?: (language: string) => void;
   onCancel: () => void;
+  maxLength?: number;
 }
 
-const CodeReference = ({ content, language, onEdit, onLanguageChange }: CodeReferenceProps) => {
+const CodeReference = ({
+  content,
+  language,
+  onEdit,
+  onLanguageChange,
+  maxLength,
+}: CodeReferenceProps) => {
   return (
     <CodeEditor
       defaultValue={content}
@@ -18,6 +25,7 @@ const CodeReference = ({ content, language, onEdit, onLanguageChange }: CodeRefe
       onChange={(value) => onEdit(value || '')}
       onLanguageChange={onLanguageChange}
       isLanguageSelectable={false}
+      maxLength={maxLength}
     />
   );
 };

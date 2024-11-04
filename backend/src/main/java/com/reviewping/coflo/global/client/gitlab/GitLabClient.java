@@ -1,7 +1,6 @@
 package com.reviewping.coflo.global.client.gitlab;
 
-import static com.reviewping.coflo.global.error.ErrorCode.EXTERNAL_API_BAD_REQUEST;
-import static com.reviewping.coflo.global.error.ErrorCode.EXTERNAL_API_NOT_FOUND;
+import static com.reviewping.coflo.global.error.ErrorCode.*;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -157,6 +156,30 @@ public class GitLabClient {
         Long mergeRequestCount = getProjectMRCount(gitlabUrl, token, gitlabProjectId);
         Map<String, Double> languages = getProjectLanguages(gitlabUrl, token, gitlabProjectId);
         return ProjectInfoContent.of(commitCount, branchCount, mergeRequestCount, languages);
+    }
+
+    public void addProjectWebhook(
+            String gitlabUrl,
+            String token,
+            Long gitlabProjectId,
+            String webhookUrl,
+            Map<String, Boolean> eventSettings) {
+        HttpHeaders headers = makeGitlabHeaders(token);
+        String url = GitLabApiUrlBuilder.createProjectWebhookUrl(gitlabUrl, gitlabProjectId);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("url", webhookUrl);
+        requestBody.putAll(eventSettings);
+
+        String body;
+        try {
+            body = objectMapper.writeValueAsString(requestBody);
+        } catch (JsonProcessingException e) {
+            throw new BusinessException(ErrorCode.GITLAB_REQUEST_SERIALIZATION_ERROR);
+        }
+
+        RestTemplateUtils.sendPostRequest(
+                url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
     public List<String> getAllBranchNames(String gitlabUrl, String token, Long gitlabProjectId) {

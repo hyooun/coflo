@@ -13,8 +13,8 @@ import com.reviewping.coflo.domain.review.controller.dto.response.RetrievalDetai
 import com.reviewping.coflo.domain.review.controller.dto.response.ReviewDetailResponse;
 import com.reviewping.coflo.domain.review.controller.dto.response.ReviewResponse;
 import com.reviewping.coflo.domain.review.entity.Review;
-import com.reviewping.coflo.domain.review.message.MrContent;
 import com.reviewping.coflo.domain.review.message.ReviewRequestMessage;
+import com.reviewping.coflo.domain.review.message.ReviewRequestMessage.MrContent;
 import com.reviewping.coflo.domain.review.message.ReviewResponseMessage;
 import com.reviewping.coflo.domain.review.repository.ReviewRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
@@ -86,18 +86,20 @@ public class ReviewService {
                 gitLabClient.getMrDiffs(gitlabUrl, token, gitlabProjectId, iid);
         // 3. 커스텀프롬프트 가져오기
         CustomPrompt customPrompt = customPromptRepository.getByProjectId(projectId);
-        // 3. 리뷰 생성 요청
+        // 4. TODO: projectId와 targetBranch로 브랜치 id 가져오기
+        Long branchId = 1L;
+        // 5. 리뷰 생성 요청
         MrContent mrContent = new MrContent(mrDescription, mrDiffs.toString());
         ReviewRequestMessage reviewRequest =
                 new ReviewRequestMessage(
                         projectId,
                         mrInfo.getId(),
-                        targetBranch,
+                        branchId,
                         mrContent,
                         customPrompt.getContent(),
                         gitlabUrl);
         redisGateway.sendReviewRequest(reviewRequest);
-        // 4. TODO: 리뷰 평가 요청
+        // 6. TODO: 리뷰 평가 요청
     }
 
     @Transactional

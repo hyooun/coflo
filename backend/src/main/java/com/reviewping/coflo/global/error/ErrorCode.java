@@ -93,6 +93,11 @@ public enum ErrorCode {
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 리뷰입니다."),
 
     /**
+     * branch (N000)
+     */
+    BRANCH_NOT_FOUND(HttpStatus.NOT_FOUND, "N001", "존재하지 않는 브랜치입니다."),
+
+    /**
      * 외부 API(Y000)
      */
     EXTERNAL_API_NOT_FOUND(HttpStatus.NOT_FOUND, "Y001", "외부 API를 찾을 수 없습니다."),

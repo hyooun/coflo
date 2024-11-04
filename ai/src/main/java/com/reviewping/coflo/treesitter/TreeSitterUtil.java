@@ -56,7 +56,9 @@ public class TreeSitterUtil {
                                                     methodNode.getStartByte(),
                                                     methodNode.getEndByte()));
 
-                            chunks.add(new ChunkedCode(methodCode, file.getName(), file.getPath()));
+                            chunks.add(
+                                    new ChunkedCode(
+                                            methodCode, file.getName(), file.getPath(), "java"));
                         }
                     }
                 }

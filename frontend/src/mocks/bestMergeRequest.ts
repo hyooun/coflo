@@ -1,7 +1,16 @@
 // src/mocks/handlers.ts
 import { rest } from 'msw';
+import { BadgeType } from 'types/badge';
 import { GitlabMergeRequest } from 'types/mergeRequest';
 import { MergeRequestReview } from 'types/review';
+
+interface BadgeResponse {
+  status: string;
+  data: {
+    mainBadgeCodeId: number;
+    badgeDetails: BadgeType[];
+  };
+}
 
 export const handlers = [
   rest.get('/api/best-merge-requests', (req, res, ctx) => {
@@ -234,5 +243,78 @@ export const handlers = [
     ];
 
     return res(ctx.status(200), ctx.json(mockReferences));
+  }),
+
+  rest.get('/api/badges', (req, res, ctx) => {
+    const mockBadgeResponse: BadgeResponse = {
+      status: 'SUCCESS',
+      data: {
+        mainBadgeCodeId: 2,
+        badgeDetails: [
+          {
+            badgeCodeId: 1,
+            name: '첫 모험가',
+            description: '처음 서비스 가입 시 기본 획득',
+            imageUrl: '/images/mocks/badges/badge_00.png',
+            isAcquired: true,
+          },
+          {
+            badgeCodeId: 2,
+            name: '리뷰 탐색자',
+            description: '첫 AI리뷰 재생성',
+            imageUrl: '/images/mocks/badges/badge_01.png',
+            isAcquired: false,
+          },
+          {
+            badgeCodeId: 3,
+            name: '코드 마스터',
+            description: '10개 이상의 MR 리뷰 완료',
+            imageUrl: '/images/mocks/badges/badge_02.png',
+            isAcquired: false,
+          },
+          {
+            badgeCodeId: 4,
+            name: '프로젝트 마스터',
+            description: '10개 이상의 MR 리뷰 완료',
+            imageUrl: '/images/mocks/badges/badge_03.png',
+            isAcquired: false,
+          },
+          {
+            badgeCodeId: 5,
+            name: '행운의 발견',
+            description: '접속 시 1% 확률로 획득',
+            imageUrl: '/images/mocks/badges/badge_04.png',
+            isAcquired: true,
+          },
+          // ... 더 많은 뱃지들 추가 가능
+        ],
+      },
+    };
+
+    return res(ctx.status(200), ctx.json(mockBadgeResponse));
+  }),
+  rest.delete('/api/badges', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        status: 'SUCCESS',
+        message: '대표 뱃지가 해제되었습니다.',
+      }),
+    );
+  }),
+
+  rest.patch('/api/badges', async (req: any, res, ctx) => {
+    const { badgeId } = await req.body;
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        status: 'SUCCESS',
+        message: '대표 뱃지가 설정되었습니다.',
+        data: {
+          badgeId,
+        },
+      }),
+    );
   }),
 ];

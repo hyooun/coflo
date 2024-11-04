@@ -6,8 +6,8 @@ import com.reviewping.coflo.json.JsonUtil;
 import com.reviewping.coflo.openai.OpenaiClient;
 import com.reviewping.coflo.openai.dto.ChatCompletionResponse;
 import com.reviewping.coflo.service.dto.MrContent;
-import com.reviewping.coflo.service.dto.ReviewRequest;
-import com.reviewping.coflo.service.dto.ReviewResponse;
+import com.reviewping.coflo.service.dto.ReviewRequestMessage;
+import com.reviewping.coflo.service.dto.ReviewResponseMessage;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -23,7 +23,7 @@ public class ReviewCreateService {
 
     @ServiceActivator(inputChannel = "reviewRequestChannel")
     public void createReview(String reviewRequestMessage) {
-        ReviewRequest reviewRequest =
+        ReviewRequestMessage reviewRequest =
                 jsonUtil.fromJson(reviewRequestMessage, new TypeReference<>() {});
         // 1. TODO: mr 임베딩
         // 2. TODO: 참고자료 검색
@@ -33,8 +33,8 @@ public class ReviewCreateService {
         ChatCompletionResponse chatCompletionResponse = openaiClient.chat(prompt);
         String chatMessage = chatCompletionResponse.choices().getFirst().message().content();
         // 5. 리뷰 생성 완료
-        ReviewResponse reviewResponse =
-                new ReviewResponse(
+        ReviewResponseMessage reviewResponse =
+                new ReviewResponseMessage(
                         reviewRequest.gitlabUrl(),
                         reviewRequest.mrInfoId(),
                         chatMessage,

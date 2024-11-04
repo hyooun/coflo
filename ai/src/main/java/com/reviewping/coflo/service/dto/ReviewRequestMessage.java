@@ -1,6 +1,6 @@
 package com.reviewping.coflo.service.dto;
 
-public record ReviewRequest(
+public record ReviewRequestMessage(
         Long projectId,
         Long mrInfoId,
         String branch,

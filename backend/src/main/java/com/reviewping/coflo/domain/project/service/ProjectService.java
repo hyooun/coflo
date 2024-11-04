@@ -12,6 +12,7 @@ import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLin
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,9 @@ public class ProjectService {
             ProjectLinkRequest projectLinkRequest) {
 
         Project project = createProject(gitlabAccount, gitlabProjectId, projectLinkRequest);
-        saveProjectBranches(projectLinkRequest, project);
+        if (projectLinkRequest.branches() != null) {
+            saveProjectBranches(projectLinkRequest.branches(), project);
+        }
 
         Project savedProject = projectRepository.save(project);
         saveBasicCustomPrompt(savedProject);
@@ -71,15 +74,12 @@ public class ProjectService {
                 .name();
     }
 
-    private void saveProjectBranches(ProjectLinkRequest projectLinkRequest, Project project) {
-        projectLinkRequest
-                .branches()
-                .forEach(
-                        branchName -> {
-                            Branch branch =
-                                    Branch.builder().name(branchName).project(project).build();
-                            project.addBranch(branch);
-                        });
+    private void saveProjectBranches(List<String> branches, Project project) {
+        branches.forEach(
+                branchName -> {
+                    Branch branch = Branch.builder().name(branchName).project(project).build();
+                    project.addBranch(branch);
+                });
     }
 
     private void saveBasicCustomPrompt(Project project) {

@@ -88,7 +88,7 @@ public class GitLabApiUrlBuilder {
                 + gitlabUrl
                 + SINGLE_PROJECT_ENDPOINT
                 + gitlabProjectId
-                + "/repository/branches?per_page=1";
+                + "/repository/branches";
     }
 
     public static String createProjectMRUrl(String gitlabUrl, Long gitlabProjectId) {

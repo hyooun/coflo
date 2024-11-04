@@ -56,7 +56,7 @@ const CodeEditor = ({
   };
 
   const handleSelectLanguage = (lang: string) => {
-    setValue(CODE_SNIPPETS[lang] || '');
+    setValue(CODE_SNIPPETS[lang]);
     onChange?.(CODE_SNIPPETS[lang] || '');
     setSelectedLanguage(lang);
     onLanguageChange?.(lang);

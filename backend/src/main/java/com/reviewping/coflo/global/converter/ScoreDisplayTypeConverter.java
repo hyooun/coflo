@@ -1,4 +1,4 @@
-package com.reviewping.coflo.global.Converter;
+package com.reviewping.coflo.global.converter;
 
 import com.reviewping.coflo.domain.project.domain.ScoreDisplayType;
 import org.springframework.core.convert.converter.Converter;

@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.customPrompt.controller.dto.response;
+package com.reviewping.coflo.domain.customprompt.controller.dto.response;
 
 import lombok.Builder;
 

@@ -1,7 +1,7 @@
 package com.reviewping.coflo.global.config;
 
-import com.reviewping.coflo.global.Converter.CalculationTypeConverter;
-import com.reviewping.coflo.global.Converter.ScoreDisplayTypeConverter;
+import com.reviewping.coflo.global.converter.CalculationTypeConverter;
+import com.reviewping.coflo.global.converter.ScoreDisplayTypeConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

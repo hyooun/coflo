@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.userproject.entity;
 
-import com.reviewping.coflo.domain.codequality.entity.CodeQualityCode;
+import com.reviewping.coflo.domain.project.entity.CodeQualityCode;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

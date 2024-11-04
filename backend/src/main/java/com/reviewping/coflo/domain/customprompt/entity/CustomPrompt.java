@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.customPrompt.entity;
+package com.reviewping.coflo.domain.customprompt.entity;
 
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;

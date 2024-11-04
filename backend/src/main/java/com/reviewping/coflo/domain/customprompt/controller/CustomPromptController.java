@@ -1,8 +1,8 @@
-package com.reviewping.coflo.domain.customPrompt.controller;
+package com.reviewping.coflo.domain.customprompt.controller;
 
-import com.reviewping.coflo.domain.customPrompt.controller.dto.request.CustomPromptRequest;
-import com.reviewping.coflo.domain.customPrompt.controller.dto.response.CustomPromptResponse;
-import com.reviewping.coflo.domain.customPrompt.service.CustomPromptService;
+import com.reviewping.coflo.domain.customprompt.controller.dto.request.CustomPromptRequest;
+import com.reviewping.coflo.domain.customprompt.controller.dto.response.CustomPromptResponse;
+import com.reviewping.coflo.domain.customprompt.service.CustomPromptService;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;

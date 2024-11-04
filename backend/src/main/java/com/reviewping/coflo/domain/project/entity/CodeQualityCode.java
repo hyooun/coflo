@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.codequality.entity;
+package com.reviewping.coflo.domain.project.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

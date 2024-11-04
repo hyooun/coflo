@@ -6,7 +6,7 @@ import com.reviewping.coflo.domain.badge.entity.BadgeCode;
 import com.reviewping.coflo.domain.badge.entity.UserBadge;
 import com.reviewping.coflo.domain.badge.repository.BadgeCodeRepository;
 import com.reviewping.coflo.domain.badge.repository.UserBadgeRepository;
-import com.reviewping.coflo.domain.customPrompt.repository.PromptHistoryRepository;
+import com.reviewping.coflo.domain.customprompt.repository.PromptHistoryRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;

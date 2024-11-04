@@ -4,6 +4,7 @@ import static com.reviewping.coflo.global.error.ErrorCode.LINK_BOT_TOKEN_NOT_EXI
 
 import com.reviewping.coflo.domain.customprompt.entity.CustomPrompt;
 import com.reviewping.coflo.domain.customprompt.repository.CustomPromptRepository;
+import com.reviewping.coflo.domain.project.entity.Branch;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
@@ -40,8 +41,16 @@ public class ProjectService {
                         .name(gitlabProjectName)
                         .build();
 
-        CustomPrompt customPrompt = CustomPrompt.builder().project(project).build();
-        customPromptRepository.save(customPrompt);
+        projectLinkRequest
+                .branches()
+                .forEach(
+                        branchName -> {
+                            Branch branch =
+                                    Branch.builder().name(branchName).project(project).build();
+                            project.addBranch(branch);
+                        });
+
+        saveBasicCustomPrompt(project);
         return projectRepository.save(project);
     }
 
@@ -53,5 +62,10 @@ public class ProjectService {
         return gitLabClient
                 .getSingleProject(domain, projectLinkRequest.botToken(), gitlabProjectId)
                 .name();
+    }
+
+    private void saveBasicCustomPrompt(Project project) {
+        CustomPrompt customPrompt = CustomPrompt.builder().project(project).build();
+        customPromptRepository.save(customPrompt);
     }
 }

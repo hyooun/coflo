@@ -2,7 +2,7 @@ package com.reviewping.coflo.global.batch;
 
 import static com.reviewping.coflo.domain.badge.entity.BadgeType.*;
 
-import com.reviewping.coflo.domain.badge.service.BadgeEventService;
+import com.reviewping.coflo.domain.mergerequest.service.BestMrHistoryService;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.StepContribution;
@@ -17,13 +17,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BestMergeHistoryTasklet implements Tasklet {
 
-    private final BadgeEventService badgeEventService;
+    private final BestMrHistoryService bestMrHistoryService;
 
     @Override
     @Retryable(retryFor = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 3600000L))
     public RepeatStatus execute(
             @Nonnull StepContribution contribution, @Nonnull ChunkContext chunkContext) {
-        badgeEventService.eventBestMrCount();
+        bestMrHistoryService.addBestMrHistory();
+
         return RepeatStatus.FINISHED;
     }
 }

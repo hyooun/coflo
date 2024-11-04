@@ -7,10 +7,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -33,17 +30,12 @@ public class MrInfo extends BaseTimeEntity {
 
     private LocalDateTime gitlabCreatedDate;
 
-    private Integer readabilityScore;
-
-    private Integer consistencyScore;
-
-    private Integer reusabilityScore;
-
-    private Integer reliabilityScore;
-
-    private Integer securityScore;
-
-    private Integer maintainabilityScore;
+    @Setter private Integer readabilityScore;
+    @Setter private Integer consistencyScore;
+    @Setter private Integer reusabilityScore;
+    @Setter private Integer reliabilityScore;
+    @Setter private Integer securityScore;
+    @Setter private Integer maintainabilityScore;
 
     @Builder
     public MrInfo(Project project, Long gitlabMrIid, LocalDateTime gitlabCreatedDate) {

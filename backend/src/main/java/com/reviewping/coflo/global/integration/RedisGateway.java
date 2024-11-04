@@ -1,5 +1,6 @@
 package com.reviewping.coflo.global.integration;
 
+import com.reviewping.coflo.domain.review.message.MrEvalRequestMessage;
 import com.reviewping.coflo.domain.review.message.ReviewRegenerateRequestMessage;
 import com.reviewping.coflo.domain.review.message.ReviewRequestMessage;
 import org.springframework.integration.annotation.Gateway;
@@ -16,7 +17,7 @@ public interface RedisGateway {
     void sendReviewRequest(ReviewRequestMessage reviewRequestMessage);
 
     @Gateway(headers = @GatewayHeader(name = "topic", value = "mr-eval-request"))
-    void sendEvalRequest(String message);
+    void sendEvalRequest(MrEvalRequestMessage mrEvalRequestMessage);
 
     @Gateway(headers = @GatewayHeader(name = "topic", value = "test"))
     void sendTest(String message);

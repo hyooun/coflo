@@ -36,21 +36,27 @@ public class ProjectService {
             Long gitlabProjectId,
             ProjectLinkRequest projectLinkRequest) {
 
+        Project project = createProject(gitlabAccount, gitlabProjectId, projectLinkRequest);
+        saveProjectBranches(projectLinkRequest, project);
+
+        Project savedProject = projectRepository.save(project);
+        saveBasicCustomPrompt(savedProject);
+        addGitlabProjectWebhooks(gitlabAccount, project.getGitlabProjectId(), savedProject.getId());
+        return savedProject;
+    }
+
+    private Project createProject(
+            GitlabAccount gitlabAccount,
+            Long gitlabProjectId,
+            ProjectLinkRequest projectLinkRequest) {
         String gitlabProjectName =
                 getProjectNameByBotToken(
                         gitlabAccount.getDomain(), gitlabProjectId, projectLinkRequest);
-
-        Project project =
-                Project.builder()
-                        .gitlabProjectId(gitlabProjectId)
-                        .botToken(projectLinkRequest.botToken())
-                        .name(gitlabProjectName)
-                        .build();
-
-        saveProjectBranches(projectLinkRequest, project);
-        saveBasicCustomPrompt(project);
-        addGitlabProjectWebhooks(gitlabAccount, project.getGitlabProjectId(), project.getId());
-        return projectRepository.save(project);
+        return Project.builder()
+                .gitlabProjectId(gitlabProjectId)
+                .botToken(projectLinkRequest.botToken())
+                .name(gitlabProjectName)
+                .build();
     }
 
     private String getProjectNameByBotToken(
@@ -63,11 +69,6 @@ public class ProjectService {
                 .name();
     }
 
-    private void saveBasicCustomPrompt(Project project) {
-        CustomPrompt customPrompt = CustomPrompt.builder().project(project).build();
-        customPromptRepository.save(customPrompt);
-    }
-
     private void saveProjectBranches(ProjectLinkRequest projectLinkRequest, Project project) {
         projectLinkRequest
                 .branches()
@@ -77,6 +78,11 @@ public class ProjectService {
                                     Branch.builder().name(branchName).project(project).build();
                             project.addBranch(branch);
                         });
+    }
+
+    private void saveBasicCustomPrompt(Project project) {
+        CustomPrompt customPrompt = CustomPrompt.builder().project(project).build();
+        customPromptRepository.save(customPrompt);
     }
 
     private void addGitlabProjectWebhooks(

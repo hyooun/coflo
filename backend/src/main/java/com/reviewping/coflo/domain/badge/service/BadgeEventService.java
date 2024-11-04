@@ -12,6 +12,7 @@ import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.user.repository.LoginHistoryRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
+import com.reviewping.coflo.global.util.RandomUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ public class BadgeEventService {
     private final UserProjectRepository userProjectRepository;
     private final LoginHistoryRepository loginHistoryRepository;
     private final PromptHistoryRepository promptHistoryRepository;
+
+    private final RandomUtil randomUtil;
 
     private UserBadge userBadge;
     private BadgeCode badgeCode;
@@ -80,6 +83,18 @@ public class BadgeEventService {
     public void eventUpdateCustomPrompt(User user) {
         long promptCount = promptHistoryRepository.countByUserId(user.getId());
         if (promptCount == PROMTPT_UPDATE_TARGET_COUNT) {
+            userBadge = UserBadge.of(user, badgeCode);
+            userBadgeRepository.save(userBadge);
+        }
+    }
+
+    // 행운의 발견 - 접속 시 1% 확률로 랜덤 획득
+    @Transactional
+    public void eventRandomLucky(User user) {
+        if (!randomUtil.random()) return;
+
+        badgeCode = badgeCodeRepository.getById(LUCKY_FIND.getId());
+        if (!userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
         }

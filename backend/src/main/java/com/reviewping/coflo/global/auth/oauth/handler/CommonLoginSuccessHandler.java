@@ -1,5 +1,6 @@
 package com.reviewping.coflo.global.auth.oauth.handler;
 
+import com.reviewping.coflo.domain.badge.service.BadgeEventService;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.service.LoginHistoryService;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtConstants;
@@ -32,6 +33,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
     private final RedisUtil redisUtil;
     private final CookieUtil cookieUtil;
     private final LoginHistoryService loginHistoryService;
+    private final BadgeEventService badgeEventService;
 
     @Override
     public void onAuthenticationSuccess(
@@ -62,6 +64,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         redisUtil.set(userId.toString(), refreshToken, JwtConstants.REFRESH_EXP_TIME);
         loginHistoryService.recordLogin(user);
+        badgeEventService.eventRandomLucky(user);
 
         if (principal.getName().equals("empty")) {
             response.sendRedirect(registUrl);

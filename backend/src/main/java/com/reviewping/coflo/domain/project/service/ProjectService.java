@@ -10,6 +10,7 @@ import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
+import com.reviewping.coflo.global.common.repository.BranchRepository;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProjectService {
+
+    private final BranchRepository branchRepository;
 
     @Value("${domain-webhook-url}")
     private String domainWebhookUrl;
@@ -79,6 +82,7 @@ public class ProjectService {
                 branchName -> {
                     Branch branch = Branch.builder().name(branchName).project(project).build();
                     project.addBranch(branch);
+                    branchRepository.save(branch);
                 });
     }
 

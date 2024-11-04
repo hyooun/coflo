@@ -40,6 +40,12 @@ public class GitlabApiService {
         return GitlabProjectPageResponse.of(gitlabProjects, gitlabProjectPage.pageDetail());
     }
 
+    public List<String> getGitlabProjectBranches(Long userId, Long gitlabProjectId) {
+        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(userId);
+        return gitLabClient.getAllBranchNames(
+                gitlabAccount.getDomain(), gitlabAccount.getUserToken(), gitlabProjectId);
+    }
+
     private List<GitlabProjectResponse> buildGitlabProjectResponses(
             GitlabProjectPageContent gitlabProjectPage, GitlabAccount gitlabAccount) {
         return gitlabProjectPage.gitlabProjectDetailContents().stream()

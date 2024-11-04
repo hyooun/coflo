@@ -5,7 +5,7 @@ import com.reviewping.coflo.git.GitUtil;
 import com.reviewping.coflo.openai.OpenaiClient;
 import com.reviewping.coflo.openai.dto.EmbeddingResponse;
 import com.reviewping.coflo.repository.VectorRepository;
-import com.reviewping.coflo.service.dto.InitRequestMessage;
+import com.reviewping.coflo.service.dto.request.InitRequestMessage;
 import com.reviewping.coflo.treesitter.TreeSitterUtil;
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.reviewping.coflo.service.dto;
+package com.reviewping.coflo.service.dto.response;
 
 import java.util.List;
 

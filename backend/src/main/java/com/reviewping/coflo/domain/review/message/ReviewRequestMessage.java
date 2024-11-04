@@ -3,7 +3,9 @@ package com.reviewping.coflo.domain.review.message;
 public record ReviewRequestMessage(
         Long projectId,
         Long mrInfoId,
-        String branch,
+        Long branchId,
         MrContent mrContent,
         String customPrompt,
-        String gitlabUrl) {}
+        String gitlabUrl) {
+    public record MrContent(String mrDescription, String mrDiffs) {}
+}

@@ -1,8 +1,8 @@
 package com.reviewping.coflo.domain.user.entity;
 
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
+import com.reviewping.coflo.global.Converter.CryptoConverter;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
-import com.reviewping.coflo.global.crypto.CryptoConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;

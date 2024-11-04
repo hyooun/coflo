@@ -14,7 +14,8 @@ import com.reviewping.coflo.domain.review.controller.dto.response.ReviewDetailRe
 import com.reviewping.coflo.domain.review.controller.dto.response.ReviewResponse;
 import com.reviewping.coflo.domain.review.entity.Review;
 import com.reviewping.coflo.domain.review.message.MrContent;
-import com.reviewping.coflo.domain.review.message.ReviewRequest;
+import com.reviewping.coflo.domain.review.message.ReviewRequestMessage;
+import com.reviewping.coflo.domain.review.message.ReviewResponseMessage;
 import com.reviewping.coflo.domain.review.repository.ReviewRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
@@ -47,9 +48,10 @@ public class ReviewService {
     @Transactional
     @ServiceActivator(inputChannel = "reviewResponseChannel")
     public void handleReviewResponse(String reviewResponseMessage) {
-        ReviewResponse reviewResponse;
+        ReviewResponseMessage reviewResponse;
         try {
-            reviewResponse = objectMapper.readValue(reviewResponseMessage, ReviewResponse.class);
+            reviewResponse =
+                    objectMapper.readValue(reviewResponseMessage, ReviewResponseMessage.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -86,8 +88,8 @@ public class ReviewService {
         CustomPrompt customPrompt = customPromptRepository.getByProjectId(projectId);
         // 3. 리뷰 생성 요청
         MrContent mrContent = new MrContent(mrDescription, mrDiffs.toString());
-        ReviewRequest reviewRequest =
-                new ReviewRequest(
+        ReviewRequestMessage reviewRequest =
+                new ReviewRequestMessage(
                         projectId,
                         mrInfo.getId(),
                         targetBranch,
@@ -111,12 +113,12 @@ public class ReviewService {
                         project.getGitlabProjectId(),
                         mergeRequestIid);
         List<ReviewDetailResponse> reviews =
-                mrInfo.getReviews().stream().map(ReviewDetailResponse::of).toList();
+                mrInfo.getReviews().stream().map(ReviewDetailResponse::from).toList();
         return ReviewResponse.of(gitlabMrResponse, reviews);
     }
 
     public List<RetrievalDetailResponse> getRetrievalDetail(Long reviewId) {
         Review review = reviewRepository.getById(reviewId);
-        return review.getRetrievals().stream().map(RetrievalDetailResponse::of).toList();
+        return review.getRetrievals().stream().map(RetrievalDetailResponse::from).toList();
     }
 }

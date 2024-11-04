@@ -41,15 +41,7 @@ public class ProjectService {
                         .name(gitlabProjectName)
                         .build();
 
-        projectLinkRequest
-                .branches()
-                .forEach(
-                        branchName -> {
-                            Branch branch =
-                                    Branch.builder().name(branchName).project(project).build();
-                            project.addBranch(branch);
-                        });
-
+        saveProjectBranches(projectLinkRequest, project);
         saveBasicCustomPrompt(project);
         return projectRepository.save(project);
     }
@@ -67,5 +59,17 @@ public class ProjectService {
     private void saveBasicCustomPrompt(Project project) {
         CustomPrompt customPrompt = CustomPrompt.builder().project(project).build();
         customPromptRepository.save(customPrompt);
+    }
+
+    private static void saveProjectBranches(
+            ProjectLinkRequest projectLinkRequest, Project project) {
+        projectLinkRequest
+                .branches()
+                .forEach(
+                        branchName -> {
+                            Branch branch =
+                                    Branch.builder().name(branchName).project(project).build();
+                            project.addBranch(branch);
+                        });
     }
 }

@@ -1,8 +1,8 @@
 package com.reviewping.coflo.domain.project.domain.mapper;
 
-import com.reviewping.coflo.domain.codequality.entity.CodeQualityCode;
 import com.reviewping.coflo.domain.project.controller.response.CodeQualityScoreResponse;
 import com.reviewping.coflo.domain.project.controller.response.ScoreOfWeekResponse;
+import com.reviewping.coflo.domain.project.entity.CodeQualityCode;
 import com.reviewping.coflo.domain.userproject.entity.UserProjectScore;
 import java.util.List;
 import java.util.Map;

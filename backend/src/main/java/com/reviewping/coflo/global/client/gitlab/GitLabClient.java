@@ -160,20 +160,14 @@ public class GitLabClient {
     }
 
     public List<String> getAllBranchNames(String gitlabUrl, String token, Long gitlabProjectId) {
-
         HttpHeaders headers = makeGitlabHeaders(token);
-
-        List<String> allBranches = new ArrayList<>();
+        String branchUrl = GitLabApiUrlBuilder.createProjectBranchesUrl(gitlabUrl, gitlabProjectId);
 
         int page = 1;
-        int totalPages;
-
+        int totalPages = 0;
+        List<String> allBranches = new ArrayList<>();
         do {
-            String url =
-                    GitLabApiUrlBuilder.createProjectBranchesUrl(gitlabUrl, gitlabProjectId)
-                            + "?page="
-                            + page
-                            + "&per_page=100";
+            String url = branchUrl + "?page=" + page + "&per_page=100";
             ResponseEntity<List<GitlabBranchContent>> response =
                     RestTemplateUtils.sendGetRequest(
                             url, headers, new ParameterizedTypeReference<>() {});
@@ -183,10 +177,9 @@ public class GitLabClient {
                 branches.forEach(branch -> allBranches.add(branch.name()));
             }
 
-            HttpHeaders responseHeaders = response.getHeaders();
-            totalPages =
-                    Integer.parseInt(
-                            Objects.requireNonNull(responseHeaders.getFirst("X-Total-Pages")));
+            if (totalPages == 0) {
+                totalPages = getTotalPages(response.getHeaders());
+            }
             page++;
         } while (page <= totalPages);
 
@@ -258,5 +251,9 @@ public class GitLabClient {
 
     private String convertToGitlabDateFormat(LocalDateTime localDateTime) {
         return localDateTime.toString() + KST_OFFSET;
+    }
+
+    private static int getTotalPages(HttpHeaders responseHeaders) {
+        return Integer.parseInt(Objects.requireNonNull(responseHeaders.getFirst("X-Total-Pages")));
     }
 }

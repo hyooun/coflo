@@ -158,28 +158,38 @@ public class GitLabClient {
         return ProjectInfoContent.of(commitCount, branchCount, mergeRequestCount, languages);
     }
 
-    public void addProjectWebhook(
-            String gitlabUrl,
-            String token,
-            Long gitlabProjectId,
-            String webhookUrl,
-            Map<String, Boolean> eventSettings) {
+    public List<String> getAllBranchNames(String gitlabUrl, String token, Long gitlabProjectId) {
+
         HttpHeaders headers = makeGitlabHeaders(token);
-        String url = GitLabApiUrlBuilder.createProjectWebhookUrl(gitlabUrl, gitlabProjectId);
 
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("url", webhookUrl);
-        requestBody.putAll(eventSettings);
+        List<String> allBranches = new ArrayList<>();
 
-        String body;
-        try {
-            body = objectMapper.writeValueAsString(requestBody);
-        } catch (JsonProcessingException e) {
-            throw new BusinessException(ErrorCode.GITLAB_REQUEST_SERIALIZATION_ERROR);
-        }
+        int page = 1;
+        int totalPages;
 
-        RestTemplateUtils.sendPostRequest(
-                url, headers, body, new ParameterizedTypeReference<>() {});
+        do {
+            String url =
+                    GitLabApiUrlBuilder.createProjectBranchesUrl(gitlabUrl, gitlabProjectId)
+                            + "?page="
+                            + page
+                            + "&per_page=100";
+            ResponseEntity<List<GitlabBranchContent>> response =
+                    RestTemplateUtils.sendGetRequest(
+                            url, headers, new ParameterizedTypeReference<>() {});
+
+            List<GitlabBranchContent> branches = response.getBody();
+            if (branches != null) {
+                branches.forEach(branch -> allBranches.add(branch.name()));
+            }
+
+            HttpHeaders responseHeaders = response.getHeaders();
+            totalPages =
+                    Integer.parseInt(
+                            Objects.requireNonNull(responseHeaders.getFirst("X-Total-Pages")));
+            page++;
+        } while (page <= totalPages);
+
+        return allBranches;
     }
 
     public List<String> getAllBranchNames(String gitlabUrl, String token, Long gitlabProjectId) {

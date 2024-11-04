@@ -98,6 +98,11 @@ public enum ErrorCode {
     BRANCH_NOT_FOUND(HttpStatus.NOT_FOUND, "N001", "존재하지 않는 브랜치입니다."),
 
     /**
+     * language (O000)
+     */
+    LANGUAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "N001", "지원하지 않는 언어입니다."),
+
+    /**
      * 외부 API(Y000)
      */
     EXTERNAL_API_NOT_FOUND(HttpStatus.NOT_FOUND, "Y001", "외부 API를 찾을 수 없습니다."),

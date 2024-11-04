@@ -1,5 +1,7 @@
 package com.reviewping.coflo.domain.review.entity;
 
+import com.reviewping.coflo.global.error.ErrorCode;
+import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
@@ -40,7 +42,7 @@ public enum LanguageType {
     public static LanguageType fromType(String type) {
         LanguageType result = LANGUAGE_TYPE_MAP.get(type.toLowerCase());
         if (result == null) {
-            throw new IllegalArgumentException("지원하지 않는 언어입니다: " + type);
+            throw new BusinessException(ErrorCode.LANGUAGE_NOT_FOUND);
         }
         return result;
     }

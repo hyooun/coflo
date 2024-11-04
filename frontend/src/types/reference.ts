@@ -18,6 +18,7 @@ export interface CommonReferenceProps extends ReferenceProps {
   onEdit: (id: number, content: string) => void;
   onDelete: (id: number) => void;
   onLanguageChange?: (language: string) => void;
+  maxLength?: number;
 }
 
 export interface ReferencesListProps {

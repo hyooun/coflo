@@ -15,11 +15,8 @@ import com.reviewping.coflo.domain.review.controller.dto.response.ReviewDetailRe
 import com.reviewping.coflo.domain.review.controller.dto.response.ReviewResponse;
 import com.reviewping.coflo.domain.review.entity.LanguageType;
 import com.reviewping.coflo.domain.review.entity.Review;
-import com.reviewping.coflo.domain.review.message.RetrievalMessage;
-import com.reviewping.coflo.domain.review.message.ReviewRegenerateRequestMessage;
-import com.reviewping.coflo.domain.review.message.ReviewRequestMessage;
+import com.reviewping.coflo.domain.review.message.*;
 import com.reviewping.coflo.domain.review.message.ReviewRequestMessage.MrContent;
-import com.reviewping.coflo.domain.review.message.ReviewResponseMessage;
 import com.reviewping.coflo.domain.review.repository.ReviewRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
@@ -73,6 +70,25 @@ public class ReviewService {
     }
 
     @Transactional
+    @ServiceActivator(inputChannel = "mrEvalResponseChannel")
+    public void handleEvalResponse(String mrEvalResponseMessage) {
+        MrEvalResponseMessage evalResponse;
+        try {
+            evalResponse =
+                    objectMapper.readValue(mrEvalResponseMessage, MrEvalResponseMessage.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        MrInfo mrInfo = mrInfoRepository.getById(evalResponse.mrInfoId());
+        mrInfo.setConsistencyScore(evalResponse.mrEvaluationMessage().consistencyScore());
+        mrInfo.setReadabilityScore(evalResponse.mrEvaluationMessage().readabilityScore());
+        mrInfo.setSecurityScore(evalResponse.mrEvaluationMessage().securityScore());
+        mrInfo.setReliabilityScore(evalResponse.mrEvaluationMessage().reliabilityScore());
+        mrInfo.setMaintainabilityScore(evalResponse.mrEvaluationMessage().maintainabilityScore());
+        mrInfo.setReusabilityScore(evalResponse.mrEvaluationMessage().reusabilityScore());
+    }
+
+    @Transactional
     public void makeCodeReviewWhenCalledByWebhook(
             String gitlabUrl,
             String token,
@@ -103,7 +119,10 @@ public class ReviewService {
                         customPrompt.getContent(),
                         gitlabUrl);
         redisGateway.sendReviewRequest(reviewRequest);
-        // 6. TODO: 리뷰 평가 요청
+        // 6. 리뷰 평가 요청
+        MrEvalRequestMessage evalRequest =
+                new MrEvalRequestMessage(mrInfo.getId(), branchId, mrContent);
+        redisGateway.sendEvalRequest(evalRequest);
     }
 
     @Transactional

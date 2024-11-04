@@ -1,8 +1,7 @@
 package com.reviewping.coflo.domain.review.message;
 
-import java.util.List;
-
 import com.reviewping.coflo.domain.review.message.ReviewRequestMessage.MrContent;
+import java.util.List;
 
 public record ReviewRegenerateRequestMessage(
         Long projectId,

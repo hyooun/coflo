@@ -43,7 +43,6 @@ public class BadgeEventService {
         if (userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) return;
 
         Integer count = gitlabAccountRepository.countByUser(user);
-
         if (count == 0) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
@@ -79,11 +78,8 @@ public class BadgeEventService {
 
     // 프롬프트 창조자 - 커스텀 프롬프트 수정 n회 이상
     public void eventUpdateCustomPrompt(User user) {
-        badgeCode = badgeCodeRepository.getById(PROMPT_CREATER.getId());
-        if (userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) return;
-
         long promptCount = promptHistoryRepository.countByUserId(user.getId());
-        if (promptCount >= PROMTPT_UPDATE_TARGET_COUNT) {
+        if (promptCount == PROMTPT_UPDATE_TARGET_COUNT) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
         }

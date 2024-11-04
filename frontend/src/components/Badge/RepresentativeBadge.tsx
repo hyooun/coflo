@@ -7,7 +7,7 @@ const RepresentativeBadge = ({ selectedBadge, onSave, onDefault }: Representativ
         {selectedBadge ? (
           <img src={selectedBadge} alt="대표 뱃지" className="w-40 h-40 object-contain" />
         ) : (
-          <div className="flex flex-col items-center text-gray-700">
+          <div className="flex flex-col items-center text-white">
             <span>대표 뱃지를</span> <span> 선택해주세요</span>
           </div>
         )}

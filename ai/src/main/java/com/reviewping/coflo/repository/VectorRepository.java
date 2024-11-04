@@ -16,26 +16,28 @@ public class VectorRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private MapSqlParameterSource createParameterSource(Long projectId, ChunkedCode chunkedCode)
-            throws SQLException {
+    private MapSqlParameterSource createParameterSource(
+            Long projectId, Long branchId, ChunkedCode chunkedCode) throws SQLException {
         PGvector embeddingVector = new PGvector(chunkedCode.getEmbedding());
         return new MapSqlParameterSource()
                 .addValue("projectId", projectId)
+                .addValue("branchId", branchId)
                 .addValue("content", chunkedCode.getContent())
                 .addValue("fileName", chunkedCode.getFileName())
                 .addValue("filePath", chunkedCode.getFilePath())
                 .addValue("embedding", embeddingVector);
     }
 
-    public void saveAllChunkedCodes(Long projectId, List<ChunkedCode> chunkedCodes) {
+    public void saveAllChunkedCodes(Long projectId, Long branchId, List<ChunkedCode> chunkedCodes) {
         String sql =
-                "INSERT INTO chunked_code (project_id, content, file_name, file_path, embedding)"
-                        + " VALUES (:projectId, :content, :fileName, :filePath, :embedding)";
+                "INSERT INTO chunked_code (project_id, branch_id, content, file_name, file_path,"
+                    + " embedding) VALUES (:projectId, :branchId, :content, :fileName, :filePath,"
+                    + " :embedding)";
         MapSqlParameterSource[] batchValues = new MapSqlParameterSource[chunkedCodes.size()];
 
         try {
             for (int i = 0; i < chunkedCodes.size(); i++) {
-                batchValues[i] = createParameterSource(projectId, chunkedCodes.get(i));
+                batchValues[i] = createParameterSource(projectId, branchId, chunkedCodes.get(i));
             }
             int[] ints = namedParameterJdbcTemplate.batchUpdate(sql, batchValues);
             System.out.println(ints.length);
@@ -45,11 +47,11 @@ public class VectorRepository {
     }
 
     public List<ChunkedCode> retrieveRelevantData(
-            Long projectId, int count, float[] queryEmbedding) {
+            Long projectId, Long branchId, int count, float[] queryEmbedding) {
         String sql =
                 "SELECT content, file_name, file_path, embedding "
                         + "FROM chunked_code "
-                        + "WHERE project_id = :projectId "
+                        + "WHERE project_id = :projectId AND branch_id = :branchId "
                         + "ORDER BY embedding <=> :embedding::vector "
                         + "LIMIT :limit";
 
@@ -58,6 +60,7 @@ public class VectorRepository {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()
                         .addValue("projectId", projectId)
+                        .addValue("branchId", branchId)
                         .addValue("embedding", embeddingVector)
                         .addValue("limit", count);
 

@@ -1,12 +1,17 @@
 package com.reviewping.coflo.service;
 
+import static com.reviewping.coflo.service.dto.request.ReviewRequestMessage.*;
+
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.reviewping.coflo.entity.ChunkedCode;
 import com.reviewping.coflo.gateway.RedisGateway;
 import com.reviewping.coflo.json.JsonUtil;
 import com.reviewping.coflo.openai.OpenaiClient;
 import com.reviewping.coflo.openai.dto.ChatCompletionResponse;
-import com.reviewping.coflo.service.dto.request.MrContent;
+import com.reviewping.coflo.openai.dto.EmbeddingResponse;
+import com.reviewping.coflo.repository.VectorRepository;
 import com.reviewping.coflo.service.dto.request.ReviewRequestMessage;
+import com.reviewping.coflo.service.dto.response.RetrievalMessage;
 import com.reviewping.coflo.service.dto.response.ReviewResponseMessage;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +25,26 @@ public class ReviewCreateService {
     private final RedisGateway redisGateway;
     private final OpenaiClient openaiClient;
     private final JsonUtil jsonUtil;
+    private final VectorRepository vectorRepository;
 
     @ServiceActivator(inputChannel = "reviewRequestChannel")
     public void createReview(String reviewRequestMessage) {
         ReviewRequestMessage reviewRequest =
                 jsonUtil.fromJson(reviewRequestMessage, new TypeReference<>() {});
-        // 1. TODO: mr 임베딩
-        // 2. TODO: 참고자료 검색
+        Long projectId = reviewRequest.projectId();
+        Long branchId = reviewRequest.branchId();
+        // 1. mr 임베딩
+        EmbeddingResponse embeddingResponse =
+                openaiClient.generateEmbedding(reviewRequest.mrContent().mrDiffs());
+        float[] embedding = embeddingResponse.data().getFirst().embedding();
+        // 2. 참고자료 검색
+        List<ChunkedCode> chunkedCodes =
+                vectorRepository.retrieveRelevantData(projectId, branchId, 10, embedding);
+        List<RetrievalMessage> retrievals =
+                chunkedCodes.stream().map(RetrievalMessage::from).toList();
         // 3. 프롬프트 생성
-        String prompt = buildPrompt(reviewRequest.mrContent(), reviewRequest.customPrompt());
+        String prompt =
+                buildPrompt(reviewRequest.mrContent(), reviewRequest.customPrompt(), retrievals);
         // 4. 리뷰 생성
         ChatCompletionResponse chatCompletionResponse = openaiClient.chat(prompt);
         String chatMessage = chatCompletionResponse.choices().getFirst().message().content();
@@ -43,7 +59,17 @@ public class ReviewCreateService {
     }
 
     // TODO: 프롬프트 개선
-    private String buildPrompt(MrContent mrContent, String customPrompt) {
-        return mrContent.mrDescription() + mrContent.mrDiffs() + customPrompt;
+    private String buildPrompt(
+            MrContent mrContent, String customPrompt, List<RetrievalMessage> retrievals) {
+        StringBuilder prompt = new StringBuilder();
+        prompt.append("# 참고자료\n");
+        for (RetrievalMessage retrieval : retrievals) {
+            prompt.append("//").append(retrieval.fileName()).append("\n");
+            prompt.append(retrieval.content()).append("\n");
+        }
+        prompt.append("# 변경내용\n");
+        prompt.append(mrContent).append("\n");
+        prompt.append(customPrompt);
+        return prompt.toString();
     }
 }

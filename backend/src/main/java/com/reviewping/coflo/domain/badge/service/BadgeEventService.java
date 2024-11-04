@@ -7,12 +7,15 @@ import com.reviewping.coflo.domain.badge.entity.UserBadge;
 import com.reviewping.coflo.domain.badge.repository.BadgeCodeRepository;
 import com.reviewping.coflo.domain.badge.repository.UserBadgeRepository;
 import com.reviewping.coflo.domain.customPrompt.repository.PromptHistoryRepository;
+import com.reviewping.coflo.domain.mergerequest.repository.BestMrHistoryRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.user.repository.LoginHistoryRepository;
+import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,12 +33,14 @@ public class BadgeEventService {
     private static final int PERCENT = 1;
     private static final Random random = new Random();
 
+    private final UserRepository userRepository;
     private final UserBadgeRepository userBadgeRepository;
     private final BadgeCodeRepository badgeCodeRepository;
     private final GitlabAccountRepository gitlabAccountRepository;
     private final UserProjectRepository userProjectRepository;
     private final LoginHistoryRepository loginHistoryRepository;
     private final PromptHistoryRepository promptHistoryRepository;
+    private final BestMrHistoryRepository bestMrHistoryRepository;
 
     private UserBadge userBadge;
     private BadgeCode badgeCode;
@@ -99,5 +104,29 @@ public class BadgeEventService {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
         }
+    }
+
+    // 정복자 - 베스트 MR에 n회 이상 선정 시 획득
+    @Transactional
+    public void eventBestMrCount() {
+        // BestMrHistory가 3회 이상인 사용자 ID 조회
+        List<Long> userIds = bestMrHistoryRepository.findUsersWithAtLeastNHistory(3);
+
+        // DB에서 3회 이상 BestMrHistory가 쌓인 사용자 중, 이미 뱃지를 가진 사용자를 제외한 사용자 조회
+        List<Long> newBadgeUserIds =
+                userBadgeRepository.findUserIdsWithoutBadge(userIds, CONQUEROR.getId());
+
+        badgeCode = badgeCodeRepository.getById(LUCKY_FIND.getId());
+
+        List<UserBadge> newBadges =
+                newBadgeUserIds.stream()
+                        .map(
+                                userId -> {
+                                    User user = userRepository.getById(userId);
+                                    return UserBadge.of(user, badgeCode);
+                                })
+                        .collect(Collectors.toList());
+
+        userBadgeRepository.saveAll(newBadges);
     }
 }

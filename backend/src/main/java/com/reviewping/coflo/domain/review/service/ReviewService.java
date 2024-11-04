@@ -7,21 +7,27 @@ import com.reviewping.coflo.domain.customprompt.repository.CustomPromptRepositor
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
 import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.domain.mergerequest.repository.MrInfoRepository;
+import com.reviewping.coflo.domain.project.entity.Branch;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.review.controller.dto.request.RegenerateReviewRequest.RetrievalContent;
 import com.reviewping.coflo.domain.review.controller.dto.response.RetrievalDetailResponse;
 import com.reviewping.coflo.domain.review.controller.dto.response.ReviewDetailResponse;
 import com.reviewping.coflo.domain.review.controller.dto.response.ReviewResponse;
+import com.reviewping.coflo.domain.review.entity.Language;
 import com.reviewping.coflo.domain.review.entity.LanguageType;
+import com.reviewping.coflo.domain.review.entity.Retrieval;
 import com.reviewping.coflo.domain.review.entity.Review;
 import com.reviewping.coflo.domain.review.message.*;
 import com.reviewping.coflo.domain.review.message.ReviewRequestMessage.MrContent;
+import com.reviewping.coflo.domain.review.message.ReviewResponseMessage;
+import com.reviewping.coflo.domain.review.repository.RetrievalRepository;
 import com.reviewping.coflo.domain.review.repository.ReviewRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
+import com.reviewping.coflo.global.common.repository.BranchRepository;
 import com.reviewping.coflo.global.integration.RedisGateway;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +41,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
+    private final RetrievalRepository retrievalRepository;
+    private final BranchRepository branchRepository;
 
     private final MrInfoRepository mrInfoRepository;
     private final ReviewRepository reviewRepository;
@@ -58,9 +66,25 @@ public class ReviewService {
         }
         MrInfo mrInfo = mrInfoRepository.getById(reviewResponse.mrInfoId());
         Project project = mrInfo.getProject();
+
         Review review = Review.builder().mrInfo(mrInfo).content(reviewResponse.content()).build();
         reviewRepository.save(review);
-        // TODO: 참고자료 저장
+        List<Retrieval> retrievals =
+                reviewResponse.retrievals().stream()
+                        .map(
+                                message ->
+                                        Retrieval.builder()
+                                                .review(review)
+                                                .fileName(message.fileName())
+                                                .content(message.content())
+                                                .language(
+                                                        new Language(
+                                                                LanguageType.fromType(
+                                                                        message.language())))
+                                                .build())
+                        .toList();
+        retrievalRepository.saveAll(retrievals);
+
         gitLabClient.addNoteToMr(
                 reviewResponse.gitlabUrl(),
                 project.getBotToken(),
@@ -106,22 +130,22 @@ public class ReviewService {
                 gitLabClient.getMrDiffs(gitlabUrl, token, gitlabProjectId, iid);
         // 3. 커스텀프롬프트 가져오기
         CustomPrompt customPrompt = customPromptRepository.getByProjectId(projectId);
-        // 4. TODO: projectId와 targetBranch로 브랜치 id 가져오기
-        Long branchId = 1L;
+        // 4. projectId와 targetBranch로 브랜치 id 가져오기
+        Branch branch = branchRepository.getByName(targetBranch);
         // 5. 리뷰 생성 요청
         MrContent mrContent = new MrContent(mrDescription, mrDiffs.toString());
         ReviewRequestMessage reviewRequest =
                 new ReviewRequestMessage(
                         projectId,
                         mrInfo.getId(),
-                        branchId,
+                        branch.getId(),
                         mrContent,
                         customPrompt.getContent(),
                         gitlabUrl);
         redisGateway.sendReviewRequest(reviewRequest);
         // 6. 리뷰 평가 요청
         MrEvalRequestMessage evalRequest =
-                new MrEvalRequestMessage(mrInfo.getId(), branchId, mrContent);
+                new MrEvalRequestMessage(mrInfo.getId(), branch.getId(), mrContent);
         redisGateway.sendEvalRequest(evalRequest);
     }
 
@@ -148,14 +172,14 @@ public class ReviewService {
                         mrInfo.getGitlabMrIid());
 
         CustomPrompt customPrompt = customPromptRepository.getByProjectId(project.getId());
-
         MrContent mrContent = new MrContent(gitlabMrResponse.description(), mrDiffs.toString());
+        Branch branch = branchRepository.getByName(gitlabMrResponse.targetBranch());
 
         ReviewRegenerateRequestMessage regenerateRequest =
                 new ReviewRegenerateRequestMessage(
                         project.getId(),
                         mrInfo.getId(),
-                        gitlabMrResponse.targetBranch(),
+                        branch.getId(),
                         mrContent,
                         customPrompt.getContent(),
                         gitlabAccount.getDomain(),

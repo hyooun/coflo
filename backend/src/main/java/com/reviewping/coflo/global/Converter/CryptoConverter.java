@@ -1,4 +1,4 @@
-package com.reviewping.coflo.global.crypto;
+package com.reviewping.coflo.global.Converter;
 
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;

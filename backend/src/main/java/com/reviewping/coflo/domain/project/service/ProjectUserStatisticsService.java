@@ -1,0 +1,69 @@
+package com.reviewping.coflo.domain.project.service;
+
+import com.reviewping.coflo.domain.project.controller.response.UserProjectIndividualScoreResponse;
+import com.reviewping.coflo.domain.project.controller.response.UserProjectTotalScoreResponse;
+import com.reviewping.coflo.domain.project.domain.CalculationType;
+import com.reviewping.coflo.domain.project.domain.ProjectWeek;
+import com.reviewping.coflo.domain.project.domain.calculator.IndividualScoreCalculator;
+import com.reviewping.coflo.domain.project.domain.calculator.ScoreCalculator;
+import com.reviewping.coflo.domain.project.domain.calculator.TotalScoreCalculator;
+import com.reviewping.coflo.domain.project.entity.Project;
+import com.reviewping.coflo.domain.project.repository.ProjectRepository;
+import com.reviewping.coflo.domain.user.entity.GitlabAccount;
+import com.reviewping.coflo.domain.user.entity.User;
+import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
+import com.reviewping.coflo.domain.userproject.entity.UserProject;
+import com.reviewping.coflo.domain.userproject.entity.UserProjectScore;
+import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
+import com.reviewping.coflo.domain.userproject.repository.UserProjectScoreRepository;
+import com.reviewping.coflo.global.util.ProjectDateUtil;
+import java.time.LocalDate;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class ProjectUserStatisticsService {
+
+    private final GitlabAccountRepository gitlabAccountRepository;
+    private final ProjectRepository projectRepository;
+    private final UserProjectRepository userProjectRepository;
+    private final UserProjectScoreRepository userProjectScoreRepository;
+    private final ProjectDateUtil projectDateUtil;
+
+    public UserProjectTotalScoreResponse getTotalScore(
+            User user, Long projectId, Integer period, CalculationType calculationType) {
+        return calculateScore(user, projectId, period, new TotalScoreCalculator(calculationType));
+    }
+
+    public UserProjectIndividualScoreResponse getIndividualScore(
+            User user, Long projectId, Integer period, CalculationType calculationType) {
+        return calculateScore(
+                user, projectId, period, new IndividualScoreCalculator(calculationType));
+    }
+
+    private <R> R calculateScore(
+            User user, Long projectId, Integer period, ScoreCalculator<R> calculator) {
+        UserProject userProject = getUserProject(user, projectId);
+        ProjectWeek projectWeek =
+                projectDateUtil.calculateWeekRange(
+                        userProject.getProject().getCreatedDate().toLocalDate(),
+                        period,
+                        LocalDate.now());
+
+        List<UserProjectScore> userProjectScores =
+                userProjectScoreRepository.findByUserProjectIdAndWeekRange(
+                        userProject.getId(), projectWeek.startWeek(), projectWeek.endWeek());
+
+        return calculator.calculateScore(projectWeek, userProjectScores);
+    }
+
+    private UserProject getUserProject(User user, Long projectId) {
+        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(user.getId());
+        Project project = projectRepository.getById(projectId);
+        return userProjectRepository.getByProjectAndGitlabAccount(project, gitlabAccount);
+    }
+}

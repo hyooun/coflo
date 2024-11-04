@@ -1,5 +1,6 @@
 package com.reviewping.coflo.global.integration;
 
+import com.reviewping.coflo.domain.review.message.ReviewRegenerateRequestMessage;
 import com.reviewping.coflo.domain.review.message.ReviewRequestMessage;
 import org.springframework.integration.annotation.Gateway;
 import org.springframework.integration.annotation.GatewayHeader;
@@ -19,4 +20,7 @@ public interface RedisGateway {
 
     @Gateway(headers = @GatewayHeader(name = "topic", value = "test"))
     void sendTest(String message);
+
+    @Gateway(headers = @GatewayHeader(name = "topic", value = "review-regenerate-request"))
+    void sendReviewRegenerateRequest(ReviewRegenerateRequestMessage reviewRegenerateRequestMessage);
 }

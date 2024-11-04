@@ -74,7 +74,7 @@ const BadgePage = () => {
   };
 
   return (
-    <div className="flex flex-col flex-grow overflow-auto px-8 pt-6">
+    <div className="flex flex-col flex-grow overflow-auto px-8 pt-6 items-center min-w-[800px]">
       <BadgeHeader />
       <RepresentativeBadge
         selectedBadge={selectedBadge?.imageUrl || null}

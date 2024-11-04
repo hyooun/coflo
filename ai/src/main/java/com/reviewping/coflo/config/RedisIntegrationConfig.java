@@ -50,6 +50,11 @@ public class RedisIntegrationConfig {
     }
 
     @Bean
+    public MessageChannel reviewRegenerateRequestChannel() {
+        return new DirectChannel();
+    }
+
+    @Bean
     public MessageChannel testInboundChannel() {
         return new DirectChannel();
     }
@@ -69,7 +74,8 @@ public class RedisIntegrationConfig {
             MessageChannel redisInboundChannel) {
 
         RedisInboundChannelAdapter adapter = new RedisInboundChannelAdapter(redisConnectionFactory);
-        adapter.setTopics("test", "init", "review-request", "mr-eval-request");
+        adapter.setTopics(
+                "test", "init", "review-request", "mr-eval-request", "review-regenerate-request");
         adapter.setOutputChannel(redisInboundChannel);
         return adapter;
     }
@@ -96,6 +102,7 @@ public class RedisIntegrationConfig {
         router.setChannelMapping("init", "initializeChannel");
         router.setChannelMapping("review-request", "reviewRequestChannel");
         router.setChannelMapping("mr-eval-request", "mrEvalRequestChannel");
+        router.setChannelMapping("review-regenerate-request", "reviewRegenerateRequestChannel");
         return router;
     }
 }

@@ -1,6 +1,7 @@
 package com.reviewping.coflo.global.client.gitlab;
 
-import static com.reviewping.coflo.global.error.ErrorCode.*;
+import static com.reviewping.coflo.global.error.ErrorCode.EXTERNAL_API_BAD_REQUEST;
+import static com.reviewping.coflo.global.error.ErrorCode.EXTERNAL_API_NOT_FOUND;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -177,40 +178,6 @@ public class GitLabClient {
 
         RestTemplateUtils.sendPostRequest(
                 url, headers, body, new ParameterizedTypeReference<>() {});
-    }
-
-    public List<String> getAllBranchNames(String gitlabUrl, String token, Long gitlabProjectId) {
-
-        HttpHeaders headers = makeGitlabHeaders(token);
-
-        List<String> allBranches = new ArrayList<>();
-
-        int page = 1;
-        int totalPages;
-
-        do {
-            String url =
-                    GitLabApiUrlBuilder.createProjectBranchesUrl(gitlabUrl, gitlabProjectId)
-                            + "?page="
-                            + page
-                            + "&per_page=100";
-            ResponseEntity<List<GitlabBranchContent>> response =
-                    RestTemplateUtils.sendGetRequest(
-                            url, headers, new ParameterizedTypeReference<>() {});
-
-            List<GitlabBranchContent> branches = response.getBody();
-            if (branches != null) {
-                branches.forEach(branch -> allBranches.add(branch.name()));
-            }
-
-            HttpHeaders responseHeaders = response.getHeaders();
-            totalPages =
-                    Integer.parseInt(
-                            Objects.requireNonNull(responseHeaders.getFirst("X-Total-Pages")));
-            page++;
-        } while (page <= totalPages);
-
-        return allBranches;
     }
 
     public List<String> getAllBranchNames(String gitlabUrl, String token, Long gitlabProjectId) {

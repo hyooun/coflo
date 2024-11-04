@@ -10,6 +10,7 @@ import AlertModal from '@components/Modal/AlertModal';
 const BadgePage = () => {
   const [badges, setBadges] = useState<BadgeType[]>([]);
   const [selectedBadge, setSelectedBadge] = useState<BadgeType | null>(null);
+  const [mainBadge, setMainBadge] = useState<BadgeType | null>(null);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string[]>([]);
 
@@ -22,9 +23,8 @@ const BadgePage = () => {
         const mainBadgeData = data.data.badgeDetails.find(
           (badge: BadgeType) => badge.badgeCodeId === data.data.mainBadgeCodeId,
         );
-        if (mainBadgeData) {
-          setSelectedBadge(mainBadgeData);
-        }
+        setMainBadge(mainBadgeData || null);
+        setSelectedBadge(mainBadgeData || null);
       } catch (error) {
         console.error('Error fetching badges:', error);
       }
@@ -39,7 +39,27 @@ const BadgePage = () => {
   };
 
   const handleSave = async () => {
-    if (!selectedBadge) return;
+    if (mainBadge?.badgeCodeId === selectedBadge?.badgeCodeId) {
+      return;
+    }
+
+    if (!selectedBadge) {
+      try {
+        const { data } = await axios.delete('/api/badges');
+
+        if (data.status === 'SUCCESS') {
+          setMainBadge(null);
+          setAlertMessage(['대표 뱃지가 해제되었습니다.']);
+          setIsAlertModalOpen(true);
+        }
+      } catch (error) {
+        console.error('Error removing badge:', error);
+        setAlertMessage(['대표 뱃지 해제에 실패했습니다.']);
+        setIsAlertModalOpen(true);
+      }
+
+      return;
+    }
 
     try {
       const { data } = await axios.patch('/api/badges', {
@@ -47,6 +67,7 @@ const BadgePage = () => {
       });
 
       if (data.status === 'SUCCESS') {
+        setMainBadge(selectedBadge);
         setAlertMessage(['대표 뱃지가 설정되었습니다.']);
         setIsAlertModalOpen(true);
       }
@@ -58,19 +79,7 @@ const BadgePage = () => {
   };
 
   const handleDefault = async () => {
-    try {
-      const { data } = await axios.delete('/api/badges');
-
-      if (data.status === 'SUCCESS') {
-        setSelectedBadge(null);
-        setAlertMessage(['대표 뱃지가 해제되었습니다.']);
-        setIsAlertModalOpen(true);
-      }
-    } catch (error) {
-      console.error('Error removing badge:', error);
-      setAlertMessage(['대표 뱃지 해제에 실패했습니다.']);
-      setIsAlertModalOpen(true);
-    }
+    setSelectedBadge(null);
   };
 
   return (

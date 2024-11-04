@@ -180,33 +180,6 @@ public class GitLabClient {
                 url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
-    public List<String> getAllBranchNames(String gitlabUrl, String token, Long gitlabProjectId) {
-        HttpHeaders headers = makeGitlabHeaders(token);
-        String branchUrl = GitLabApiUrlBuilder.createProjectBranchesUrl(gitlabUrl, gitlabProjectId);
-
-        int page = 1;
-        int totalPages = 0;
-        List<String> allBranches = new ArrayList<>();
-        do {
-            String url = branchUrl + "?page=" + page + "&per_page=100";
-            ResponseEntity<List<GitlabBranchContent>> response =
-                    RestTemplateUtils.sendGetRequest(
-                            url, headers, new ParameterizedTypeReference<>() {});
-
-            List<GitlabBranchContent> branches = response.getBody();
-            if (branches != null) {
-                branches.forEach(branch -> allBranches.add(branch.name()));
-            }
-
-            if (totalPages == 0) {
-                totalPages = getTotalPages(response.getHeaders());
-            }
-            page++;
-        } while (page <= totalPages);
-
-        return allBranches;
-    }
-
     private int getProjectCommitCount(String gitlabUrl, String token, Long gitlabProjectId) {
         String url = GitLabApiUrlBuilder.createProjectCommitsUrl(gitlabUrl, gitlabProjectId);
         HttpHeaders headers = makeGitlabHeaders(token);

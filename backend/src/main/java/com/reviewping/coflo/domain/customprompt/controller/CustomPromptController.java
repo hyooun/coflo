@@ -4,12 +4,14 @@ import com.reviewping.coflo.domain.customprompt.controller.dto.request.CustomPro
 import com.reviewping.coflo.domain.customprompt.controller.dto.response.CustomPromptResponse;
 import com.reviewping.coflo.domain.customprompt.service.CustomPromptService;
 import com.reviewping.coflo.domain.user.entity.User;
+import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@LogExecution
 @RestController
 @RequestMapping("/api/custom-prompts")
 @RequiredArgsConstructor

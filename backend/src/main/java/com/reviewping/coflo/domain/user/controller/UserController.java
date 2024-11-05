@@ -3,16 +3,14 @@ package com.reviewping.coflo.domain.user.controller;
 import com.reviewping.coflo.domain.user.controller.dto.request.GitlabAccountRequest;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.service.UserService;
+import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@LogExecution
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor

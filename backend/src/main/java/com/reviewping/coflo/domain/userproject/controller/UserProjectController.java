@@ -4,6 +4,7 @@ import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.domain.userproject.controller.dto.response.UserProjectResponse;
 import com.reviewping.coflo.domain.userproject.service.UserProjectService;
+import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
@@ -12,6 +13,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@LogExecution
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user-project")

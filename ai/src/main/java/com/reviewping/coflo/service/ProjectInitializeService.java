@@ -1,7 +1,9 @@
 package com.reviewping.coflo.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.reviewping.coflo.entity.ChunkedCode;
 import com.reviewping.coflo.git.GitUtil;
+import com.reviewping.coflo.json.JsonUtil;
 import com.reviewping.coflo.openai.OpenaiClient;
 import com.reviewping.coflo.openai.dto.EmbeddingResponse;
 import com.reviewping.coflo.repository.VectorRepository;
@@ -25,22 +27,27 @@ public class ProjectInitializeService {
     private final TreeSitterUtil treeSitterUtil;
     private final VectorRepository vectorRepository;
     private final String gitCloneDirectory;
+    private final JsonUtil jsonUtil;
 
     public ProjectInitializeService(
             GitUtil gitUtil,
             OpenaiClient openaiClient,
             TreeSitterUtil treeSitterUtil,
             VectorRepository vectorRepository,
-            @Value("${git-clone-directory}") String gitCloneDirectory) {
+            @Value("${git-clone-directory}") String gitCloneDirectory,
+            JsonUtil jsonUtil) {
         this.gitUtil = gitUtil;
         this.openaiClient = openaiClient;
         this.treeSitterUtil = treeSitterUtil;
         this.vectorRepository = vectorRepository;
         this.gitCloneDirectory = gitCloneDirectory;
+        this.jsonUtil = jsonUtil;
     }
 
     @ServiceActivator(inputChannel = "initializeChannel")
-    public void initializeKnowledgeBase(InitRequestMessage initRequest) {
+    public void initializeKnowledgeBase(String initRequestMessage) {
+        InitRequestMessage initRequest =
+                jsonUtil.fromJson(initRequestMessage, new TypeReference<>() {});
         Long projectId = initRequest.projectId();
         Long branchId = initRequest.branchId();
         String gitUrl = initRequest.gitUrl();

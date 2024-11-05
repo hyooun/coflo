@@ -33,3 +33,19 @@ build_FE:
     - if: '$CI_COMMIT_BRANCH == "fe/dev"'
   tags: 
     - prod
+
+build_AI:
+  stage: build
+  image: gradle:8.8-jdk21
+  before_script:
+    - echo "[INFO] YML Settings"
+    - chmod +x backend/gradlew
+  script:
+    - cd ai
+    - ./gradlew clean build -x test -Dspring.profiles.active=prod
+    - cp build/libs/coflo-0.0.1-SNAPSHOT.jar ~/coflo/spring-docker-ai
+    - sh ~/coflo/spring-docker-ai/spring.sh
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "ai/dev"'
+  tags: 
+    - prod

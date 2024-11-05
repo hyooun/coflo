@@ -24,7 +24,7 @@ const CustomPromptContainer = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 min-w-[600px]">
         <div className="relative w-full border-2 border-primary-500 rounded-xl p-4">
           <PrevPrompt />
           <textarea

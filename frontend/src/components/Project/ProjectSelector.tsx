@@ -38,7 +38,8 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
 
     setProjects(projectsWithCurrent);
     setSelectedProject(projectsWithCurrent.find((p) => p.isCurrent) || projectsWithCurrent[0]);
-  }, []);
+    console.log(selectedProject);
+  }, [selectedProject]);
 
   useEffect(() => {
     searchInputRef.current?.focus();

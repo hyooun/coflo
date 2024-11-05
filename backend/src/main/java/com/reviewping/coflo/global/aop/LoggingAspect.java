@@ -37,6 +37,7 @@ public class LoggingAspect {
             String errorLogMessage = getErrorLogMessage(className, methodName, args, ex);
             WebHookUtils.sendWebHookMessage(errorLogMessage);
             log.info(WEBHOOK_MESSAGE);
+            log.info("{}", errorLogMessage);
             throw ex;
         }
     }

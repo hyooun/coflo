@@ -3,12 +3,10 @@ package com.reviewping.coflo.domain.badge.service;
 import com.reviewping.coflo.domain.badge.controller.dto.response.BadgeDetail;
 import com.reviewping.coflo.domain.badge.controller.dto.response.BadgeResponse;
 import com.reviewping.coflo.domain.badge.entity.BadgeCode;
-import com.reviewping.coflo.domain.badge.entity.UserBadge;
 import com.reviewping.coflo.domain.badge.repository.BadgeCodeRepository;
 import com.reviewping.coflo.domain.badge.repository.UserBadgeRepository;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,17 +22,11 @@ public class BadgeService {
     private final UserRepository userRepository;
 
     public BadgeResponse getBadgeInfo(User user) {
-        List<UserBadge> userBadges = userBadgeRepository.findAllByUser(user);
-
         BadgeCode mainBadgeCode = user.getMainBadgeCode();
-        Long mainbadgeCodeId = mainBadgeCode != null ? mainBadgeCode.getId() : null;
-        List<BadgeDetail> badgeDetails = new ArrayList<>();
+        Long mainBadgeCodeId = mainBadgeCode != null ? mainBadgeCode.getId() : null;
+        List<BadgeDetail> badgeDetails = getBadgeDetails(user);
 
-        for (UserBadge userBadge : userBadges) {
-            badgeDetails.add(BadgeDetail.of(userBadge.getBadgeCode()));
-        }
-
-        return BadgeResponse.of(mainbadgeCodeId, badgeDetails);
+        return BadgeResponse.of(mainBadgeCodeId, badgeDetails);
     }
 
     @Transactional
@@ -46,5 +38,19 @@ public class BadgeService {
     @Transactional
     public void deleteMainBadge(User user) {
         userRepository.updateBadge(user, null);
+    }
+
+    private List<BadgeDetail> getBadgeDetails(User user) {
+        return badgeCodeRepository.findAll().stream()
+                .map(
+                        badgeCode ->
+                                new BadgeDetail(
+                                        badgeCode.getId(),
+                                        badgeCode.getName(),
+                                        badgeCode.getDescription(),
+                                        badgeCode.getImageUrl(),
+                                        userBadgeRepository.existsByUserAndBadgeCode(
+                                                user, badgeCode)))
+                .toList();
     }
 }

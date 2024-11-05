@@ -32,13 +32,12 @@ public enum ErrorCode {
     GITLAB_EVENT_REQUEST_SERIALIZATION_ERROR(
             HttpStatus.INTERNAL_SERVER_ERROR, "C006", "웹훅 REQUEST 역직렬화 중 에러가 발생했습니다."),
     /**
-     * Review(D000)
+     * REVIEW(D000)
      */
-    CHAT_REQUEST_SERIALIZATION_ERROR(
-            HttpStatus.INTERNAL_SERVER_ERROR, "D001", "OPENAI 요청 생성에 오류가 발생했습니다."),
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "D001", "존재하지 않는 리뷰입니다."),
 
     /**
-     * JWT Token(E000)
+     * JWT TOKEN(E000)
      */
     TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "E001", "유효하지 않은 토큰입니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "E002", "만료된 토큰입니다."),
@@ -46,46 +45,49 @@ public enum ErrorCode {
     TOKEN_WRONG(HttpStatus.UNAUTHORIZED, "E004", "잘못된 토큰 서명입니다."),
 
     /**
-     * crypto(F000)
+     * CRYPTO(F000)
      */
     ENCRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "F001", "암호화 도중 오류가 발생했습니다."),
     DECRYPTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "F002", "복호화 도중 오류가 발생했습니다."),
 
     /**
-     * custom_prompt(G000)
+     * CUSTOM PROMPT(G000)
      */
     CUSTOM_PROMPT_NOT_EXIST(HttpStatus.NOT_FOUND, "G001", "존재하지 않는 커스텀 프롬프트입니다."),
 
     /**
-     * project(H000)
+     * PROJECT(H000)
      */
     PROJECT_NOT_EXIST(HttpStatus.NOT_FOUND, "H001", "존재하지 않는 프로젝트입니다."),
-    PROJECT_CALCULATION_TYPE_NOT_EXIST(HttpStatus.BAD_REQUEST, "H001", "잘못된 CalculationType 값입니다."),
+    PROJECT_CALCULATION_TYPE_NOT_EXIST(
+            HttpStatus.BAD_REQUEST, "H002", "잘못된 CalculationType 파라미터 값입니다."),
     PROJECT_SCORE_DISPLAY_TYPE_NOT_EXIST(
-            HttpStatus.BAD_REQUEST, "H001", "잘못된 ScoreDisplayType 값입니다."),
+            HttpStatus.BAD_REQUEST, "H003", "잘못된 ScoreDisplayType 파라미터 값입니다."),
 
     /**
-     * USER-PROJECT(I000)
+     * USER PROJECT(I000)
      */
     LINK_BOT_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "I001", "연동에 필요한 Bot 토큰이 존재하지 않습니다."),
-    USER_PROJECT_NOT_EXIST(HttpStatus.NOT_FOUND, "I002", "존재하지 않는 프로젝트입니다."),
+    USER_PROJECT_NOT_EXIST(HttpStatus.NOT_FOUND, "I002", "연동되지 않는 프로젝트입니다."),
+
     /**
-     * (J000)
+     * WEBHOOK CHANNEL(J000)
      */
     CHANNEL_CODE_NOT_EXIST(HttpStatus.NOT_FOUND, "J001", "존재하지 않는 채널 코드입니다."),
-
-    /**
-     * Webhook Channel(K000)
-     */
     WEBHOOK_REQUEST_SERIALIZATION_ERROR(
-            HttpStatus.INTERNAL_SERVER_ERROR, "K001", "Webhook Content 요청 생성에 오류가 발생했습니다."),
-    WEBHOOK_CHANNEL_NOT_EXIST(HttpStatus.NOT_FOUND, "K002", "존재하지 않는 웹훅 채널입니다."),
+            HttpStatus.INTERNAL_SERVER_ERROR, "J002", "Webhook Content 요청 생성에 오류가 발생했습니다."),
+    WEBHOOK_CHANNEL_NOT_EXIST(HttpStatus.NOT_FOUND, "J003", "존재하지 않는 웹훅 채널입니다."),
 
     /**
-     * user badge(L000)
+     * BADGE(K000)
      */
-    USER_BADGE_NOT_EXIST(HttpStatus.NOT_FOUND, "L001", "존재하지 않는 사용자 뱃지입니다."),
-    BADGE_NOT_EXIST(HttpStatus.NOT_FOUND, "L002", "존재하지 않는 뱃지입니다."),
+    USER_BADGE_NOT_EXIST(HttpStatus.NOT_FOUND, "K001", "존재하지 않는 사용자 뱃지입니다."),
+    BADGE_NOT_EXIST(HttpStatus.NOT_FOUND, "K002", "존재하지 않는 뱃지입니다."),
+
+    /**
+     * language (L000)
+     */
+    LANGUAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "L001", "지원하지 않는 언어입니다."),
 
     /**
      * review (M000)
@@ -98,12 +100,7 @@ public enum ErrorCode {
     BRANCH_NOT_FOUND(HttpStatus.NOT_FOUND, "N001", "존재하지 않는 브랜치입니다."),
 
     /**
-     * language (O000)
-     */
-    LANGUAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "O001", "지원하지 않는 언어입니다."),
-
-    /**
-     * 외부 API(Y000)
+     * EXTERNAL API(Y000)
      */
     EXTERNAL_API_NOT_FOUND(HttpStatus.NOT_FOUND, "Y001", "외부 API를 찾을 수 없습니다."),
     EXTERNAL_API_METHOD_NOT_ALLOWED(
@@ -116,7 +113,7 @@ public enum ErrorCode {
     EXTERNAL_API_UNAUTHORIZED(HttpStatus.BAD_REQUEST, "Y006", "외부 API 토큰이 유효하지 않습니다."),
 
     /**
-     * Etc(Z000)
+     * ETC(Z000)
      */
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST, "Z009", "잘못된 파라미터가 포함되었습니다.");
 

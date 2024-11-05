@@ -13,6 +13,8 @@ dist
 dist-ssr
 *.local
 
+/src/mocks
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

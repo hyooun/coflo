@@ -40,7 +40,7 @@ const MergeRequestReviewPage = () => {
       <div className="w-full">
         <MergeRequestHeader mergeRequest={mergeRequest} />
       </div>
-      <div className="flex gap-12 ml-4">
+      <div className="flex gap-12 ml-4 overflow-auto">
         <div className="flex-1">
           <ReviewList reviews={reviews} />
         </div>

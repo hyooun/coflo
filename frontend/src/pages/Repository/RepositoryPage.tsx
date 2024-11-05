@@ -14,7 +14,7 @@ import tokenintro from '@assets/tokenintro.png';
 
 export default function RepositoryPage() {
   const [currentPage] = useAtom(currentPageAtom);
-  const [setTotalPages] = useAtom(totalPagesAtom);
+  const [, setTotalPages] = useAtom(totalPagesAtom);
   const [repositories, setRepositories] = useState<GitlabProject[]>([]);
   const itemsPerPage = 10;
   const [selectedRepo, setSelectedRepo] = useState<GitlabProject | null>(null);
@@ -29,7 +29,7 @@ export default function RepositoryPage() {
       console.log('API 응답:', response);
       if (response && response.data) {
         setRepositories(response.data.gitlabProjectList);
-        // setTotalPages(response.data.totalPages);
+        setTotalPages(response.data.totalPages);
       }
     };
 

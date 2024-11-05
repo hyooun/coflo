@@ -3,9 +3,10 @@ import { useParams } from 'react-router-dom';
 import MergeRequestHeader from '@components/MergeRequest/MergeRequestHeader .tsx';
 import ReviewList from '@components/MergeRequest/Review/ReviewList.tsx';
 import { GitlabMergeRequest } from 'types/mergeRequest.ts';
-import { MergeRequestReview, Reference } from 'types/review.ts';
+import { MergeRequestReview } from 'types/review.ts';
+import { Reference } from 'types/reference';
 import { useEffect, useState } from 'react';
-import ReferencesList from '@components/MergeRequest/Review/ReferenceList.tsx';
+import ReferencesList from '@components/MergeRequest/Review/ReviewReferenceList.tsx';
 
 const MergeRequestReviewPage = () => {
   const { id } = useParams();
@@ -36,15 +37,11 @@ const MergeRequestReviewPage = () => {
   if (!mergeRequest) return <div>Loading...</div>;
 
   return (
-    <div className="p-8 flex flex-col">
-      <div className="w-full">
+    <div className="p-8 flex flex-col w-full overflow-auto items-center">
+      <div className="w-full border-b-2 border-secondary">
         <MergeRequestHeader mergeRequest={mergeRequest} />
-      </div>
-      <div className="flex gap-12 ml-4 overflow-auto">
-        <div className="flex-1">
+        <div className="flex gap-12 w-full">
           <ReviewList reviews={reviews} />
-        </div>
-        <div className="">
           <ReferencesList references={references} />
         </div>
       </div>

@@ -15,7 +15,8 @@ const MergeRequestHeader = ({ mergeRequest }: { mergeRequest: GitlabMergeRequest
     }
   };
   return (
-    <div className="space-y-1 border-b-2 border-secondary font-pretendard pb-4">
+    <div className="space-y-1 border-b-2 border-secondary font-pretendard pb-4 w-full min-w-[700px]">
+      {/* <div className="space-y-1 border-b-2 border-secondary font-pretendard pb-4"> */}
       <div className="flex items-center gap-2">
         <h1 className="text-2xl font-bold">{mergeRequest.title}</h1>
         <span className="text-2xl text-gray-600">#{mergeRequest.id}</span>
@@ -27,7 +28,7 @@ const MergeRequestHeader = ({ mergeRequest }: { mergeRequest: GitlabMergeRequest
           <span className="font-bold">{mergeRequest.state}</span>
         </div>
         <div>
-          <span className="font-bold">{mergeRequest.assignee.username}</span>
+          <span className="font-bold">{mergeRequest.assignee.name}</span>
           <span className="mx-1">requested to merge</span>
           <span className="font-SFMono text-xs bg-secondary text-white rounded-2xl px-2">
             {mergeRequest.sourceBranch}

@@ -141,7 +141,7 @@ public class GitLabClient {
         try {
             body = objectMapper.writeValueAsString(gitlabNoteRequest);
         } catch (JsonProcessingException e) {
-            throw new BusinessException(ErrorCode.GITLAB_REQUEST_SERIALIZATION_ERROR);
+            throw new BusinessException(ErrorCode.GITLAB_REQUEST_SERIALIZATION_ERROR, e);
         }
         RestTemplateUtils.sendPostRequest(
                 url, headers, body, new ParameterizedTypeReference<>() {});
@@ -173,7 +173,7 @@ public class GitLabClient {
         try {
             body = objectMapper.writeValueAsString(requestBody);
         } catch (JsonProcessingException e) {
-            throw new BusinessException(ErrorCode.GITLAB_REQUEST_SERIALIZATION_ERROR);
+            throw new BusinessException(ErrorCode.GITLAB_REQUEST_SERIALIZATION_ERROR, e);
         }
 
         RestTemplateUtils.sendPostRequest(

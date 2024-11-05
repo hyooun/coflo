@@ -34,7 +34,7 @@ public class GitlabWebhookController {
         try {
             gitlabEventRequest = objectMapper.readValue(requestBody, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
-            throw new BusinessException(ErrorCode.GITLAB_EVENT_REQUEST_SERIALIZATION_ERROR);
+            throw new BusinessException(ErrorCode.GITLAB_EVENT_REQUEST_SERIALIZATION_ERROR, e);
         }
         mrEventHandler.handle(projectId, gitlabEventRequest);
         return ApiSuccessResponse.success();

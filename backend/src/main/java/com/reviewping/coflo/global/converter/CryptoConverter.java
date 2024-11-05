@@ -37,7 +37,7 @@ public class CryptoConverter implements AttributeConverter<String, String> {
             byte[] encrypted = c.doFinal(str.getBytes(StandardCharsets.UTF_8));
             return new String(Base64.getEncoder().encode(encrypted));
         } catch (Exception e) {
-            throw new BusinessException(ErrorCode.ENCRYPTION_ERROR);
+            throw new BusinessException(ErrorCode.ENCRYPTION_ERROR, e);
         }
     }
 
@@ -49,7 +49,7 @@ public class CryptoConverter implements AttributeConverter<String, String> {
             byte[] byteStr = Base64.getDecoder().decode(str.getBytes());
             return new String(c.doFinal(byteStr), StandardCharsets.UTF_8);
         } catch (Exception e) {
-            throw new BusinessException(ErrorCode.DECRYPTION_ERROR);
+            throw new BusinessException(ErrorCode.DECRYPTION_ERROR, e);
         }
     }
 }

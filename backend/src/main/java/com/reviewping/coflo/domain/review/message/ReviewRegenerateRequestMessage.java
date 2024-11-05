@@ -6,7 +6,7 @@ import java.util.List;
 public record ReviewRegenerateRequestMessage(
         Long projectId,
         Long mrInfoId,
-        String branch,
+        Long branchId,
         MrContent mrContent,
         String customPrompt,
         String gitlabUrl,

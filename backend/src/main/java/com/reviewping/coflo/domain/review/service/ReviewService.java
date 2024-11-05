@@ -98,6 +98,7 @@ public class ReviewService {
             String targetBranch,
             LocalDateTime gitlabCreatedDate,
             Long projectId) {
+        log.debug("#makeCodeReviewWhenCalledByWebhook");
         // 1. MrInfo 저장
         Project project = projectRepository.getReferenceById(projectId);
         MrInfo mrInfo = mrInfoRepository.save(new MrInfo(project, iid, gitlabCreatedDate));

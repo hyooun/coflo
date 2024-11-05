@@ -1,5 +1,7 @@
 package com.reviewping.coflo.domain.gitlab.controller;
 
+import static com.reviewping.coflo.global.error.ErrorCode.UNSUPPORTED_EVENT_TYPE;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,6 +9,7 @@ import com.reviewping.coflo.domain.gitlab.service.MrEventHandler;
 import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.client.gitlab.request.GitlabEventRequest;
 import com.reviewping.coflo.global.common.response.ApiResponse;
+import com.reviewping.coflo.global.common.response.impl.ApiErrorResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
@@ -29,7 +32,7 @@ public class GitlabWebhookController {
             @PathVariable("projectId") Long projectId,
             @RequestBody String requestBody) {
         if (!gitlabEventType.equals(MERGE_REQUEST_TYPE)) {
-            throw new BusinessException(ErrorCode.UNSUPPORTED_EVENT_TYPE);
+            return ApiErrorResponse.error(UNSUPPORTED_EVENT_TYPE);
         }
 
         GitlabEventRequest gitlabEventRequest;
@@ -38,7 +41,12 @@ public class GitlabWebhookController {
         } catch (JsonProcessingException e) {
             throw new BusinessException(ErrorCode.GITLAB_EVENT_REQUEST_SERIALIZATION_ERROR, e);
         }
-        mrEventHandler.handle(projectId, gitlabEventRequest);
+        try {
+            mrEventHandler.handle(projectId, gitlabEventRequest);
+        } catch (BusinessException e) {
+            return ApiErrorResponse.error(e.getErrorCode());
+        }
+
         return ApiSuccessResponse.success();
     }
 }

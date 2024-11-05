@@ -11,8 +11,10 @@ import java.time.OffsetDateTime;
 public record GitlabEventRequest(
         String objectKind, String eventType, Project project, ObjectAttributes objectAttributes) {
 
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record Project(Long id, String webUrl) {}
 
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record ObjectAttributes(
             Long id,
             Long iid,

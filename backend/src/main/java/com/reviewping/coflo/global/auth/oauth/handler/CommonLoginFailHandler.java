@@ -27,7 +27,7 @@ public class CommonLoginFailHandler implements AuthenticationFailureHandler {
             HttpServletResponse response,
             AuthenticationException exception)
             throws IOException, ServletException {
-        log.info("=== 로그인 실패 ===");
+        log.info("=== 로그인 실패 === Exception: {}", exception.getMessage());
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(APPLICATION_JSON_VALUE);

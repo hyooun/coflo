@@ -39,7 +39,7 @@ build_AI:
   image: gradle:8.8-jdk21
   before_script:
     - echo "[INFO] YML Settings"
-    - chmod +x backend/gradlew
+    - chmod +x ai/gradlew
   script:
     - cd ai
     - ./gradlew clean build -x test -Dspring.profiles.active=prod

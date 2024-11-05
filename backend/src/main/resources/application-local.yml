@@ -28,3 +28,6 @@ spring:
   sql:
     init:
       mode: always
+
+mattermost-logger:
+  base-url: ${LOCAL_ERROR_WEBHOOK_URL}

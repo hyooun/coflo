@@ -1,7 +1,13 @@
-export default function Header({ title }: HeaderProps) {
+export default function Header({ title, description }: HeaderProps) {
   return (
-    <div className="flex flex-row font-pretendard items-center justify-between px-10  py-8">
-      <div className="text-3xl font-bold text-[#172b4d]">{title}</div>
+    <div className="flex flex-col space-y-2 mb-6 w-full max-w-[1000px] min-w-[350px] items-start font-pretendard">
+      <div className="text-3xl font-bold">{title}</div>
+      {description &&
+        description.map((desc, index) => (
+          <div key={index} className="font-bold">
+            {desc}
+          </div>
+        ))}
     </div>
   );
 }

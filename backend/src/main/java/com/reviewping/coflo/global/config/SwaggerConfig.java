@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
         servers = {
+            @Server(url = "http://localhost:8080"),
             @Server(url = "https://www.coflo.co.kr"),
             @Server(url = "https://k11a210.p.ssafy.io")
         })

@@ -95,25 +95,29 @@ const CommonSelector = <T extends unknown>({
             </div>
           )}
           <div className="max-h-40 overflow-y-auto">
-            {filteredItems.map((item) =>
-              renderItem ? (
-                renderItem(item, isEqual(item, selectedItem))
-              ) : (
-                <button
-                  key={displayValue(item)}
-                  onClick={() => {
-                    onSelect(item);
-                    setIsOpen(false);
-                  }}
-                  className={`${itemClassName} ${
-                    isEqual(item, selectedItem)
-                      ? 'text-primary-500 bg-secondary/30'
-                      : 'text-gray-700'
-                  }`}
-                >
-                  {displayValue(item)}
-                </button>
-              ),
+            {filteredItems.length === 0 ? (
+              <div className="text-center text-primary-500 p-2"> 검색된 결과가 없습니다. </div>
+            ) : (
+              filteredItems.map((item) =>
+                renderItem ? (
+                  renderItem(item, isEqual(item, selectedItem))
+                ) : (
+                  <button
+                    key={displayValue(item)}
+                    onClick={() => {
+                      onSelect(item);
+                      setIsOpen(false);
+                    }}
+                    className={`${itemClassName} ${
+                      isEqual(item, selectedItem)
+                        ? 'text-primary-500 bg-secondary/30'
+                        : 'text-gray-700'
+                    }`}
+                  >
+                    {displayValue(item)}
+                  </button>
+                ),
+              )
             )}
           </div>
         </div>

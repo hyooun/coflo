@@ -4,12 +4,14 @@ import com.reviewping.coflo.domain.badge.controller.dto.request.MainBadgeRequest
 import com.reviewping.coflo.domain.badge.controller.dto.response.BadgeResponse;
 import com.reviewping.coflo.domain.badge.service.BadgeService;
 import com.reviewping.coflo.domain.user.entity.User;
+import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@LogExecution
 @RestController
 @RequestMapping("/api/badges")
 @RequiredArgsConstructor

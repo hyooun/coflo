@@ -74,7 +74,7 @@ public class MrEventHandler {
             URL parsedUrl = uri.toURL();
             return parsedUrl.getHost();
         } catch (IllegalArgumentException | URISyntaxException | MalformedURLException e) {
-            throw new BusinessException(ErrorCode.GITLAB_URL_PARSE_ERROR);
+            throw new BusinessException(ErrorCode.GITLAB_URL_PARSE_ERROR, e);
         }
     }
 }

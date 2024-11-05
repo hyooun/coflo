@@ -60,12 +60,12 @@ public class RestTemplateUtils {
     private static BusinessException handleClientOrServerError(HttpClientErrorException e) {
         if (e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)
                 || e.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
-            return new BusinessException(ErrorCode.EXTERNAL_API_UNAUTHORIZED);
+            return new BusinessException(ErrorCode.EXTERNAL_API_UNAUTHORIZED, e);
         } else if (e.getStatusCode().is4xxClientError()) {
-            return new BusinessException(ErrorCode.EXTERNAL_API_BAD_REQUEST);
+            return new BusinessException(ErrorCode.EXTERNAL_API_BAD_REQUEST, e);
         } else if (e.getStatusCode().is5xxServerError()) {
-            return new BusinessException(ErrorCode.EXTERNAL_API_INTERNAL_SERVER_ERROR);
+            return new BusinessException(ErrorCode.EXTERNAL_API_INTERNAL_SERVER_ERROR, e);
         }
-        return new BusinessException(ErrorCode.EXTERNAL_API_INTERNAL_SERVER_ERROR);
+        return new BusinessException(ErrorCode.EXTERNAL_API_INTERNAL_SERVER_ERROR, e);
     }
 }

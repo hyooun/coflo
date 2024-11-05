@@ -88,7 +88,7 @@ public class WebhookChannelService {
         try {
             body = objectMapper.writeValueAsString(webhookContent);
         } catch (JsonProcessingException e) {
-            throw new BusinessException(WEBHOOK_REQUEST_SERIALIZATION_ERROR);
+            throw new BusinessException(WEBHOOK_REQUEST_SERIALIZATION_ERROR, e);
         }
 
         RestTemplateUtils.sendPostRequest(

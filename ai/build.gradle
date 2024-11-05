@@ -47,7 +47,7 @@ dependencies {
     // JGit
     implementation 'org.eclipse.jgit:org.eclipse.jgit:7.0.0.202409031743-r'
 
-    // Tree-sitter
+    // tree-sitter
     implementation 'io.github.bonede:tree-sitter:0.24.3'
     implementation 'io.github.bonede:tree-sitter-java:0.21.0a'
     implementation 'io.github.bonede:tree-sitter-json:0.23.0'
@@ -57,12 +57,6 @@ dependencies {
     testImplementation 'org.springframework.integration:spring-integration-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testRuntimeOnly 'com.h2database:h2'
-
-    // Testcontainers
-    testImplementation "org.testcontainers:testcontainers:1.20.3"
-    testImplementation "org.testcontainers:junit-jupiter:1.20.3"
-    testImplementation "com.redis:testcontainers-redis:2.2.2"
-
 }
 
 tasks.named('test') {

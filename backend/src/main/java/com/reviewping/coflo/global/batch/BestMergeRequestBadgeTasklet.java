@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class BestMergeBadgeTasklet implements Tasklet {
+public class BestMergeRequestBadgeTasklet implements Tasklet {
 
     private final BadgeEventService badgeEventService;
 

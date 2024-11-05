@@ -1,7 +1,5 @@
 package com.reviewping.coflo.global.batch;
 
-import static com.reviewping.coflo.domain.badge.entity.BadgeType.*;
-
 import com.reviewping.coflo.domain.mergerequest.service.BestMrHistoryService;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class BestMergeHistoryTasklet implements Tasklet {
+public class BestMergeRequestHistoryTasklet implements Tasklet {
 
     private final BestMrHistoryService bestMrHistoryService;
 

@@ -1,7 +1,7 @@
 package com.reviewping.coflo.global.config;
 
-import com.reviewping.coflo.global.batch.BestMergeBadgeTasklet;
-import com.reviewping.coflo.global.batch.BestMergeHistoryTasklet;
+import com.reviewping.coflo.global.batch.BestMergeRequestBadgeTasklet;
+import com.reviewping.coflo.global.batch.BestMergeRequestHistoryTasklet;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,16 +11,12 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.job.flow.Flow; // Spring Batch의 Flow
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -34,32 +30,33 @@ public class BatchConfig {
     @Bean
     public Job myJob(
             JobRepository jobRepository,
-            Flow parallelFlow,
+            @Qualifier("addHistoryStep") Step addHistoryStep,
+            @Qualifier("eventStep") Step eventStep,
             JobExecutionListener jobExecutionListener) {
         return new JobBuilder("myJob", jobRepository)
                 .listener(jobExecutionListener)
-                .start(parallelFlow)
-                .end()
+                .start(addHistoryStep)
+                .next(eventStep)
                 .build();
     }
 
     @Bean
-    public Step noticeStep(
+    public Step addHistoryStep(
             JobRepository jobRepository,
-            BestMergeHistoryTasklet bestMergeHistoryTasklet,
+            BestMergeRequestHistoryTasklet bestMergeRequestHistoryTasklet,
             PlatformTransactionManager transactionManager) {
-        return new StepBuilder("noticeStep", jobRepository)
-                .tasklet(bestMergeHistoryTasklet, transactionManager)
+        return new StepBuilder("addHistoryStep", jobRepository)
+                .tasklet(bestMergeRequestHistoryTasklet, transactionManager)
                 .build();
     }
 
     @Bean
     public Step eventStep(
             JobRepository jobRepository,
-            BestMergeBadgeTasklet bestMergeBadgeTasklet,
+            BestMergeRequestBadgeTasklet bestMergeRequestBadgeTasklet,
             PlatformTransactionManager transactionManager) {
         return new StepBuilder("eventStep", jobRepository)
-                .tasklet(bestMergeBadgeTasklet, transactionManager)
+                .tasklet(bestMergeRequestBadgeTasklet, transactionManager)
                 .build();
     }
 
@@ -81,21 +78,5 @@ public class BatchConfig {
                 }
             }
         };
-    }
-
-    @Bean
-    public TaskExecutor taskExecutor() {
-        return new SimpleAsyncTaskExecutor("taskExecutor");
-    }
-
-    @Bean
-    public Flow parallelFlow(
-            @Qualifier("noticeStep") Step noticeStep, @Qualifier("eventStep") Step eventStep) {
-        return new FlowBuilder<Flow>("parallelFlow")
-                .split(taskExecutor())
-                .add(
-                        new FlowBuilder<Flow>("flow1").start(noticeStep).build(),
-                        new FlowBuilder<Flow>("flow2").start(eventStep).build())
-                .build();
     }
 }

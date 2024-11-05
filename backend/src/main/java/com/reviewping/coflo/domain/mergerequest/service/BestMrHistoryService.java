@@ -38,12 +38,10 @@ public class BestMrHistoryService {
         List<User> users = userRepository.findAllByUsernames(usernames);
 
         // Write
-        if (!users.isEmpty()) {
-            List<BestMrHistory> histories =
-                    users.stream()
-                            .map(user -> new BestMrHistory(user.getId(), LocalDate.now()))
-                            .collect(Collectors.toList());
-            bestMrHistoryRepository.saveAll(histories);
-        }
+        List<BestMrHistory> histories =
+                users.stream()
+                        .map(user -> new BestMrHistory(user.getId(), LocalDate.now()))
+                        .collect(Collectors.toList());
+        bestMrHistoryRepository.saveAll(histories);
     }
 }

@@ -35,7 +35,4 @@ logging:
 
 crypto-key: ${CRYPTO_KEY}
 
-redirect-regist-url: ${REDIRECT_REGIST_URL}
-redirect-main-url: ${REDIRECT_MAIN_URL}
-
 domain-webhook-url: ${COFLO_WEBHOOK_URL}

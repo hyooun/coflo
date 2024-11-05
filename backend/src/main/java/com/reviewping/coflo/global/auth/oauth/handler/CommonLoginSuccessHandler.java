@@ -6,7 +6,7 @@ import com.reviewping.coflo.domain.user.service.LoginHistoryService;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtProvider;
 import com.reviewping.coflo.global.auth.oauth.model.UserDetails;
-import com.reviewping.coflo.global.util.CookieUtil;
+import com.reviewping.coflo.global.util.CookieUtils;
 import com.reviewping.coflo.global.util.RedisUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -24,14 +23,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @RequiredArgsConstructor
 public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    @Value("${redirect-regist-url}")
-    private String registUrl;
-
-    @Value("${redirect-main-url}")
-    private String mainUrl;
-
     private final RedisUtil redisUtil;
-    private final CookieUtil cookieUtil;
     private final LoginHistoryService loginHistoryService;
     private final BadgeEventService badgeEventService;
 
@@ -49,12 +41,12 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         String refreshToken = JwtProvider.generateToken(responseMap, JwtConstants.REFRESH_EXP_TIME);
 
         Cookie accessTokenCookie =
-                cookieUtil.createCookie(
+                CookieUtils.createCookie(
                         JwtConstants.ACCESS_NAME,
                         accessToken,
                         (int) JwtConstants.ACCESS_EXP_TIME * 60);
         Cookie refreshTokenCookie =
-                cookieUtil.createCookie(
+                CookieUtils.createCookie(
                         JwtConstants.REFRESH_NAME,
                         refreshToken,
                         (int) JwtConstants.REFRESH_EXP_TIME * 60);
@@ -66,10 +58,10 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         loginHistoryService.recordLogin(user);
         badgeEventService.eventRandom(user);
 
-        if (principal.getName().equals("empty")) {
-            response.sendRedirect(registUrl);
-        } else {
-            response.sendRedirect(mainUrl);
-        }
+        String redirectUrl = CookieUtils.getCookieValue(request, "redirect_url");
+        CookieUtils.deleteCookie(request, response, "redirect_url");
+
+        log.info("redirect_url={}", redirectUrl);
+        response.sendRedirect(redirectUrl);
     }
 }

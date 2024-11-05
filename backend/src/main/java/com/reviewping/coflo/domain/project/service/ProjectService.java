@@ -54,14 +54,12 @@ public class ProjectService {
         Project savedProject = projectRepository.save(project);
         saveBasicCustomPrompt(savedProject);
         addGitlabProjectWebhooks(gitlabAccount.getDomain(), savedProject);
-        initProject(
-                savedProject, branches, projectLinkRequest.botToken(), gitlabAccount.getDomain());
+        initProject(savedProject, branches, projectLinkRequest.botToken(), project.getGitUrl());
         return savedProject;
     }
 
     private void initProject(
-            Project project, List<Branch> branches, String token, String gitlabDomain) {
-        String gitlabUrl = "https://" + gitlabDomain + "/" + project.getName();
+            Project project, List<Branch> branches, String token, String gitlabUrl) {
         branches.forEach(
                 branch -> {
                     InitRequestMessage initRequest =

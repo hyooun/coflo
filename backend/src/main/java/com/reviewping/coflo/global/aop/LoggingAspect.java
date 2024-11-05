@@ -46,19 +46,18 @@ public class LoggingAspect {
         StringBuilder messageBuilder = new StringBuilder();
         messageBuilder.append(
                 String.format(
-                        "```\nException in %s.%s() called with arguments: %s\n",
+                        "Exception in %s.%s() called with arguments: `%s`\n",
                         className, methodName, Arrays.toString(args)));
 
-        messageBuilder.append("Exception message: ").append(ex.getMessage()).append("\n");
+        messageBuilder.append("**Exception message** : ").append(ex.getMessage()).append("\n");
 
         if (ex instanceof BusinessException) {
             Throwable cause = ex.getCause();
             if (cause != null) {
-                messageBuilder.append("Cause: ").append(cause.getMessage()).append("\n");
+                messageBuilder.append("**Cause** : ").append(cause.getMessage()).append("\n");
             }
         }
 
-        messageBuilder.append("```");
         return messageBuilder.toString();
     }
 }

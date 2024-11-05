@@ -1,9 +1,10 @@
 package com.reviewping.coflo.global.auth.oauth.handler;
 
-import static org.springframework.util.MimeTypeUtils.*;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reviewping.coflo.global.error.ErrorCode;
+import com.reviewping.coflo.global.util.WebHookUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,5 +42,9 @@ public class CommonLoginFailHandler implements AuthenticationFailureHandler {
                         "code", errorCode.getCode(),
                         "message", errorCode.getMessage());
         response.getWriter().write(objectMapper.writeValueAsString(error));
+
+        String logMessage =
+                String.format("OAuth2 Authentication Failed: %s", exception.getMessage());
+        WebHookUtils.sendWebHookMessage(logMessage);
     }
 }

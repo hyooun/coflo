@@ -37,7 +37,7 @@ public class BadgeEventService {
     private static final Long LOGIN_TARGET_COUNT = 1L;
     private static final Long PROMTPT_UPDATE_TARGET_COUNT = 2L;
     private static final Integer PERCENT = 1;
-    private static final Long AI_REWARD_TARGET_SCORE = 60L;
+    private static final Long AI_REWARD_TARGET_SCORE = 55L;
     private static final Random random = new Random();
 
     private final UserRepository userRepository;
@@ -139,9 +139,10 @@ public class BadgeEventService {
         userBadgeRepository.saveAll(newBadges);
     }
 
+    // 코드 마스터 - AI 리뷰평가 리워드 합이 n점 이상 시 획득
     @Transactional
     public void eventAiRewardScore() {
-        badgeCode = badgeCodeRepository.getById(CONQUEROR.getId());
+        badgeCode = badgeCodeRepository.getById(CODE_MASTER.getId());
         userProjectRepository
                 .findAll()
                 .forEach(userProject -> processUserProject(userProject, badgeCode));
@@ -156,7 +157,7 @@ public class BadgeEventService {
                         project.getCreatedDate().toLocalDate(), LocalDate.now());
 
         long totalScore = calculateTotalScore(userProject, week - 1);
-        if (totalScore == AI_REWARD_TARGET_SCORE
+        if (totalScore >= AI_REWARD_TARGET_SCORE
                 && !userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
             UserBadge userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);

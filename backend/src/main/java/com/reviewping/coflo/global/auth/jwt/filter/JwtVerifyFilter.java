@@ -5,7 +5,7 @@ import static com.reviewping.coflo.global.error.ErrorCode.*;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtProvider;
 import com.reviewping.coflo.global.auth.oauth.service.AuthenticationService;
-import com.reviewping.coflo.global.util.CookieUtil;
+import com.reviewping.coflo.global.util.CookieUtils;
 import com.reviewping.coflo.global.util.RedisUtil;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -25,7 +25,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtVerifyFilter extends OncePerRequestFilter {
 
     private final RedisUtil redisUtil;
-    private final CookieUtil cookieUtil;
     private final AuthenticationService authenticationService;
 
     private static final String[] whitelist = {
@@ -50,8 +49,8 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        String accessToken = cookieUtil.getCookieValue(request, JwtConstants.ACCESS_NAME);
-        String refreshToken = cookieUtil.getCookieValue(request, JwtConstants.REFRESH_NAME);
+        String accessToken = CookieUtils.getCookieValue(request, JwtConstants.ACCESS_NAME);
+        String refreshToken = CookieUtils.getCookieValue(request, JwtConstants.REFRESH_NAME);
 
         if (refreshToken != null) {
             handleRefreshToken(request, response, refreshToken);
@@ -89,13 +88,13 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             redisUtil.set(userId, refreshToken, JwtConstants.REFRESH_EXP_TIME);
 
             Cookie accessTokenCookie =
-                    cookieUtil.createCookie(
+                    CookieUtils.createCookie(
                             JwtConstants.ACCESS_NAME,
                             accessToken,
                             (int) JwtConstants.ACCESS_EXP_TIME / 1000);
 
             Cookie refreshTokenCookie =
-                    cookieUtil.createCookie(
+                    CookieUtils.createCookie(
                             JwtConstants.REFRESH_NAME,
                             refreshToken,
                             (int) JwtConstants.REFRESH_EXP_TIME / 1000);

@@ -141,7 +141,7 @@ public class BadgeEventService {
 
     @Transactional
     public void eventAiRewardScore() {
-        badgeCode = badgeCodeRepository.getById(LUCKY_FIND.getId());
+        badgeCode = badgeCodeRepository.getById(CONQUEROR.getId());
         userProjectRepository
                 .findAll()
                 .forEach(userProject -> processUserProject(userProject, badgeCode));

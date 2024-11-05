@@ -30,6 +30,7 @@ public class Project extends BaseTimeEntity {
     private Long gitlabProjectId;
 
     private String name;
+    private String gitUrl;
 
     @OneToMany(mappedBy = "project")
     private List<UserProject> userProjects = new ArrayList<>();
@@ -44,10 +45,11 @@ public class Project extends BaseTimeEntity {
     private List<Branch> branches = new ArrayList<>();
 
     @Builder
-    public Project(String botToken, Long gitlabProjectId, String name) {
+    public Project(String botToken, Long gitlabProjectId, String name, String gitUrl) {
         this.botToken = botToken;
         this.gitlabProjectId = gitlabProjectId;
         this.name = name;
+        this.gitUrl = gitUrl;
     }
 
     public void addBranch(Branch branch) {

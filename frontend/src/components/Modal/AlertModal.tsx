@@ -10,8 +10,10 @@ const AlertModal = ({ content, onConfirm, className = '' }: AlertModalProps) => 
       >
         <TriangleAlert className="text-primary-500" size={48} />
         <div className="my-2">
-          {content.map((text) => (
-            <p className="text-center text-xl text-primary-500">{text}</p>
+          {content.map((text, index) => (
+            <p key={index} className="text-center text-xl text-primary-500">
+              {text}
+            </p>
           ))}
         </div>
         <div className="flex justify-center gap-4">

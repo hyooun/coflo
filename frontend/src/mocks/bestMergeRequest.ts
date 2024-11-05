@@ -317,4 +317,27 @@ export const handlers = [
       }),
     );
   }),
+  rest.get('/api/custom-prompts/:projectId', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        status: 'SUCCESS',
+        data: {
+          customPromptId: 1,
+          content:
+            '메소드 분리에 더욱 초점을 맞춰줘.\n코드리뷰를 간결하고 명확하게 작성해줘.\n메소드 분리에 더욱 초점을 맞춰줘.\n코드리뷰를 간결하고 명확하게 작성해줘.\n메소드 분리에 더욱 초점을 맞춰줘.\n코드리뷰를 간결하고 명확하게 작성해줘.\n메소드 분리에 더욱 초점을 맞춰줘.\n코드리뷰를 간결하고 명확하게 작성해줘.\n메소드 분리에 더욱 초점을 맞춰줘.\n코드리뷰를 간결하고 명확하게 작성해줘.\n메소드 분리에 더욱 초점을 맞춰줘.\n코드리뷰를 간결하고 명확하게 작성해줘.\n',
+        },
+      }),
+    );
+  }),
+
+  // 저장을 위한 POST 핸들러도 추가
+  rest.put('/api/custom-prompts/:projectId', async (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        status: 'SUCCESS',
+      }),
+    );
+  }),
 ];

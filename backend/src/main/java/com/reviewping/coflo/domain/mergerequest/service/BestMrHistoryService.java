@@ -9,6 +9,8 @@ import com.reviewping.coflo.domain.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,11 +39,18 @@ public class BestMrHistoryService {
         // Process
         List<User> users = userRepository.findAllByUsernames(usernames);
 
+        Map<String, User> userMap =
+                users.stream().collect(Collectors.toMap(User::getUsername, Function.identity()));
+
         // Write
         List<BestMrHistory> histories =
-                users.stream()
-                        .map(user -> new BestMrHistory(user.getId(), LocalDate.now()))
-                        .collect(Collectors.toList());
+                usernames.stream()
+                        .filter(userMap::containsKey)
+                        .map(
+                                username ->
+                                        new BestMrHistory(
+                                                userMap.get(username).getId(), LocalDate.now()))
+                        .toList();
         bestMrHistoryRepository.saveAll(histories);
     }
 }

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-import BadgeHeader from '@components/Badge/BadgeHeader';
 import RepresentativeBadge from '@components/Badge/RepresentativeBadge';
 import BadgeList from '@components/Badge/BadgeList';
 import { BadgeType } from 'types/badge';
 import AlertModal from '@components/Modal/AlertModal';
+import Header from '@components/Header/Header.tsx';
 
 const BadgePage = () => {
   const [badges, setBadges] = useState<BadgeType[]>([]);
@@ -84,7 +84,10 @@ const BadgePage = () => {
 
   return (
     <div className="flex flex-col flex-grow overflow-auto px-8 pt-6 items-center min-w-[800px]">
-      <BadgeHeader />
+      <Header
+        title={'My Badge'}
+        description={['다른 사람에게 보이는 뱃지를 설정 할 수 있습니다.']}
+      />
       <RepresentativeBadge
         selectedBadge={selectedBadge?.imageUrl || null}
         onSave={handleSave}

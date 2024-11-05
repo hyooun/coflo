@@ -40,6 +40,7 @@ public class MrEventHandler {
                 "#handle:: eventType: {}, action: {}",
                 gitlabEventRequest.eventType(),
                 gitlabEventRequest.objectAttributes().action());
+        log.debug("gitlabEventRequest: {}", gitlabEventRequest);
         handlers.getOrDefault(
                         gitlabEventRequest.objectAttributes().action(),
                         (id, request) -> {

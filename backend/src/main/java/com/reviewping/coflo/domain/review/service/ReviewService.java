@@ -69,21 +69,7 @@ public class ReviewService {
 
         Review review = Review.builder().mrInfo(mrInfo).content(reviewResponse.content()).build();
         reviewRepository.save(review);
-        List<Retrieval> retrievals =
-                reviewResponse.retrievals().stream()
-                        .map(
-                                message ->
-                                        Retrieval.builder()
-                                                .review(review)
-                                                .fileName(message.fileName())
-                                                .content(message.content())
-                                                .language(
-                                                        new Language(
-                                                                LanguageType.fromType(
-                                                                        message.language())))
-                                                .build())
-                        .toList();
-        retrievalRepository.saveAll(retrievals);
+        saveRetrievals(reviewResponse, review);
 
         gitLabClient.addNoteToMr(
                 reviewResponse.gitlabUrl(),
@@ -225,5 +211,23 @@ public class ReviewService {
     public List<RetrievalDetailResponse> getRetrievalDetail(Long reviewId) {
         Review review = reviewRepository.getById(reviewId);
         return review.getRetrievals().stream().map(RetrievalDetailResponse::from).toList();
+    }
+
+    private void saveRetrievals(ReviewResponseMessage reviewResponse, Review review) {
+        List<Retrieval> retrievals =
+                reviewResponse.retrievals().stream()
+                        .map(
+                                message ->
+                                        Retrieval.builder()
+                                                .review(review)
+                                                .fileName(message.fileName())
+                                                .content(message.content())
+                                                .language(
+                                                        new Language(
+                                                                LanguageType.fromType(
+                                                                        message.language())))
+                                                .build())
+                        .toList();
+        retrievalRepository.saveAll(retrievals);
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.redis.inbound.RedisInboundChannelAdapter;
 import org.springframework.integration.redis.outbound.RedisPublishingMessageHandler;
 import org.springframework.integration.router.HeaderValueRouter;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 
@@ -52,21 +51,6 @@ public class RedisIntegrationConfig {
     @Bean
     public MessageChannel reviewRegenerateRequestChannel() {
         return new DirectChannel();
-    }
-
-    @Bean
-    public MessageChannel testInboundChannel() {
-        return new DirectChannel();
-    }
-
-    @Bean
-    public MessageChannel testOutboundChannel() {
-        return new DirectChannel();
-    }
-
-    @ServiceActivator(inputChannel = "testInboundChannel")
-    public void handleMessage(Message<?> message) {
-        System.out.println("Received test message from Redis: " + message);
     }
 
     @Bean

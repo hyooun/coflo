@@ -56,21 +56,34 @@ public class MergeRequestService {
         GitlabAccount gitlabAccount =
                 gitlabAccountRepository.getByUserIdAndProjectId(userId, projectId);
         Project project = projectRepository.getById(projectId);
-        LocalDate[] startAndEndDates =
-                projectDateUtil.calculateWeekStartAndEndDates(
-                        LocalDate.from(project.getCreatedDate()), LocalDate.now());
-
-        List<MrInfo> mrInfoList =
-                mrInfoRepository.findTop3MrInfoList(
-                        projectId,
-                        startAndEndDates[0].atTime(0, 0, 0),
-                        startAndEndDates[1].atTime(0, 0, 0));
+        List<MrInfo> mrInfoList = getTop3MrInfos(project);
 
         return gitLabClient.getTop3MrList(
                 gitlabAccount.getDomain(),
                 gitlabAccount.getUserToken(),
                 project.getGitlabProjectId(),
                 mrInfoList);
+    }
+
+    public List<String> getUsernameBestMergeRequests(Project project) {
+        Long userId = project.getUserProjects().getFirst().getGitlabAccount().getUser().getId();
+        List<GitlabMrResponse> top3MrList = getBestMergeRequests(userId, project.getId());
+
+        List<String> findUsernames =
+                top3MrList.stream().map(top -> top.assignee().username()).toList();
+        return findUsernames;
+    }
+
+    private List<MrInfo> getTop3MrInfos(Project project) {
+        LocalDate[] startAndEndDates =
+                projectDateUtil.calculateWeekStartAndEndDates(
+                        LocalDate.from(project.getCreatedDate()), LocalDate.now());
+        List<MrInfo> mrInfoList =
+                mrInfoRepository.findTop3MrInfoList(
+                        project.getId(),
+                        startAndEndDates[0].atTime(0, 0, 0),
+                        startAndEndDates[1].atTime(0, 0, 0));
+        return mrInfoList;
     }
 
     private List<GitlabMrResponse> buildGitlabMrResponses(GitlabMrPageContent gitlabMrPage) {

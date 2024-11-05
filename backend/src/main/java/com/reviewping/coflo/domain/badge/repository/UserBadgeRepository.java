@@ -9,6 +9,8 @@ import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.List;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface UserBadgeRepository extends JpaRepository<UserBadge, Long> {
 
@@ -16,6 +18,12 @@ public interface UserBadgeRepository extends JpaRepository<UserBadge, Long> {
     List<UserBadge> findAllByUser(User user);
 
     boolean existsByUserAndBadgeCode(User user, BadgeCode badgeCode);
+
+    @Query(
+            "SELECT u.id FROM User u WHERE u.id IN :userIds AND u.id NOT IN "
+                    + "(SELECT ub.user.id FROM UserBadge ub WHERE ub.badgeCode.id = :badgeCodeId)")
+    List<Long> findUserIdsWithoutBadge(
+            @Param("userIds") List<Long> userIds, @Param("badgeCodeId") Long badgeCodeId);
 
     default UserBadge getById(Long id) {
         return findById(id).orElseThrow(() -> new BusinessException(USER_BADGE_NOT_EXIST));

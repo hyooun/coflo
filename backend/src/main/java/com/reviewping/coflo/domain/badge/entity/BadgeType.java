@@ -8,6 +8,7 @@ public enum BadgeType {
     PROJECT_MASTER(3L),
     LUCKY_FIND(6L),
     REGULAR_CUSTOMER(7L),
+    CONQUEROR(11L),
     PROMPT_CREATER(12L);
 
     private final Long id;

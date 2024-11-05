@@ -1,6 +1,7 @@
 import { rest } from 'msw';
 import { GitlabProjectListResponse } from 'types/gitLab';
 import { UpdateRepositoryRequest } from 'types/api';
+import badge1 from '@assets/badge1.jpg';
 
 export const handlers = [
   rest.get('/api/gitlab/search', (req, res, ctx) => {
@@ -308,40 +309,544 @@ export const handlers = [
       }),
     );
   }),
-  rest.get('/api/best-merge-requests', (req, res, ctx) => {
+
+  rest.get('/api/projects/:projectId', (req, res, ctx) => {
+    const { projectId } = req.params;
+
+    const projectInfo = {
+      status: 'SUCCESS',
+      data: {
+        commitCount: 6,
+        branchCount: 9,
+        mergeRequestCount: 54,
+        languages: [
+          {
+            language: 'shell',
+            percentage: 66.37,
+            color: '#89e051',
+          },
+          {
+            language: 'Java',
+            percentage: 33.74,
+            color: '#b07219',
+          },
+        ],
+        aiReviewCount: 0,
+      },
+      message: `프로젝트 ${projectId}에 대한 정보입니다.`,
+    };
+
+    console.log('Response data:', projectInfo);
+
+    return res(ctx.status(200), ctx.json(projectInfo));
+  }),
+  rest.get('/api/projects/:projectId/scores', (req, res, ctx) => {
+    const { projectId } = req.params;
+
+    const scoresResponse = {
+      status: 'SUCCESS',
+      data: {
+        startDate: '2024-10-21',
+        endDate: '2024-10-27',
+        userScores: [
+          {
+            userId: 1,
+            username: '지민',
+            profileImageUrl:
+              'https://secure.gravatar.com/avatar/de5618f1a5aedaa97da4da8aea212a4f10088fef603b68a9ef38c7cc3f569930?s=80&d=identicon',
+            badgeName: '첫 모험가',
+            badgeImageUrl: badge1,
+            scores: [
+              { name: '가독성', score: 7 },
+              { name: '일관성', score: 8 },
+              { name: '재사용성', score: 6 },
+              { name: '신뢰성', score: 9 },
+              { name: '보안성', score: 7 },
+              { name: '유지보수성', score: 8 },
+            ],
+          },
+          {
+            userId: 2,
+            username: '보연',
+            profileImageUrl:
+              'https://secure.gravatar.com/avatar/de5618f1a5aedaa97da4da8aea212a4f10088fef603b68a9ef38c7cc3f569930?s=80&d=identicon',
+            badgeName: '프로젝트 개척자',
+            badgeImageUrl: badge1,
+            scores: [
+              { name: '가독성', score: 7 },
+              { name: '일관성', score: 8 },
+              { name: '재사용성', score: 6 },
+              { name: '신뢰성', score: 9 },
+              { name: '보안성', score: 7 },
+              { name: '유지보수성', score: 8 },
+            ],
+          },
+          {
+            userId: 3,
+            username: '선기',
+            profileImageUrl:
+              'https://secure.gravatar.com/avatar/de5618f1a5aedaa97da4da8aea212a4f10088fef603b68a9ef38c7cc3f569930?s=80&d=identicon',
+            badgeName: '헌신의 발자국',
+            badgeImageUrl: null,
+            scores: [
+              { name: '가독성', score: 8 },
+              { name: '일관성', score: 7 },
+              { name: '재사용성', score: 6 },
+              { name: '신뢰성', score: 8 },
+              { name: '보안성', score: 7 },
+              { name: '유지보수성', score: 8 },
+            ],
+          },
+          {
+            userId: 4,
+            username: '형민',
+            profileImageUrl:
+              'https://secure.gravatar.com/avatar/de5618f1a5aedaa97da4da8aea212a4f10088fef603b68a9ef38c7cc3f569930?s=80&d=identicon',
+            badgeName: null,
+            badgeImageUrl: badge1,
+            scores: [
+              { name: '가독성', score: 8 },
+              { name: '일관성', score: 9 },
+              { name: '재사용성', score: 8 },
+              { name: '신뢰성', score: 7 },
+              { name: '보안성', score: 9 },
+              { name: '유지보수성', score: 8 },
+            ],
+          },
+          // {
+          //   userId: 5,
+          //   username: '영수',
+          //   profileImageUrl:
+          //     'https://secure.gravatar.com/avatar/de5618f1a5aedaa97da4da8aea212a4f10088fef603b68a9ef38c7cc3f569930?s=80&d=identicon',
+          //   badgeName: '팀 리더',
+          //   badgeImageUrl: badge1,
+          //   scores: [
+          //     { name: '가독성', score: 9 },
+          //     { name: '일관성', score: 9 },
+          //     { name: '재사용성', score: 8 },
+          //     { name: '신뢰성', score: 9 },
+          //     { name: '보안성', score: 8 },
+          //     { name: '유지보수성', score: 9 },
+          //   ],
+          // },
+        ],
+      },
+    };
+
+    console.log('Response data:', scoresResponse);
+
+    return res(ctx.status(200), ctx.json(scoresResponse));
+  }),
+
+  rest.get('/api/projects/:projectId/statistics', (req, res, ctx) => {
+    const { projectId } = req.params;
+    const calculationType = req.url.searchParams.get('calculationType');
+    const scoreDisplayType = req.url.searchParams.get('scoreDisplayType');
+
+    console.log(`Request URL: ${req.url}`);
+    console.log(
+      `Project ID: ${projectId}, Calculation Type: ${calculationType}, Score Display Type: ${scoreDisplayType}`,
+    );
+
+    // 데이터 준비
+    let responseData;
+
+    if (calculationType === 'acquisition' && scoreDisplayType === 'total') {
+      responseData = {
+        status: 'SUCCESS',
+        data: {
+          startDate: '2024-10-14',
+          endDate: '2024-10-27',
+          scoreOfWeek: [
+            { week: 1, score: 48 },
+            { week: 2, score: 45 },
+          ],
+        },
+      };
+      console.log(responseData);
+    } else if (calculationType === 'acquisition' && scoreDisplayType === 'individual') {
+      responseData = {
+        status: 'SUCCESS',
+        data: {
+          startDate: '2024-10-14',
+          endDate: '2024-10-27',
+          codeQualityScores: [
+            {
+              codeQualityName: '가독성',
+              scoreOfWeek: [
+                { week: 1, score: 8 },
+                { week: 2, score: 7 },
+              ],
+            },
+            {
+              codeQualityName: '일관성',
+              scoreOfWeek: [
+                { week: 1, score: 7 },
+                { week: 2, score: 8 },
+              ],
+            },
+            {
+              codeQualityName: '재사용성',
+              scoreOfWeek: [
+                { week: 1, score: 9 },
+                { week: 2, score: 6 },
+              ],
+            },
+            {
+              codeQualityName: '신뢰성',
+              scoreOfWeek: [
+                { week: 1, score: 6 },
+                { week: 2, score: 9 },
+              ],
+            },
+            {
+              codeQualityName: '보안성',
+              scoreOfWeek: [
+                { week: 1, score: 10 },
+                { week: 2, score: 7 },
+              ],
+            },
+            {
+              codeQualityName: '유지보수성',
+              scoreOfWeek: [
+                { week: 1, score: 8 },
+                { week: 2, score: 8 },
+              ],
+            },
+          ],
+        },
+      };
+    } else if (calculationType === 'cumulative' && scoreDisplayType === 'total') {
+      responseData = {
+        status: 'SUCCESS',
+        data: {
+          startDate: '2024-10-14',
+          endDate: '2024-10-27',
+          scoreOfWeek: [
+            { week: 1, score: 48 },
+            { week: 2, score: 93 },
+          ],
+        },
+      };
+    } else if (calculationType === 'cumulative' && scoreDisplayType === 'individual') {
+      responseData = {
+        status: 'SUCCESS',
+        data: {
+          startDate: '2024-10-14',
+          endDate: '2024-10-27',
+          codeQualityScores: [
+            {
+              codeQualityName: '유지보수성',
+              scoreOfWeek: [
+                { week: 1, score: 8 },
+                { week: 2, score: 16 },
+              ],
+            },
+            {
+              codeQualityName: '재사용성',
+              scoreOfWeek: [
+                { week: 1, score: 9 },
+                { week: 2, score: 15 },
+              ],
+            },
+            {
+              codeQualityName: '보안성',
+              scoreOfWeek: [
+                { week: 1, score: 10 },
+                { week: 2, score: 17 },
+              ],
+            },
+            {
+              codeQualityName: '가독성',
+              scoreOfWeek: [
+                { week: 1, score: 8 },
+                { week: 2, score: 15 },
+              ],
+            },
+            {
+              codeQualityName: '신뢰성',
+              scoreOfWeek: [
+                { week: 1, score: 6 },
+                { week: 2, score: 15 },
+              ],
+            },
+            {
+              codeQualityName: '일관성',
+              scoreOfWeek: [
+                { week: 1, score: 7 },
+                { week: 2, score: 15 },
+              ],
+            },
+          ],
+        },
+      };
+    }
+
+    // 응답 반환
+    return res(ctx.status(200), ctx.json(responseData));
+  }),
+
+  rest.get('/api/merge-requests/best', (req, res, ctx) => {
+    const { projectId } = req.url.searchParams;
     return res(
-      ctx.json([
+      ctx.status(200),
+      ctx.json({
+        status: 'SUCCESS',
+        data: [
+          {
+            id: 641081,
+            iid: 69,
+            title: '[feat/#349]커스텀-프롬프트',
+            description: `
+              <!--\n제목 : [{커밋유형}/#이슈숫자] 기능명\nex) [feat/#11] 로그인\n-->
+              
+              ## 주요 변경사항
+              
+              - fix:패키지명
+              
+              <br/>
+              
+              ## 리뷰 요청사항
+              
+              - [x] MR Approve
+              
+              <br/>
+              
+              ## ➕ 지라 링크
+              
+              - [S11P31A210-349](https://ssafy.atlassian.net/browse/S11P31A210-349)
+              
+              <br/>
+            `,
+            state: 'merged',
+            mergedAt: '2024-10-30T06:08:01.482',
+            createdAt: '2024-10-30T06:07:20.291',
+            updatedAt: '2024-10-31T00:01:57.094',
+            closedAt: null,
+            sourceBranch: 'fe/S11P31A210-349-ui-커스텀-프롬프트',
+            targetBranch: 'fe/dev',
+            labels: ['🐛 Fix'],
+            hasConflicts: false,
+            assignee: {
+              username: 'anjs134',
+              avatarUrl:
+                'https://secure.gravatar.com/avatar/18d31feb03d8981c6c569b9924031f8be04855d7bf40d32a2d66e9093d49cc09?s=80&d=identicon',
+            },
+            reviewer: {
+              username: 'btothey99',
+              avatarUrl:
+                'https://secure.gravatar.com/avatar/5df4d4186f3aa8c84bf409a74f39adb23d0695b905365155357fda4ed004a8b8?s=80&d=identicon',
+            },
+            isAiReviewCreated: false,
+          },
+          {
+            id: 641212,
+            iid: 71,
+            title: '[fix/#327] 테스트 실패 수정',
+            description: `
+              <!--\n제목 : [{커밋유형}/#이슈숫자] 기능명\nex) [feat/#327] 테스트 실패 수정\n-->
+              
+              ## 주요 변경사항
+              
+              - 통합테스트 실패 수정 data.sql이 테스트에서 정상 실행되도록 수정
+              - reviewservice 단위테스트 픽스
+              
+              <br/>
+              
+              ## 리뷰 요청사항
+              
+              - [ ] MR Approve
+              
+              <br/>
+              
+              ## ➕ 지라 링크
+              
+              - [S11P31A210-327](https://ssafy.atlassian.net/browse/S11P31A210-327)
+              
+              <br/>
+            `,
+            state: 'merged',
+            mergedAt: '2024-10-31T00:04:08.295',
+            createdAt: '2024-10-30T12:03:43.485',
+            updatedAt: '2024-10-31T00:04:08.611',
+            closedAt: null,
+            sourceBranch: 'be/S11P31A210-376-테스트-코드-실패-핫픽스',
+            targetBranch: 'be/dev',
+            labels: ['Backend', '✅ Test', '🐛 Fix'],
+            hasConflicts: false,
+            assignee: {
+              username: 'ajsthfldu',
+              avatarUrl:
+                'https://secure.gravatar.com/avatar/de5618f1a5aedaa97da4da8aea212a4f10088fef603b68a9ef38c7cc3f569930?s=80&d=identicon',
+            },
+            reviewer: {
+              username: 'jimmi219',
+              avatarUrl: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17537/avatar.png',
+            },
+            isAiReviewCreated: false,
+          },
+          {
+            id: 641801,
+            iid: 73,
+            title: '[feat/#379] 팀 프로젝트 디테일 조회 시, 언어 색상 데이터도 추가',
+            description: `
+              <!--\n제목 : [{커밋유형}/#이슈숫자] 기능명\nex) [feat/#11] 로그인\n-->
+              
+              ## 주요 변경사항
+              
+              - 팀 프로젝트 디테일 조회 시, 언어 색상 데이터도 추가
+              - LanguageCode 엔티티 추가
+              
+              <br/>
+              
+              ## 리뷰 요청사항
+              
+              - [ ] MR Approve
+              
+              <br/>
+              
+              ## ➕ 지라 링크
+              
+              - [S11P31A210-379](https://ssafy.atlassian.net/browse/S11P31A210-379)
+              
+              <br/>
+            `,
+            state: 'merged',
+            mergedAt: '2024-10-31T06:44:17.143',
+            createdAt: '2024-10-31T06:32:33.477',
+            updatedAt: '2024-10-31T06:44:17.347',
+            closedAt: null,
+            sourceBranch: 'be/S11P31A210-379-팀-디테일-조회-언어-색상-추가',
+            targetBranch: 'be/dev',
+            labels: ['Backend', '✨ Feature', '🐛 Fix'],
+            hasConflicts: false,
+            assignee: {
+              username: 'jimmi219',
+              avatarUrl: 'https://lab.ssafy.com/uploads/-/system/user/avatar/17537/avatar.png',
+            },
+            reviewer: {
+              username: 'fview',
+              avatarUrl:
+                'https://secure.gravatar.com/avatar/47167cd2ae5c88c5b69f4a690ab5cdb4554a141768b8d6f17c9d62b6380ee1d2?s=80&d=identicon',
+            },
+            isAiReviewCreated: false,
+          },
+        ],
+      }),
+    );
+  }),
+  rest.get('/api/reviews/:id', (req, res, ctx) => {
+    const { id } = req.params;
+
+    const mockMergeRequest: GitlabMergeRequest = {
+      id: Number(id),
+      iid: 247,
+      title: '[feat/#247] 앨범 상세 보기 API 연동',
+      description: 'API 연동을 통해 앨범 상세 정보를 가져올 수 있도록 구현',
+      state: 'merged',
+      mergedAt: '2023-10-01T12:34:56Z',
+      createdAt: '2023-09-15T08:00:00Z',
+      updatedAt: '2023-10-01T12:34:56Z',
+      closedAt: null,
+      sourceBranch: 'feature/album-detail',
+      targetBranch: 'dev',
+      labels: ['feature', 'api'],
+      hasConflicts: false,
+      assignee: {
+        id: 1,
+        username: 'hatchu',
+        name: '하츄핑',
+        avatarUrl: '/images/mocks/profile1.png',
+      },
+      reviewer: {
+        id: 2,
+        username: 'chana',
+        name: '차나핑',
+        avatarUrl: '/images/mocks/profile2.png',
+      },
+      isAiReviewCreated: false,
+    };
+
+    const mockReviewData: MergeRequestReview = {
+      ...mockMergeRequest,
+      reviews: [
         {
           id: 1,
-          branchName: 'feature/user',
-          title: 'Feat: 회원가입 컴포넌트 구현',
-          assignee: '/images/mocks/profile1.png',
-          reviewer: '/images/mocks/profile2.png',
-          createdAt: '1 week ago',
-          labels: ['feat', 'style'],
-          author: '이보연',
+          reviewer: {
+            id: 2,
+            username: 'chana',
+            name: '차나핑',
+            avatarUrl: '/images/mocks/profile2.png',
+          },
+          createdAt: '2023-10-01T12:34:56Z',
+          updatedAt: '2023-10-01T12:34:56Z',
+          content:
+            '## 코드 리뷰 요약\n- 상태 관리와 조건부 렌더링이 잘 되어 있습니다.\n- Tailwind CSS를 효과적으로 사용하였습니다.',
+          comments: [
+            {
+              id: 1,
+              reviewer: {
+                id: 2,
+                username: 'chana',
+                name: '차나핑',
+                avatarUrl: '/images/mocks/profile2.png',
+              },
+              createdAt: '2023-10-01T12:35:00Z',
+              updatedAt: '2023-10-01T12:35:00Z',
+              content:
+                '### 개선사항\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.`useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다. `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다. `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다. `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.  \n### 개선사항\n\n - `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.### 개선사항\n\n- `useState`를 `useReducer`로 변경하면 가독성이 높아질 수 있습니다.',
+              resolved: false,
+              resolvable: true,
+              replies: [
+                {
+                  id: 1,
+                  author: {
+                    id: 1,
+                    username: 'hatchu',
+                    name: '하츄핑',
+                    avatarUrl: '/images/mocks/profile1.png',
+                  },
+                  content: '네, 수정하겠습니다. 좋은 의견 감사합니다!',
+                  createdAt: '2023-10-01T12:36:00Z',
+                  updatedAt: '2023-10-01T12:36:00Z',
+                },
+              ],
+            },
+          ],
         },
         {
           id: 2,
-          branchName: 'dev',
-          title: 'Fix: 입력폼 수정',
-          assignee: '/images/mocks/profile1.png',
-          reviewer: '/images/mocks/profile2.png',
-          createdAt: '1 week ago',
-          labels: ['fix', 'error'],
-          author: '구승석',
+          reviewer: {
+            id: 3,
+            username: 'hachu',
+            name: '하츄핑',
+            avatarUrl: '/images/mocks/profile1.png',
+          },
+          createdAt: '2023-10-02T10:00:00Z',
+          updatedAt: '2023-10-02T10:00:00Z',
+          content:
+            '## 코드 스타일\n\n- 코드 스타일이 일관적입니다.\n- 주석이 잘 작성되어 있습니다.',
+          comments: [
+            {
+              id: 2,
+              reviewer: {
+                id: 2,
+                username: 'chana',
+                name: '차나핑',
+                avatarUrl: '/images/mocks/profile2.png',
+              },
+              createdAt: '2023-10-02T10:05:00Z',
+              updatedAt: '2023-10-02T10:05:00Z',
+              content: '### 추가 제안\n\n- 함수 이름을 더 명확하게 변경하는 것이 좋겠습니다.',
+              resolved: false,
+              resolvable: false,
+              replies: [],
+            },
+          ],
         },
-        {
-          id: 3,
-          branchName: 'dev',
-          title: 'Fix: 입력폼 수정',
-          assignee: '/images/mocks/profile1.png',
-          reviewer: '/images/mocks/profile2.png',
-          createdAt: '1 week ago',
-          labels: ['fix', 'error'],
-          author: '구승석',
-        },
-      ]),
-    );
+      ],
+    };
+
+    return res(ctx.status(200), ctx.json(mockReviewData));
   }),
 ];

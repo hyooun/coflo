@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios';
 import { ApiResponse } from 'types/api';
 import instance from '@config/apiConfig';
 import { GitlabMrListResponse } from 'types/mergeRequest';
+import { GitlabMergeRequest } from 'types/mergeRequest';
 
 const responseBody = <T>(response: AxiosResponse<ApiResponse<T>>) => response.data;
 
@@ -17,4 +18,7 @@ export const MergeRequest = {
     size: number,
   ): Promise<ApiResponse<GitlabMrListResponse>> =>
     apiRequests.get<GitlabMrListResponse>('merge-requests', { keyword, page, size }),
+
+  getBestMrList: (ProjectId: string): Promise<ApiResponse<GitlabMergeRequest[]>> =>
+    apiRequests.get<GitlabMergeRequest[]>(`/merge-requests/best?projectId=${ProjectId}`),
 };

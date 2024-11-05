@@ -1,149 +1,246 @@
 import ChartBox from '@components/ChartBox/ChartBox';
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import 'chart.js/auto';
 import IconWithText from '@components/TextDiv/IconWithText';
 import { BranchIcon } from '@components/TextDiv/Icons/BranchIcon';
 import { PullRequestIcon } from '@components/TextDiv/Icons/PullRequestIcon';
 import { CommitIcon } from '@components/TextDiv/Icons/CommitIcon';
 import { AiIcon } from '@components/TextDiv/Icons/AiIcon';
+import { fetchProjectDetail } from '@components/Chart/ProgrammingLanguageData';
+import { fetchProjectTeamScore } from '@components/Chart/ProjectTeamScoreData';
+import { RadarData } from 'types/project';
+import { ChartDropdown } from '@components/Home/ChartDropDown';
+import { loadChartData } from '@components/Chart/LoaderChart';
 
 import {
-  horizontalBarOptions,
-  radarOptions,
-  lineOptions,
-  cubicLineOptions,
+  createHorizontalBarOptions,
+  createRadarOptions,
+  createLineOptions,
+  createCubicLineOptions,
 } from '@constants/chartOptions';
 import Title from '@components/Title/Title';
 import BestMergeRequestList from '@components/Home/BestMergeRequest/BestMergeRequestList.tsx';
+import { ProgrammingLanguagesData } from 'types/language';
 
 const HomePage = () => {
-  const [selectedChart, setSelectedChart] = useState<'line' | 'cubic'>('line');
+  const initialProjectDetail = {
+    programmingLanguagesData: null,
+    commitCount: 0,
+    branchCount: 0,
+    mergeRequestCount: 0,
+    aiReviewCount: 0,
+  };
+  const initialRadarData: RadarData = {
+    labels: [],
+    datasets: [],
+  };
+  const [containerHeight, setContainerHeight] = useState<number>(0);
 
-  const radarData = {
-    labels: ['가독성', 'Public Speaking', 'Development', 'Hard Skill', 'Soft Skill', 'Resources'],
-    datasets: [
-      {
-        label: '구승석',
-        data: [65, 59, 90, 81, 56, 55],
-        borderColor: '#BB92F6',
-        backgroundColor: 'transparent',
-      },
-      {
-        label: '김형민',
-        data: [20, 10, 50, 31, 40, 15],
-        borderColor: '#B8E314',
-        backgroundColor: 'transparent',
-      },
-    ],
+  const [radarData, setRadarData] = useState<RadarData | null>(initialRadarData);
+  const [profileIcons, setProfileIcons] = useState<Record<number, string>>({});
+  const [badgeIcons, setBadgeIcons] = useState<Record<number, string>>({});
+  const [selectedChart, setSelectedChart] = useState<string>('획득 통합 스코어');
+  const [, setSelectedOption] = useState<string | null>(null);
+
+  const [lineData, setLineData] = useState({
+    labels: [],
+    datasets: [],
+  });
+
+  const [cubicLineData, setCubicLineData] = useState({
+    labels: [],
+    datasets: [],
+  });
+
+  const [maxValue, setMaxValue] = useState<number>(0);
+  const [minValue, setMinValue] = useState<number>(100);
+  const totalUsers = Object.keys(profileIcons).length;
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [projectDetail, setProjectDetail] = useState<{
+    programmingLanguagesData: ProgrammingLanguagesData | null;
+    commitCount: number;
+    branchCount: number;
+    mergeRequestCount: number;
+    aiReviewCount: number;
+  }>(initialProjectDetail);
+  const projectId = 'your_project_id';
+
+  const handleSelect = (chart: string) => {
+    setSelectedChart(chart);
   };
 
-  const programmingLanguagesData = {
-    labels: ['languages'],
-    datasets: [
-      {
-        label: 'JavaScript',
-        data: [20],
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'transparent',
-        barThickness: 10,
-        borderSkipped: false,
-        borderRadius: [{ topLeft: 20, topRight: 0, bottomLeft: 20, bottomRight: 0 }],
-      },
-      {
-        label: 'TypeScript',
-        data: [30],
-        barThickness: 10,
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-      },
-      {
-        label: 'Python',
-        data: [10],
-        barThickness: 10,
-        backgroundColor: 'rgba(255, 206, 86, 0.2)',
-      },
-      {
-        label: 'Java',
-        data: [40],
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        barThickness: 10,
-        borderRadius: [{ topLeft: 0, topRight: 20, bottomLeft: 0, bottomRight: 20 }],
-      },
-    ],
-  };
+  useEffect(() => {
+    let calculationType = 'acquisition';
+    let scoreDisplayType = 'total';
 
-  const lineData = {
-    labels: ['1주차', '2주차', '3주차', '4주차', '5주차', '6주차', '7주차'],
-    datasets: [
-      {
-        label: '김형민',
-        data: [65, 59, 80, 81, 56, 55, 40],
-        borderColor: 'rgba(255, 99, 132, 1)',
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-      },
-      // {
-      //   label: '구승석',
-      //   data: [28, 48, 40, 19, 86, 27, 90],
-      //   borderColor: 'rgba(54, 162, 235, 1)',
-      //   backgroundColor: 'rgba(54, 162, 235, 0.2)',
-      // },
-    ],
-  };
+    switch (selectedChart) {
+      case '획득 통합 스코어':
+        calculationType = 'acquisition';
+        scoreDisplayType = 'total';
+        break;
+      case '획득 개별 스코어':
+        calculationType = 'acquisition';
+        scoreDisplayType = 'individual';
+        break;
+      case '누적 통합 스코어':
+        calculationType = 'cumulative';
+        scoreDisplayType = 'total';
+        break;
+      case '누적 개별 스코어':
+        calculationType = 'cumulative';
+        scoreDisplayType = 'individual';
+        break;
+      default:
+        break;
+    }
 
-  const cubicLineData = {
-    labels: ['1주차', '2주차', '3주차', '4주차', '5주차', '6주차', '7주차'],
-    datasets: [
-      {
-        label: '김형민',
-        data: [45, 25, 60, 75, 95, 80, 50],
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        tension: 0.4,
-      },
-    ],
-  };
+    const queryParams = {
+      calculationType,
+      scoreDisplayType,
+    };
+
+    const fetchData = async () => {
+      const {
+        lineData: fetchedLineData,
+        cubicLineData: fetchedCubicLineData,
+        maxScore,
+        minScore,
+      } = await loadChartData(projectId, selectedChart, queryParams);
+
+      if (fetchedLineData) {
+        console.log(fetchedLineData);
+        setLineData(fetchedLineData);
+      }
+
+      if (fetchedCubicLineData) {
+        setCubicLineData(fetchedCubicLineData);
+      }
+
+      setMaxValue(maxScore);
+      setMinValue(minScore);
+    };
+
+    fetchData();
+  }, [selectedChart, projectId]);
+
+  useEffect(() => {
+    const loadProjectData = async () => {
+      const langauageData = await fetchProjectDetail(projectId);
+      const teamScoreData = await fetchProjectTeamScore(projectId);
+
+      setProjectDetail(langauageData || initialProjectDetail);
+      if (teamScoreData) {
+        setRadarData(teamScoreData.radarData);
+        setProfileIcons(teamScoreData.profileIcons);
+        setBadgeIcons(teamScoreData.badgeIcons);
+      }
+    };
+
+    loadProjectData();
+  }, [projectId]);
+
+  const fixedSpacing = 22;
+  const offset = totalUsers <= 1 ? 0 : (containerHeight - totalUsers * fixedSpacing) / 2 + 88;
+
+  useEffect(() => {
+    if (containerRef.current) {
+      setContainerHeight(containerRef.current.clientHeight);
+    }
+  }, []);
 
   return (
     <div className="flex flex-col flex-grow overflow-auto px-8 pt-6">
       <div className="flex flex-row ml-4">
-        <div className="flex flex-col mr-4">
+        <div className="flex flex-col mr-8">
           <Title title="Team Radar Charts" />
-          <div className="w-[600px] h-[320px] bg-[#F5F7FA] m-2 flex items-center justify-center ">
+          <div
+            ref={containerRef}
+            className="w-[680px] h-[320px]  bg-gray-400 border-2 border-gray-500 rounded-lg m-2 flex items-center justify-center "
+          >
             <ChartBox
               chartType="radar"
               data={radarData}
-              options={radarOptions}
+              options={createRadarOptions()}
               chartId="radarChart"
-              width={600}
+              width={500}
               height={300}
             />
+            {Object.entries(profileIcons).map(([userId, profileUrl], index) => (
+              <div
+                key={`user-${userId}`}
+                className="absolute"
+                style={{
+                  top: offset + index * fixedSpacing,
+                  left: 910,
+                }}
+              >
+                <img
+                  src={profileUrl}
+                  alt={`User ${userId} Profile`}
+                  style={{ width: 20, height: 20 }}
+                />
+
+                {badgeIcons[parseInt(userId)] && (
+                  <img
+                    src={badgeIcons[parseInt(userId)]!}
+                    alt={`User ${userId} Badge`}
+                    style={{
+                      width: 20,
+                      height: 20,
+                      marginLeft: 5,
+                      position: 'absolute',
+                      top: 0,
+                      left: 25,
+                    }}
+                  />
+                )}
+              </div>
+            ))}
           </div>
         </div>
         <div className="flex flex-col">
           <Title title="Project Total" />
-          <div className="w-[350px] h-[320px] bg-[#F5F7FA] m-2 flex  flex-col ">
+          <div className="w-[420px] h-[320px] p-2 bg-gray-400 border-2 border-gray-500 rounded-lg m-2 flex  flex-col ">
             <Title title="About" textSize="text-lg" px="px-1" py="py-1" ml="ml-6" mt="mt-3" />
             <Title title="Language" px="px-1" py="py-1" ml="ml-8" />
-            <div className="ml-7">
-              <ChartBox
-                chartType="bar"
-                data={programmingLanguagesData}
-                options={horizontalBarOptions}
-                chartId="horizontalBarChart"
-                width={300}
-                height={100}
-              />
+            <div className="ml-8">
+              {projectDetail.programmingLanguagesData &&
+              projectDetail.programmingLanguagesData.labels ? (
+                <ChartBox
+                  chartType="bar"
+                  data={projectDetail.programmingLanguagesData}
+                  options={createHorizontalBarOptions([0, 100])}
+                  chartId="horizontalBarChart"
+                  width={300}
+                  height={100}
+                />
+              ) : (
+                <p>No Chart</p>
+              )}
             </div>
             <div className="h-5 pr-4 pl-4 w-full flex flex-col justify-center">
               <div className="bg-[#CCCCCC] h-[1px] w-full"></div>
             </div>
             <Title title="Info" px="px-1" py="py-1" ml="ml-8" />
             <div className="flex flex-row m-4 ml-8 gap-4">
-              <IconWithText svg={<CommitIcon />} text="commits" count={2512} />
-              <IconWithText svg={<BranchIcon />} text="branches" count={7} />
+              <IconWithText svg={<CommitIcon />} text="commits" count={projectDetail.commitCount} />
+              <IconWithText
+                svg={<BranchIcon className="w-4 h-4" />}
+                text="branches"
+                count={projectDetail.branchCount}
+              />
             </div>
             <div className="flex flex-row m-2 ml-8 gap-4">
-              <IconWithText svg={<PullRequestIcon className="w-4 h-4" />} text="MRs" count={224} />
-              <IconWithText svg={<AiIcon />} text="Ai reviews" count={211} />
+              <IconWithText
+                svg={<PullRequestIcon className="w-4 h-4" />}
+                text="MRs"
+                count={projectDetail.mergeRequestCount}
+              />
+              <IconWithText
+                svg={<AiIcon />}
+                text="Ai reviews"
+                count={projectDetail.aiReviewCount}
+              />
             </div>
           </div>
         </div>
@@ -151,45 +248,53 @@ const HomePage = () => {
 
       <div className="flex">
         <div className="flex flex-row ml-4">
-          <div className="flex flex-col mr-4">
+          <div className="flex flex-col mr-8">
             <div className="flex flex-row justify-between">
               <Title title="Personal Growth Graph" />
 
-              <div className="ml-6 mb-4 flex flex-row space-x-2">
-                <button
-                  onClick={() => setSelectedChart('line')}
-                  className={`px-4 py-2 ${selectedChart === 'line' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                >
-                  주간 변화
-                </button>
-                <button
-                  onClick={() => setSelectedChart('cubic')}
-                  className={`px-4 py-2 ${selectedChart === 'cubic' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                >
-                  주간 누적 점수
-                </button>
-              </div>
+              <ChartDropdown
+                onSelect={(option) => {
+                  handleSelect(option);
+                  setSelectedOption(option);
+                }}
+              />
             </div>
-            <div className="w-[600px] h-[320px] bg-[#F5F7FA] m-2 flex items-center justify-center ">
-              {selectedChart === 'line' && (
-                <ChartBox
-                  chartType="line"
-                  data={lineData}
-                  options={lineOptions}
-                  chartId="lineChart"
-                />
-              )}
-              {selectedChart === 'cubic' && (
+            <div className="w-[680px] h-[320px]  bg-gray-400 border-2 border-gray-500 rounded-lg m-2 flex items-center justify-center ">
+              {selectedChart === '획득 통합 스코어' && (
                 <ChartBox
                   chartType="line"
                   data={cubicLineData}
-                  options={cubicLineOptions}
+                  options={createLineOptions([0, 70])}
+                  chartId="lineChart"
+                />
+              )}
+              {selectedChart === '획득 개별 스코어' && (
+                <ChartBox
+                  chartType="line"
+                  data={lineData}
+                  options={createLineOptions([0, 11])}
                   chartId="cubicLineChart"
+                />
+              )}
+              {selectedChart === '누적 통합 스코어' && (
+                <ChartBox
+                  chartType="line"
+                  data={cubicLineData}
+                  options={createCubicLineOptions([minValue, maxValue])}
+                  chartId="cumulativeLineChart"
+                />
+              )}
+              {selectedChart === '누적 개별 스코어' && (
+                <ChartBox
+                  chartType="line"
+                  data={lineData}
+                  options={createCubicLineOptions([minValue, maxValue])}
+                  chartId="cumulativeCubicLineChart"
                 />
               )}
             </div>
           </div>
-          <div className="w-[350px] h-[350px]">
+          <div className="w-[420px] h-[320px] mt-6 ml-2 ">
             <BestMergeRequestList />
           </div>
         </div>

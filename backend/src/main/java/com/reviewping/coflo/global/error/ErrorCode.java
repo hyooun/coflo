@@ -90,14 +90,9 @@ public enum ErrorCode {
     LANGUAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "L001", "지원하지 않는 언어입니다."),
 
     /**
-     * review (M000)
+     * branch (M000)
      */
-    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 리뷰입니다."),
-
-    /**
-     * branch (N000)
-     */
-    BRANCH_NOT_FOUND(HttpStatus.NOT_FOUND, "N001", "존재하지 않는 브랜치입니다."),
+    BRANCH_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 브랜치입니다."),
 
     /**
      * EXTERNAL API(Y000)

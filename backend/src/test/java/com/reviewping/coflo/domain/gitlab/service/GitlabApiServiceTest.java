@@ -108,7 +108,7 @@ class GitlabApiServiceTest {
 
     private GitlabProjectPageContent createGitlabProjectPageContent() {
         GitlabProjectDetailContent detailContent =
-                new GitlabProjectDetailContent(123L, "Test Project", "Description");
+                new GitlabProjectDetailContent(123L, "Test Project", "Description", "GIT URL");
         return new GitlabProjectPageContent(List.of(detailContent), PageDetail.of(1L, 1, true, 1));
     }
 }

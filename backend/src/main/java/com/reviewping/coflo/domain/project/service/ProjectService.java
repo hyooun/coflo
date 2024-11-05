@@ -12,6 +12,7 @@ import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectDetailContent;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.integration.RedisGateway;
 import java.util.HashMap;
@@ -78,24 +79,24 @@ public class ProjectService {
             GitlabAccount gitlabAccount,
             Long gitlabProjectId,
             ProjectLinkRequest projectLinkRequest) {
-        String gitlabProjectName =
-                getProjectNameByBotToken(
+        GitlabProjectDetailContent gitlabProject =
+                getProjectContentByBotToken(
                         gitlabAccount.getDomain(), gitlabProjectId, projectLinkRequest);
         return Project.builder()
                 .gitlabProjectId(gitlabProjectId)
                 .botToken(projectLinkRequest.botToken())
-                .name(gitlabProjectName)
+                .name(gitlabProject.name())
+                .gitUrl(gitlabProject.httpUrlToRepo())
                 .build();
     }
 
-    private String getProjectNameByBotToken(
+    private GitlabProjectDetailContent getProjectContentByBotToken(
             String domain, Long gitlabProjectId, ProjectLinkRequest projectLinkRequest) {
         if (projectLinkRequest == null || projectLinkRequest.botToken() == null) {
             throw new BusinessException(LINK_BOT_TOKEN_NOT_EXIST);
         }
-        return gitLabClient
-                .getSingleProject(domain, projectLinkRequest.botToken(), gitlabProjectId)
-                .name();
+        return gitLabClient.getSingleProject(
+                domain, projectLinkRequest.botToken(), gitlabProjectId);
     }
 
     private List<Branch> saveProjectBranches(List<String> branchNames, Project project) {

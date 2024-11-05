@@ -1,16 +1,10 @@
 export interface Project {
   id: string;
-  date: string;
-  language: string;
+  name: string;
+  isCurrent?: boolean;
 }
 
-export interface ProjectCardItemProps {
-  project: Project;
-  cardWidth: string;
-  cardHeight: string;
-}
-
-export interface ProjectCardProps {
-  cardWidth?: string;
-  cardHeight?: string;
+export interface ProjectSelectorProps {
+  onClose: () => void;
+  titleRef: React.RefObject<HTMLDivElement>;
 }

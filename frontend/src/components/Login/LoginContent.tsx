@@ -1,4 +1,5 @@
 import LoginButton from '@pages/Login/LoginButton.tsx';
+import loginImage from '@assets/images/login_image.png';
 
 const LoginContent = () => {
   const handleKakaoLogin = () => {
@@ -12,7 +13,7 @@ const LoginContent = () => {
     <div className="flex mobile:flex-col flex-row gap-20 h-full items-center justify-center ">
       <div className="w-full lg:w-1/2">
         <img
-          src="/images/login_image.png"
+          src={loginImage}
           alt="login illustration"
           className="w-full max-w-[500px] h-auto object-contain mx-auto"
         />
@@ -25,7 +26,7 @@ const LoginContent = () => {
             <span className="text-secondary mx-1">coFlo</span>
             <span>할까요?</span>
           </div>
-          <p className="mt-2">플로핑과 함께 내 프로젝트 코드를 리뷰하세요.</p>
+          <p className="mt-2">팀원과 함께 내 프로젝트 코드를 리뷰하세요.</p>
         </div>
         <div className="w-full space-y-3 mb-6">
           <LoginButton

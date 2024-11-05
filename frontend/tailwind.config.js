@@ -35,6 +35,7 @@ export default {
           600: '#cccccc',
           700: '#919191',
           800: '#a5a5a5',
+          900: '#515151',
         },
         background: {
           navy: '#e3d8f6',

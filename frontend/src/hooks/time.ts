@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 function useTimeAgo(date: string) {
   const timeAgo = useMemo(() => {
+    if (!date) return '';
     const parsedDate = new Date(date);
     return getTimeAgoText(parsedDate);
   }, [date]);

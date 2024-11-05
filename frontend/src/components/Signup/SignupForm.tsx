@@ -39,7 +39,7 @@ const SignupForm = () => {
       <div className="absolute inset-0 backdrop-blur-md rounded-3xl"></div>
 
       {/* SignupForm 콘텐츠 */}
-      <div className="bg-white/50 rounded-3xl p-10 py-20 relative z-10 font-pretendard">
+      <div className="bg-white/50 rounded-3xl p-10 py-20 relative z-10 font-pretendard border-2 border-primary-500">
         <div className="text-5xl font-bold mb-10 mt-20">회원 가입</div>
         <form>
           <div className="space-y-14">
@@ -52,6 +52,7 @@ const SignupForm = () => {
                   onChange={handleUrlChange}
                   isWarning={!isUrlValid}
                   warningMessage="유효하지 않은 URL 형식입니다. (ex: lab.ssafy. ...)"
+                  className="border-2"
                 />
               </div>
               <div className="h-28">
@@ -63,6 +64,7 @@ const SignupForm = () => {
                   onChange={handleTokenChange}
                   isWarning={!isTokenValid}
                   warningMessage="유효하지 않은 토큰입니다. 다시 한 번 입력해주세요."
+                  className="border-2"
                   icon={
                     <button
                       type="button"

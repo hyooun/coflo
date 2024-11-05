@@ -8,6 +8,7 @@ import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,6 +24,9 @@ public interface UserProjectRepository
 
     @Query("SELECT COUNT(up) FROM UserProject up WHERE up.gitlabAccount.id IN :gitlabAccountIds")
     Long countByGitlabAccountIds(@Param("gitlabAccountIds") List<Long> gitlabAccountIds);
+
+    @EntityGraph(attributePaths = {"project", "userProjectScores", "gitlabAccount"})
+    List<UserProject> findAll();
 
     default UserProject getByProjectAndGitlabAccount(Project project, GitlabAccount gitlabAccount) {
         return findByProjectAndGitlabAccount(project, gitlabAccount)

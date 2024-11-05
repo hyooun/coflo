@@ -1,5 +1,6 @@
 package com.reviewping.coflo.global.config;
 
+import com.reviewping.coflo.global.batch.AiRewardTotalTasklet;
 import com.reviewping.coflo.global.batch.BestMergeRequestBadgeTasklet;
 import com.reviewping.coflo.global.batch.BestMergeRequestHistoryTasklet;
 import jakarta.annotation.Nonnull;
@@ -31,12 +32,14 @@ public class BatchConfig {
     public Job myJob(
             JobRepository jobRepository,
             @Qualifier("addHistoryStep") Step addHistoryStep,
-            @Qualifier("eventStep") Step eventStep,
+            @Qualifier("bestMergeRequestEventStep") Step eventStep,
+            @Qualifier("aiRewardEventStep") Step aiRewardEventStep,
             JobExecutionListener jobExecutionListener) {
         return new JobBuilder("myJob", jobRepository)
                 .listener(jobExecutionListener)
                 .start(addHistoryStep)
                 .next(eventStep)
+                .next(aiRewardEventStep)
                 .build();
     }
 
@@ -51,12 +54,22 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step eventStep(
+    public Step bestMergeRequestEventStep(
             JobRepository jobRepository,
             BestMergeRequestBadgeTasklet bestMergeRequestBadgeTasklet,
             PlatformTransactionManager transactionManager) {
-        return new StepBuilder("eventStep", jobRepository)
+        return new StepBuilder("bestMergeRequestEventStep", jobRepository)
                 .tasklet(bestMergeRequestBadgeTasklet, transactionManager)
+                .build();
+    }
+
+    @Bean
+    public Step aiRewardEventStep(
+            JobRepository jobRepository,
+            AiRewardTotalTasklet aiRewardTotalTasklet,
+            PlatformTransactionManager transactionManager) {
+        return new StepBuilder("aiRewardEventStep", jobRepository)
+                .tasklet(aiRewardTotalTasklet, transactionManager)
                 .build();
     }
 

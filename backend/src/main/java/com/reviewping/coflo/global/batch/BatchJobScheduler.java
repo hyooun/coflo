@@ -19,7 +19,7 @@ public class BatchJobScheduler {
 
     // TODO: 운영 시 주기 조정
     @Scheduled(cron = "0 50 23 * * SUN") // 매주 일요일 오후 11시 50분에 실행
-    public void runVoteVerificationJob() throws Exception {
+    public void runCofloJob() throws Exception {
         JobParameters params =
                 new JobParametersBuilder()
                         .addLong("time", System.currentTimeMillis())

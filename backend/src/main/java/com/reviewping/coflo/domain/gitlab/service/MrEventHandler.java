@@ -36,6 +36,10 @@ public class MrEventHandler {
 
     @Async
     public void handle(Long projectId, GitlabEventRequest gitlabEventRequest) {
+        log.debug(
+                "#handle:: eventType: {}, action: {}",
+                gitlabEventRequest.eventType(),
+                gitlabEventRequest.objectAttributes().action());
         handlers.getOrDefault(
                         gitlabEventRequest.objectAttributes().action(),
                         (id, request) -> {
@@ -45,6 +49,7 @@ public class MrEventHandler {
     }
 
     private void handleOpen(Long projectId, GitlabEventRequest gitlabEventRequest) {
+        log.debug("#handleOpen");
         // 1. 필요한 정보 추출
         String gitlabUrl = getGitlabUrl(gitlabEventRequest);
         Long gitlabProjectId = gitlabEventRequest.project().id();

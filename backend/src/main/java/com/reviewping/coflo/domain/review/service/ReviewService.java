@@ -117,7 +117,7 @@ public class ReviewService {
         // 3. 커스텀프롬프트 가져오기
         CustomPrompt customPrompt = customPromptRepository.getByProjectId(projectId);
         // 4. projectId와 targetBranch로 브랜치 id 가져오기
-        Branch branch = branchRepository.getByName(targetBranch);
+        Branch branch = branchRepository.getByNameAndProject(targetBranch, project);
         // 5. 리뷰 생성 요청
         MrContent mrContent = new MrContent(mrDescription, mrDiffs.toString());
         ReviewRequestMessage reviewRequest =
@@ -159,7 +159,8 @@ public class ReviewService {
 
         CustomPrompt customPrompt = customPromptRepository.getByProjectId(project.getId());
         MrContent mrContent = new MrContent(gitlabMrResponse.description(), mrDiffs.toString());
-        Branch branch = branchRepository.getByName(gitlabMrResponse.targetBranch());
+        Branch branch =
+                branchRepository.getByNameAndProject(gitlabMrResponse.targetBranch(), project);
 
         ReviewRegenerateRequestMessage regenerateRequest =
                 new ReviewRegenerateRequestMessage(

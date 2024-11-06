@@ -1,6 +1,10 @@
 spring:
   application:
     name: coflo-ai
+
+  main:
+    keep-alive: true
+
   data:
     redis:
       host: ${REDIS_HOST}

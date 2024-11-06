@@ -26,6 +26,7 @@ public class UserService {
     public void addGitlabAccount(String domain, String userToken, Long userId) {
         User user = userRepository.getById(userId);
         badgeEventService.eventFirstLogin(user);
+        gitLabClient.getUserInfo(domain, userToken);
         gitlabAccountRepository.save(
                 GitlabAccount.builder().user(user).domain(domain).userToken(userToken).build());
     }

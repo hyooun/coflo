@@ -8,6 +8,7 @@ import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class UserProjectController {
     private final UserProjectService userProjectService;
 
     @PostMapping("/{gitlabProjectId}")
+    @Operation(summary = "프로젝트 연동 추가")
     public ApiResponse<Map<String, Long>> addUserProject(
             @AuthUser User user,
             @PathVariable("gitlabProjectId") Long gitlabProjectId,
@@ -32,6 +34,7 @@ public class UserProjectController {
     }
 
     @DeleteMapping("/{gitlabProjectId}")
+    @Operation(summary = "연동된 프로젝트 삭제")
     public ApiResponse<Map<String, Long>> deleteUserProject(
             @AuthUser User user, @PathVariable("gitlabProjectId") Long gitlabProjectId) {
         Long projectId = userProjectService.unlinkGitlabProject(user, gitlabProjectId);
@@ -39,12 +42,14 @@ public class UserProjectController {
     }
 
     @GetMapping("/status")
+    @Operation(summary = "프로젝트 연동 여부 조회")
     public ApiResponse<Map<String, Boolean>> getLinkedStatus(@AuthUser User user) {
         boolean hasLinkedProject = userProjectService.hasLinkedProject(user.getId());
         return ApiSuccessResponse.success("hasLinkedProject", hasLinkedProject);
     }
 
     @GetMapping
+    @Operation(summary = "사용자의 연동된 프로젝트 리스트 조회")
     public ApiResponse<List<UserProjectResponse>> getUserProjects(
             @AuthUser User user,
             @RequestParam(name = "currentProjectId", defaultValue = "-1") Long currentProjectId) {

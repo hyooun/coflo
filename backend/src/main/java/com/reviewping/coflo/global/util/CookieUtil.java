@@ -9,11 +9,13 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
 
-public interface CookieUtils {
+@Component
+public class CookieUtil {
 
-    static Cookie createCookie(String name, String value, int maxAge) {
+    public Cookie createCookie(String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
@@ -24,7 +26,7 @@ public interface CookieUtils {
         return cookie;
     }
 
-    static String getCookieValue(HttpServletRequest request, String cookieName) {
+    public String getCookieValue(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
         if (cookies == null) return null;
 
@@ -36,7 +38,7 @@ public interface CookieUtils {
         return null;
     }
 
-    static Optional<Cookie> resolveCookie(HttpServletRequest request, String cookieName) {
+    public Optional<Cookie> resolveCookie(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
 
         if (cookies != null && cookies.length > 0) {
@@ -50,7 +52,7 @@ public interface CookieUtils {
         return Optional.empty();
     }
 
-    static void deleteCookie(
+    public void deleteCookie(
             HttpServletRequest request, HttpServletResponse response, String cookieName) {
         Optional<Cookie> optionalCookie = resolveCookie(request, cookieName);
         if (optionalCookie.isPresent()) {
@@ -62,7 +64,7 @@ public interface CookieUtils {
         }
     }
 
-    static void setCookie(
+    public void setCookie(
             HttpServletResponse response, String cookieName, String cookieContents, int maxAge) {
         ResponseCookie cookie =
                 ResponseCookie.from(cookieName, cookieContents)
@@ -75,17 +77,17 @@ public interface CookieUtils {
         response.addHeader("Set-Cookie", cookie.toString());
     }
 
-    static String serialize(OAuth2AuthorizationRequest request) {
+    public String serialize(OAuth2AuthorizationRequest request) {
         return Base64.getUrlEncoder().encodeToString(SerializationUtils.serialize(request));
     }
 
-    static <T> T deserialize(Cookie cookie, Class<T> clz) {
+    public <T> T deserialize(Cookie cookie, Class<T> clz) {
         if (isDeleted(cookie)) return null;
         return clz.cast(
                 SerializationUtils.deserialize(Base64.getUrlDecoder().decode(cookie.getValue())));
     }
 
-    private static boolean isDeleted(Cookie cookie) {
+    private boolean isDeleted(Cookie cookie) {
         return StringUtils.isBlank(cookie.getValue()) || Objects.isNull(cookie.getValue());
     }
 }

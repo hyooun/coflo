@@ -12,9 +12,10 @@ import org.springframework.web.client.HttpClientErrorException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WebHookUtils {
+public class WebHookUtil {
 
     private static String BASE_URL;
+    private final RestTemplateUtil restTemplateUtil;
 
     @Value("${mattermost-logger.base-url}")
     private String baseUrlProperty;
@@ -25,9 +26,9 @@ public class WebHookUtils {
         log.info("WebHookUtils initialized with BASE_URL: {}", BASE_URL);
     }
 
-    public static void sendWebHookMessage(String message) {
+    public void sendWebHookMessage(String message) {
         String CONTENT_TYPE = "application/json";
-        HttpHeaders headers = RestTemplateUtils.createHeaders(CONTENT_TYPE);
+        HttpHeaders headers = restTemplateUtil.createHeaders(CONTENT_TYPE);
 
         String body =
                 String.format(
@@ -36,7 +37,7 @@ public class WebHookUtils {
         log.info("sendWebHookMessage {}", body);
 
         try {
-            RestTemplateUtils.sendPostRequest(
+            restTemplateUtil.sendPostRequest(
                     BASE_URL, headers, body, new ParameterizedTypeReference<String>() {});
             log.info("WebHook message sent successfully.");
         } catch (HttpClientErrorException e) {

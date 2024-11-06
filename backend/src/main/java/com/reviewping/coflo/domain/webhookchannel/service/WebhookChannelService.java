@@ -17,7 +17,7 @@ import com.reviewping.coflo.domain.webhookchannel.entity.WebhookChannel;
 import com.reviewping.coflo.domain.webhookchannel.repository.ChannelCodeRepository;
 import com.reviewping.coflo.domain.webhookchannel.repository.WebhookChannelRepository;
 import com.reviewping.coflo.global.error.exception.BusinessException;
-import com.reviewping.coflo.global.util.RestTemplateUtils;
+import com.reviewping.coflo.global.util.RestTemplateUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -35,6 +35,8 @@ public class WebhookChannelService {
     private final WebhookChannelRepository webhookChannelRepository;
     private final ChannelCodeRepository channelCodeRepository;
     private final ProjectRepository projectRepository;
+
+    private final RestTemplateUtil restTemplateUtil;
 
     @Transactional
     public void addWebhookChannel(Long projectId, Long channelCodeId, String webhookUrl) {
@@ -81,7 +83,7 @@ public class WebhookChannelService {
     }
 
     private void send(String url, String content, ChannelCode channelCode) {
-        HttpHeaders headers = RestTemplateUtils.createHeaders(APPLICATION_JSON_VALUE);
+        HttpHeaders headers = restTemplateUtil.createHeaders(APPLICATION_JSON_VALUE);
         WebhookContent webhookContent = getWebhookContent(content, channelCode.getName());
 
         String body;
@@ -91,8 +93,7 @@ public class WebhookChannelService {
             throw new BusinessException(WEBHOOK_REQUEST_SERIALIZATION_ERROR, e);
         }
 
-        RestTemplateUtils.sendPostRequest(
-                url, headers, body, new ParameterizedTypeReference<>() {});
+        restTemplateUtil.sendPostRequest(url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
     private static WebhookContent getWebhookContent(String content, ChannelType channelType) {

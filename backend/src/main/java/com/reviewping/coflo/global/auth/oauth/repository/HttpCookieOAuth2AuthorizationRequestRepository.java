@@ -1,14 +1,16 @@
 package com.reviewping.coflo.global.auth.oauth.repository;
 
-import com.reviewping.coflo.global.util.CookieUtils;
+import com.reviewping.coflo.global.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class HttpCookieOAuth2AuthorizationRequestRepository
         implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
@@ -16,10 +18,13 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
     public static final String REDIRECT_URL_PARAM_COOKIE_NAME = "redirect_url";
     private static final int cookieExpireSeconds = 180;
 
+    private final CookieUtil cookieUtil;
+
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
-        return CookieUtils.resolveCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME)
-                .map(cookie -> CookieUtils.deserialize(cookie, OAuth2AuthorizationRequest.class))
+        return cookieUtil
+                .resolveCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME)
+                .map(cookie -> cookieUtil.deserialize(cookie, OAuth2AuthorizationRequest.class))
                 .orElse(null);
     }
 
@@ -29,18 +34,18 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
             HttpServletRequest request,
             HttpServletResponse response) {
         if (authorizationRequest == null) {
-            CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
-            CookieUtils.deleteCookie(request, response, REDIRECT_URL_PARAM_COOKIE_NAME);
+            cookieUtil.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+            cookieUtil.deleteCookie(request, response, REDIRECT_URL_PARAM_COOKIE_NAME);
             return;
         }
-        CookieUtils.setCookie(
+        cookieUtil.setCookie(
                 response,
                 OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
-                CookieUtils.serialize(authorizationRequest),
+                cookieUtil.serialize(authorizationRequest),
                 cookieExpireSeconds);
         String redirectUrlAfterLogin = request.getParameter(REDIRECT_URL_PARAM_COOKIE_NAME);
         if (StringUtils.isNotBlank(redirectUrlAfterLogin)) {
-            CookieUtils.setCookie(
+            cookieUtil.setCookie(
                     response,
                     REDIRECT_URL_PARAM_COOKIE_NAME,
                     redirectUrlAfterLogin,
@@ -53,13 +58,13 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
             HttpServletRequest request, HttpServletResponse response) {
 
         OAuth2AuthorizationRequest authorizationRequest = this.loadAuthorizationRequest(request);
-        CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+        cookieUtil.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
 
         return authorizationRequest;
     }
 
     public void clearCookies(HttpServletRequest request, HttpServletResponse response) {
-        CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
-        CookieUtils.deleteCookie(request, response, REDIRECT_URL_PARAM_COOKIE_NAME);
+        cookieUtil.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+        cookieUtil.deleteCookie(request, response, REDIRECT_URL_PARAM_COOKIE_NAME);
     }
 }

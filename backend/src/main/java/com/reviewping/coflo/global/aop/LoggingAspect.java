@@ -1,8 +1,9 @@
 package com.reviewping.coflo.global.aop;
 
 import com.reviewping.coflo.global.error.exception.BusinessException;
-import com.reviewping.coflo.global.util.WebHookUtils;
+import com.reviewping.coflo.global.util.WebHookUtil;
 import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class LoggingAspect {
 
     private static final String WEBHOOK_MESSAGE = "Error occurs : Webhooks sent";
+    private final WebHookUtil webHookUtil;
 
     @Pointcut("within(@com.reviewping.coflo.global.aop.LogExecution *)")
     public void beanAnnotatedWithLogExecution() {}
@@ -35,7 +38,7 @@ public class LoggingAspect {
             return result;
         } catch (Exception ex) {
             String errorLogMessage = getErrorLogMessage(className, methodName, args, ex);
-            WebHookUtils.sendWebHookMessage(errorLogMessage);
+            webHookUtil.sendWebHookMessage(errorLogMessage);
             log.info(WEBHOOK_MESSAGE);
             log.info("{}", errorLogMessage);
             throw ex;

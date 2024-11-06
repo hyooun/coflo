@@ -30,12 +30,15 @@ public class UserService {
         User user = userRepository.getById(userId);
         badgeEventService.eventFirstLogin(user);
         gitLabClient.getUserInfo(domain, userToken);
+
         try {
             gitlabAccountRepository.save(
                     GitlabAccount.builder().user(user).domain(domain).userToken(userToken).build());
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException(ErrorCode.USER_TOKEN_ALREADY_EXIST);
         }
+
+        if (user.getUsername() == null) synchronizeUserInfo(userId);
     }
 
     @Transactional

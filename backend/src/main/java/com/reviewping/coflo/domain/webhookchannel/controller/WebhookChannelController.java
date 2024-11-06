@@ -7,6 +7,7 @@ import com.reviewping.coflo.domain.webhookchannel.service.WebhookChannelService;
 import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ public class WebhookChannelController {
     private static final String TEST_CONTENT = "Hello coFlo!";
 
     @PostMapping
+    @Operation(summary = "웹훅 채널 신규 등록")
     public ApiResponse<Void> addWebhookChannel(
             @RequestBody WebhookChannelRequest webhookChannelRequest) {
         webhookChannelService.addWebhookChannel(
@@ -32,18 +34,21 @@ public class WebhookChannelController {
     }
 
     @GetMapping("/{projectId}")
+    @Operation(summary = "등록된 웹훅 채널 목록 조회")
     public ApiResponse<List<WebhookChannelResponse>> getWebhookChannelList(
             @PathVariable("projectId") Long projectId) {
         return ApiSuccessResponse.success(webhookChannelService.getWebhookChannelList(projectId));
     }
 
     @PostMapping("/test/{projectId}")
+    @Operation(summary = "웹훅 연동 테스트")
     public ApiResponse<Void> testWebhookChannel(@PathVariable("projectId") Long projectId) {
         webhookChannelService.sendData(projectId, TEST_CONTENT);
         return ApiSuccessResponse.success();
     }
 
     @PatchMapping("/{webhookChannelId}")
+    @Operation(summary = "연동된 웹훅 정보 수정")
     public ApiResponse<Void> updateWebhookChannel(
             @PathVariable("webhookChannelId") Long webhookChannelId,
             @RequestBody UpdateWebhookChannelRequest updateWebhookChannelRequest) {
@@ -53,6 +58,7 @@ public class WebhookChannelController {
     }
 
     @DeleteMapping("/{webhookChannelId}")
+    @Operation(summary = "연동된 웹훅 연동 해제")
     public ApiResponse<Void> deleteWebhookChannel(
             @PathVariable("webhookChannelId") Long webhookChannelId) {
         webhookChannelService.deleteWebhookChannel(webhookChannelId);

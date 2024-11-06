@@ -11,6 +11,7 @@ import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ public class ProjectController {
     private final ProjectUserStatisticsService projectUserStatisticsService;
 
     @GetMapping("/{projectId}")
+    @Operation(summary = "프로젝트 상세 정보 조회")
     public ApiResponse<ProjectTeamDetailResponse> getProjectInfoDetail(
             @AuthUser User user, @PathVariable("projectId") Long projectId) {
         return ApiSuccessResponse.success(
@@ -33,6 +35,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/scores")
+    @Operation(summary = "주간 6항목 점수 데이터 조회", description = "점수 총합 상위 5명에 대한 6항목 점수 데이터")
     public ApiResponse<ProjectTeamRewardResponse> getProjectTeamScore(
             @AuthUser User user, @PathVariable("projectId") Long projectId) {
         return ApiSuccessResponse.success(
@@ -40,6 +43,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/statistics")
+    @Operation(summary = "개인별 성장 그래프 데이터 조회", description = "옵션에 따라 개인별, 팀별, 기간별 조회")
     ApiResponse<?> getProjectUserStatisticsScore(
             @AuthUser User user,
             @PathVariable("projectId") Long projectId,

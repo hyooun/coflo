@@ -7,6 +7,7 @@ import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/me")
+    @Operation(summary = "현재 로그인 된 사용자의 연동된 Gitlab 정보 확인")
     public ApiResponse<Void> addGitlabAccount(
             @AuthUser User user, @RequestBody GitlabAccountRequest gitlabAccountRequest) {
         userService.addGitlabAccount(
@@ -27,6 +29,7 @@ public class UserController {
     }
 
     @PatchMapping("/me/sync")
+    @Operation(summary = "사용자 정보 동기화", description = "username과 avatar_url 동기화")
     public ApiResponse<Void> synchronizeUserInfo(@AuthUser User user) {
         userService.synchronizeUserInfo(user.getId());
         return ApiSuccessResponse.success();

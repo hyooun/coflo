@@ -8,6 +8,7 @@ import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,11 +21,13 @@ public class BadgeController {
     private final BadgeService badgeService;
 
     @GetMapping
+    @Operation(summary = "로그인 된 사용자의 뱃지 정보 조회", description = "대표 뱃지 ID와 모든 뱃지 리스트, 사용자 획득 여부 조회")
     public ApiResponse<BadgeResponse> getBadgeInfo(@AuthUser User user) {
         return ApiSuccessResponse.success(badgeService.getBadgeInfo(user));
     }
 
     @PatchMapping
+    @Operation(summary = "로그인 된 사용자의 대표 뱃지 변경")
     public ApiResponse<Void> updateMainBadge(
             @AuthUser User user, @RequestBody MainBadgeRequest mainBadgeRequest) {
         badgeService.updateMainBadge(user, mainBadgeRequest.badgeCodeId());
@@ -32,6 +35,7 @@ public class BadgeController {
     }
 
     @DeleteMapping
+    @Operation(summary = "로그인 된 사용자의 대표 뱃지 삭제", description = "null로 변경됨")
     public ApiResponse<Void> deleteMainBadge(@AuthUser User user) {
         badgeService.deleteMainBadge(user);
         return ApiSuccessResponse.success();

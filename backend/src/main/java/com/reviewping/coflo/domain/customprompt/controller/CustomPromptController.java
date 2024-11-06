@@ -8,6 +8,7 @@ import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +21,14 @@ public class CustomPromptController {
     private final CustomPromptService customPromptService;
 
     @GetMapping("/{projectId}")
+    @Operation(summary = "연동된 프로젝트의 Custom Prompt 조회")
     public ApiResponse<CustomPromptResponse> getCustomPrompt(
             @PathVariable("projectId") Long projectId) {
         return ApiSuccessResponse.success(customPromptService.getCustomPrompt(projectId));
     }
 
     @PutMapping("/{customPromptId}")
+    @Operation(summary = "연동된 프로젝트의 Custom Prompt 수정")
     public ApiResponse<Void> updateCustomPrompt(
             @AuthUser User user,
             @PathVariable("customPromptId") Long customPromptId,

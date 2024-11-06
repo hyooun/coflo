@@ -1,5 +1,6 @@
 package com.reviewping.coflo.global.config;
 
+import com.reviewping.coflo.global.batch.AiRewardTotalTasklet;
 import com.reviewping.coflo.global.batch.BestMergeRequestBadgeTasklet;
 import com.reviewping.coflo.global.batch.BestMergeRequestHistoryTasklet;
 import jakarta.annotation.Nonnull;
@@ -28,35 +29,56 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class BatchConfig {
 
     @Bean
-    public Job myJob(
+    public Job bestMergeRequestEventJob(
             JobRepository jobRepository,
-            @Qualifier("addHistoryStep") Step addHistoryStep,
-            @Qualifier("eventStep") Step eventStep,
+            @Qualifier("addBestMrHistoryStep") Step addBestMrHistoryStep,
+            @Qualifier("bestMergeRequestEventStep") Step bestMergeRequestEventStep,
             JobExecutionListener jobExecutionListener) {
-        return new JobBuilder("myJob", jobRepository)
+        return new JobBuilder("bestMergeRequestJob", jobRepository)
                 .listener(jobExecutionListener)
-                .start(addHistoryStep)
-                .next(eventStep)
+                .start(addBestMrHistoryStep)
+                .next(bestMergeRequestEventStep)
                 .build();
     }
 
     @Bean
-    public Step addHistoryStep(
+    public Job aiRewardEventJob(
+            JobRepository jobRepository,
+            @Qualifier("aiRewardEventStep") Step aiRewardEventStep,
+            JobExecutionListener jobExecutionListener) {
+        return new JobBuilder("aiRewardEventJob", jobRepository)
+                .listener(jobExecutionListener)
+                .start(aiRewardEventStep)
+                .build();
+    }
+
+    @Bean
+    public Step addBestMrHistoryStep(
             JobRepository jobRepository,
             BestMergeRequestHistoryTasklet bestMergeRequestHistoryTasklet,
             PlatformTransactionManager transactionManager) {
-        return new StepBuilder("addHistoryStep", jobRepository)
+        return new StepBuilder("addBestMrHistoryStep", jobRepository)
                 .tasklet(bestMergeRequestHistoryTasklet, transactionManager)
                 .build();
     }
 
     @Bean
-    public Step eventStep(
+    public Step bestMergeRequestEventStep(
             JobRepository jobRepository,
             BestMergeRequestBadgeTasklet bestMergeRequestBadgeTasklet,
             PlatformTransactionManager transactionManager) {
-        return new StepBuilder("eventStep", jobRepository)
+        return new StepBuilder("bestMergeRequestEventStep", jobRepository)
                 .tasklet(bestMergeRequestBadgeTasklet, transactionManager)
+                .build();
+    }
+
+    @Bean
+    public Step aiRewardEventStep(
+            JobRepository jobRepository,
+            AiRewardTotalTasklet aiRewardTotalTasklet,
+            PlatformTransactionManager transactionManager) {
+        return new StepBuilder("aiRewardEventStep", jobRepository)
+                .tasklet(aiRewardTotalTasklet, transactionManager)
                 .build();
     }
 

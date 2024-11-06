@@ -8,12 +8,18 @@ import com.reviewping.coflo.domain.badge.repository.BadgeCodeRepository;
 import com.reviewping.coflo.domain.badge.repository.UserBadgeRepository;
 import com.reviewping.coflo.domain.customprompt.repository.PromptHistoryRepository;
 import com.reviewping.coflo.domain.mergerequest.repository.BestMrHistoryRepository;
+import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.user.repository.LoginHistoryRepository;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
+import com.reviewping.coflo.domain.userproject.entity.UserProject;
+import com.reviewping.coflo.domain.userproject.entity.UserProjectScore;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
+import com.reviewping.coflo.domain.userproject.repository.UserProjectScoreRepository;
+import com.reviewping.coflo.global.util.ProjectDateUtil;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -27,10 +33,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BadgeEventService {
 
     // TODO: 운영시에 count 바꾸기
-    private static final Long PROJECT_LINK_TARGET_COUNT = 1L;
-    private static final Long LOGIN_TARGET_COUNT = 1L;
-    private static final Long PROMTPT_UPDATE_TARGET_COUNT = 2L;
+    private static final long PROJECT_LINK_TARGET_COUNT = 1L;
+    private static final long LOGIN_TARGET_COUNT = 1L;
+    private static final long PROMTPT_UPDATE_TARGET_COUNT = 2L;
     private static final int PERCENT = 1;
+    private static final long AI_REWARD_TARGET_SCORE = 55L;
     private static final Random random = new Random();
 
     private final UserRepository userRepository;
@@ -41,6 +48,8 @@ public class BadgeEventService {
     private final LoginHistoryRepository loginHistoryRepository;
     private final PromptHistoryRepository promptHistoryRepository;
     private final BestMrHistoryRepository bestMrHistoryRepository;
+    private final UserProjectScoreRepository userProjectScoreRepository;
+    private final ProjectDateUtil projectDateUtil;
 
     private UserBadge userBadge;
     private BadgeCode badgeCode;
@@ -128,5 +137,36 @@ public class BadgeEventService {
                         .collect(Collectors.toList());
 
         userBadgeRepository.saveAll(newBadges);
+    }
+
+    // 코드 마스터 - AI 리뷰평가 리워드 합이 n점 이상 시 획득
+    @Transactional
+    public void eventAiRewardScore() {
+        badgeCode = badgeCodeRepository.getById(CODE_MASTER.getId());
+        userProjectRepository
+                .findAll()
+                .forEach(userProject -> processUserProject(userProject, badgeCode));
+    }
+
+    private void processUserProject(UserProject userProject, BadgeCode badgeCode) {
+        Project project = userProject.getProject();
+        User user = userProject.getGitlabAccount().getUser();
+
+        int week =
+                projectDateUtil.calculateWeekNumber(
+                        project.getCreatedDate().toLocalDate(), LocalDate.now());
+
+        long totalScore = calculateTotalScore(userProject, week - 1);
+        if (totalScore >= AI_REWARD_TARGET_SCORE
+                && !userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
+            UserBadge userBadge = UserBadge.of(user, badgeCode);
+            userBadgeRepository.save(userBadge);
+        }
+    }
+
+    private long calculateTotalScore(UserProject userProject, int week) {
+        return userProjectScoreRepository.findAllByUserProjectAndWeek(userProject, week).stream()
+                .mapToLong(UserProjectScore::getTotalScore)
+                .sum();
     }
 }

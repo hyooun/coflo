@@ -5,6 +5,7 @@ import com.reviewping.coflo.gateway.RedisGateway;
 import com.reviewping.coflo.json.JsonUtil;
 import com.reviewping.coflo.openai.OpenaiClient;
 import com.reviewping.coflo.openai.dto.ChatCompletionResponse;
+import com.reviewping.coflo.repository.PromptTemplateRepository;
 import com.reviewping.coflo.service.dto.request.MrEvalRequestMessage;
 import com.reviewping.coflo.service.dto.request.ReviewRequestMessage.MrContent;
 import com.reviewping.coflo.service.dto.response.MrEvalResponseMessage;
@@ -23,6 +24,7 @@ public class MrEvalService {
     private final JsonUtil jsonUtil;
     private final OpenaiClient openaiClient;
     private final RedisGateway redisGateway;
+    private final PromptTemplateRepository promptTemplateRepository;
 
     @PostConstruct
     public void setEvalTemplate() {
@@ -49,9 +51,8 @@ public class MrEvalService {
     private String buildEvalPrompt(MrContent mrContent) {
         return mrContent.mrDiffs()
                 + "\n"
-                + "이 MR 가독성, 일관성, 재사용성, 신뢰성, 보안성, 유지보수성에 대해서 평가한 후 **반드시 아래 json형식으로 반환해줘**\n"
-                + "각 항목은 최대 10점이야."
-                + "// template\n"
+                + promptTemplateRepository.findLatestTemplate().content()
+                + "\n"
                 + EVAL_TEMPLATE;
     }
 }

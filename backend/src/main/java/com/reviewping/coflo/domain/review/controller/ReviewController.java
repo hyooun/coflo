@@ -9,6 +9,7 @@ import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping
+    @Operation(summary = "리뷰 리스트 조회", description = "MR에 대한 AI 작성 리뷰 리스트 조회")
     public ApiResponse<ReviewResponse> getReviewList(
             @AuthUser User user, @RequestParam Long projectId, @RequestParam Long mergeRequestIid) {
         ReviewResponse reviewResponse =
@@ -32,6 +34,7 @@ public class ReviewController {
     }
 
     @PostMapping
+    @Operation(summary = "리뷰 재생성 요청", description = "참고 자료 수정/삭제 후 요청")
     public ApiResponse<Void> regenerateReview(
             @AuthUser User user, @RequestBody RegenerateReviewRequest request) {
         reviewService.regenerateReview(user.getId(), request.mrInfoId(), request.retrievals());
@@ -39,6 +42,7 @@ public class ReviewController {
     }
 
     @GetMapping("/{reviewId}/retrievals")
+    @Operation(summary = "참고 자료 상세 조회", description = "리뷰에 사용된 참고 자료 조회")
     public ApiResponse<List<RetrievalDetailResponse>> getRetrievalDetail(
             @PathVariable Long reviewId) {
         List<RetrievalDetailResponse> retrievalDetailResponse =

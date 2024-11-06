@@ -13,6 +13,7 @@ public enum ErrorCode {
      */
     USER_NOT_EXIST(HttpStatus.NOT_FOUND, "A001", "존재하지 않는 유저입니다"),
     LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "A002", "로그인 도중 오류가 발생했습니다."),
+    USER_TOKEN_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "A003", "이미 등록된 USER TOKEN입니다."),
 
     /**
      * MR_INFO(B000)

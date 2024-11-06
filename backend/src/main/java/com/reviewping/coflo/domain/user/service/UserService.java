@@ -7,8 +7,11 @@ import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabUserInfoContent;
+import com.reviewping.coflo.global.error.ErrorCode;
+import com.reviewping.coflo.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +30,12 @@ public class UserService {
         User user = userRepository.getById(userId);
         badgeEventService.eventFirstLogin(user);
         gitLabClient.getUserInfo(domain, userToken);
-        gitlabAccountRepository.save(
-                GitlabAccount.builder().user(user).domain(domain).userToken(userToken).build());
+        try {
+            gitlabAccountRepository.save(
+                    GitlabAccount.builder().user(user).domain(domain).userToken(userToken).build());
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessException(ErrorCode.USER_TOKEN_ALREADY_EXIST);
+        }
     }
 
     @Transactional

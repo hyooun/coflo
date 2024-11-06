@@ -2,6 +2,7 @@ package com.reviewping.coflo.domain.review.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reviewping.coflo.domain.badge.service.BadgeEventService;
 import com.reviewping.coflo.domain.customprompt.entity.CustomPrompt;
 import com.reviewping.coflo.domain.customprompt.repository.CustomPromptRepository;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
@@ -25,6 +26,7 @@ import com.reviewping.coflo.domain.review.message.ReviewResponseMessage;
 import com.reviewping.coflo.domain.review.repository.RetrievalRepository;
 import com.reviewping.coflo.domain.review.repository.ReviewRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
+import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
@@ -49,6 +51,7 @@ public class ReviewService {
     private final GitlabAccountRepository gitlabAccountRepository;
     private final CustomPromptRepository customPromptRepository;
     private final ProjectRepository projectRepository;
+    private final BadgeEventService badgeEventService;
 
     private final GitLabClient gitLabClient;
     private final ObjectMapper objectMapper;
@@ -137,12 +140,12 @@ public class ReviewService {
     }
 
     @Transactional
-    public void regenerateReview(Long userId, Long mrInfoId, List<RetrievalContent> retrievals) {
+    public void regenerateReview(User user, Long mrInfoId, List<RetrievalContent> retrievals) {
         MrInfo mrInfo = mrInfoRepository.getById(mrInfoId);
         Project project = mrInfo.getProject();
 
         GitlabAccount gitlabAccount =
-                gitlabAccountRepository.getByUserIdAndProjectId(userId, project.getId());
+                gitlabAccountRepository.getByUserIdAndProjectId(user.getId(), project.getId());
 
         List<GitlabMrDiffsContent> mrDiffs =
                 gitLabClient.getMrDiffs(
@@ -180,6 +183,8 @@ public class ReviewService {
                                                         LanguageType.valueOf(retrieval.language())
                                                                 .getType()))
                                 .toList());
+
+        badgeEventService.eventFirstAiReviewRegenerate(user);
         redisGateway.sendReviewRegenerateRequest(regenerateRequest);
     }
 

@@ -34,7 +34,7 @@ public class ReviewController {
     @PostMapping
     public ApiResponse<Void> regenerateReview(
             @AuthUser User user, @RequestBody RegenerateReviewRequest request) {
-        reviewService.regenerateReview(user.getId(), request.mrInfoId(), request.retrievals());
+        reviewService.regenerateReview(user, request.mrInfoId(), request.retrievals());
         return ApiSuccessResponse.success();
     }
 

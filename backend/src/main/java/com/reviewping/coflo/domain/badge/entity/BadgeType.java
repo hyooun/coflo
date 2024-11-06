@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum BadgeType {
     FIRST_ADVENTURER(1L),
+    REVIEW_FINDER(2L),
     PROJECT_MASTER(3L),
     CODE_MASTER(5L),
     LUCKY_FIND(6L),

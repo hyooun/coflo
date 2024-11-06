@@ -148,6 +148,15 @@ public class BadgeEventService {
                 .forEach(userProject -> processUserProject(userProject, badgeCode));
     }
 
+    // 리뷰 탐색자 - 첫 AI 리뷰 재생성
+    public void eventFirstAiReviewRegenerate(User user) {
+        badgeCode = badgeCodeRepository.getById(REVIEW_FINDER.getId());
+        if (!userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
+            userBadge = UserBadge.of(user, badgeCode);
+            userBadgeRepository.save(userBadge);
+        }
+    }
+
     private void processUserProject(UserProject userProject, BadgeCode badgeCode) {
         Project project = userProject.getProject();
         User user = userProject.getGitlabAccount().getUser();

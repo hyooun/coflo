@@ -55,7 +55,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
         String refreshToken = cookieUtil.getCookieValue(request, JwtConstants.REFRESH_NAME);
 
         if (requestURI.equals(REFRESH_TOKEN_END_POINT) && refreshToken != null) {
-            handleRefreshToken(request, response, refreshToken);
+            handleRefreshToken(response, refreshToken);
         } else if (accessToken != null) {
             handleAccessToken(request, response, filterChain, accessToken);
         } else {
@@ -75,13 +75,13 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void handleRefreshToken(
-            HttpServletRequest request, HttpServletResponse response, String refreshToken) {
+    private void handleRefreshToken(HttpServletResponse response, String refreshToken) {
         Map<String, Object> claims = JwtProvider.validateToken(refreshToken);
-        String userId = (String) claims.get("id");
+        String userId = ((Integer) claims.get("userId")).toString();
         String token = (String) redisUtil.get(userId);
+        token = token.replaceAll("^\"|\"$", "");
 
-        if (token != null || !refreshToken.equals(token)) {
+        if (!refreshToken.equals(token)) {
             throw new JwtException(TOKEN_INVALID.getMessage());
         } else {
             redisUtil.delete(userId);
@@ -93,13 +93,13 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
                     cookieUtil.createCookie(
                             JwtConstants.ACCESS_NAME,
                             accessToken,
-                            (int) JwtConstants.ACCESS_EXP_TIME / 1000);
+                            JwtConstants.ACCESS_EXP_TIME * 60);
 
             Cookie refreshTokenCookie =
                     cookieUtil.createCookie(
                             JwtConstants.REFRESH_NAME,
                             refreshToken,
-                            (int) JwtConstants.REFRESH_EXP_TIME / 1000);
+                            JwtConstants.REFRESH_EXP_TIME * 60);
 
             response.addCookie(accessTokenCookie);
             response.addCookie(refreshTokenCookie);

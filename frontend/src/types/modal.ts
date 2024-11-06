@@ -26,10 +26,11 @@ export interface GuideModalProps {
     onChange: (value: string) => void;
     placeholder?: string;
   };
-  link?: {
+  links?: {
     url: string;
     text: string;
-  };
+    icon?: React.ReactNode;
+  }[];
 }
 
 export interface AlertModalProps {

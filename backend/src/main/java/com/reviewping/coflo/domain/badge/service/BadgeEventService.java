@@ -33,11 +33,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BadgeEventService {
 
     // TODO: 운영시에 count 바꾸기
-    private static final Long PROJECT_LINK_TARGET_COUNT = 1L;
-    private static final Long LOGIN_TARGET_COUNT = 1L;
-    private static final Long PROMTPT_UPDATE_TARGET_COUNT = 2L;
-    private static final Integer PERCENT = 1;
-    private static final Long AI_REWARD_TARGET_SCORE = 55L;
+    private static final long PROJECT_LINK_TARGET_COUNT = 1L;
+    private static final long LOGIN_TARGET_COUNT = 1L;
+    private static final long PROMTPT_UPDATE_TARGET_COUNT = 2L;
+    private static final int PERCENT = 1;
+    private static final long AI_REWARD_TARGET_SCORE = 55L;
     private static final Random random = new Random();
 
     private final UserRepository userRepository;

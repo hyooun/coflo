@@ -74,4 +74,14 @@ public class SwaggerConfig {
     GroupedOpenApi gitlabApi() {
         return GroupedOpenApi.builder().group("gitlab").pathsToMatch("/api/gitlab/**").build();
     }
+
+    @Bean
+    GroupedOpenApi ReviewApi() {
+        return GroupedOpenApi.builder().group("review").pathsToMatch("/api/reviews/**").build();
+    }
+
+    @Bean
+    GroupedOpenApi BadgeApi() {
+        return GroupedOpenApi.builder().group("badge").pathsToMatch("/api/badges/**").build();
+    }
 }

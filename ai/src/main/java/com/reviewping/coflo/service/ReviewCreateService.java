@@ -9,6 +9,7 @@ import com.reviewping.coflo.json.JsonUtil;
 import com.reviewping.coflo.openai.OpenaiClient;
 import com.reviewping.coflo.openai.dto.ChatCompletionResponse;
 import com.reviewping.coflo.openai.dto.EmbeddingResponse;
+import com.reviewping.coflo.repository.PromptTemplateRepository;
 import com.reviewping.coflo.repository.VectorRepository;
 import com.reviewping.coflo.service.dto.request.ReviewRegenerateRequestMessage;
 import com.reviewping.coflo.service.dto.request.ReviewRequestMessage;
@@ -23,10 +24,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReviewCreateService {
 
+    private static final String PROMPT_TYPE = "REVIEW";
+
     private final RedisGateway redisGateway;
     private final OpenaiClient openaiClient;
     private final JsonUtil jsonUtil;
     private final VectorRepository vectorRepository;
+    private final PromptTemplateRepository promptTemplateRepository;
 
     @ServiceActivator(inputChannel = "reviewRequestChannel")
     public void createReview(String reviewRequestMessage) {
@@ -82,18 +86,10 @@ public class ReviewCreateService {
         redisGateway.sendReview(reviewResponse);
     }
 
-    // TODO: 프롬프트 개선
     private String buildPrompt(
             MrContent mrContent, String customPrompt, List<RetrievalMessage> retrievals) {
-        StringBuilder prompt = new StringBuilder();
-        prompt.append("# 참고자료\n");
-        for (RetrievalMessage retrieval : retrievals) {
-            prompt.append("//").append(retrieval.fileName()).append("\n");
-            prompt.append(retrieval.content()).append("\n");
-        }
-        prompt.append("# 변경내용\n");
-        prompt.append(mrContent).append("\n");
-        prompt.append(customPrompt);
-        return prompt.toString();
+        String prompt = promptTemplateRepository.findLatestTemplate(PROMPT_TYPE).content();
+        return prompt.formatted(
+                retrievals, mrContent.mrDescription(), mrContent.mrDiffs(), customPrompt);
     }
 }

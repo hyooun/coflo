@@ -19,12 +19,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MrEvalService {
 
-    private String EVAL_TEMPLATE;
+    private static final String PROMPT_TYPE = "MR_EVAL";
 
     private final JsonUtil jsonUtil;
     private final OpenaiClient openaiClient;
     private final RedisGateway redisGateway;
     private final PromptTemplateRepository promptTemplateRepository;
+
+    private String EVAL_TEMPLATE;
 
     @PostConstruct
     public void setEvalTemplate() {
@@ -49,10 +51,7 @@ public class MrEvalService {
     }
 
     private String buildEvalPrompt(MrContent mrContent) {
-        return mrContent.mrDiffs()
-                + "\n"
-                + promptTemplateRepository.findLatestTemplate().content()
-                + "\n"
-                + EVAL_TEMPLATE;
+        String prompt = promptTemplateRepository.findLatestTemplate(PROMPT_TYPE).content();
+        return prompt.formatted(mrContent.mrDiffs(), EVAL_TEMPLATE);
     }
 }

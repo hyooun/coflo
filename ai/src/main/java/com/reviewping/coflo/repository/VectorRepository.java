@@ -41,7 +41,6 @@ public class VectorRepository {
                 batchValues[i] = createParameterSource(projectId, branchId, chunkedCodes.get(i));
             }
             int[] ints = namedParameterJdbcTemplate.batchUpdate(sql, batchValues);
-            System.out.println(ints.length);
         } catch (SQLException e) {
             throw new PersistenceException("Failed to batch save chunked codes with embeddings", e);
         }

@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProjectInitializeService {
+
+    private static final int BATCH_SIZE = 10;
 
     private final GitUtil gitUtil;
     private final OpenaiClient openaiClient;
@@ -57,21 +60,35 @@ public class ProjectInitializeService {
         String localPath = gitCloneDirectory + projectId + "/" + branch;
         gitUtil.shallowCloneOrPull(gitUrl, branch, token, localPath);
         // 2. 전처리: 메소드 단위 청킹 + 메타데이터 추가
-        List<ChunkedCode> chunkedCodes = preprocessData(localPath);
-        // 3. 벡터DB에 저장: batch로 작업
-        vectorRepository.saveAllChunkedCodes(projectId, branchId, chunkedCodes);
+        // 3. 벡터DB에 저장
+        preprocessAndSave(projectId, branchId, localPath);
     }
 
-    private List<ChunkedCode> preprocessData(String localPath) {
+    private void preprocessAndSave(Long projectId, Long branchId, String localPath) {
+        List<ChunkedCode> buffer = new ArrayList<>(BATCH_SIZE);
+
         try (Stream<Path> filePathStream = Files.walk(Path.of(localPath))) {
-            return filePathStream
+            filePathStream
                     .filter(Files::isRegularFile) // 파일만 선택
                     .filter(this::isCodeFile)
                     .flatMap(filePath -> preprocessCode(filePath.toFile()).stream())
                     .map(this::addEmbedding)
-                    .toList();
+                    .forEach(
+                            chunkedCode -> {
+                                buffer.add(chunkedCode);
+                                if (buffer.size() >= BATCH_SIZE) {
+                                    vectorRepository.saveAllChunkedCodes(
+                                            projectId, branchId, buffer);
+                                    buffer.clear();
+                                }
+                            });
+
+            // 남아있는 데이터가 있으면 마지막으로 저장
+            if (!buffer.isEmpty()) {
+                vectorRepository.saveAllChunkedCodes(projectId, branchId, buffer);
+            }
         } catch (IOException e) {
-            return List.of();
+            throw new PreProcessException("파일 전처리 중 예외가 발생했습니다.", e);
         }
     }
 

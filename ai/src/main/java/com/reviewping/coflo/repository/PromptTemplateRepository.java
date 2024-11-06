@@ -4,7 +4,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.reviewping.coflo.entity.PromptTemplate;
+import com.reviewping.coflo.service.dto.PromptTemplate;
 
 import lombok.RequiredArgsConstructor;
 

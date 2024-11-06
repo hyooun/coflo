@@ -21,9 +21,5 @@ openai:
 
 git-clone-directory: ${GIT_CLONE_DIRECTORY}
 
-logging:
-  level:
-    com.reviewping.coflo: debug
-    org.springframework:
-        integration: debug
-        messaging: debug
+mattermost-logger:
+  base-url: ${MATTERMOST_WEBHOOK_URL}

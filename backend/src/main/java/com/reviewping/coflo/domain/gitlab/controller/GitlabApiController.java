@@ -9,6 +9,7 @@ import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ public class GitlabApiController {
     private final GitlabApiService gitlabApiService;
 
     @GetMapping("/search")
+    @Operation(summary = "사용자의 Gitlab repository 조회", description = "키워드 검색 가능, 페이지네이션 기능 제공")
     public ApiResponse<GitlabProjectPageResponse> getGitlabProjects(
             @AuthUser User user,
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
@@ -34,13 +36,15 @@ public class GitlabApiController {
     }
 
     @GetMapping("/{gitlabProjectId}/branches")
-    public ApiResponse<List<String>> getGitlabProjectBranched(
+    @Operation(summary = "프로젝트 연동 시 branch 목록 조회")
+    public ApiResponse<List<String>> getGitlabProjectBranches(
             @AuthUser User user, @PathVariable("gitlabProjectId") Long gitlabProjectId) {
         return ApiSuccessResponse.success(
                 gitlabApiService.getGitlabProjectBranches(user.getId(), gitlabProjectId));
     }
 
     @PostMapping("/user-token/validate")
+    @Operation(summary = "User Token 유효성 검증")
     public ApiResponse<Boolean> validateUserToken(
             @RequestBody GitlabAccountRequest gitlabAccountRequest) {
         return ApiSuccessResponse.success(

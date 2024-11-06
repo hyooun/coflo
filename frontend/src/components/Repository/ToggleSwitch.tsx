@@ -1,6 +1,6 @@
 const ToggleSwitch = ({ checked, onChange }: ToggleSwitchProps) => {
   return (
-    <label className="relative inline-block w-14 h-8">
+    <label className="relative inline-block w-16 h-8">
       <input
         type="checkbox"
         checked={checked}

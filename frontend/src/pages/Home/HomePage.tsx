@@ -203,7 +203,7 @@ const HomePage = () => {
           <div className="w-[420px] h-[320px] p-2 bg-gray-400 border-2 border-gray-500 rounded-lg m-2 flex  flex-col ">
             <Title title="About" textSize="text-lg" px="px-1" py="py-1" ml="ml-6" mt="mt-3" />
             <Title title="Language" px="px-1" py="py-1" ml="ml-8" />
-            <div className="ml-8">
+            <div className="ml-16">
               {projectDetail.programmingLanguagesData &&
               projectDetail.programmingLanguagesData.labels ? (
                 <ChartBox

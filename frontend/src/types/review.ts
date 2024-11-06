@@ -7,32 +7,33 @@ export interface MergeRequestReview extends GitlabMergeRequest {
 
 export interface Review {
   id: number;
-  reviewer: Reviewer;
+  modifiedAt: string;
+  // reviewer: Reviewer;
   createdAt: string;
-  updatedAt: string;
+  // updatedAt: string;
   content: string; // 마크다운 형식의 리뷰 내용
-  comments: Comment[];
+  // comments: Comment[];
 }
 
-interface Comment {
-  id: number;
-  reviewer: Reviewer;
-  createdAt: string;
-  updatedAt: string;
-  content: string;
-  resolved?: boolean;
-  resolvable: boolean;
-  replies: CommentReply[];
-}
+// interface Comment {
+//   id: number;
+//   reviewer: Reviewer;
+//   createdAt: string;
+//   updatedAt: string;
+//   content: string;
+//   resolved?: boolean;
+//   resolvable: boolean;
+//   replies: CommentReply[];
+// }
 
-interface CommentReply {
-  id: number;
-  author: Reviewer;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  system?: boolean;
-}
+// interface CommentReply {
+//   id: number;
+//   author: Reviewer;
+//   content: string;
+//   createdAt: string;
+//   updatedAt: string;
+//   system?: boolean;
+// }
 
 export interface ReviewCommentProps {
   name?: string;
@@ -42,4 +43,9 @@ export interface ReviewCommentProps {
   createdAt?: string;
   backgroundColor?: string;
   reviewer?: Reviewer;
+}
+
+export interface MergeRequest {
+  mergeRequest: GitlabMergeRequest;
+  reviews: Review[];
 }

@@ -1,7 +1,10 @@
 import { rest } from 'msw';
 import { GitlabProjectListResponse } from 'types/gitLab';
 import { UpdateRepositoryRequest } from 'types/api';
-import badge1 from '@assets/badge1.jpg';
+import badge1 from '@assets/images/badges/badge_none.png';
+import { MergeRequestReview } from 'types/review';
+import { GitlabMergeRequest } from 'types/mergeRequest';
+import { Reference } from 'types/reference';
 
 export const handlers = [
   rest.get('/api/gitlab/search', (req, res, ctx) => {
@@ -9,7 +12,7 @@ export const handlers = [
     const page = req.url.searchParams.get('page');
     const size = req.url.searchParams.get('size');
 
-    if (!keyword || !page || !size) {
+    if (keyword === undefined && page === undefined && size === undefined) {
       return res(
         ctx.status(400),
         ctx.json({
@@ -735,6 +738,70 @@ export const handlers = [
       }),
     );
   }),
+  rest.get('/api/review', (req, res, ctx) => {
+    const { id } = req.params;
+    const { projectId } = req.params;
+
+    const mockMergeRequest: GitlabMergeRequest = {
+      id: Number(id),
+      iid: 247,
+      title: '[feat/#247] 앨범 상세 보기 API 연동',
+      description: 'API 연동을 통해 앨범 상세 정보를 가져올 수 있도록 구현',
+      state: 'merged',
+      mergedAt: '2023-10-01T12:34:56Z',
+      createdAt: '2023-09-15T08:00:00Z',
+      updatedAt: '2023-10-01T12:34:56Z',
+      closedAt: null,
+      sourceBranch: 'feature/album-detail',
+      targetBranch: 'dev',
+      labels: ['feature', 'api'],
+      hasConflicts: false,
+      assignee: {
+        id: 1,
+        username: 'hatchu',
+        name: '하츄핑',
+        avatarUrl: '/images/mocks/profile1.png',
+      },
+      reviewer: {
+        id: 2,
+        username: 'chana',
+        name: '차나핑',
+        avatarUrl: '/images/mocks/profile2.png',
+      },
+      isAiReviewCreated: false,
+    };
+
+    const mockReviews = [
+      {
+        id: 1,
+        content: '리뷰유ㅠㅠㅠㅠㅠ111111',
+        createdAt: '2024-11-01T16:23:50.538468',
+        modifiedAt: '2024-11-01T16:23:50.538468',
+      },
+      {
+        id: 2,
+        content: '리뷰유ㅠㅠㅠㅠㅠㅠ222222222',
+        createdAt: '2024-11-01T16:23:50.538468',
+        modifiedAt: '2024-11-01T16:23:50.538468',
+      },
+      {
+        id: 3,
+        content: '리뷰유ㅠㅠㅠㅠㅠㅠㅠ33333',
+        createdAt: '2024-11-01T16:23:50.538468',
+        modifiedAt: '2024-11-01T16:23:50.538468',
+      },
+    ];
+
+    const mockResponse = {
+      status: 'SUCCESS',
+      data: {
+        mergeRequest: mockMergeRequest,
+        reviews: mockReviews,
+      },
+    };
+
+    return res(ctx.status(200), ctx.json(mockResponse));
+  }),
   rest.get('/api/reviews/:id', (req, res, ctx) => {
     const { id } = req.params;
 
@@ -848,5 +915,185 @@ export const handlers = [
     };
 
     return res(ctx.status(200), ctx.json(mockReviewData));
+  }),
+  rest.get('/api/reviews/:reviewId/retrievals', (req, res, ctx) => {
+    const { reviewId } = req.params;
+    console.log('Intercepted request for reviewId:', reviewId);
+
+    const mockReferences: Reference[] = [
+      {
+        id: 1,
+        fileName: 'src/components/Album/Detail.java',
+        language: 'JAVA',
+        content: 'Some code content here...',
+      },
+      {
+        id: 2,
+        fileName: 'docs/specifications.md',
+        language: 'PLAINTEXT',
+        content: 'Some text content here...',
+      },
+      {
+        id: 3,
+        fileName: 'docs/example.md',
+        language: 'PLAINTEXT',
+        content: 'Some text content here...Some text content here...Some text content here...',
+      },
+      {
+        id: 4,
+        fileName: 'src/components/Album/Detail.tsx',
+        language: 'TYPESCRIPT',
+        content: `export default function AlbumDetail() {
+          const [albumData, setAlbumData] = useState<AlbumType | null>(null);
+          const [isLoading, setIsLoading] = useState(true);
+          const { id } = useParams();
+        
+          useEffect(() => {
+            async function fetchAlbumData() {
+              try {
+                const response = await axios.get(\`/api/albums/\${id}\`);
+                setAlbumData(response.data);
+              } catch (error) {
+                console.error('Failed to fetch album data:', error);
+              } finally {
+                setIsLoading(false);
+              }
+            }
+        
+            fetchAlbumData();
+          }, [id]);
+        
+          if (isLoading) {
+            return <LoadingSpinner />;
+          }
+        
+          if (!albumData) {
+            return <div>앨범을 찾을 수 없습니다.</div>;
+          }
+        
+          return (
+            <div className="container mx-auto px-4 py-8">
+              <div className="flex flex-col md:flex-row gap-8">
+                <div className="w-full md:w-1/3">
+                  <img
+                    src={albumData.coverImage}
+                    alt={albumData.title}
+                    className="w-full rounded-lg shadow-lg"
+                  />
+                </div>
+                <div className="w-full md:w-2/3">
+                  <h1 className="text-3xl font-bold mb-4">{albumData.title}</h1>
+                  <p className="text-gray-600 mb-6">{albumData.description}</p>
+                  {/* Additional album details */}
+                </div>
+              </div>
+            </div>
+          );
+        }`,
+      },
+    ];
+
+    const mockResponse = {
+      status: 'SUCCESS',
+      data: mockReferences,
+    };
+
+    return res(ctx.status(200), ctx.json(mockResponse));
+  }),
+
+  rest.get('/api/badges', (req, res, ctx) => {
+    const mockBadgeResponse: BadgeResponse = {
+      status: 'SUCCESS',
+      data: {
+        mainBadgeCodeId: 2,
+        badgeDetails: [
+          {
+            badgeCodeId: 1,
+            name: '첫 모험가',
+            description: '처음 서비스 가입 시 기본 획득',
+            imageUrl: '/images/mocks/badges/badge_00.png',
+            isAcquired: true,
+          },
+          {
+            badgeCodeId: 2,
+            name: '리뷰 탐색자',
+            description: '첫 AI리뷰 재생성',
+            imageUrl: '/images/mocks/badges/badge_01.png',
+            isAcquired: false,
+          },
+          {
+            badgeCodeId: 3,
+            name: '코드 마스터',
+            description: '10개 이상의 MR 리뷰 완료',
+            imageUrl: '/images/mocks/badges/badge_02.png',
+            isAcquired: false,
+          },
+          {
+            badgeCodeId: 4,
+            name: '프로젝트 마스터',
+            description: '10개 이상의 MR 리뷰 완료',
+            imageUrl: '/images/mocks/badges/badge_03.png',
+            isAcquired: false,
+          },
+          {
+            badgeCodeId: 5,
+            name: '행운의 발견',
+            description: '접속 시 1% 확률로 획득',
+            imageUrl: '/images/mocks/badges/badge_04.png',
+            isAcquired: true,
+          },
+          // ... 더 많은 뱃지들 추가 가능
+        ],
+      },
+    };
+
+    return res(ctx.status(200), ctx.json(mockBadgeResponse));
+  }),
+  rest.delete('/api/badges', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        status: 'SUCCESS',
+        message: '대표 뱃지가 해제되었습니다.',
+      }),
+    );
+  }),
+
+  rest.patch('/api/badges', async (req: any, res, ctx) => {
+    const { badgeId } = await req.body;
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        status: 'SUCCESS',
+        message: '대표 뱃지가 설정되었습니다.',
+        data: {
+          badgeId,
+        },
+      }),
+    );
+  }),
+  rest.get('/api/custom-prompts/:projectId', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        status: 'SUCCESS',
+        data: {
+          customPromptId: 1,
+          content:
+            '메소드 분리에 더욱 초점을 맞춰줘.\n코드리뷰를 간결하고 명확하게 작성해줘.\n메소드 분리에 더욱 초점을 맞춰줘.\n코드리뷰를 간결하고 명확하게 작성해줘.\n메소드 분리에 더욱 초점을 맞춰줘.\n코드리뷰를 간결하고 명확하게 작성해줘.\n메소드 분리에 더욱 초점을 맞춰줘.\n코드리뷰를 간결하고 명확하게 작성해줘.\n메소드 분리에 더욱 초점을 맞춰줘.\n코드리뷰를 간결하고 명확하게 작성해줘.\n메소드 분리에 더욱 초점을 맞춰줘.\n코드리뷰를 간결하고 명확하게 작성해줘.\n',
+        },
+      }),
+    );
+  }),
+
+  // 저장을 위한 POST 핸들러도 추가
+  rest.put('/api/custom-prompts/:projectId', async (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        status: 'SUCCESS',
+      }),
+    );
   }),
 ];

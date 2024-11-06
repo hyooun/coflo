@@ -5,21 +5,27 @@ import { Reference } from 'types/reference.ts';
 import ReferencesList from '@components/MergeRequest/Reference/ReferencesList.tsx';
 import ScrollNavigationButton from '@components/Button/ScrollNavigationButton';
 import Header from '@components/Header/Header.tsx';
+import { Review } from '@apis/Review';
 
 const ReferencesPage = () => {
-  const { id } = useParams();
+  const { id, selectedReviewId } = useParams<{ id: string; selectedReviewId: string }>();
+
   const [references, setReferences] = useState<Reference[]>([]);
   useEffect(() => {
-    if (!id) return;
+    if (!selectedReviewId) return;
 
-    const fetchReferences = async () => {
-      const response = await fetch(`/api/reviews/${id}/retrivals`);
-      const data = await response.json();
-      setReferences(data);
+    const fetchReferences = async (reviewId: string) => {
+      const response = await Review.getReviewRetrievals(reviewId);
+
+      const data = response.data;
+      console.log(data);
+      if (data) {
+        setReferences(data);
+      }
     };
 
-    fetchReferences();
-  }, [id]);
+    fetchReferences(selectedReviewId);
+  }, [selectedReviewId, id]);
 
   if (!references) return <div>Loading...</div>;
 

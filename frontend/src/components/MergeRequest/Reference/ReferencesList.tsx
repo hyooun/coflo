@@ -59,7 +59,6 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
       fileName: fileName,
       content,
       language: language.toLowerCase(),
-      type: language.toLowerCase() === 'plaintext' ? 'TEXT' : 'CODE',
     };
 
     setReferences((prev) => [...prev, newReference]);
@@ -69,19 +68,23 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
   return (
     <div className="w-full my-4 min-w-[350px]">
       <div className="space-y-4">
-        {references.map((reference) => (
-          <CommonReference
-            key={reference.id}
-            id={reference.id}
-            fileName={reference.fileName}
-            content={reference.content}
-            language={reference.language}
-            type={reference.type}
-            onEdit={handleEdit}
-            onDelete={handleDeleteClick}
-            maxLength={3000}
-          />
-        ))}
+        {references.map((reference) => {
+          const referenceType = reference.language.toLowerCase() === 'plaintext' ? 'TEXT' : 'CODE';
+
+          return (
+            <CommonReference
+              key={reference.id}
+              id={reference.id}
+              fileName={reference.fileName}
+              content={reference.content}
+              language={reference.language}
+              type={referenceType}
+              onEdit={handleEdit}
+              onDelete={handleDeleteClick}
+              maxLength={3000}
+            />
+          );
+        })}
         <div
           className="flex flex-col justify-center items-center border-2 rounded-lg border-primary-500 py-10 space-y-4 hover:cursor-pointer"
           onClick={handleAddReference}

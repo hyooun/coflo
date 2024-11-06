@@ -27,14 +27,13 @@ public class CustomPromptController {
         return ApiSuccessResponse.success(customPromptService.getCustomPrompt(projectId));
     }
 
-    @PutMapping("/{customPromptId}")
+    @PutMapping("/{projectId}")
     @Operation(summary = "연동된 프로젝트의 Custom Prompt 수정")
     public ApiResponse<Void> updateCustomPrompt(
             @AuthUser User user,
-            @PathVariable("customPromptId") Long customPromptId,
+            @PathVariable("projectId") Long projectId,
             @ModelAttribute CustomPromptRequest customPromptRequest) {
-        customPromptService.updateCustomPrompt(
-                user, customPromptRequest.contents(), customPromptId);
+        customPromptService.updateCustomPrompt(user, customPromptRequest.contents(), projectId);
         return ApiSuccessResponse.success();
     }
 }

@@ -10,6 +10,7 @@ import com.reviewping.coflo.global.auth.oauth.handler.CommonLoginSuccessHandler;
 import com.reviewping.coflo.global.auth.oauth.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.reviewping.coflo.global.auth.oauth.service.AuthenticationService;
 import com.reviewping.coflo.global.auth.oauth.service.OAuth2UserService;
+import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
 import com.reviewping.coflo.global.util.WebHookUtil;
 import java.util.Arrays;
@@ -34,6 +35,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private final RedisUtil redisUtil;
+    private final CookieUtil cookieUtil;
     private final WebHookUtil webHookUtil;
     private final ObjectMapper objectMapper;
     private final OAuth2UserService oAuth2UserService;
@@ -50,7 +52,8 @@ public class SecurityConfig {
 
     @Bean
     public CommonLoginSuccessHandler commonLoginSuccessHandler() {
-        return new CommonLoginSuccessHandler(redisUtil, loginHistoryService, badgeEventService);
+        return new CommonLoginSuccessHandler(
+                redisUtil, cookieUtil, loginHistoryService, badgeEventService);
     }
 
     @Bean
@@ -60,7 +63,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        JwtVerifyFilter jwtVerifyFilter = new JwtVerifyFilter(redisUtil, authenticationService);
+        JwtVerifyFilter jwtVerifyFilter =
+                new JwtVerifyFilter(redisUtil, cookieUtil, authenticationService);
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(

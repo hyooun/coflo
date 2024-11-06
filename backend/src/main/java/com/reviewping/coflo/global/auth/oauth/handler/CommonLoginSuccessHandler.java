@@ -6,7 +6,7 @@ import com.reviewping.coflo.domain.user.service.LoginHistoryService;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtProvider;
 import com.reviewping.coflo.global.auth.oauth.model.UserDetails;
-import com.reviewping.coflo.global.util.CookieUtils;
+import com.reviewping.coflo.global.util.CookieUtil;
 import com.reviewping.coflo.global.util.RedisUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -24,6 +24,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final RedisUtil redisUtil;
+    private final CookieUtil cookieUtil;
     private final LoginHistoryService loginHistoryService;
     private final BadgeEventService badgeEventService;
 
@@ -41,12 +42,12 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         String refreshToken = JwtProvider.generateToken(responseMap, JwtConstants.REFRESH_EXP_TIME);
 
         Cookie accessTokenCookie =
-                CookieUtils.createCookie(
+                cookieUtil.createCookie(
                         JwtConstants.ACCESS_NAME,
                         accessToken,
                         (int) JwtConstants.ACCESS_EXP_TIME * 60);
         Cookie refreshTokenCookie =
-                CookieUtils.createCookie(
+                cookieUtil.createCookie(
                         JwtConstants.REFRESH_NAME,
                         refreshToken,
                         (int) JwtConstants.REFRESH_EXP_TIME * 60);
@@ -58,8 +59,8 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         loginHistoryService.recordLogin(user);
         badgeEventService.eventRandom(user);
 
-        String redirectUrl = CookieUtils.getCookieValue(request, "redirect_url");
-        CookieUtils.deleteCookie(request, response, "redirect_url");
+        String redirectUrl = cookieUtil.getCookieValue(request, "redirect_url");
+        cookieUtil.deleteCookie(request, response, "redirect_url");
 
         log.info("redirect_url={}", redirectUrl);
         response.sendRedirect(redirectUrl);

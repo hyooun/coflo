@@ -37,6 +37,8 @@ export interface AlertModalProps {
   content: string[];
   onConfirm: () => void;
   className?: string;
+  icon?: React.ElementType;
+  iconSize?: number;
 }
 
 export interface ConfirmModalProps extends AlertModalProps {

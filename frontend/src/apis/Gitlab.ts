@@ -1,11 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { ApiResponse } from 'types/api';
 import instance from '@config/apiConfig';
-
-interface ValidateTokenRequest {
-  domain: string;
-  userToken: string;
-}
+import { GitlabProjectListResponse, ValidateTokenRequest } from 'types/gitLab';
 
 const responseBody = <T>(response: AxiosResponse<ApiResponse<T>>) => response.data;
 
@@ -28,5 +24,6 @@ export const Gitlab = {
     keyword: string;
     page: number;
     size: number;
-  }): Promise<ApiResponse<boolean>> => apiRequests.get<boolean>('gitlab/projects'),
+  }): Promise<ApiResponse<GitlabProjectListResponse>> =>
+    apiRequests.get<GitlabProjectListResponse>('gitlab/search', query),
 };

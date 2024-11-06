@@ -46,6 +46,15 @@ public class GitlabApiService {
                 gitlabAccount.getDomain(), gitlabAccount.getUserToken(), gitlabProjectId);
     }
 
+    public Boolean validateUserToken(String domain, String userToken) {
+        try {
+            gitLabClient.getUserInfo(domain, userToken);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private List<GitlabProjectResponse> buildGitlabProjectResponses(
             GitlabProjectPageContent gitlabProjectPage, GitlabAccount gitlabAccount) {
         return gitlabProjectPage.gitlabProjectDetailContents().stream()

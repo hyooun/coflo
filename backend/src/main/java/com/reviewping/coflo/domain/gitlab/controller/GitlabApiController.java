@@ -3,6 +3,7 @@ package com.reviewping.coflo.domain.gitlab.controller;
 import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.domain.gitlab.controller.dto.response.GitlabProjectPageResponse;
 import com.reviewping.coflo.domain.gitlab.service.GitlabApiService;
+import com.reviewping.coflo.domain.user.controller.dto.request.GitlabAccountRequest;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
@@ -37,5 +38,13 @@ public class GitlabApiController {
             @AuthUser User user, @PathVariable("gitlabProjectId") Long gitlabProjectId) {
         return ApiSuccessResponse.success(
                 gitlabApiService.getGitlabProjectBranches(user.getId(), gitlabProjectId));
+    }
+
+    @PostMapping("/user-token/validate")
+    public ApiResponse<Boolean> validateUserToken(
+            @RequestBody GitlabAccountRequest gitlabAccountRequest) {
+        return ApiSuccessResponse.success(
+                gitlabApiService.validateUserToken(
+                        gitlabAccountRequest.domain(), gitlabAccountRequest.userToken()));
     }
 }

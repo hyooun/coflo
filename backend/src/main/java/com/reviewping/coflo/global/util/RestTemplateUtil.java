@@ -13,28 +13,17 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RestTemplateUtils {
-
-    static final String HEADER_CONTENT_TYPE = "Content-Type";
-    static final String HEADER_AUTHORIZATION = "Authorization";
-    static final String AUTH_TYPE = "Bearer ";
+public class RestTemplateUtil {
 
     private static final RestTemplate restTemplate = new RestTemplate();
 
-    public static HttpHeaders createHeaders(String contentType, String token) {
+    public HttpHeaders createHeaders(String contentType) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HEADER_CONTENT_TYPE, contentType);
-        headers.set(HEADER_AUTHORIZATION, AUTH_TYPE + token);
+        headers.set(HttpHeaders.CONTENT_TYPE, contentType);
         return headers;
     }
 
-    public static HttpHeaders createHeaders(String contentType) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HEADER_CONTENT_TYPE, contentType);
-        return headers;
-    }
-
-    public static <T> ResponseEntity<T> sendGetRequest(
+    public <T> ResponseEntity<T> sendGetRequest(
             String url, HttpHeaders headers, ParameterizedTypeReference<T> responseType) {
         HttpEntity<String> entity = new HttpEntity<>(headers);
         try {
@@ -44,7 +33,7 @@ public class RestTemplateUtils {
         }
     }
 
-    public static <T> ResponseEntity<T> sendPostRequest(
+    public <T> ResponseEntity<T> sendPostRequest(
             String url,
             HttpHeaders headers,
             String body,
@@ -57,7 +46,7 @@ public class RestTemplateUtils {
         }
     }
 
-    private static BusinessException handleClientOrServerError(HttpClientErrorException e) {
+    private BusinessException handleClientOrServerError(HttpClientErrorException e) {
         if (e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)
                 || e.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
             return new BusinessException(ErrorCode.EXTERNAL_API_UNAUTHORIZED, e);

@@ -14,7 +14,7 @@ import com.reviewping.coflo.global.client.gitlab.response.*;
 import com.reviewping.coflo.global.common.entity.PageDetail;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
-import com.reviewping.coflo.global.util.RestTemplateUtils;
+import com.reviewping.coflo.global.util.RestTemplateUtil;
 import java.time.LocalDateTime;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +33,7 @@ public class GitLabClient {
     private static final String PRIVATE_TOKEN = "PRIVATE-TOKEN";
     private static final String KST_OFFSET = "+09:00";
 
+    private final RestTemplateUtil restTemplateUtil;
     private final ObjectMapper objectMapper;
 
     public GitlabProjectPageContent searchGitlabProjects(
@@ -42,7 +43,7 @@ public class GitLabClient {
                 GitLabApiUrlBuilder.createSearchGitlabProjectUrl(gitlabUrl, gitlabSearchRequest);
 
         ResponseEntity<List<GitlabProjectDetailContent>> response =
-                RestTemplateUtils.sendGetRequest(
+                restTemplateUtil.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
 
         PageDetail pageDetail = createPageDetail(response.getHeaders());
@@ -65,7 +66,7 @@ public class GitLabClient {
                         gitlabSearchRequest,
                         this.convertToGitlabDateFormat(createdAt));
         ResponseEntity<List<GitlabMrDetailContent>> response =
-                RestTemplateUtils.sendGetRequest(
+                restTemplateUtil.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
 
         PageDetail pageDetail = createPageDetail(response.getHeaders());
@@ -91,7 +92,7 @@ public class GitLabClient {
                 GitLabApiUrlBuilder.createGetMergeRequestsUrl(
                         gitlabUrl, gitlabProjectId, mergeRequestIid);
         ResponseEntity<GitlabMrDetailContent> response =
-                RestTemplateUtils.sendGetRequest(
+                restTemplateUtil.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
         GitlabMrDetailContent gitlabMrDetailContent = response.getBody();
         if (gitlabMrDetailContent == null) {
@@ -105,7 +106,7 @@ public class GitLabClient {
         HttpHeaders headers = makeGitlabHeaders(token);
         String url = GitLabApiUrlBuilder.createSingleProjectUrl(gitlabUrl, gitlabProjectId);
         ResponseEntity<GitlabProjectDetailContent> response =
-                RestTemplateUtils.sendGetRequest(
+                restTemplateUtil.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
         return response.getBody();
     }
@@ -115,7 +116,7 @@ public class GitLabClient {
         String url = GitLabApiUrlBuilder.createUserInfoUrl(gitlabUrl);
 
         ResponseEntity<GitlabUserInfoContent> response =
-                RestTemplateUtils.sendGetRequest(
+                restTemplateUtil.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
         return response.getBody();
     }
@@ -126,7 +127,7 @@ public class GitLabClient {
         String url = GitLabApiUrlBuilder.createMRDiffsUrl(gitlabUrl, gitlabProjectId, iid);
 
         ResponseEntity<List<GitlabMrDiffsContent>> response =
-                RestTemplateUtils.sendGetRequest(
+                restTemplateUtil.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
         return response.getBody();
     }
@@ -143,8 +144,7 @@ public class GitLabClient {
         } catch (JsonProcessingException e) {
             throw new BusinessException(ErrorCode.GITLAB_REQUEST_SERIALIZATION_ERROR, e);
         }
-        RestTemplateUtils.sendPostRequest(
-                url, headers, body, new ParameterizedTypeReference<>() {});
+        restTemplateUtil.sendPostRequest(url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
     public ProjectInfoContent getProjectInfoDetail(
@@ -176,8 +176,7 @@ public class GitLabClient {
             throw new BusinessException(ErrorCode.GITLAB_REQUEST_SERIALIZATION_ERROR, e);
         }
 
-        RestTemplateUtils.sendPostRequest(
-                url, headers, body, new ParameterizedTypeReference<>() {});
+        restTemplateUtil.sendPostRequest(url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
     public List<String> getAllBranchNames(String gitlabUrl, String token, Long gitlabProjectId) {
@@ -190,7 +189,7 @@ public class GitLabClient {
         do {
             String url = branchUrl + "?page=" + page + "&per_page=100";
             ResponseEntity<List<GitlabBranchContent>> response =
-                    RestTemplateUtils.sendGetRequest(
+                    restTemplateUtil.sendGetRequest(
                             url, headers, new ParameterizedTypeReference<>() {});
 
             List<GitlabBranchContent> branches = response.getBody();
@@ -212,7 +211,7 @@ public class GitLabClient {
         HttpHeaders headers = makeGitlabHeaders(token);
 
         ResponseEntity<Map<String, Object>> response =
-                RestTemplateUtils.sendGetRequest(
+                restTemplateUtil.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
 
         Map<String, Object> body = response.getBody();
@@ -228,7 +227,7 @@ public class GitLabClient {
         String url = GitLabApiUrlBuilder.createProjectLanguagesUrl(gitlabUrl, gitlabProjectId);
         HttpHeaders headers = makeGitlabHeaders(token);
         ResponseEntity<Map<String, Double>> response =
-                RestTemplateUtils.sendGetRequest(
+                restTemplateUtil.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
         return response.getBody();
     }
@@ -248,7 +247,7 @@ public class GitLabClient {
     private long getTotalByHeader(String token, String url) {
         HttpHeaders headers = makeGitlabHeaders(token);
         ResponseEntity<Object> response =
-                RestTemplateUtils.sendGetRequest(
+                restTemplateUtil.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
         return Long.parseLong(Objects.requireNonNull(response.getHeaders().getFirst("X-Total")));
     }

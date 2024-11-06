@@ -196,7 +196,9 @@ public class ReviewService {
                         project.getGitlabProjectId(),
                         mergeRequestIid);
         List<ReviewDetailResponse> reviews =
-                mrInfo.getReviews().stream().map(ReviewDetailResponse::from).toList();
+                reviewRepository.findByMrInfoOrderByCreatedDateDesc(mrInfo).stream()
+                        .map(ReviewDetailResponse::from)
+                        .toList();
         return ReviewResponse.of(gitlabMrResponse, reviews);
     }
 

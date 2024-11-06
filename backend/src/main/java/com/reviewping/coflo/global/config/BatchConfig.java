@@ -29,26 +29,35 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class BatchConfig {
 
     @Bean
-    public Job myJob(
+    public Job bestMergeRequestEventJob(
             JobRepository jobRepository,
-            @Qualifier("addHistoryStep") Step addHistoryStep,
-            @Qualifier("bestMergeRequestEventStep") Step eventStep,
-            @Qualifier("aiRewardEventStep") Step aiRewardEventStep,
+            @Qualifier("addBestMrHistoryStep") Step addBestMrHistoryStep,
+            @Qualifier("bestMergeRequestEventStep") Step bestMergeRequestEventStep,
             JobExecutionListener jobExecutionListener) {
-        return new JobBuilder("myJob", jobRepository)
+        return new JobBuilder("bestMergeRequestJob", jobRepository)
                 .listener(jobExecutionListener)
-                .start(addHistoryStep)
-                .next(eventStep)
-                .next(aiRewardEventStep)
+                .start(addBestMrHistoryStep)
+                .next(bestMergeRequestEventStep)
                 .build();
     }
 
     @Bean
-    public Step addHistoryStep(
+    public Job aiRewardEventJob(
+            JobRepository jobRepository,
+            @Qualifier("aiRewardEventStep") Step aiRewardEventStep,
+            JobExecutionListener jobExecutionListener) {
+        return new JobBuilder("aiRewardEventJob", jobRepository)
+                .listener(jobExecutionListener)
+                .start(aiRewardEventStep)
+                .build();
+    }
+
+    @Bean
+    public Step addBestMrHistoryStep(
             JobRepository jobRepository,
             BestMergeRequestHistoryTasklet bestMergeRequestHistoryTasklet,
             PlatformTransactionManager transactionManager) {
-        return new StepBuilder("addHistoryStep", jobRepository)
+        return new StepBuilder("addBestMrHistoryStep", jobRepository)
                 .tasklet(bestMergeRequestHistoryTasklet, transactionManager)
                 .build();
     }

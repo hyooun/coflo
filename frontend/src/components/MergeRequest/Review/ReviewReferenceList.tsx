@@ -5,9 +5,10 @@ import ReviewComment from 'components/MergeRequest/Review/ReviewComment';
 
 interface ReviewReferencesListProps {
   references: Reference[];
+  selectedReviewId: string | null;
 }
 
-const ReviewReferencesList = ({ references }: ReviewReferencesListProps) => {
+const ReviewReferencesList = ({ references, selectedReviewId }: ReviewReferencesListProps) => {
   const { id } = useParams();
 
   return (
@@ -16,7 +17,7 @@ const ReviewReferencesList = ({ references }: ReviewReferencesListProps) => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">References</h2>
         <Link
-          to={`/main/merge-request/reviews/${id}/references`}
+          to={`/main/merge-request/reviews/${id}/references/${selectedReviewId}`}
           className="hover:text-gray-800 transition-colors"
         >
           전체보기
@@ -25,15 +26,21 @@ const ReviewReferencesList = ({ references }: ReviewReferencesListProps) => {
 
       {/* References List */}
       <div className="space-y-4">
-        {references.map((reference) => (
-          <div key={reference.id} className="max-h-[330px] rounded-lg border-2 border-secondary">
-            <ReviewComment
-              title={reference.fileName}
-              content={reference.content}
-              type={reference.type}
-            />
-          </div>
-        ))}
+        {references.map((reference) => {
+          // Set the type based on the language
+          const referenceType: 'CODE' | 'TEXT' =
+            reference.language === 'PLAINTEXT' ? 'TEXT' : 'CODE';
+
+          return (
+            <div key={reference.id} className="max-h-[330px] rounded-lg border-2 border-secondary">
+              <ReviewComment
+                title={reference.fileName}
+                content={reference.content}
+                type={referenceType}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

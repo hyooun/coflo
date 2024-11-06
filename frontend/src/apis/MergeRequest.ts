@@ -13,12 +13,12 @@ const apiRequests = {
 
 export const MergeRequest = {
   getMrList: (
-    keyword: string,
-    page: number,
-    size: number,
+    keyword?: string,
+    page?: string,
+    size?: string,
   ): Promise<ApiResponse<GitlabMrListResponse>> =>
     apiRequests.get<GitlabMrListResponse>('merge-requests', { keyword, page, size }),
 
-  getBestMrList: (ProjectId: string): Promise<ApiResponse<GitlabMergeRequest[]>> =>
-    apiRequests.get<GitlabMergeRequest[]>(`/merge-requests/best?projectId=${ProjectId}`),
+  getBestMrList: (projectId: string): Promise<ApiResponse<GitlabMergeRequest[]>> =>
+    apiRequests.get<GitlabMergeRequest[]>(`/merge-requests/best?projectId=${projectId}`),
 };

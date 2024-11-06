@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import arrowIcon from '@assets/arrow-icon.svg';
+import arrowIcon from '@assets/icons/arrow-icon.svg';
 
 export function ChartDropdown({ onSelect }: { onSelect: (option: string) => void }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +30,7 @@ export function ChartDropdown({ onSelect }: { onSelect: (option: string) => void
   };
 
   return (
-    <div className="relative w-[130px] h-[30px] mt-3 mr-4 z-10" ref={dropdownRef}>
+    <div className="relative w-[150px] h-[30px] mt-3 mr-4 z-10" ref={dropdownRef}>
       <div
         className="flex items-center bg-transparent justify-between bg-gray-200 p-1 rounded-md cursor-pointer "
         onClick={toggleDropdown}

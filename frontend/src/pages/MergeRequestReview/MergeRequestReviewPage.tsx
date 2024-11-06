@@ -1,48 +1,76 @@
-// src/pages/MergeRequestReview/MergeRequestReviewPage.tsx
 import { useParams } from 'react-router-dom';
-import MergeRequestHeader from '@components/MergeRequest/MergeRequestHeader .tsx';
+import MergeRequestHeader from '@components/MergeRequest/MergeRequestHeader ';
 import ReviewList from '@components/MergeRequest/Review/ReviewList.tsx';
 import { GitlabMergeRequest } from 'types/mergeRequest.ts';
 import { MergeRequestReview } from 'types/review.ts';
 import { Reference } from 'types/reference';
 import { useEffect, useState } from 'react';
 import ReferencesList from '@components/MergeRequest/Review/ReviewReferenceList.tsx';
+import { Review } from '@apis/Review';
 
 const MergeRequestReviewPage = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const projectId = 'your_project_id';
   const [mergeRequest, setMergeRequest] = useState<GitlabMergeRequest | null>(null);
   const [reviews, setReviews] = useState<MergeRequestReview['reviews']>([]);
   const [references, setReferences] = useState<Reference[]>([]);
+  const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
 
-    const fetchMergeRequest = async () => {
-      const response = await fetch(`/api/reviews/${id}`);
-      const data = await response.json();
-      setMergeRequest(data);
-      setReviews(data.reviews);
+    const fetchMergeRequest = async (projectId: string, id: string) => {
+      const response = await Review.getCodeReviewList(projectId, id);
+      const data = response.data;
+      if (data) {
+        setMergeRequest(data.mergeRequest);
+        setReviews(data.reviews);
+      }
     };
 
-    const fetchReferences = async () => {
-      const response = await fetch(`/api/reviews/${id}/retrivals`);
-      const data = await response.json();
-      setReferences(data);
-    };
-
-    fetchMergeRequest();
-    fetchReferences();
+    fetchMergeRequest(projectId, id);
   }, [id]);
 
+  useEffect(() => {
+    if (!selectedReviewId) return;
+
+    const fetchReferences = async (reviewId: string) => {
+      const response = await Review.getReviewRetrievals(reviewId);
+
+      const data = response.data;
+      console.log(data);
+      if (data) {
+        setReferences(data);
+      }
+    };
+
+    fetchReferences(selectedReviewId);
+  }, [selectedReviewId]);
+
+  useEffect(() => {
+    if (reviews.length > 0 && !selectedReviewId) {
+      setSelectedReviewId(String(Number(reviews[0].id)));
+    }
+  }, [reviews, selectedReviewId]);
+
   if (!mergeRequest) return <div>Loading...</div>;
+
+  const handleReviewClick = (reviewId: string) => {
+    console.log(reviewId);
+    setSelectedReviewId(reviewId);
+  };
 
   return (
     <div className="p-8 flex flex-col w-full overflow-auto items-center">
       <div className="w-full border-b-2 border-secondary">
         <MergeRequestHeader mergeRequest={mergeRequest} />
         <div className="flex gap-12 w-full">
-          <ReviewList reviews={reviews} />
-          <ReferencesList references={references} />
+          <ReviewList
+            reviews={reviews}
+            mergeRequest={mergeRequest}
+            onReviewClick={handleReviewClick}
+          />
+          <ReferencesList references={references} selectedReviewId={selectedReviewId} />
         </div>
       </div>
     </div>

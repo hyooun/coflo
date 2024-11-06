@@ -19,9 +19,9 @@ const apiRequests = {
 
 export const Link = {
   getLinkRepository: (
-    keyword: string,
-    page: number,
-    size: number,
+    keyword?: string,
+    page?: string,
+    size?: string,
   ): Promise<ApiResponse<GitlabProjectListResponse>> =>
     apiRequests.get<GitlabProjectListResponse>('gitlab/search', { keyword, page, size }),
 

@@ -1,27 +1,38 @@
 import { useState } from 'react';
 import PrevPrompt from './PrevPrompt';
 import AlertModal from '@components/Modal/AlertModal';
+import { customPrompt } from '@apis/CustomPrompt';
+import { useNavigate } from 'react-router-dom';
 
 const CustomPromptContainer = () => {
   const [content, setContent] = useState<string>('');
   const [isAlertModalOpen, setIsAlertModalOpen] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string[]>([]);
   const maxLength = 1000;
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setContent(value);
   };
 
-  const handleSavePrompt = () => {
+  const handleSavePrompt = async () => {
     if (maxLength && content.length > maxLength) {
       setIsAlertModalOpen(true);
       setAlertMessage(['최대 글자 수를 초과하였습니다.']);
       return;
     }
-    console.log(content);
-  };
 
+    const projectId = '1';
+
+    const response = await customPrompt.updateCustomPrompt(projectId, { promptText: content });
+
+    if (response.status === 'SUCCESS') {
+      setIsAlertModalOpen(true);
+      setAlertMessage(['프롬프트가 성공적으로 저장되었습니다.']);
+      navigate(0);
+    }
+  };
   return (
     <>
       <div className="flex flex-col gap-6 min-w-[600px]">

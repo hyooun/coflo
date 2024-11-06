@@ -25,7 +25,11 @@ export default function RepositoryPage() {
   useEffect(() => {
     const fetchProjects = async () => {
       console.log('현재 페이지:', currentPage);
-      const response = await Link.getLinkRepository('some-keyword', currentPage, itemsPerPage);
+      const response = await Link.getLinkRepository(
+        undefined,
+        String(Number(currentPage)),
+        String(Number(itemsPerPage)),
+      );
       console.log('API 응답:', response);
       if (response && response.data) {
         setRepositories(response.data.gitlabProjectList);

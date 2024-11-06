@@ -76,6 +76,9 @@ export const createRadarOptions = () => {
 export const createLineOptions = (data: number[]) => {
   const { min, max } = getMinMaxValues(data);
 
+  const suggestedMin = min !== null ? min : 0;
+  const suggestedMax = max !== null ? max : 100;
+
   return {
     responsive: true,
     plugins: {
@@ -88,12 +91,12 @@ export const createLineOptions = (data: number[]) => {
     },
     scales: {
       x: {
-        suggestedMin: min,
-        suggestedMax: max,
+        suggestedMin,
+        suggestedMax,
       },
       y: {
-        suggestedMin: min,
-        suggestedMax: max,
+        suggestedMin,
+        suggestedMax,
       },
     },
   };

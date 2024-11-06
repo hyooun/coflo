@@ -1,12 +1,27 @@
-// components/MergeRequestDetail/ReviewList.tsx
 import { Review } from 'types/review.ts';
 import ReviewItem from './ReviewItem';
+import { GitlabMergeRequest } from 'types/mergeRequest';
 
-const ReviewList = ({ reviews }: { reviews: Review[] }) => {
+const ReviewList = ({
+  reviews,
+  mergeRequest,
+  onReviewClick,
+}: {
+  reviews: Review[];
+  mergeRequest: GitlabMergeRequest;
+  onReviewClick: (reviewId: string) => void;
+}) => {
   return (
-    <div className="font-pretendard flex-[4] pl-4 min-w-[500px]">
+    <div className="font-pretendard flex-[4] pl-4 min-w-[500px] relative">
+      <div className="absolute top-0 left-[1rem] h-full border-l-2 border-secondary" />
       {reviews.map((review, index) => (
-        <ReviewItem key={index} review={review} />
+        <div
+          style={{ cursor: 'pointer' }}
+          key={index}
+          onClick={() => onReviewClick(String(Number(review.id)))}
+        >
+          <ReviewItem review={review} mergeRequest={mergeRequest} />
+        </div>
       ))}
     </div>
   );

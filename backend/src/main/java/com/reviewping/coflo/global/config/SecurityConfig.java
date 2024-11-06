@@ -11,6 +11,7 @@ import com.reviewping.coflo.global.auth.oauth.repository.HttpCookieOAuth2Authori
 import com.reviewping.coflo.global.auth.oauth.service.AuthenticationService;
 import com.reviewping.coflo.global.auth.oauth.service.OAuth2UserService;
 import com.reviewping.coflo.global.util.RedisUtil;
+import com.reviewping.coflo.global.util.WebHookUtil;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private final RedisUtil redisUtil;
+    private final WebHookUtil webHookUtil;
     private final ObjectMapper objectMapper;
     private final OAuth2UserService oAuth2UserService;
     private final AuthenticationService authenticationService;
@@ -53,7 +55,7 @@ public class SecurityConfig {
 
     @Bean
     public CommonLoginFailHandler commonLoginFailHandler() {
-        return new CommonLoginFailHandler(objectMapper);
+        return new CommonLoginFailHandler(objectMapper, webHookUtil);
     }
 
     @Bean

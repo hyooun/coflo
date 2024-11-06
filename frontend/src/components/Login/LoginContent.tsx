@@ -1,13 +1,14 @@
 import LoginButton from '@pages/Login/LoginButton.tsx';
 import loginImage from '@assets/images/login_image.png';
+import { login } from '@apis/Auth.ts';
 
 const LoginContent = () => {
   const handleKakaoLogin = () => {
-    window.location.href = 'http://localhost:8080/api/oauth2/authorization/kakao';
+    login('kakao');
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:8080/api/oauth2/authorization/google';
+    login('google');
   };
   return (
     <div className="flex mobile:flex-col flex-row gap-20 h-full items-center justify-center ">

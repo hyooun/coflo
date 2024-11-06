@@ -1,5 +1,6 @@
 package com.reviewping.coflo.global.client.gitlab.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.time.OffsetDateTime;
@@ -10,7 +11,6 @@ import java.time.OffsetDateTime;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record GitlabEventRequest(
         String objectKind, String eventType, Project project, ObjectAttributes objectAttributes) {
-
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record Project(Long id, String webUrl) {}
 
@@ -20,8 +20,8 @@ public record GitlabEventRequest(
             Long iid,
             String targetBranch,
             String title,
-            OffsetDateTime createdAt,
-            OffsetDateTime updatedAt,
+            @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss X") OffsetDateTime createdAt,
+            @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss X") OffsetDateTime updatedAt,
             Boolean draft,
             String description,
             String action) {}

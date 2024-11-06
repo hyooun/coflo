@@ -26,6 +26,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 
     private final RedisUtil redisUtil;
     private final AuthenticationService authenticationService;
+    private final String REFRESH_TOKEN_END_POINT = "/api/refresh-tokens";
 
     private static final String[] whitelist = {
         "/swagger-ui/**",
@@ -52,7 +53,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
         String accessToken = CookieUtils.getCookieValue(request, JwtConstants.ACCESS_NAME);
         String refreshToken = CookieUtils.getCookieValue(request, JwtConstants.REFRESH_NAME);
 
-        if (refreshToken != null) {
+        if (requestURI.equals(REFRESH_TOKEN_END_POINT) && refreshToken != null) {
             handleRefreshToken(request, response, refreshToken);
         } else if (accessToken != null) {
             handleAccessToken(request, response, filterChain, accessToken);

@@ -50,7 +50,9 @@ public class MrEvalService {
 
     private String buildEvalPrompt(MrContent mrContent) {
         return mrContent.mrDiffs()
+                + "\n"
                 + promptTemplateRepository.findLatestTemplate().content()
+                + "\n"
                 + EVAL_TEMPLATE;
     }
 }

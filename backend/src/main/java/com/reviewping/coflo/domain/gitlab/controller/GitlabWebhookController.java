@@ -13,6 +13,7 @@ import com.reviewping.coflo.global.common.response.impl.ApiErrorResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class GitlabWebhookController {
     private final ObjectMapper objectMapper;
 
     @PostMapping("/webhook/{projectId}")
+    @Operation(summary = "Gitlab webhook 등록 시 사용")
     public ApiResponse<Void> handleGitlabEvent(
             @RequestHeader("X-Gitlab-Event") String gitlabEventType,
             @PathVariable("projectId") Long projectId,

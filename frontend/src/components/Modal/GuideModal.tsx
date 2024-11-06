@@ -12,7 +12,7 @@ export default function GuideModal({
   onConfirm,
   hasInput,
   inputProps,
-  link,
+  links,
 }: GuideModalProps) {
   if (!isOpen) return null;
 
@@ -62,16 +62,21 @@ export default function GuideModal({
         )}
 
         {/* Link */}
-        {link && (
-          <div className="mb-6 text-center">
-            <a
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary-500"
-            >
-              {link.text}
-            </a>
+        {links && (
+          <div className="flex flex-col mb-6 items-center">
+            {links.map((link) => (
+              <div className="flex items-center justify-start gap-2">
+                {link.icon && link.icon}
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary-500"
+                >
+                  {link.text}
+                </a>
+              </div>
+            ))}
           </div>
         )}
 

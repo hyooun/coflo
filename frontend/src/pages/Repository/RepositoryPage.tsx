@@ -148,10 +148,12 @@ export default function RepositoryPage() {
             onChange: setInputValue,
             placeholder: '프로젝트 토큰을 입력하세요',
           }}
-          link={{
-            url: 'https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html',
-            text: '프로젝트 토큰 생성 가이드 보기',
-          }}
+          links={[
+            {
+              url: 'https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html',
+              text: '프로젝트 토큰 생성 가이드 보기',
+            },
+          ]}
           onClose={() => {
             setIsModalOpen(false);
             setSelectedRepo(null);

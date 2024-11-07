@@ -3,7 +3,6 @@ export type ReferenceType = 'CODE' | 'TEXT';
 export interface Reference {
   id: number;
   fileName: string;
-  type: ReferenceType;
   language: string;
   content: string;
   relevance?: number;
@@ -19,6 +18,7 @@ export interface CommonReferenceProps extends ReferenceProps {
   onDelete: (id: number) => void;
   onLanguageChange?: (language: string) => void;
   maxLength?: number;
+  type: ReferenceType;
 }
 
 export interface ReferencesListProps {

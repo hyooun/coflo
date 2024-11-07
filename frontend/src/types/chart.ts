@@ -5,6 +5,7 @@ interface ChartBoxProps {
   chartId: any;
   width?: number;
   height?: number;
+  plugins?: any[];
 }
 
 interface BarChartProps {

@@ -1,9 +1,14 @@
 export interface BadgeType {
-  badgeCodeId: number;
+  badgeCodeId: string;
   name: string;
   description: string;
   imageUrl: string;
   isAcquired: boolean;
+}
+
+export interface BadgeResponse {
+  badgeDetails: BadgeType[];
+  mainBadgeCodeId: string;
 }
 
 export interface BadgeProps {

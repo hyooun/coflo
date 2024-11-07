@@ -1,8 +1,15 @@
 import useTimeAgo from '@hooks/time';
 import { Review } from 'types/review';
 import ReviewComment from './ReviewComment';
+import { GitlabMergeRequest } from 'types/mergeRequest';
 
-const ReviewItem = ({ review }: { review: Review }) => {
+const ReviewItem = ({
+  review,
+  mergeRequest,
+}: {
+  review: Review;
+  mergeRequest: GitlabMergeRequest;
+}) => {
   const timeAgo = useTimeAgo(review.createdAt);
 
   return (
@@ -11,13 +18,13 @@ const ReviewItem = ({ review }: { review: Review }) => {
       <div className="flex items-center gap-2 mb-4">
         <div className="absolute -left-4">
           <img
-            src={review.reviewer.avatarUrl}
-            alt={review.reviewer.name}
+            src={mergeRequest.reviewer.avatarUrl}
+            alt={mergeRequest.reviewer.name}
             className="w-8 h-8 rounded-full bg-secondary"
           />
         </div>
         <div className="flex items-center gap-2">
-          <span className="font-bold">{review.reviewer.name}</span>
+          <span className="font-bold">{mergeRequest.reviewer.name}</span>
           <span className="text-gray-700">reviewed</span>
           <span className="text-gray-700">{timeAgo}</span>
         </div>
@@ -26,15 +33,14 @@ const ReviewItem = ({ review }: { review: Review }) => {
       {/* 메인 리뷰 코멘트 - 깃 트리와 살짝 겹치게 */}
       <div className="bg-white rounded-t-lg border-2 border-secondary rounded-lg -ml-10">
         <ReviewComment
-          name={review.reviewer.name}
+          name={mergeRequest.reviewer.name}
           content={review.content}
           createdAt={timeAgo}
-          reviewer={review.reviewer}
         />
       </div>
 
       {/* 코드 리뷰 코멘트들 - 깃 트리 오른쪽에 표시 */}
-      <div className="mt-4 space-y-4">
+      {/* <div className="mt-4 space-y-4">
         {review.comments.map((comment) => (
           <div className="border-2 border-secondary rounded-lg" key={comment.id}>
             <ReviewComment
@@ -46,7 +52,7 @@ const ReviewItem = ({ review }: { review: Review }) => {
             />
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

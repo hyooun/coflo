@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { ApiResponse } from 'types/api';
+import { CustomPromptResponse } from 'types/customPrompt';
 import instance from '@config/apiConfig';
 
 const responseBody = <T>(response: AxiosResponse<ApiResponse<T>>) => response.data;
@@ -12,17 +13,19 @@ const apiRequests = {
 
   post: <T>(url: string, body: object) =>
     instance.post<ApiResponse<T>>(url, body).then(responseBody),
-
-  delete: <T>(url: string) => instance.delete<ApiResponse<T>>(url).then(responseBody),
 };
 
-export const UserProject = {
-  updateRepository: (repoId: number, data: { botToken?: string }): Promise<ApiResponse<any>> =>
-    apiRequests.post(`user-project/${repoId}`, data),
+export const customPrompt = {
+  getCustomPrompt: (projectId: string): Promise<ApiResponse<CustomPromptResponse>> =>
+    apiRequests.get<CustomPromptResponse>(`custom-prompts/${projectId}`),
 
-  getLinkStatus: (): Promise<ApiResponse<{ isLinked: boolean }>> =>
-    apiRequests.get<{ isLinked: boolean }>(`user-project/status`),
+  updateCustomPrompt: (
+    projectId: string,
+    data: { promptText: string },
+  ): Promise<ApiResponse<any>> => {
+    const formData = new FormData();
+    formData.append('promptText', data.promptText);
 
-  deleteRepository: (repoId: number): Promise<ApiResponse<any>> =>
-    apiRequests.delete(`user-project/${repoId}`),
+    return instance.put(`/custom-prompts/${projectId}`, formData).then(responseBody);
+  },
 };

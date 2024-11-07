@@ -51,7 +51,7 @@ const customRouter = createBrowserRouter([
         element: <MergeRequestReviewPage />,
       },
       {
-        path: 'merge-request/reviews/:id/references',
+        path: 'merge-request/reviews/:id/references/:selectedReviewId',
         element: <ReferencesPage />,
       },
       {

@@ -5,7 +5,7 @@ import { CustomSearchBar } from '@components/Mr/MrSearchBar';
 import { MrItem } from '@components/Mr/MrItem';
 import Pagination from '@components/Pagination/Pagination';
 import { MergeRequest } from '@apis/MergeRequest';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { GitlabMergeRequest } from 'types/mergeRequest';
 
 const MergeListPage = () => {
@@ -13,11 +13,19 @@ const MergeListPage = () => {
   const [setTotalPages] = useAtom(totalPagesAtom);
   const [mergeRequests, setMergeRequests] = useState<GitlabMergeRequest[]>([]);
   const itemsPerPage = 5;
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const handleItemClick = (id: number) => {
+    navigate(`/main/merge-request/reviews/${id}`);
+  };
 
   useEffect(() => {
     const fetchMergeRequests = async () => {
-      const response = await MergeRequest.getMrList('some-keyword', currentPage, itemsPerPage);
+      const response = await MergeRequest.getMrList(
+        undefined,
+        String(Number(currentPage)),
+        String(Number(itemsPerPage)),
+      );
 
       if (response && response.data) {
         setMergeRequests(response.data.gitlabMrList);
@@ -33,9 +41,13 @@ const MergeListPage = () => {
       <div className="max-w-3xl  p-6">
         <CustomSearchBar></CustomSearchBar>
 
-        <div className="bg-white w-[1000px] ">
+        <div className="bg-white w-[1000px]">
           {mergeRequests.map((mergeRequest) => (
-            <div key={mergeRequest.id}>
+            <div
+              key={mergeRequest.id}
+              onClick={() => handleItemClick(mergeRequest.id)}
+              className="cursor-pointer"
+            >
               <MrItem mergeRequest={mergeRequest} />
               <div className="border-t border-gray-300" />
             </div>

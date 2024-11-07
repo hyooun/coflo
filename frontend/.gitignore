@@ -17,6 +17,8 @@ mkcert
 .env
 vite.config.ts
 
+/src/mocks
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

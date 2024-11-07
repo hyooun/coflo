@@ -27,10 +27,10 @@ export const Gitlab = {
   getGitlabProjectBranched: (gitlabProjectId: number): Promise<ApiResponse<boolean>> =>
     apiRequests.get<boolean>(`gitlab/${gitlabProjectId}/branches`),
 
-  getGitlabProjects: (query: {
-    keyword: string;
-    page: number;
-    size: number;
-  }): Promise<ApiResponse<GitlabProjectListResponse>> =>
-    apiRequests.get<GitlabProjectListResponse>('gitlab/search', query),
+  getGitlabProjects: (
+    keyword?: string,
+    page?: number,
+    size?: number,
+  ): Promise<ApiResponse<GitlabProjectListResponse>> =>
+    apiRequests.get<GitlabProjectListResponse>('gitlab/search', { keyword, page, size }),
 };

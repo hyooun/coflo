@@ -21,7 +21,7 @@ const labelColors: LabelColors = {
   },
 };
 
-const LabelButton = ({ label, active }: { label: string; active?: boolean }) => {
+const LabelButton = ({ label }: { label: string }) => {
   const { bgColor } = labelColors[label] || { bgColor: 'bg-blue-500' };
 
   return (

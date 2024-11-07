@@ -8,7 +8,7 @@ export interface BadgeType {
 
 export interface BadgeResponse {
   badgeDetails: BadgeType[];
-  mainBadgeCodeId: string;
+  mainBadgeCodeId?: string;
 }
 
 export interface BadgeProps {

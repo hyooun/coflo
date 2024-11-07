@@ -11,10 +11,13 @@ import { CommonButton } from '@components/Button/CommonButton';
 import { useNavigate } from 'react-router-dom';
 import GuideModal from '@components/Modal/GuideModal.tsx';
 import tokenintro from '@assets/tokenintro.png';
+import { Gitlab } from '@apis/Gitlab';
+import Header from '@components/Header/Header';
+import { FileQuestion } from 'lucide-react';
 
 export default function RepositoryPage() {
   const [currentPage] = useAtom(currentPageAtom);
-  const [setTotalPages] = useAtom(totalPagesAtom);
+  const [, setTotalPages] = useAtom(totalPagesAtom);
   const [repositories, setRepositories] = useState<GitlabProject[]>([]);
   const itemsPerPage = 10;
   const [selectedRepo, setSelectedRepo] = useState<GitlabProject | null>(null);
@@ -25,11 +28,17 @@ export default function RepositoryPage() {
   useEffect(() => {
     const fetchProjects = async () => {
       console.log('현재 페이지:', currentPage);
-      const response = await Link.getLinkRepository('some-keyword', currentPage, itemsPerPage);
+
+      const response = await Gitlab.getGitlabProjects({
+        keyword: '',
+        page: currentPage,
+        size: itemsPerPage,
+      });
       console.log('API 응답:', response);
+      console.log('API 응답:', response.data);
       if (response && response.data) {
         setRepositories(response.data.gitlabProjectList);
-        // setTotalPages(response.data.totalPages);
+        setTotalPages(response.data.totalPages);
       }
     };
 
@@ -92,10 +101,14 @@ export default function RepositoryPage() {
   };
 
   return (
-    <div className="max-w-3xl ml-[80px] p-6">
-      <h1 className="text-3xl  font-bold mb-3">Repository</h1>
-      <div className="flex items-center justify-between w-[1000px]">
-        <h2 className="text-xl mb-3">내 프로젝트에서 리뷰할 프로젝트를 선택합니다.</h2>
+    <div className="flex flex-col ml-[80px] p-6 w-full">
+      <div className="flex flex-row justify-between items-center pr-3">
+        <div>
+          <Header
+            title="Repository"
+            description={['내 프로젝트에서 리뷰할 프로젝트를 선택합니다.']}
+          />
+        </div>
         <CommonButton
           className="px-4 w-[100px] h-[50px]"
           active={false}
@@ -108,13 +121,13 @@ export default function RepositoryPage() {
 
       <RepositorySearchBar />
 
-      <div className="bg-white w-[1000px]">
+      <div className="bg-white w-full">
         {repositories.map((repo, index) => (
           <div key={repo.gitlabProjectId}>
             <div className="flex items-center justify-between p-4">
               <RepositoryItem
                 name={repo.name}
-                integrate={repo.isLinkable ? '' : '프로젝트 토큰이 없습니다'}
+                integrate={repo.isLinkable ? '' : '프로젝트 토큰을 설정해주세요'}
               />
               <ToggleSwitch checked={repo.isLinked} onChange={() => handleToggleChange(index)} />
             </div>
@@ -147,11 +160,15 @@ export default function RepositoryPage() {
             value: inputValue,
             onChange: setInputValue,
             placeholder: '프로젝트 토큰을 입력하세요',
+            labelText: '프로젝트 토큰',
           }}
-          link={{
-            url: 'https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html',
-            text: '프로젝트 토큰 생성 가이드 보기',
-          }}
+          links={[
+            {
+              url: 'https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html',
+              text: '프로젝트 토큰 생성 가이드 보기',
+              icon: <FileQuestion size={20} className="text-primary-500" />,
+            },
+          ]}
           onClose={() => {
             setIsModalOpen(false);
             setSelectedRepo(null);

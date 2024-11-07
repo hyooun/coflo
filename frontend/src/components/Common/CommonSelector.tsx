@@ -72,7 +72,7 @@ const CommonSelector = <T extends unknown>({
 
   return (
     <div className={className} ref={dropdownRef}>
-      <button onClick={() => setIsOpen(!isOpen)} className={buttonClassName}>
+      <button onClick={() => setIsOpen(!isOpen)} className={buttonClassName} type="button">
         <span>{displayValue(selectedItem)}</span>
         <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>

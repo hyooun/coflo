@@ -7,8 +7,8 @@ import { isLoginAtom } from '@store/auth';
 const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const instance = axios.create({
-  baseURL: VITE_API_BASE_URL + '/api',
-  // baseURL: '/api',
+  // baseURL: VITE_API_BASE_URL + '/api',
+  baseURL: '/api',
   timeout: 15000,
   withCredentials: true,
 });

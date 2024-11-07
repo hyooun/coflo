@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { currentPageAtom, totalPagesAtom } from '@store/pagination';
 import { RepositorySearchBar } from '@components/Repository/RepositorySearchBar';
@@ -14,6 +14,8 @@ import tokenintro from '@assets/tokenintro.png';
 import Header from '@components/Header/Header';
 import { FileQuestion } from 'lucide-react';
 import { Gitlab } from '@apis/Gitlab';
+
+const MemoizedPagination = React.memo(Pagination);
 
 export default function RepositoryPage() {
   const [currentPage] = useAtom(currentPageAtom);
@@ -39,6 +41,10 @@ export default function RepositoryPage() {
 
     fetchProjects();
   }, [currentPage, setTotalPages]);
+
+  const handleInputChange = (value: string) => {
+    setInputValue(value);
+  };
 
   const handleToggleChange = async (index: number) => {
     const repo = repositories[index];
@@ -153,7 +159,7 @@ export default function RepositoryPage() {
           hasInput
           inputProps={{
             value: inputValue,
-            onChange: setInputValue,
+            onChange: handleInputChange,
             placeholder: '프로젝트 토큰을 입력하세요',
             labelText: '프로젝트 토큰',
           }}
@@ -173,7 +179,7 @@ export default function RepositoryPage() {
           gitlabProjectId={String(selectedRepo.gitlabProjectId)}
         />
       )}
-      <Pagination />
+      <MemoizedPagination />
     </div>
   );
 }

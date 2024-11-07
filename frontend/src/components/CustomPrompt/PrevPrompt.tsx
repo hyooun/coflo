@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { customPrompt } from '@apis/CustomPrompt';
 
 interface CustomPrompt {
-  customPromptId: number;
+  customPromptId: string;
   content: string;
 }
 
@@ -13,7 +13,10 @@ const PrevPrompt = () => {
   useEffect(() => {
     const fetchPrevPrompt = async () => {
       const response = await customPrompt.getCustomPrompt(projectId);
-      setPrevPrompt(response.data);
+      const data = response.data;
+      if (data) {
+        setPrevPrompt(data);
+      }
     };
 
     fetchPrevPrompt();

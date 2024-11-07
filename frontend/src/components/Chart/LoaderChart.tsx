@@ -91,7 +91,7 @@ export const loadChartData = async (
       });
     });
 
-    const labels = Array.from(labelsSet)
+    const labels = Array.from(labelsSet as Set<number>)
       .sort((a, b) => a - b)
       .map((week) => `${week}주차`);
 

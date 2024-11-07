@@ -170,7 +170,7 @@ export default function RepositoryPage() {
             setInputValue('');
           }}
           onConfirm={handleModalConfirm}
-          gitlabProjectId={selectedRepo.gitlabProjectId}
+          gitlabProjectId={String(selectedRepo.gitlabProjectId)}
         />
       )}
       <Pagination />

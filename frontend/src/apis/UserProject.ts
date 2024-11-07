@@ -2,10 +2,10 @@ import { AxiosResponse } from 'axios';
 import { ApiResponse } from 'types/api';
 import instance from '@config/apiConfig';
 import {
-  ApiResponseMapStringBoolean,
-  ApiResponseMapStringLong,
+  UserProjectData,
   ProjectLinkRequest,
   UserProjectResponse,
+  GetLinkedStatusData,
 } from 'types/project';
 
 const responseBody = <T>(response: AxiosResponse<ApiResponse<T>>) => response.data;
@@ -21,20 +21,20 @@ const apiRequests = {
 };
 
 export const UserProject = {
-  getUserProject: (
+  addUserProject: (
     gitlabProjectId: number,
     data: ProjectLinkRequest,
-  ): Promise<ApiResponse<ApiResponseMapStringLong>> =>
-    apiRequests.post<ApiResponseMapStringLong>(`/api/user-project/${gitlabProjectId}`, data),
+  ): Promise<ApiResponse<UserProjectData>> =>
+    apiRequests.post<UserProjectData>(`user-project/${gitlabProjectId}`, data),
 
-  deleteUserProject: (gitlabProjectId: number): Promise<ApiResponse<ApiResponseMapStringLong>> =>
-    apiRequests.delete<ApiResponseMapStringLong>(`/api/user-project/${gitlabProjectId}`),
+  deleteUserProject: (gitlabProjectId: number): Promise<ApiResponse<UserProjectData>> =>
+    apiRequests.delete<UserProjectData>(`user-project/${gitlabProjectId}`),
 
   getUserProjects: (query: {
     currentProjectId: number;
   }): Promise<ApiResponse<UserProjectResponse[]>> =>
-    apiRequests.get<UserProjectResponse[]>(`/api/user-project`, query),
+    apiRequests.get<UserProjectResponse[]>(`user-project`, query),
 
-  getLinkedStatus: (): Promise<ApiResponse<ApiResponseMapStringBoolean>> =>
-    apiRequests.get<ApiResponseMapStringBoolean>(`/api/user-project/status`),
+  getLinkedStatus: (): Promise<ApiResponse<GetLinkedStatusData>> =>
+    apiRequests.get<GetLinkedStatusData>(`user-project/status`),
 };

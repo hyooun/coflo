@@ -14,9 +14,8 @@ export interface ProjectLinkRequest {
   branches: string[];
 }
 
-export interface ApiResponseMapStringLong {
-  status: 'SUCCESS' | 'ERROR';
-  data: Record<string, number>;
+export interface UserProjectData {
+  projectId: number;
 }
 
 export interface UserProjectResponse {
@@ -25,7 +24,6 @@ export interface UserProjectResponse {
   name: string;
 }
 
-export interface ApiResponseMapStringBoolean {
-  status: 'SUCCESS' | 'ERROR';
-  data: Record<string, boolean>;
+export interface GetLinkedStatusData {
+  hasLinkeProject: boolean;
 }

@@ -6,7 +6,7 @@ export default function Header({ title, description }: HeaderProps) {
       {description && (
         <div className="flex flex-col">
           {description.map((desc, index) => (
-            <div key={index} className="font-bold">
+            <div key={index} className="font-bold text-xl">
               {desc}
             </div>
           ))}

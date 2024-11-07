@@ -1002,10 +1002,10 @@ export const handlers = [
   }),
 
   rest.get('/api/badges', (req, res, ctx) => {
-    const mockBadgeResponse: BadgeResponse = {
+    const mockBadgeResponse = {
       status: 'SUCCESS',
       data: {
-        mainBadgeCodeId: 2,
+        mainBadgeCodeId: 1,
         badgeDetails: [
           {
             badgeCodeId: 1,
@@ -1042,7 +1042,34 @@ export const handlers = [
             imageUrl: '/images/mocks/badges/badge_04.png',
             isAcquired: true,
           },
-          // ... 더 많은 뱃지들 추가 가능
+          {
+            badgeCodeId: 6,
+            name: '행운의 발견',
+            description: '접속 시 1% 확률로 획득',
+            imageUrl: '/images/mocks/badges/badge_04.png',
+            isAcquired: true,
+          },
+          {
+            badgeCodeId: 7,
+            name: '행운의 발견',
+            description: '접속 시 1% 확률로 획득',
+            imageUrl: '/images/mocks/badges/badge_04.png',
+            isAcquired: true,
+          },
+          {
+            badgeCodeId: 8,
+            name: '행운의 발견',
+            description: '접속 시 1% 확률로 획득',
+            imageUrl: '/images/mocks/badges/badge_04.png',
+            isAcquired: true,
+          },
+          {
+            badgeCodeId: 9,
+            name: '행운의 발견',
+            description: '접속 시 1% 확률로 획득',
+            imageUrl: '/images/mocks/badges/badge_04.png',
+            isAcquired: true,
+          },
         ],
       },
     };
@@ -1087,7 +1114,6 @@ export const handlers = [
     );
   }),
 
-  // 저장을 위한 POST 핸들러도 추가
   rest.put('/api/custom-prompts/:projectId', async (req, res, ctx) => {
     return res(
       ctx.status(200),

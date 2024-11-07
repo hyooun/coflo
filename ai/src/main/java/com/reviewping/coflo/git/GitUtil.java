@@ -1,11 +1,22 @@
 package com.reviewping.coflo.git;
 
+import com.reviewping.coflo.service.dto.GitFileInfo;
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -65,7 +76,64 @@ public class GitUtil {
         }
     }
 
+    public List<GitFileInfo> getUpdatedFileInfos(
+            String repoPath, String oldCommitHash, String newCommitHash) {
+        try (Repository repository = openRepository(repoPath);
+                RevWalk revWalk = new RevWalk(repository);
+                Git git = new Git(repository)) {
+
+            RevCommit oldCommit = getCommit(repository, revWalk, oldCommitHash);
+            RevCommit newCommit = getCommit(repository, revWalk, newCommitHash);
+
+            return getDiffEntries(git, repository, oldCommit, newCommit);
+
+        } catch (Exception e) {
+            throw new GitUtilException("커밋 간 파일 변경 내역을 가져오는데 실패했습니다.", e);
+        }
+    }
+
+    private Repository openRepository(String repoPath) throws IOException {
+        return new FileRepositoryBuilder().setGitDir(new File(repoPath + "/.git")).build();
+    }
+
+    private RevCommit getCommit(Repository repository, RevWalk revWalk, String commitHash)
+            throws IOException {
+        ObjectId commitId = repository.resolve(commitHash);
+        return revWalk.parseCommit(commitId);
+    }
+
+    private List<GitFileInfo> getDiffEntries(
+            Git git, Repository repository, RevCommit oldCommit, RevCommit newCommit)
+            throws IOException, GitAPIException {
+        List<DiffEntry> diffs =
+                git.diff()
+                        .setOldTree(prepareTreeParser(repository, oldCommit))
+                        .setNewTree(prepareTreeParser(repository, newCommit))
+                        .call();
+
+        return diffs.stream()
+                .map(
+                        diffEntry ->
+                                new GitFileInfo(diffEntry.getChangeType(), diffEntry.getNewPath()))
+                .toList();
+    }
+
     private boolean isDirectoryValid(File directory) {
         return directory.exists() && directory.isDirectory() && directory.list().length > 0;
+    }
+
+    private CanonicalTreeParser prepareTreeParser(Repository repository, RevCommit commit)
+            throws IOException {
+        // 커밋에서 트리 객체를 가져오기
+        RevTree tree = commit.getTree();
+
+        // CanonicalTreeParser 초기화
+        CanonicalTreeParser treeParser = new CanonicalTreeParser();
+        try (var reader = repository.newObjectReader()) {
+            // 트리 파서를 설정하여 커밋의 트리를 읽어올 수 있도록 함
+            treeParser.reset(reader, tree.getId());
+        }
+
+        return treeParser;
     }
 }

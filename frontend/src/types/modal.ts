@@ -25,17 +25,21 @@ export interface GuideModalProps {
     value: string;
     onChange: (value: string) => void;
     placeholder?: string;
+    labelText?: string;
   };
-  link?: {
+  links?: {
     url: string;
     text: string;
-  };
+    icon?: React.ReactNode;
+  }[];
 }
 
 export interface AlertModalProps {
   content: string[];
   onConfirm: () => void;
   className?: string;
+  icon?: React.ElementType;
+  iconSize?: number;
 }
 
 export interface ConfirmModalProps extends AlertModalProps {

@@ -1,40 +1,74 @@
 import { useState } from 'react';
-import { Eye, EyeOff, Info } from 'lucide-react';
-import CommonInput from '@components/Input/CommonInput.tsx';
+import { useAtom } from 'jotai';
+import { Link, Info, FileQuestion, CircleCheck, TriangleAlert } from 'lucide-react';
 import { CommonButton } from '@components/Button/CommonButton.tsx';
 import GuideModal from '@components/Modal/GuideModal.tsx';
+import AlertModal from '@components/Modal/AlertModal';
+import GitUrlSelector from './GitUrlSelector';
+import { Gitlab } from '@apis/Gitlab';
+import { User } from '@apis/User';
+import { isSignupAtom } from '@store/auth';
+import { useAuthRedirect } from '@hooks/useAuthRedirect';
+import { TokenInput } from '@components/Input/TokenInput';
 
 const SignupForm = () => {
-  const [showPassword, setShowPassword] = useState(true);
-  const [projectUrl, setProjectUrl] = useState('');
+  const [domain, setDomain] = useState('lab.ssafy.com');
   const [userToken, setUserToken] = useState('');
-  const [isUrlValid, setIsUrlValid] = useState(true);
-  const [isTokenValid, setIsTokenValid] = useState(true);
+  const [isTokenValid, setIsTokenValid] = useState(false);
+  const [isValidating, setIsValidating] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string[]>([]);
+  const isSignupEnabled = isTokenValid && domain;
+  const [, setIsSignup] = useAtom(isSignupAtom);
 
-  const validateUrl = (url: string) => {
-    return url.startsWith('lab.ssafy');
+  const handleValidateToken = async () => {
+    if (!userToken) return;
+
+    setIsValidating(true);
+    try {
+      const response = await Gitlab.validateUserToken({
+        domain,
+        userToken,
+      });
+      const isValid = response.data;
+      if (isValid) {
+        setIsTokenValid(isValid);
+        setIsAlertModalOpen(true);
+        setAlertMessage(['유효한 토큰입니다.', '회원가입을 진행해주세요.']);
+      } else {
+        setIsAlertModalOpen(true);
+        setAlertMessage(['유효하지 않은 토큰입니다.', '다시 한 번 입력해주세요.']);
+      }
+    } catch (error) {
+      setIsTokenValid(false);
+    } finally {
+      setIsValidating(false);
+    }
   };
 
-  const validateUserToken = (token: string) => {
-    const englishOnlyRegex = /^[A-Za-z]+$/;
-    return englishOnlyRegex.test(token);
-  };
+  const handleSignup = async () => {
+    if (!isSignupEnabled) return;
 
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setProjectUrl(value);
-    setIsUrlValid(validateUrl(value));
-  };
+    try {
+      const response = await User.addGitlabAccount({
+        domain,
+        userToken,
+      });
 
-  const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setUserToken(value);
-    setIsTokenValid(validateUserToken(value));
+      if (response.status === 'SUCCESS') {
+        setIsSignup(true);
+        useAuthRedirect();
+      }
+    } catch (error) {
+      console.error('회원가입 실패', error);
+      setIsAlertModalOpen(true);
+      setAlertMessage(['회원가입에 실패했습니다.', '다시 시도해주세요.']);
+    }
   };
 
   return (
-    <div className="relative">
+    <div className="relative min-w-[520px]">
       {/* 블러 효과 배경 */}
       <div className="absolute inset-0 backdrop-blur-md rounded-3xl"></div>
 
@@ -45,35 +79,22 @@ const SignupForm = () => {
           <div className="space-y-14">
             <div className="flex flex-col space-y-10">
               <div className="h-28">
-                <CommonInput
-                  placeholder="Enter your user project URL"
-                  labelText="가져올 프로젝트의 URL을 입력해주세요."
-                  value={projectUrl}
-                  onChange={handleUrlChange}
-                  isWarning={!isUrlValid}
-                  warningMessage="유효하지 않은 URL 형식입니다. (ex: lab.ssafy. ...)"
-                  className="border-2"
+                <GitUrlSelector
+                  value={domain}
+                  onChange={setDomain}
+                  labelText="가져올 Git 서비스 URL을 선택해주세요."
                 />
               </div>
-              <div className="h-28">
-                <CommonInput
-                  type={showPassword ? 'password' : 'text'}
-                  placeholder="Enter your user access token"
-                  labelText="사용자 인증 토큰을 입력해주세요."
+              <div className="relative h-28">
+                <TokenInput
                   value={userToken}
-                  onChange={handleTokenChange}
-                  isWarning={!isTokenValid}
-                  warningMessage="유효하지 않은 토큰입니다. 다시 한 번 입력해주세요."
-                  className="border-2"
-                  icon={
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="focus:outline-none"
-                    >
-                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </button>
-                  }
+                  onChange={(value) => setUserToken(value)}
+                  onValidate={handleValidateToken}
+                  isValidating={isValidating}
+                  isValid={isTokenValid}
+                  labelText="사용자 인증 토큰을 입력해주세요."
+                  placeholder="Enter your user access token"
+                  warningMessage="검증하기 버튼을 눌러 토큰을 검증해주세요."
                 />
                 <div
                   className="flex items-center text-sm text-secondary mt-1 cursor-pointer"
@@ -93,7 +114,8 @@ const SignupForm = () => {
           title="사용자 인증 토큰 안내"
           content={
             <div className="text-center text-xl font-bold text-primary-500">
-              아바타 프로필 클릭 &gt; Edit Profile &gt; User settings &gt; Access Tokens
+              아바타 프로필 클릭 &gt; Edit Profile &gt; User settings &gt; Access Tokens &gt; Add
+              new token
             </div>
           }
           onClose={() => setIsModalOpen(false)}
@@ -101,14 +123,36 @@ const SignupForm = () => {
             src: '/images/guide/guide_personal_access_token.png',
             alt: 'personal_access_token',
           }}
-          link={{
-            url: 'https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html',
-            text: '인증 토큰 발급 관련 안내',
-          }}
+          links={[
+            {
+              url: `https://${domain}`,
+              text: '토큰 가지러 가기',
+              icon: <Link size={20} className="text-primary-500" />,
+            },
+            {
+              url: 'https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html',
+              text: '인증 토큰 발급 관련 도움말',
+              icon: <FileQuestion size={20} className="text-primary-500" />,
+            },
+          ]}
         />
 
-        <div className="flex justify-center mt-20">
-          <CommonButton className="w-36 h-14 text-xl">회원가입</CommonButton>
+        {isAlertModalOpen && (
+          <AlertModal
+            content={alertMessage}
+            onConfirm={() => setIsAlertModalOpen(false)}
+            icon={isTokenValid ? CircleCheck : TriangleAlert}
+          />
+        )}
+
+        <div className="flex justify-center mt-20 cursor-pointer">
+          <CommonButton
+            className="w-36 h-14 text-xl"
+            disabled={!isSignupEnabled}
+            onClick={handleSignup}
+          >
+            가입하기
+          </CommonButton>
         </div>
       </div>
     </div>

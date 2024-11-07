@@ -12,3 +12,13 @@ export interface GitlabProjectListResponse {
   isLast: boolean;
   currPage: number;
 }
+
+export interface ValidateUserTokenRequest {
+  domain: string;
+  userToken: string;
+}
+
+export interface ValidateBotTokenRequest {
+  gitlabProjectId: string;
+  botToken: string;
+}

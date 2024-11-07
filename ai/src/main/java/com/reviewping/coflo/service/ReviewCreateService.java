@@ -8,8 +8,8 @@ import com.reviewping.coflo.json.JsonUtil;
 import com.reviewping.coflo.openai.OpenaiClient;
 import com.reviewping.coflo.openai.dto.ChatCompletionResponse;
 import com.reviewping.coflo.openai.dto.EmbeddingResponse;
+import com.reviewping.coflo.repository.ChunkedCodeRepository;
 import com.reviewping.coflo.repository.PromptTemplateRepository;
-import com.reviewping.coflo.repository.VectorRepository;
 import com.reviewping.coflo.service.dto.ChunkedCode;
 import com.reviewping.coflo.service.dto.request.ReviewRegenerateRequestMessage;
 import com.reviewping.coflo.service.dto.request.ReviewRequestMessage;
@@ -29,8 +29,8 @@ public class ReviewCreateService {
     private final RedisGateway redisGateway;
     private final OpenaiClient openaiClient;
     private final JsonUtil jsonUtil;
-    private final VectorRepository vectorRepository;
     private final PromptTemplateRepository promptTemplateRepository;
+    private final ChunkedCodeRepository chunkedCodeRepository;
 
     @ServiceActivator(inputChannel = "reviewRequestChannel")
     public void createReview(String reviewRequestMessage) {
@@ -44,7 +44,7 @@ public class ReviewCreateService {
         float[] embedding = embeddingResponse.data().getFirst().embedding();
         // 2. 참고자료 검색
         List<ChunkedCode> chunkedCodes =
-                vectorRepository.retrieveRelevantData(projectId, branchId, 10, embedding);
+                chunkedCodeRepository.retrieveRelevantData(projectId, branchId, 10, embedding);
         List<RetrievalMessage> retrievals =
                 chunkedCodes.stream().map(RetrievalMessage::from).toList();
         // 3. 프롬프트 생성

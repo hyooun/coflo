@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class VectorRepository {
+public class ChunkedCodeRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -80,5 +80,13 @@ public class VectorRepository {
                     }
                     return chunkedCode;
                 });
+    }
+
+    public void removeAllByFilePath(String filePath) {
+        String sql = "DELETE FROM chunked_code WHERE file_path = :filePath";
+
+        MapSqlParameterSource params = new MapSqlParameterSource().addValue("filePath", filePath);
+
+        namedParameterJdbcTemplate.update(sql, params);
     }
 }

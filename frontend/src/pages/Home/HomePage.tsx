@@ -219,7 +219,7 @@ const HomePage = () => {
               )}
             </div>
             <div className="h-5 pr-4 pl-4 w-full flex flex-col justify-center">
-              <div className="bg-[#CCCCCC] h-[1px] w-full"></div>
+              <div className="bg-gray-600 h-[1px] w-full"></div>
             </div>
             <Title title="Info" px="px-1" py="py-1" ml="ml-8" />
             <div className="flex flex-row m-4 ml-8 gap-4">

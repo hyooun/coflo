@@ -6,6 +6,7 @@ import BadgeList from '@components/Badge/BadgeList';
 import { BadgeType } from 'types/badge';
 import AlertModal from '@components/Modal/AlertModal';
 import Header from '@components/Header/Header.tsx';
+import { Badge } from '@apis/Badge';
 
 const BadgePage = () => {
   const [badges, setBadges] = useState<BadgeType[]>([]);
@@ -13,20 +14,20 @@ const BadgePage = () => {
   const [mainBadge, setMainBadge] = useState<BadgeType | null>(null);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string[]>([]);
+  const [mainBadgeCodeId, setMainBadgeCodeId] = useState<string>('');
 
   useEffect(() => {
     const fetchBadges = async () => {
-      try {
-        const { data } = await axios.get('/api/badges');
-        setBadges(data.data.badgeDetails);
+      const response = await Badge.getBadge();
+      if (response.data) {
+        setBadges(response.data.badgeDetails);
+        setMainBadgeCodeId(response.data.mainBadgeCodeId);
 
-        const mainBadgeData = data.data.badgeDetails.find(
-          (badge: BadgeType) => badge.badgeCodeId === data.data.mainBadgeCodeId,
+        const mainBadgeData = response.data.badgeDetails.find(
+          (badge: BadgeType) => badge.badgeCodeId === mainBadgeCodeId,
         );
         setMainBadge(mainBadgeData || null);
         setSelectedBadge(mainBadgeData || null);
-      } catch (error) {
-        console.error('Error fetching badges:', error);
       }
     };
     fetchBadges();

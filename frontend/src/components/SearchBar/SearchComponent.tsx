@@ -31,7 +31,7 @@ const SearchComponent = () => {
         <CommonButton
           active={true}
           hoverColor=""
-          bgColor="bg-[#A5A5A5]"
+          bgColor="bg-gray-800"
           className="mr-2 w-[100px] h-[30px]"
           onClick={handleReset}
         >
@@ -52,7 +52,7 @@ const SearchComponent = () => {
           <CommonButton
             active={true}
             hoverColor=""
-            bgColor="bg-[#A5A5A5]"
+            bgColor="bg-gray-800"
             onClick={handleEdit}
             className="mr-2 w-[100px] h-[30px]"
           >

@@ -13,7 +13,12 @@ export interface GitlabProjectListResponse {
   currPage: number;
 }
 
-export interface ValidateTokenRequest {
+export interface ValidateUserTokenRequest {
   domain: string;
   userToken: string;
+}
+
+export interface ValidateBotTokenRequest {
+  gitlabProjectId: string;
+  botToken: string;
 }

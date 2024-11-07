@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { ApiResponse } from 'types/api';
 import instance from '@config/apiConfig';
+import { UserProjectResponse } from 'types/project';
 
 const responseBody = <T>(response: AxiosResponse<ApiResponse<T>>) => response.data;
 
@@ -22,6 +23,11 @@ export const UserProject = {
 
   getLinkStatus: (): Promise<ApiResponse<{ hasLinkedProject: boolean }>> =>
     apiRequests.get<{ hasLinkedProject: boolean }>(`user-project/status`),
+
+  getUserProjects: (query: {
+    currentProjectId: number;
+  }): Promise<ApiResponse<UserProjectResponse[]>> =>
+    apiRequests.get<UserProjectResponse[]>(`user-project`, query),
 
   deleteRepository: (repoId: number): Promise<ApiResponse<any>> =>
     apiRequests.delete(`user-project/${repoId}`),

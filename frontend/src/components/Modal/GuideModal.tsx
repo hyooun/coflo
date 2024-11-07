@@ -2,7 +2,7 @@
 // import { useState } from 'react';
 import { X } from 'lucide-react';
 // import { Gitlab } from '@apis/Gitlab';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TokenInput } from '@components/Input/TokenInput';
 import type { GuideModalProps } from 'types/modal.ts';
 import { Gitlab } from '@apis/Gitlab';
@@ -20,19 +20,32 @@ export default function GuideModal({
   inputProps,
   links,
 }: GuideModalProps) {
-  const [botToken] = useState<string>('');
+  const [botToken, setBotToken] = useState<string>('');
   const [isTokenValid, setIsTokenValid] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
   const [, setIsAlertModalOpen] = useState(false);
   const [, setAlertMessage] = useState<string[]>([]);
 
-  if (!isOpen || !gitlabProjectId) return null;
+  useEffect(() => {
+    if (isOpen && inputProps?.value) {
+      setBotToken(inputProps.value);
+    }
+  }, [inputProps?.value, isOpen]);
 
   const handleValidateToken = async () => {
+    console.log(botToken);
     if (!botToken) return;
     console.log('토큰 검증 시작');
-    console.log(botToken);
+
     setIsValidating(true);
+
+    if (!gitlabProjectId) {
+      console.error('Gitlab Project ID가 정의되지 않았습니다.');
+      setIsAlertModalOpen(true);
+      setAlertMessage(['Gitlab Project ID가 정의되지 않았습니다.', 'GitLab ID를 확인해주세요.']);
+      return;
+    }
+
     try {
       const response = await Gitlab.validateBotToken({
         gitlabProjectId,
@@ -41,6 +54,7 @@ export default function GuideModal({
       const isValid = response.data;
       if (isValid) {
         setIsTokenValid(isValid);
+        console.log('끝');
         console.log('유효한 토큰입니다.');
         setIsAlertModalOpen(true);
         setAlertMessage(['유효한 토큰입니다.', '회원가입을 진행해주세요.']);
@@ -55,6 +69,8 @@ export default function GuideModal({
       setIsValidating(false);
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div

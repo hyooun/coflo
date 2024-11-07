@@ -1,5 +1,6 @@
 package com.reviewping.coflo.logging;
 
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,11 +20,32 @@ public class MattermostAppender extends AppenderBase<ILoggingEvent> {
     private static final JsonUtil jsonUtil = new JsonUtil(new ObjectMapper());
 
     private String url;
+    private PatternLayoutEncoder encoder;
+
+    @Override
+    public void start() {
+        // PatternLayoutEncoder 초기화
+        if (this.encoder != null) {
+            this.encoder.setContext(getContext());
+            this.encoder.start();
+        }
+        super.start();
+    }
 
     @Override
     protected void append(ILoggingEvent eventObject) {
+        if (!isStarted()) {
+            return;
+        }
+
+        // encoder를 사용해 포맷팅된 메시지 생성
+        String formattedMessage =
+                this.encoder != null
+                        ? this.encoder.getLayout().doLayout(eventObject)
+                        : eventObject.getFormattedMessage();
+
         Map<String, String> payload = new HashMap<>();
-        payload.put("text", eventObject.getFormattedMessage());
+        payload.put("text", formattedMessage);
         String body = jsonUtil.toJson(payload);
 
         HttpHeaders headers = new HttpHeaders();

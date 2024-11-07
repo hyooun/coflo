@@ -1,3 +1,8 @@
+export interface Project {
+  id: string;
+  name: string;
+  isCurrent?: boolean;
+}
 export interface Score {
   name: string;
   score: number;
@@ -10,6 +15,30 @@ export interface UserScore {
   badgeName: string | null;
   badgeImageUrl: string | null;
   scores: Score[];
+}
+
+export interface ProjectSelectorProps {
+  onClose: () => void;
+  titleRef: React.RefObject<HTMLDivElement>;
+}
+
+export interface ProjectLinkRequest {
+  botToken: string;
+  branches: string[];
+}
+
+export interface UserProjectData {
+  projectId: number;
+}
+
+export interface UserProjectResponse {
+  /** @format int64 */
+  projectId: number;
+  name: string;
+}
+
+export interface GetLinkedStatusData {
+  hasLinkeProject: boolean;
 }
 
 export interface ProjectTeamRequestResoponse {

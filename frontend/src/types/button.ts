@@ -6,6 +6,7 @@ interface BtnProps {
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   bgColor?: string;
   hoverColor?: string;
+  disabled?: boolean;
 }
 
 interface LabelColors {

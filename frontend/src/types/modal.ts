@@ -7,6 +7,7 @@ export interface ModalProps {
 }
 
 export interface GuideModalProps {
+  gitlabProjectId?: string;
   repo?: any;
   inputValue?: string;
   setInputValue?: (value: string) => void;
@@ -24,18 +25,26 @@ export interface GuideModalProps {
   inputProps?: {
     value: string;
     onChange: (value: string) => void;
+    onValidate?: () => void;
+    isValidating?: boolean;
+    isValid?: boolean;
     placeholder?: string;
+    labelText?: string;
+    warningMessage?: string;
   };
-  link?: {
+  links?: {
     url: string;
     text: string;
-  };
+    icon?: React.ReactNode;
+  }[];
 }
 
 export interface AlertModalProps {
   content: string[];
   onConfirm: () => void;
   className?: string;
+  icon?: React.ElementType;
+  iconSize?: number;
 }
 
 export interface ConfirmModalProps extends AlertModalProps {

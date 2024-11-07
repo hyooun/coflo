@@ -11,6 +11,7 @@ import LoginPage from '@pages/Login/LoginPage';
 import SignupPage from '@pages/Signup/SignupPage.tsx';
 import MergeRequestReviewPage from '@pages/MergeRequestReview/MergeRequestReviewPage.tsx';
 import ReferencesPage from '@pages/MergeRequestReview/ReferencesPage';
+import { OAuthRedirectHandler } from '@apis/Auth';
 
 const customRouter = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const customRouter = createBrowserRouter([
   {
     path: 'login',
     element: <LoginPage />,
+  },
+  {
+    path: 'login/callback/:provider',
+    element: <OAuthRedirectHandler />,
   },
   {
     path: '/',

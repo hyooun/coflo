@@ -1,5 +1,4 @@
 import { AxiosResponse } from 'axios';
-import { GitlabProjectListResponse } from 'types/gitLab';
 import { ApiResponse } from 'types/api';
 import instance from '@config/apiConfig';
 
@@ -17,14 +16,7 @@ const apiRequests = {
   delete: <T>(url: string) => instance.delete<ApiResponse<T>>(url).then(responseBody),
 };
 
-export const Link = {
-  getLinkRepository: (
-    keyword?: string,
-    page?: string,
-    size?: string,
-  ): Promise<ApiResponse<GitlabProjectListResponse>> =>
-    apiRequests.get<GitlabProjectListResponse>('gitlab/search', { keyword, page, size }),
-
+export const UserProject = {
   updateRepository: (repoId: number, data: { botToken?: string }): Promise<ApiResponse<any>> =>
     apiRequests.post(`user-project/${repoId}`, data),
 

@@ -4,16 +4,20 @@ export function CommonButton({
   onClick,
   children,
   className,
-  bgColor,
-  hoverColor,
+  bgColor = 'bg-primary-500',
+  hoverColor = 'hover:bg-primary-600',
+  disabled = false,
 }: BtnProps) {
-  const currentBgColor = active ? bgColor : 'bg-primary-300';
-  const currentHoverColor = active ? hoverColor : 'hover:bg-primary-400';
+  const currentBgColor = disabled ? 'bg-gray-700' : active ? bgColor : 'bg-primary-500';
+
+  const currentHoverColor = disabled ? '' : active ? hoverColor : 'hover:bg-primary-400';
 
   return (
     <div
-      className={`${className} font-pretendard flex flex-row items-center rounded-3xl ${currentBgColor} ${currentHoverColor} text-white transition-colors duration-200`}
-      onClick={onClick}
+      className={`${className} font-pretendard flex flex-row items-center rounded-3xl 
+        ${currentBgColor} ${currentHoverColor} text-white transition-colors duration-200
+        ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+      onClick={disabled ? undefined : onClick}
     >
       {icon && <div className="pr-2">{icon}</div>}
       <div className="flex-1 text-center">{children}</div>

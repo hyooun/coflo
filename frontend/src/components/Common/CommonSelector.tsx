@@ -72,7 +72,7 @@ const CommonSelector = <T extends unknown>({
 
   return (
     <div className={className} ref={dropdownRef}>
-      <button onClick={() => setIsOpen(!isOpen)} className={buttonClassName}>
+      <button onClick={() => setIsOpen(!isOpen)} className={buttonClassName} type="button">
         <span>{displayValue(selectedItem)}</span>
         <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
@@ -95,25 +95,29 @@ const CommonSelector = <T extends unknown>({
             </div>
           )}
           <div className="max-h-40 overflow-y-auto">
-            {filteredItems.map((item) =>
-              renderItem ? (
-                renderItem(item, isEqual(item, selectedItem))
-              ) : (
-                <button
-                  key={displayValue(item)}
-                  onClick={() => {
-                    onSelect(item);
-                    setIsOpen(false);
-                  }}
-                  className={`${itemClassName} ${
-                    isEqual(item, selectedItem)
-                      ? 'text-primary-500 bg-secondary/30'
-                      : 'text-gray-700'
-                  }`}
-                >
-                  {displayValue(item)}
-                </button>
-              ),
+            {filteredItems.length === 0 ? (
+              <div className="text-center text-primary-500 p-2"> 검색된 결과가 없습니다. </div>
+            ) : (
+              filteredItems.map((item) =>
+                renderItem ? (
+                  renderItem(item, isEqual(item, selectedItem))
+                ) : (
+                  <button
+                    key={displayValue(item)}
+                    onClick={() => {
+                      onSelect(item);
+                      setIsOpen(false);
+                    }}
+                    className={`${itemClassName} ${
+                      isEqual(item, selectedItem)
+                        ? 'text-primary-500 bg-secondary/30'
+                        : 'text-gray-700'
+                    }`}
+                  >
+                    {displayValue(item)}
+                  </button>
+                ),
+              )
             )}
           </div>
         </div>

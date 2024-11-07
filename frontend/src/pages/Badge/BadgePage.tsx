@@ -21,7 +21,7 @@ const BadgePage = () => {
       const response = await Badge.getBadge();
       if (response.data) {
         setBadges(response.data.badgeDetails);
-        setMainBadgeCodeId(response.data.mainBadgeCodeId);
+        setMainBadgeCodeId(response.data.mainBadgeCodeId || '');
 
         const mainBadgeData = response.data.badgeDetails.find(
           (badge: BadgeType) => badge.badgeCodeId === mainBadgeCodeId,
@@ -44,37 +44,21 @@ const BadgePage = () => {
       return;
     }
 
-    if (!selectedBadge) {
-      try {
-        const { data } = await axios.delete('/api/badges');
-
-        if (data.status === 'SUCCESS') {
-          setMainBadge(null);
-          setAlertMessage(['대표 뱃지가 해제되었습니다.']);
-          setIsAlertModalOpen(true);
-        }
-      } catch (error) {
-        console.error('Error removing badge:', error);
-        setAlertMessage(['대표 뱃지 해제에 실패했습니다.']);
-        setIsAlertModalOpen(true);
-      }
-
-      return;
-    }
-
     try {
-      const { data } = await axios.patch('/api/badges', {
-        badgeId: selectedBadge.badgeCodeId,
-      });
+      const { status } = await Badge.updateMainBadge(selectedBadge?.badgeCodeId || '');
 
-      if (data.status === 'SUCCESS') {
+      if (status === 'SUCCESS') {
         setMainBadge(selectedBadge);
-        setAlertMessage(['대표 뱃지가 설정되었습니다.']);
+        setAlertMessage([
+          selectedBadge ? '대표 뱃지가 설정되었습니다.' : '대표 뱃지가 해제되었습니다.',
+        ]);
         setIsAlertModalOpen(true);
       }
     } catch (error) {
       console.error('Error saving badge:', error);
-      setAlertMessage(['대표 뱃지 설정에 실패했습니다.']);
+      setAlertMessage([
+        selectedBadge ? '대표 뱃지 설정에 실패했습니다.' : '대표 뱃지 해제에 실패했습니다.',
+      ]);
       setIsAlertModalOpen(true);
     }
   };

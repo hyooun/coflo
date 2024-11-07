@@ -5,15 +5,15 @@ import { RepositorySearchBar } from '@components/Repository/RepositorySearchBar'
 import { RepositoryItem } from '@components/Repository/RepositoryItem';
 import ToggleSwitch from '@components/Repository/ToggleSwitch';
 import Pagination from '@components/Pagination/Pagination';
-import { Link } from '@apis/Link';
+import { UserProject } from '@apis/Link';
 import { GitlabProject } from 'types/gitLab';
 import { CommonButton } from '@components/Button/CommonButton';
 import { useNavigate } from 'react-router-dom';
 import GuideModal from '@components/Modal/GuideModal.tsx';
 import tokenintro from '@assets/tokenintro.png';
-import { Gitlab } from '@apis/Gitlab';
 import Header from '@components/Header/Header';
 import { FileQuestion } from 'lucide-react';
+import { Gitlab } from '@apis/Gitlab';
 
 export default function RepositoryPage() {
   const [currentPage] = useAtom(currentPageAtom);
@@ -28,12 +28,7 @@ export default function RepositoryPage() {
   useEffect(() => {
     const fetchProjects = async () => {
       console.log('현재 페이지:', currentPage);
-
-      const response = await Gitlab.getGitlabProjects({
-        keyword: '',
-        page: currentPage,
-        size: itemsPerPage,
-      });
+      const response = await Gitlab.getGitlabProjects(undefined, currentPage, itemsPerPage);
       console.log('API 응답:', response);
       console.log('API 응답:', response.data);
       if (response && response.data) {
@@ -50,14 +45,14 @@ export default function RepositoryPage() {
 
     if (repo.isLinkable) {
       if (repo.isLinked) {
-        await Link.deleteRepository(repo.gitlabProjectId);
+        await UserProject.deleteRepository(repo.gitlabProjectId);
         setRepositories((prev) => {
           const updatedRepos = [...prev];
           updatedRepos[index] = { ...updatedRepos[index], isLinked: false };
           return updatedRepos;
         });
       } else {
-        await Link.updateRepository(repo.gitlabProjectId, {});
+        await UserProject.updateRepository(repo.gitlabProjectId, {});
         setRepositories((prev) => {
           const updatedRepos = [...prev];
           updatedRepos[index] = { ...updatedRepos[index], isLinked: true };
@@ -72,7 +67,7 @@ export default function RepositoryPage() {
 
   const handleModalConfirm = async () => {
     if (selectedRepo) {
-      await Link.updateRepository(selectedRepo.gitlabProjectId, { botToken: inputValue });
+      await UserProject.updateRepository(selectedRepo.gitlabProjectId, { botToken: inputValue });
 
       setRepositories((prev) => {
         const updatedRepos = [...prev];
@@ -90,7 +85,7 @@ export default function RepositoryPage() {
   };
 
   const handleButtonClick = async () => {
-    const response = await Link.getLinkStatus();
+    const response = await UserProject.getLinkStatus();
     const isLinked = response.data?.isLinked;
 
     if (isLinked) {
@@ -136,7 +131,7 @@ export default function RepositoryPage() {
         ))}
       </div>
 
-      {isModalOpen && (
+      {isModalOpen && selectedRepo && (
         <GuideModal
           isOpen={isModalOpen}
           title="프로젝트 토큰을 얻어오는 방법"
@@ -175,6 +170,7 @@ export default function RepositoryPage() {
             setInputValue('');
           }}
           onConfirm={handleModalConfirm}
+          gitlabProjectId={String(selectedRepo.gitlabProjectId)}
         />
       )}
       <Pagination />

@@ -33,10 +33,10 @@ export interface GitlabMergeRequest {
 
 export interface GitlabMrListResponse {
   gitlabMrList: GitlabMergeRequest[];
-  totalPages: number;
-  totalElements: number;
-  isLast: boolean;
-  currPage: number;
+  totalPages?: number;
+  totalElements?: number;
+  isLast?: boolean;
+  currPage?: number;
 }
 
 export interface MrItemProps {

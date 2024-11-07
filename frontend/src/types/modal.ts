@@ -7,6 +7,7 @@ export interface ModalProps {
 }
 
 export interface GuideModalProps {
+  gitlabProjectId?: string;
   repo?: any;
   inputValue?: string;
   setInputValue?: (value: string) => void;
@@ -24,8 +25,12 @@ export interface GuideModalProps {
   inputProps?: {
     value: string;
     onChange: (value: string) => void;
+    onValidate?: () => void;
+    isValidating?: boolean;
+    isValid?: boolean;
     placeholder?: string;
     labelText?: string;
+    warningMessage?: string;
   };
   links?: {
     url: string;

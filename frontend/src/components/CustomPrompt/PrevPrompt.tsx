@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
+import { customPrompt } from '@apis/CustomPrompt';
 
 interface CustomPrompt {
-  customPromptId: number;
+  customPromptId: string;
   content: string;
 }
 
 const PrevPrompt = () => {
+  const projectId = '1';
   const [prevPrompt, setPrevPrompt] = useState<CustomPrompt | null>(null);
 
   useEffect(() => {
     const fetchPrevPrompt = async () => {
-      const response = await fetch(`/api/custom-prompts/1`);
-      const result = await response.json();
-      setPrevPrompt(result.data);
+      const response = await customPrompt.getCustomPrompt(projectId);
+      const data = response.data;
+      if (data) {
+        setPrevPrompt(data);
+      }
     };
 
     fetchPrevPrompt();

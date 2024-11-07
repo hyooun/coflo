@@ -2,10 +2,13 @@
 // import { useState } from 'react';
 import { X } from 'lucide-react';
 // import { Gitlab } from '@apis/Gitlab';
+import { useState } from 'react';
 import { TokenInput } from '@components/Input/TokenInput';
 import type { GuideModalProps } from 'types/modal.ts';
+import { Gitlab } from '@apis/Gitlab';
 
 export default function GuideModal({
+  gitlabProjectId,
   isOpen,
   width = 'w-[600px]',
   title,
@@ -17,38 +20,41 @@ export default function GuideModal({
   inputProps,
   links,
 }: GuideModalProps) {
-  if (!isOpen) return null;
-  // 프로젝트 아이디 추가 구현
-  // const [botToken, setBotToken] = useState<string>('');
-  // const [isTokenValid, setIsTokenValid] = useState(false);
-  // const [isValidating, setIsValidating] = useState(false);
-  //
-  // const handleValidateToken = async () => {
-  //   if (!botToken) return;
-  //   console.log('토큰 검증 시작');
-  //   console.log(botToken);
-  //   setIsValidating(true);
-  //   try {
-  //     const response = await Gitlab.validateBotToken({
-  //       botToken,
-  //     });
-  //     const isValid = response.data;
-  //     if (isValid) {
-  //       setIsTokenValid(isValid);
-  //       console.log('유효한 토큰입니다.');
-  //       // setIsAlertModalOpen(true);
-  //       // setAlertMessage(['유효한 토큰입니다.', '회원가입을 진행해주세요.']);
-  //     } else {
-  //       console.log('유효하지 않은 토큰입니다.');
-  //       // setIsAlertModalOpen(true);
-  //       // setAlertMessage(['유효하지 않은 토큰입니다.', '다시 한 번 입력해주세요.']);
-  //     }
-  //   } catch (error) {
-  //     setIsTokenValid(false);
-  //   } finally {
-  //     setIsValidating(false);
-  //   }
-  // };
+  const [botToken] = useState<string>('');
+  const [isTokenValid, setIsTokenValid] = useState(false);
+  const [isValidating, setIsValidating] = useState(false);
+  const [, setIsAlertModalOpen] = useState(false);
+  const [, setAlertMessage] = useState<string[]>([]);
+
+  if (!isOpen || !gitlabProjectId) return null;
+
+  const handleValidateToken = async () => {
+    if (!botToken) return;
+    console.log('토큰 검증 시작');
+    console.log(botToken);
+    setIsValidating(true);
+    try {
+      const response = await Gitlab.validateBotToken({
+        gitlabProjectId,
+        botToken,
+      });
+      const isValid = response.data;
+      if (isValid) {
+        setIsTokenValid(isValid);
+        console.log('유효한 토큰입니다.');
+        setIsAlertModalOpen(true);
+        setAlertMessage(['유효한 토큰입니다.', '회원가입을 진행해주세요.']);
+      } else {
+        console.log('유효하지 않은 토큰입니다.');
+        setIsAlertModalOpen(true);
+        setAlertMessage(['유효하지 않은 토큰입니다.', '다시 한 번 입력해주세요.']);
+      }
+    } catch (error) {
+      setIsTokenValid(false);
+    } finally {
+      setIsValidating(false);
+    }
+  };
 
   return (
     <div
@@ -87,9 +93,9 @@ export default function GuideModal({
             <TokenInput
               value={inputProps.value}
               onChange={inputProps.onChange}
-              // onValidate={handleValidateToken}
-              // isValidating={isValidating}
-              // isValid={isTokenValid}
+              onValidate={handleValidateToken}
+              isValidating={isValidating}
+              isValid={isTokenValid}
               labelText={inputProps.labelText || ''}
               placeholder={inputProps.placeholder || ''}
               warningMessage="검증하기 버튼을 눌러 토큰을 검증해주세요."

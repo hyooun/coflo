@@ -29,8 +29,9 @@ const ChartBox = ({
   data,
   options,
   chartId,
-  width = 550,
+  width = 500,
   height = 300,
+  plugins,
 }: ChartBoxProps) => {
   const chartRef = useRef<any>(null);
 
@@ -50,6 +51,7 @@ const ChartBox = ({
       id: chartId,
       width,
       height,
+      plugins,
     };
 
     switch (chartType) {

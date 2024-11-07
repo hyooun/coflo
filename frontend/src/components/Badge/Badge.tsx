@@ -36,11 +36,11 @@ const Badge = ({
       {/* 툴팁 */}
       {tooltipOptions.show && (
         <div
-          className="absolute z-10 invisible group-hover:visible bg-secondary text-white text-sm rounded-lg py-2 px-3 
+          className="absolute z-10 invisible group-hover:visible bg-primary-500 text-white text-lg rounded-lg py-2 px-3 
           -bottom-16 left-1/2 transform -translate-x-1/2 min-w-max"
         >
           <div className="flex flex-col gap-1">
-            {tooltipOptions.showName && <span className="font-bold">{badge.name}</span>}
+            {tooltipOptions.showName && <span className="font-bold text-center">{badge.name}</span>}
             {tooltipOptions.showDescription && (
               <span className="text-gray-300">{badge.description}</span>
             )}
@@ -48,7 +48,7 @@ const Badge = ({
           {/* 툴팁 화살표 */}
           <div
             className="absolute -top-2 left-1/2 transform -translate-x-1/2 
-            border-solid border-4 border-transparent border-b-gray-900"
+            border-solid border-4 border-transparent border-b-primary-500"
           />
         </div>
       )}

@@ -5,7 +5,7 @@ import com.reviewping.coflo.git.GitUtil;
 import com.reviewping.coflo.json.JsonUtil;
 import com.reviewping.coflo.openai.OpenaiClient;
 import com.reviewping.coflo.openai.dto.EmbeddingResponse;
-import com.reviewping.coflo.repository.VectorRepository;
+import com.reviewping.coflo.repository.ChunkedCodeRepository;
 import com.reviewping.coflo.service.dto.ChunkedCode;
 import com.reviewping.coflo.service.dto.request.InitRequestMessage;
 import com.reviewping.coflo.treesitter.TreeSitterUtil;
@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProjectInitializeService {
@@ -28,7 +29,7 @@ public class ProjectInitializeService {
     private final GitUtil gitUtil;
     private final OpenaiClient openaiClient;
     private final TreeSitterUtil treeSitterUtil;
-    private final VectorRepository vectorRepository;
+    private final ChunkedCodeRepository chunkedCodeRepository;
     private final String gitCloneDirectory;
     private final JsonUtil jsonUtil;
 
@@ -36,18 +37,19 @@ public class ProjectInitializeService {
             GitUtil gitUtil,
             OpenaiClient openaiClient,
             TreeSitterUtil treeSitterUtil,
-            VectorRepository vectorRepository,
+            ChunkedCodeRepository chunkedCodeRepository,
             @Value("${git-clone-directory}") String gitCloneDirectory,
             JsonUtil jsonUtil) {
         this.gitUtil = gitUtil;
         this.openaiClient = openaiClient;
         this.treeSitterUtil = treeSitterUtil;
-        this.vectorRepository = vectorRepository;
+        this.chunkedCodeRepository = chunkedCodeRepository;
         this.gitCloneDirectory = gitCloneDirectory;
         this.jsonUtil = jsonUtil;
     }
 
     @ServiceActivator(inputChannel = "initializeChannel")
+    @Transactional
     public void initializeKnowledgeBase(String initRequestMessage) {
         InitRequestMessage initRequest =
                 jsonUtil.fromJson(initRequestMessage, new TypeReference<>() {});
@@ -77,7 +79,7 @@ public class ProjectInitializeService {
                             chunkedCode -> {
                                 buffer.add(chunkedCode);
                                 if (buffer.size() >= BATCH_SIZE) {
-                                    vectorRepository.saveAllChunkedCodes(
+                                    chunkedCodeRepository.saveAllChunkedCodes(
                                             projectId, branchId, buffer);
                                     buffer.clear();
                                 }
@@ -85,7 +87,7 @@ public class ProjectInitializeService {
 
             // 남아있는 데이터가 있으면 마지막으로 저장
             if (!buffer.isEmpty()) {
-                vectorRepository.saveAllChunkedCodes(projectId, branchId, buffer);
+                chunkedCodeRepository.saveAllChunkedCodes(projectId, branchId, buffer);
             }
         } catch (IOException e) {
             throw new PreprocessException("파일 전처리 중 예외가 발생했습니다.", e);

@@ -34,7 +34,9 @@ const BadgePage = () => {
 
   const handleBadgeClick = (badge: BadgeType) => {
     if (badge.isAcquired) {
-      setSelectedBadge(badge);
+      selectedBadge?.badgeCodeId === badge.badgeCodeId
+        ? setSelectedBadge(null)
+        : setSelectedBadge(badge);
     }
   };
 
@@ -62,21 +64,13 @@ const BadgePage = () => {
     }
   };
 
-  const handleDefault = async () => {
-    setSelectedBadge(null);
-  };
-
   return (
-    <div className="flex flex-col flex-grow overflow-auto px-8 pt-6 items-center min-w-[800px]">
+    <div className="flex flex-col flex-grow overflow-auto px-8 pt-6 min-w-[800px]">
       <Header
         title={'My Badge'}
         description={['다른 사람에게 보이는 뱃지를 설정 할 수 있습니다.']}
       />
-      <RepresentativeBadge
-        selectedBadge={selectedBadge?.imageUrl || null}
-        onSave={handleSave}
-        onDefault={handleDefault}
-      />
+      <RepresentativeBadge selectedBadge={selectedBadge?.imageUrl || null} onSave={handleSave} />
       <BadgeList badges={badges} onBadgeClick={handleBadgeClick} />
       {isAlertModalOpen && (
         <AlertModal content={alertMessage} onConfirm={() => setIsAlertModalOpen(false)} />

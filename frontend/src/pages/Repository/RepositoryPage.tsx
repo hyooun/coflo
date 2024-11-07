@@ -92,8 +92,7 @@ export default function RepositoryPage() {
 
   const handleButtonClick = async () => {
     const response = await UserProject.getLinkStatus();
-    const isLinked = response.data?.isLinked;
-
+    const isLinked = response.data?.hasLinkedProject;
     if (isLinked) {
       navigate('/main');
     } else {

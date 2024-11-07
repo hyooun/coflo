@@ -20,11 +20,15 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health,metrics,prometheus
+      exclude: env,beans,heapdump,threaddump,configprops,quarts
   prometheus:
     metrics:
       export:
         enabled: true
+  web:
+    server:
+      auto-time-requests: true
 
 logging:
   level:

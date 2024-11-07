@@ -20,8 +20,8 @@ export const UserProject = {
   updateRepository: (repoId: number, data: { botToken?: string }): Promise<ApiResponse<any>> =>
     apiRequests.post(`user-project/${repoId}`, data),
 
-  getLinkStatus: (): Promise<ApiResponse<{ isLinked: boolean }>> =>
-    apiRequests.get<{ isLinked: boolean }>(`user-project/status`),
+  getLinkStatus: (): Promise<ApiResponse<{ hasLinkedProject: boolean }>> =>
+    apiRequests.get<{ hasLinkedProject: boolean }>(`user-project/status`),
 
   deleteRepository: (repoId: number): Promise<ApiResponse<any>> =>
     apiRequests.delete(`user-project/${repoId}`),

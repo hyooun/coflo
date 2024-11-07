@@ -13,6 +13,7 @@ import GuideModal from '@components/Modal/GuideModal.tsx';
 import tokenintro from '@assets/tokenintro.png';
 import { Gitlab } from '@apis/Gitlab';
 import Header from '@components/Header/Header';
+import { FileQuestion } from 'lucide-react';
 
 export default function RepositoryPage() {
   const [currentPage] = useAtom(currentPageAtom);
@@ -159,11 +160,13 @@ export default function RepositoryPage() {
             value: inputValue,
             onChange: setInputValue,
             placeholder: '프로젝트 토큰을 입력하세요',
+            labelText: '프로젝트 토큰',
           }}
           links={[
             {
               url: 'https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html',
               text: '프로젝트 토큰 생성 가이드 보기',
+              icon: <FileQuestion size={20} className="text-primary-500" />,
             },
           ]}
           onClose={() => {

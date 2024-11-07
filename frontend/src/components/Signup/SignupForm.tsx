@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAtom } from 'jotai';
-import { Link, Eye, EyeOff, Info, FileQuestion, CircleCheck, TriangleAlert } from 'lucide-react';
-import CommonInput from '@components/Input/CommonInput.tsx';
+import { Link, Info, FileQuestion, CircleCheck, TriangleAlert } from 'lucide-react';
 import { CommonButton } from '@components/Button/CommonButton.tsx';
 import GuideModal from '@components/Modal/GuideModal.tsx';
 import AlertModal from '@components/Modal/AlertModal';
@@ -10,9 +9,9 @@ import { Gitlab } from '@apis/Gitlab';
 import { User } from '@apis/User';
 import { isSignupAtom } from '@store/auth';
 import { useAuthRedirect } from '@hooks/useAuthRedirect';
+import { TokenInput } from '@components/Input/TokenInput';
 
 const SignupForm = () => {
-  const [showPassword, setShowPassword] = useState(true);
   const [domain, setDomain] = useState('lab.ssafy.com');
   const [userToken, setUserToken] = useState('');
   const [isTokenValid, setIsTokenValid] = useState(false);
@@ -87,32 +86,16 @@ const SignupForm = () => {
                 />
               </div>
               <div className="relative h-28">
-                <CommonInput
-                  type={showPassword ? 'password' : 'text'}
-                  placeholder="Enter your user access token"
-                  labelText="사용자 인증 토큰을 입력해주세요."
+                <TokenInput
                   value={userToken}
-                  onChange={(e) => setUserToken(e.target.value)}
-                  isWarning={userToken != '' && !isTokenValid}
+                  onChange={(value) => setUserToken(value)}
+                  onValidate={handleValidateToken}
+                  isValidating={isValidating}
+                  isValid={isTokenValid}
+                  labelText="사용자 인증 토큰을 입력해주세요."
+                  placeholder="Enter your user access token"
                   warningMessage="검증하기 버튼을 눌러 토큰을 검증해주세요."
-                  className="border-2"
-                  icon={
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="focus:outline-none"
-                    >
-                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </button>
-                  }
                 />
-                <CommonButton
-                  onClick={handleValidateToken}
-                  disabled={!userToken || isValidating}
-                  className="mt-8 w-24 absolute right-0 -top-7"
-                >
-                  {isValidating ? '검증 중...' : '검증하기'}
-                </CommonButton>
                 <div
                   className="flex items-center text-sm text-secondary mt-1 cursor-pointer"
                   onClick={() => setIsModalOpen(true)}

@@ -22,11 +22,11 @@
             <appender-ref ref="MATTERMOST"/>
         </appender>
 
-        <root level="DEBUG">
+        <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>
 
-        <logger name="com.reviewping.coflo" level="ERROR" additivity="false">
+        <logger name="com.reviewping.coflo" level="DEBUG" additivity="false">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="ASYNC_MATTERMOST"/>
         </logger>

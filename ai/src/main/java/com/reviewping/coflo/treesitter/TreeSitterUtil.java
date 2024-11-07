@@ -1,6 +1,6 @@
 package com.reviewping.coflo.treesitter;
 
-import com.reviewping.coflo.entity.ChunkedCode;
+import com.reviewping.coflo.service.dto.ChunkedCode;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,12 +1,12 @@
 package com.reviewping.coflo.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.reviewping.coflo.entity.ChunkedCode;
 import com.reviewping.coflo.git.GitUtil;
 import com.reviewping.coflo.json.JsonUtil;
 import com.reviewping.coflo.openai.OpenaiClient;
 import com.reviewping.coflo.openai.dto.EmbeddingResponse;
 import com.reviewping.coflo.repository.VectorRepository;
+import com.reviewping.coflo.service.dto.ChunkedCode;
 import com.reviewping.coflo.service.dto.request.InitRequestMessage;
 import com.reviewping.coflo.treesitter.TreeSitterUtil;
 import java.io.File;

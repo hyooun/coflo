@@ -41,3 +41,7 @@ spotless_check_output.txt
 
 ### secret ###
 .env
+
+### temp ###
+/src/test/**
+sample*

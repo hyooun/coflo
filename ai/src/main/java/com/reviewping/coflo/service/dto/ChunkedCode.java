@@ -1,4 +1,4 @@
-package com.reviewping.coflo.entity;
+package com.reviewping.coflo.service.dto;
 
 import lombok.Getter;
 import lombok.ToString;

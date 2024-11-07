@@ -3,7 +3,6 @@ package com.reviewping.coflo.service;
 import static com.reviewping.coflo.service.dto.request.ReviewRequestMessage.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.reviewping.coflo.entity.ChunkedCode;
 import com.reviewping.coflo.gateway.RedisGateway;
 import com.reviewping.coflo.json.JsonUtil;
 import com.reviewping.coflo.openai.OpenaiClient;
@@ -11,6 +10,7 @@ import com.reviewping.coflo.openai.dto.ChatCompletionResponse;
 import com.reviewping.coflo.openai.dto.EmbeddingResponse;
 import com.reviewping.coflo.repository.PromptTemplateRepository;
 import com.reviewping.coflo.repository.VectorRepository;
+import com.reviewping.coflo.service.dto.ChunkedCode;
 import com.reviewping.coflo.service.dto.request.ReviewRegenerateRequestMessage;
 import com.reviewping.coflo.service.dto.request.ReviewRequestMessage;
 import com.reviewping.coflo.service.dto.response.RetrievalMessage;

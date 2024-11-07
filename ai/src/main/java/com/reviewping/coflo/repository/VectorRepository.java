@@ -1,7 +1,7 @@
 package com.reviewping.coflo.repository;
 
 import com.pgvector.PGvector;
-import com.reviewping.coflo.entity.ChunkedCode;
+import com.reviewping.coflo.service.dto.ChunkedCode;
 import java.sql.Array;
 import java.sql.SQLException;
 import java.util.List;

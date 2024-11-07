@@ -45,6 +45,14 @@ public class ProjectUpdateService {
     public void updateKnowledgeBase(String updateRequestMessage) {
         UpdateRequestMessage updateRequest =
                 jsonUtil.fromJson(updateRequestMessage, new TypeReference<>() {});
+        log.info(
+                "지식베이스 업데이트 시작 - Project ID: {}, Branch ID: {}, Git URL: {}, Branch: {}, Commit"
+                        + " Hash: {}",
+                updateRequest.projectId(),
+                updateRequest.branchId(),
+                updateRequest.gitUrl(),
+                updateRequest.branch(),
+                updateRequest.commitHash());
 
         //        1. 최신 commit_hash와 last_commit_hash 비교 (없으면 분기해서 init)
         BranchInfo branchInfo = branchRepository.findByBranchId(updateRequest.branchId());
@@ -84,5 +92,13 @@ public class ProjectUpdateService {
                 updateRequest.projectId(), updateRequest.branchId(), pathStream);
         // 3. last_commit_hash 업데이트
         branchRepository.updateLastCommitHash(branchInfo.id(), updateRequest.commitHash());
+        log.info(
+                "지식베이스 업데이트 완료 - Project ID: {}, Branch ID: {}, Git URL: {}, Branch: {}, Commit"
+                        + " Hash: {}",
+                updateRequest.projectId(),
+                updateRequest.branchId(),
+                updateRequest.gitUrl(),
+                updateRequest.branch(),
+                updateRequest.commitHash());
     }
 }

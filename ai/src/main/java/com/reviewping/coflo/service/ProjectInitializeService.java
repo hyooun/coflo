@@ -88,7 +88,7 @@ public class ProjectInitializeService {
                 vectorRepository.saveAllChunkedCodes(projectId, branchId, buffer);
             }
         } catch (IOException e) {
-            throw new PreProcessException("파일 전처리 중 예외가 발생했습니다.", e);
+            throw new PreprocessException("파일 전처리 중 예외가 발생했습니다.", e);
         }
     }
 

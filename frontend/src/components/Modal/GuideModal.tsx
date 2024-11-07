@@ -1,8 +1,8 @@
 // components/Modal/GuideModal.tsx
-import { Gitlab } from '@apis/Gitlab';
-import { TokenInput } from '@components/Input/TokenInput';
+// import { useState } from 'react';
 import { X } from 'lucide-react';
-import { useState } from 'react';
+// import { Gitlab } from '@apis/Gitlab';
+import { TokenInput } from '@components/Input/TokenInput';
 import type { GuideModalProps } from 'types/modal.ts';
 
 export default function GuideModal({
@@ -87,9 +87,9 @@ export default function GuideModal({
             <TokenInput
               value={inputProps.value}
               onChange={inputProps.onChange}
-              onValidate={handleValidateToken}
-              isValidating={isValidating}
-              isValid={isTokenValid}
+              // onValidate={handleValidateToken}
+              // isValidating={isValidating}
+              // isValid={isTokenValid}
               labelText={inputProps.labelText || ''}
               placeholder={inputProps.placeholder || ''}
               warningMessage="검증하기 버튼을 눌러 토큰을 검증해주세요."

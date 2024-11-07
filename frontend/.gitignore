@@ -13,6 +13,9 @@ dist
 dist-ssr
 *.local
 src/mocks
+mkcert
+.env
+vite.config.ts
 
 /src/mocks
 

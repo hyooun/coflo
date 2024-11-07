@@ -13,7 +13,7 @@ export const Sidebar = () => {
   const location = useLocation();
 
   return (
-    <div className="h-screen min-w-[250px] max-w-[250px] border-r border-r-solid border-r-[#dfe1e6] bg-[#f4f5f7] flex flex-col items-center px-4 font-pretendard text-sm leading-[1.2] ">
+    <div className="h-screen min-w-[250px] max-w-[250px] border-r border-r-solid border-r-[#dfe1e6] bg-[#f4f5f7] flex flex-col items-center p-4 font-pretendard text-sm leading-[1.2] ">
       <Title />
       <Link to="/main" className="w-full">
         <NavButton active={location.pathname === '/main'} icon={<HomeIcon />}>

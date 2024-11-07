@@ -25,6 +25,7 @@ export interface GuideModalProps {
     value: string;
     onChange: (value: string) => void;
     placeholder?: string;
+    labelText?: string;
   };
   links?: {
     url: string;

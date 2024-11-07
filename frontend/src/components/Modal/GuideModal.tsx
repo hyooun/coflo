@@ -1,5 +1,8 @@
 // components/Modal/GuideModal.tsx
+import { Gitlab } from '@apis/Gitlab';
+import { TokenInput } from '@components/Input/TokenInput';
 import { X } from 'lucide-react';
+import { useState } from 'react';
 import type { GuideModalProps } from 'types/modal.ts';
 
 export default function GuideModal({
@@ -15,6 +18,37 @@ export default function GuideModal({
   links,
 }: GuideModalProps) {
   if (!isOpen) return null;
+  // 프로젝트 아이디 추가 구현
+  // const [botToken, setBotToken] = useState<string>('');
+  // const [isTokenValid, setIsTokenValid] = useState(false);
+  // const [isValidating, setIsValidating] = useState(false);
+  //
+  // const handleValidateToken = async () => {
+  //   if (!botToken) return;
+  //   console.log('토큰 검증 시작');
+  //   console.log(botToken);
+  //   setIsValidating(true);
+  //   try {
+  //     const response = await Gitlab.validateBotToken({
+  //       botToken,
+  //     });
+  //     const isValid = response.data;
+  //     if (isValid) {
+  //       setIsTokenValid(isValid);
+  //       console.log('유효한 토큰입니다.');
+  //       // setIsAlertModalOpen(true);
+  //       // setAlertMessage(['유효한 토큰입니다.', '회원가입을 진행해주세요.']);
+  //     } else {
+  //       console.log('유효하지 않은 토큰입니다.');
+  //       // setIsAlertModalOpen(true);
+  //       // setAlertMessage(['유효하지 않은 토큰입니다.', '다시 한 번 입력해주세요.']);
+  //     }
+  //   } catch (error) {
+  //     setIsTokenValid(false);
+  //   } finally {
+  //     setIsValidating(false);
+  //   }
+  // };
 
   return (
     <div
@@ -50,13 +84,16 @@ export default function GuideModal({
         {/* Input Field */}
         {hasInput && inputProps && (
           <div className="mb-6">
-            <input
-              type="text"
+            <TokenInput
               value={inputProps.value}
-              onChange={(e) => inputProps.onChange(e.target.value)}
-              placeholder={inputProps.placeholder}
-              className="w-full p-3 border-2 border-primary-500 rounded-lg
-                       focus:outline-none"
+              onChange={inputProps.onChange}
+              onValidate={handleValidateToken}
+              isValidating={isValidating}
+              isValid={isTokenValid}
+              labelText={inputProps.labelText || ''}
+              placeholder={inputProps.placeholder || ''}
+              warningMessage="검증하기 버튼을 눌러 토큰을 검증해주세요."
+              showValidateButton={true}
             />
           </div>
         )}

@@ -16,11 +16,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class ProjectInitializeService {
 
@@ -58,12 +60,24 @@ public class ProjectInitializeService {
         String gitUrl = initRequest.gitUrl();
         String branch = initRequest.branch();
         String token = initRequest.token();
+        log.info(
+                "지식베이스 초기화 시작 - Project ID: {}, Branch ID: {}, Git URL: {}, Branch: {}",
+                projectId,
+                branchId,
+                gitUrl,
+                branch);
         // 1. git clone
         String localPath = gitCloneDirectory + projectId + "/" + branch;
         gitUtil.shallowCloneOrPull(gitUrl, branch, token, localPath);
         // 2. 전처리: 메소드 단위 청킹 + 메타데이터 추가
         // 3. 벡터DB에 저장
         preprocessAndSave(projectId, branchId, localPath);
+        log.info(
+                "지식베이스 초기화 완료 - Project ID: {}, Branch ID: {}, Git URL: {}, Branch: {}",
+                projectId,
+                branchId,
+                gitUrl,
+                branch);
     }
 
     private void preprocessAndSave(Long projectId, Long branchId, String localPath) {

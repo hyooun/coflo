@@ -8,8 +8,14 @@ const responseBody = <T>(response: AxiosResponse<ApiResponse<T>>) => response.da
 const apiRequests = {
   get: <T>(url: string, params?: object) =>
     instance.get<ApiResponse<T>>(url, { params }).then(responseBody),
+
+  patch: <T>(url: string, data?: any) =>
+    instance.patch<ApiResponse<T>>(url, data).then(responseBody),
 };
 
 export const Badge = {
   getBadge: (): Promise<ApiResponse<BadgeResponse>> => apiRequests.get<BadgeResponse>('badges'),
+
+  updateMainBadge: (badgeCodeId: string): Promise<ApiResponse<void>> =>
+    apiRequests.patch<void>('badges', { badgeCodeId }),
 };

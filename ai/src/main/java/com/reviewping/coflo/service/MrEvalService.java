@@ -12,9 +12,11 @@ import com.reviewping.coflo.service.dto.response.MrEvalResponseMessage;
 import com.reviewping.coflo.service.dto.response.MrEvalResponseMessage.MrEvaluationMessage;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MrEvalService {
@@ -39,6 +41,7 @@ public class MrEvalService {
         MrEvalRequestMessage evalRequest =
                 jsonUtil.fromJson(mrEvalRequestMessage, new TypeReference<>() {});
 
+        log.info("MR 평가 시작 - MR Info ID: {}", evalRequest.mrInfoId());
         String evalPrompt = buildEvalPrompt(evalRequest.mrContent());
         ChatCompletionResponse chatCompletionResponse = openaiClient.chat(evalPrompt);
         MrEvaluationMessage mrEvaluationMessage =
@@ -48,6 +51,10 @@ public class MrEvalService {
         MrEvalResponseMessage mrEvalResponseMessage =
                 new MrEvalResponseMessage(evalRequest.mrInfoId(), mrEvaluationMessage);
         redisGateway.sendEval(mrEvalResponseMessage);
+        log.info(
+                "MR 평가 완료 - MR Info ID: {}, 평가 결과: {}",
+                evalRequest.mrInfoId(),
+                mrEvaluationMessage);
     }
 
     private String buildEvalPrompt(MrContent mrContent) {

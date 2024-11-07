@@ -17,9 +17,11 @@ import com.reviewping.coflo.service.dto.response.RetrievalMessage;
 import com.reviewping.coflo.service.dto.response.ReviewResponseMessage;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewCreateService {
@@ -38,6 +40,12 @@ public class ReviewCreateService {
                 jsonUtil.fromJson(reviewRequestMessage, new TypeReference<>() {});
         Long projectId = reviewRequest.projectId();
         Long branchId = reviewRequest.branchId();
+        log.info(
+                "리뷰 생성 시작 - GitLab URL: {}, MR Info ID: {}, Project ID: {}, Branch ID: {}",
+                reviewRequest.gitlabUrl(),
+                reviewRequest.mrInfoId(),
+                projectId,
+                branchId);
         // 1. mr 임베딩
         EmbeddingResponse embeddingResponse =
                 openaiClient.generateEmbedding(reviewRequest.mrContent().mrDiffs());
@@ -60,6 +68,11 @@ public class ReviewCreateService {
                         reviewRequest.mrInfoId(),
                         chatMessage,
                         retrievals);
+        log.info(
+                "리뷰 생성 완료 - GitLab URL: {}, MR Info ID: {}, 참고자료 수: {}",
+                reviewResponse.gitlabUrl(),
+                reviewResponse.mrInfoId(),
+                reviewResponse.retrievals().size());
         redisGateway.sendReview(reviewResponse);
     }
 
@@ -68,6 +81,11 @@ public class ReviewCreateService {
         ReviewRegenerateRequestMessage reviewRequest =
                 jsonUtil.fromJson(reviewRegenerateRequestMessage, new TypeReference<>() {});
         // 1. 프롬프트 생성
+        log.info(
+                "리뷰 재생성 시작 - GitLab URL: {}, MR Info ID: {}, 참고자료 수: {}",
+                reviewRequest.gitlabUrl(),
+                reviewRequest.mrInfoId(),
+                reviewRequest.retrievals().size());
         String prompt =
                 buildPrompt(
                         reviewRequest.mrContent(),
@@ -83,6 +101,11 @@ public class ReviewCreateService {
                         reviewRequest.mrInfoId(),
                         chatMessage,
                         reviewRequest.retrievals());
+        log.info(
+                "리뷰 재생성 완료 - GitLab URL: {}, MR Info ID: {}, 참고자료 수: {}",
+                reviewResponse.gitlabUrl(),
+                reviewResponse.mrInfoId(),
+                reviewResponse.retrievals().size());
         redisGateway.sendReview(reviewResponse);
     }
 

@@ -25,5 +25,4 @@ export interface BadgeProps {
 export interface RepresentativeBadgeProps {
   selectedBadge: string | null;
   onSave: () => void;
-  onDefault: () => void;
 }

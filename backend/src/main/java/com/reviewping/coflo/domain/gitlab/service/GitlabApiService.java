@@ -5,7 +5,9 @@ import com.reviewping.coflo.domain.gitlab.controller.dto.response.GitlabProjectP
 import com.reviewping.coflo.domain.gitlab.controller.dto.response.GitlabProjectResponse;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
+import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
+import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectDetailContent;
@@ -24,6 +26,7 @@ public class GitlabApiService {
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
     private final GitlabAccountRepository gitlabAccountRepository;
+    private final UserRepository userRepository;
 
     public GitlabProjectPageResponse getGitlabProjects(
             Long userId, GitlabSearchRequest gitlabSearchRequest) {
@@ -49,6 +52,17 @@ public class GitlabApiService {
     public Boolean validateUserToken(String domain, String userToken) {
         try {
             gitLabClient.getUserInfo(domain, userToken);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Boolean validateBotToken(Long userId, Long gitlabProjectId, String botToken) {
+        try {
+            User user = userRepository.getById(userId);
+            gitLabClient.getSingleProject(
+                    user.getGitlabAccounts().getFirst().getDomain(), botToken, gitlabProjectId);
             return true;
         } catch (Exception e) {
             return false;

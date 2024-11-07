@@ -1,6 +1,6 @@
 package com.reviewping.coflo.global.auth.jwt.filter;
 
-import static com.reviewping.coflo.global.error.ErrorCode.*;
+import static com.reviewping.coflo.global.error.ErrorCode.TOKEN_INVALID;
 
 import com.reviewping.coflo.global.auth.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtProvider;
@@ -35,7 +35,8 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
         "/actuator/**",
         "/api/users/me",
         "/favicon.ico",
-        "/webhook/*"
+        "/webhook/*",
+        "/actuator/**"
     };
 
     @Override

@@ -6,8 +6,11 @@ import { isConnectAtom, isLoginAtom, isSignupAtom } from '@store/auth';
 const VITE_REDIRECT_URL = import.meta.env.VITE_REDIRECT_URL;
 const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+const getRedirectUrl = (provider: string) =>
+  encodeURIComponent(`${VITE_REDIRECT_URL}/login/callback/${provider}`);
+
 export function login(provider: 'kakao' | 'google') {
-  const redirectUrl = encodeURIComponent(`${VITE_REDIRECT_URL}/login/callback/${provider}`);
+  const redirectUrl = getRedirectUrl(provider);
   window.location.replace(
     `${VITE_API_BASE_URL}/api/oauth2/authorization/${provider}?redirect_url=${redirectUrl}`,
   );
@@ -27,7 +30,7 @@ export function OAuthRedirectHandler() {
       return;
     }
 
-    const redirectUrl = encodeURIComponent(`${VITE_REDIRECT_URL}/login/callback/${provider}`);
+    const redirectUrl = getRedirectUrl(provider);
 
     fetch(`${VITE_API_BASE_URL}/api/oauth2/authorization/${provider}?redirect_url=${redirectUrl}`, {
       mode: 'no-cors',

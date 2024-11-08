@@ -3,6 +3,8 @@ import PrevPrompt from './PrevPrompt';
 import AlertModal from '@components/Modal/AlertModal';
 import { customPrompt } from '@apis/CustomPrompt';
 import { useNavigate } from 'react-router-dom';
+import { projectIdAtom } from '@store/auth';
+import { useAtom } from 'jotai';
 
 const CustomPromptContainer = () => {
   const [content, setContent] = useState<string>('');
@@ -23,7 +25,9 @@ const CustomPromptContainer = () => {
       return;
     }
 
-    const projectId = '1';
+    const [projectId] = useAtom(projectIdAtom);
+
+    if (!projectId) return;
 
     const response = await customPrompt.updateCustomPrompt(projectId, { promptText: content });
 
@@ -33,6 +37,7 @@ const CustomPromptContainer = () => {
       navigate(0);
     }
   };
+
   return (
     <>
       <div className="flex flex-col gap-6 min-w-[600px]">

@@ -21,6 +21,8 @@ import {
 import Title from '@components/Title/Title';
 import BestMergeRequestList from '@components/Home/BestMergeRequest/BestMergeRequestList.tsx';
 import { ProgrammingLanguagesData } from 'types/language';
+import { projectIdAtom } from '@store/auth';
+import { useAtom } from 'jotai';
 
 const HomePage = () => {
   const initialProjectDetail = {
@@ -63,7 +65,7 @@ const HomePage = () => {
     mergeRequestCount: number;
     aiReviewCount: number;
   }>(initialProjectDetail);
-  const projectId = 'your_project_id';
+  const [projectId] = useAtom(projectIdAtom);
 
   const handleSelect = (chart: string) => {
     setSelectedChart(chart);
@@ -100,6 +102,7 @@ const HomePage = () => {
     };
 
     const fetchData = async () => {
+      if (!projectId) return;
       const {
         lineData: fetchedLineData,
         cubicLineData: fetchedCubicLineData,
@@ -124,6 +127,7 @@ const HomePage = () => {
   }, [selectedChart, projectId]);
 
   useEffect(() => {
+    if (!projectId) return;
     const loadProjectData = async () => {
       const langauageData = await fetchProjectDetail(projectId);
       const teamScoreData = await fetchProjectTeamScore(projectId);
@@ -140,7 +144,7 @@ const HomePage = () => {
   }, [projectId]);
 
   const fixedSpacing = 22;
-  const offset = totalUsers <= 1 ? 0 : (containerHeight - totalUsers * fixedSpacing) / 2 + 88;
+  const offset = totalUsers < 1 ? 0 : (containerHeight - totalUsers * fixedSpacing) / 2 + 87;
 
   useEffect(() => {
     if (containerRef.current) {

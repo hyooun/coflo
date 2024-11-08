@@ -83,6 +83,9 @@ dependencies {
     // prometheus
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // graphQL
+    implementation 'org.springframework.boot:spring-boot-starter-graphql'
 }
 
 // 의존성 전이를 비활성화

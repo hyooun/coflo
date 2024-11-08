@@ -70,7 +70,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         if (isConnect && projectId == null) {
             UserProject userProject =
                     userProjectRepository.findTopByUserIdOrderByCreatedDateDesc(userId);
-            projectId = userProject.getId();
+            projectId = userProject.getProject().getId();
         }
 
         String redirectUrl = cookieUtil.getCookieValue(request, "redirect_url");

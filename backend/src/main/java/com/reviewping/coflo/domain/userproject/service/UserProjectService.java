@@ -61,6 +61,12 @@ public class UserProjectService {
     public UserProjectStatusResponse hasLinkedProject(Long userId) {
         GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(userId);
         Boolean hasLinkedProject = userProjectRepository.existsByGitlabAccountUserId(userId);
+        Long recentVisitedProjectId = gitlabAccount.getVisitedProjectId();
+        if (hasLinkedProject && recentVisitedProjectId == null) {
+            UserProject userProject =
+                    userProjectRepository.findTopByUserIdOrderByCreatedDateDesc(userId);
+            recentVisitedProjectId = userProject.getProject().getId();
+        }
         return new UserProjectStatusResponse(hasLinkedProject, gitlabAccount.getVisitedProjectId());
     }
 

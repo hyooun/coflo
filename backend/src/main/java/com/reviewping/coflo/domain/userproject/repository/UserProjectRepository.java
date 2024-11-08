@@ -31,7 +31,7 @@ public interface UserProjectRepository
     @Query(
             "SELECT up FROM UserProject up JOIN up.gitlabAccount gl JOIN gl.user u "
                     + "WHERE u.id = :userId ORDER BY up.createdDate DESC LIMIT 1")
-    UserProject findByUserId(@Param("userId") Long userId);
+    UserProject findTopByUserIdOrderByCreatedDateDesc(@Param("userId") Long userId);
 
     default UserProject getByProjectAndGitlabAccount(Project project, GitlabAccount gitlabAccount) {
         return findByProjectAndGitlabAccount(project, gitlabAccount)

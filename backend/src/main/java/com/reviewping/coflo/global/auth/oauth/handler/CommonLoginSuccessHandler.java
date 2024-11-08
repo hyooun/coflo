@@ -68,7 +68,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         Long projectId = userService.getRecentVisitProjectId(user);
 
         if (isConnect && projectId == null) {
-            UserProject userProject = userProjectRepository.findByUserId(userId);
+            UserProject userProject = userProjectRepository.findTopByUserIdOrderByCreatedDateDesc(userId);
             projectId = userProject.getId();
         }
 

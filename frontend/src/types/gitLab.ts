@@ -7,12 +7,14 @@ export interface GitlabProject {
 
 export interface GitlabProjectListResponse {
   gitlabProjectList: GitlabProject[];
-  pageInfo: {
-    startCursor: string;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-    endCursor: string;
-  };
+  pageInfo: PageInfo;
+}
+
+export interface PageInfo {
+  startCursor: string;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  endCursor: string;
 }
 
 export interface ValidateUserTokenRequest {

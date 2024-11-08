@@ -16,12 +16,11 @@ public class ChunkedCodeRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private MapSqlParameterSource createParameterSource(
-            Long projectId, Long branchId, ChunkedCode chunkedCode) throws SQLException {
+    private MapSqlParameterSource createParameterSource(Long branchInfoId, ChunkedCode chunkedCode)
+            throws SQLException {
         PGvector embeddingVector = new PGvector(chunkedCode.getEmbedding());
         return new MapSqlParameterSource()
-                .addValue("projectId", projectId)
-                .addValue("branchId", branchId)
+                .addValue("branchInfoId", branchInfoId)
                 .addValue("language", chunkedCode.getLanguage())
                 .addValue("content", chunkedCode.getContent())
                 .addValue("fileName", chunkedCode.getFileName())
@@ -29,16 +28,16 @@ public class ChunkedCodeRepository {
                 .addValue("embedding", embeddingVector);
     }
 
-    public void saveAllChunkedCodes(Long projectId, Long branchId, List<ChunkedCode> chunkedCodes) {
+    public void saveAllChunkedCodes(Long branchInfoId, List<ChunkedCode> chunkedCodes) {
         String sql =
-                "INSERT INTO chunked_code (project_id, branch_id, language, content, file_name,"
-                    + " file_path, embedding) VALUES (:projectId, :branchId, :language, :content,"
-                    + " :fileName, :filePath, :embedding)";
+                "INSERT INTO chunked_code (branch_info_id, language, content, file_name,"
+                        + " file_path, embedding) VALUES (:branchInfoId, :language, :content,"
+                        + " :fileName, :filePath, :embedding)";
         MapSqlParameterSource[] batchValues = new MapSqlParameterSource[chunkedCodes.size()];
 
         try {
             for (int i = 0; i < chunkedCodes.size(); i++) {
-                batchValues[i] = createParameterSource(projectId, branchId, chunkedCodes.get(i));
+                batchValues[i] = createParameterSource(branchInfoId, chunkedCodes.get(i));
             }
             int[] ints = namedParameterJdbcTemplate.batchUpdate(sql, batchValues);
         } catch (SQLException e) {
@@ -49,12 +48,12 @@ public class ChunkedCodeRepository {
     public List<ChunkedCode> retrieveRelevantData(
             Long projectId, Long branchId, int count, float[] queryEmbedding) {
         String sql =
-                "SELECT content, file_name, file_path, embedding, language "
-                        + "FROM chunked_code "
-                        + "WHERE project_id = :projectId AND branch_id = :branchId "
-                        + "ORDER BY embedding <=> :embedding::vector "
+                "SELECT cc.content, cc.file_name, cc.file_path, cc.embedding, cc.language "
+                        + "FROM chunked_code cc "
+                        + "INNER JOIN branch_info bi ON cc.branch_info_id = bi.id "
+                        + "WHERE bi.project_id = :projectId AND bi.branch_id = :branchId "
+                        + "ORDER BY cc.embedding <=> :embedding::vector "
                         + "LIMIT :limit";
-
         PGvector embeddingVector = new PGvector(queryEmbedding);
 
         MapSqlParameterSource params =

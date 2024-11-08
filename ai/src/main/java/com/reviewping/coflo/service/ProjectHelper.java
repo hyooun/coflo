@@ -25,7 +25,7 @@ public class ProjectHelper {
     private final OpenaiClient openaiClient;
 
     @Transactional
-    public void preprocessAndSave(Long projectId, Long branchId, Stream<Path> filePathStream) {
+    public void preprocessAndSave(Long branchInfoId, Stream<Path> filePathStream) {
         List<ChunkedCode> buffer = new ArrayList<>(BATCH_SIZE);
 
         filePathStream
@@ -37,15 +37,14 @@ public class ProjectHelper {
                         chunkedCode -> {
                             buffer.add(chunkedCode);
                             if (buffer.size() >= BATCH_SIZE) {
-                                chunkedCodeRepository.saveAllChunkedCodes(
-                                        projectId, branchId, buffer);
+                                chunkedCodeRepository.saveAllChunkedCodes(branchInfoId, buffer);
                                 buffer.clear();
                             }
                         });
 
         // 남아있는 데이터가 있으면 마지막으로 저장
         if (!buffer.isEmpty()) {
-            chunkedCodeRepository.saveAllChunkedCodes(projectId, branchId, buffer);
+            chunkedCodeRepository.saveAllChunkedCodes(branchInfoId, buffer);
         }
     }
 

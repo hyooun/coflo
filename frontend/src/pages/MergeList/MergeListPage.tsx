@@ -26,9 +26,22 @@ const MergeListPage = () => {
     setCurrentStatus(status);
   };
 
-  const handleSearch = (keyword: string, searchType: string) => {
+  const handleSearch = async (keyword: string, searchType: string) => {
     setSearchKeyword(keyword);
     setSearchType(searchType);
+
+    if (!projectId) return;
+
+    const response = await MergeRequest.getMrList(projectId, currentStatus, {
+      keyword: keyword,
+      page: Number(currentPage),
+      size: Number(itemsPerPage),
+    });
+
+    if (response.data) {
+      setTotalPages(response.data.totalPages ?? 1);
+      setMergeRequests(response.data.gitlabMrList);
+    }
   };
 
   const handleItemClick = (id: number) => {
@@ -37,9 +50,8 @@ const MergeListPage = () => {
 
   useEffect(() => {
     const fetchMergeRequests = async () => {
-      if (!projectId) {
-        return;
-      }
+      if (!projectId) return;
+
       const response = await MergeRequest.getMrList(projectId, currentStatus, {
         keyword: searchKeyword,
         page: Number(currentPage),
@@ -51,7 +63,6 @@ const MergeListPage = () => {
         setMergeRequests(response.data.gitlabMrList);
       }
     };
-
     fetchMergeRequests();
   }, [projectId, currentStatus, currentPage]);
 
@@ -62,7 +73,7 @@ const MergeListPage = () => {
         <CustomSearchBar onSearch={handleSearch} />
       </div>
 
-      <div className="bg-white flex flex-col justify-between h-full py-4">
+      <div className="bg-white flex flex-col justify-start h-full py-4">
         {mergeRequests.length === 0 ? (
           <EmptyMergeRequest />
         ) : (

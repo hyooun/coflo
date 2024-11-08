@@ -34,4 +34,12 @@ public class UserController {
         userService.synchronizeUserInfo(user.getId());
         return ApiSuccessResponse.success();
     }
+
+    @PatchMapping("/recent-project/{projectId}")
+    @Operation(summary = "최근 조회한 프로젝트 식별자", description = "GitlabAccount의 recentProjectId 변경")
+    public ApiResponse<Void> updateRecentProject(
+            @AuthUser User user, @PathVariable Long projectId) {
+        userService.updateRecentProjectId(user.getId(), projectId);
+        return ApiSuccessResponse.success();
+    }
 }

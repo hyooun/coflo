@@ -1,5 +1,6 @@
 package com.reviewping.coflo.domain.gitlab.controller;
 
+import com.reviewping.coflo.domain.gitlab.controller.dto.request.BotTokenValidateRequest;
 import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.domain.gitlab.controller.dto.response.GitlabProjectPageResponse;
 import com.reviewping.coflo.domain.gitlab.service.GitlabApiService;
@@ -52,5 +53,16 @@ public class GitlabApiController {
         return ApiSuccessResponse.success(
                 gitlabApiService.validateUserToken(
                         gitlabAccountRequest.domain(), gitlabAccountRequest.userToken()));
+    }
+
+    @PostMapping("/bot-token/validate")
+    @Operation(summary = "Bot Token 유효성 검증")
+    public ApiResponse<Boolean> validateUserToken(
+            @AuthUser User user, @RequestBody BotTokenValidateRequest botTokenValidateRequest) {
+        return ApiSuccessResponse.success(
+                gitlabApiService.validateBotToken(
+                        user.getId(),
+                        botTokenValidateRequest.gitlabProjectId(),
+                        botTokenValidateRequest.botToken()));
     }
 }

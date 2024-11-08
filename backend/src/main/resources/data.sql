@@ -1,44 +1,48 @@
 -- code_quality
-INSERT INTO code_quality_code (id, name) VALUES (1,'가독성'), (2, '일관성'), (3, '재사용성'), (4, '신뢰성'), (5, '보안성'), (6, '유지보수성');
+INSERT INTO code_quality_code (id, name)
+VALUES (1, '가독성'),
+       (2, '일관성'),
+       (3, '재사용성'),
+       (4, '신뢰성'),
+       (5, '보안성'),
+       (6, '유지보수성');
 
 -- language
-INSERT INTO Language (type) VALUES
-('TYPESCRIPT'),
-('JAVASCRIPT'),
-('PYTHON'),
-('JAVA'),
-('C'),
-('CPP'),
-('CSHARP'),
-('GO'),
-('RUBY'),
-('RUST'),
-('SWIFT'),
-('PHP'),
-('SHELL'),
-('SQL'),
-('HTML'),
-('CSS'),
-('PLAINTEXT');
+INSERT INTO badge_code (id, name, description, image_url)
+VALUES (1, '첫 모험가', '처음 서비스 가입 시 기본 획득', 'https://velog.velcdn.com/images/fkgnssla/post/24b35aef-1f43-4fe2-b570-62354fd95f2f/image.png'),
+       (2, '리뷰 탐색자', '첫 AI리뷰 재생성', 'https://velog.velcdn.com/images/fkgnssla/post/5c9ebbcc-6866-4c04-8039-f9a5a3509f88/image.png'),
+       (3, '프로젝트 마스터', '연동한 프로젝트 개수 20개 이상 시 획득', 'https://velog.velcdn.com/images/fkgnssla/post/ced9a828-2a60-423e-be0a-1c5f2879559b/image.png'),
+       (4, '코드 마스터', 'AI 리뷰평가 리워드 합이 55점 이상 시 획득', 'https://velog.velcdn.com/images/fkgnssla/post/653d5a7c-34ce-4861-929a-35bc61558a8b/image.png'),
+       (5, '행운의 발견', '접속 시 3% 확률로 랜덤 획득', 'https://velog.velcdn.com/images/fkgnssla/post/0d6b5f9e-da96-479f-963d-9ddd12db9d57/image.png'),
+       (6, '단골 손님', '서비스 로그인 100회 이상 (1일 1회)', 'https://velog.velcdn.com/images/fkgnssla/post/80ca6e90-aa18-4af5-b8b7-768ef1445d8a/image.png'),
+       (7, '정복자', '베스트 MR에 50회 이상 선정 시 획득', 'https://velog.velcdn.com/images/fkgnssla/post/11aef17c-c14e-46db-a006-4d4feb20ac22/image.png'),
+       (8, '프롬프트 창조자', '커스텀 프롬포트 등록/수정 100회 이상', 'https://velog.velcdn.com/images/fkgnssla/post/e950ed7f-69e9-453e-8022-eb529255c323/image.png'),
+       (9, '전설의 모험가', '9개의 뱃지를 모두 획득하면 획득', 'https://velog.velcdn.com/images/fkgnssla/post/00d0f3e4-6b55-4db7-a65c-6f77747631af/image.png');
 
 -- badge
-INSERT INTO badge_code (id, name, description, image_url) VALUES
-(1, '첫 모험가', '처음 서비스 가입 시 기본 획득', 'https://example.com/images/badge1.png'),
-(2, '리뷰 탐색자', '첫 AI리뷰 재생성', 'https://example.com/images/badge2.png'),
-(3, '프로젝트 개척자', '연동한 프로젝트 개수 n개 이상 시 획득', 'https://example.com/images/badge3.png'),
-(4, '헌신의 발자국', '커밋 개수 n개 이상 시 획득', 'https://example.com/images/badge4.png'),
-(5, '코드 마스터', 'AI 리뷰평가 리워드 합이 n점 이상 시 획득', 'https://example.com/images/badge5.png'),
-(6, '행운의 발견', '접속 시 3% 확률로 랜덤 획득', 'https://example.com/images/badge6.png'),
-(7, '단골 손님', '서비스 로그인 n회 이상 (1일 1회)', 'https://example.com/images/badge7.png'),
-(8, '성장의 발자취', '직접 작성한 리뷰가 n개 이상 시 획득', 'https://example.com/images/badge8.png'),
-(9, '도전의 기록', 'MR 개수가 n개 이상 시 획득', 'https://example.com/images/badge9.png'),
-(10, '인정받는 리뷰어', '내가 쓴 리뷰 좋아요가 n개 이상 시 획득', 'https://example.com/images/badge10.png'),
-(11, '마스터 리뷰어', '베스트 MR에 n회 이상 선정 시 획득', 'https://example.com/images/badge11.png'),
-(12, '프롬프트 창조자', '커스텀 프롬포트 등록/수정 n회 이상', 'https://example.com/images/badge12.png'),
-(13, '전설의 모험가', '12개의 핑을 모두 획득하면 획득', 'https://example.com/images/badge13.png');
+INSERT INTO channel_code (id, name)
+VALUES (1, 'MATTERMOST'),
+       (2, 'DISCORD');
 
 -- channel_code
-INSERT INTO channel_code (id, name) VALUES (1, 'MATTERMOST'), (2, 'DISCORD');
+INSERT INTO Language (type)
+VALUES ('TYPESCRIPT'),
+       ('JAVASCRIPT'),
+       ('PYTHON'),
+       ('JAVA'),
+       ('C'),
+       ('CPP'),
+       ('CSHARP'),
+       ('GO'),
+       ('RUBY'),
+       ('RUST'),
+       ('SWIFT'),
+       ('PHP'),
+       ('SHELL'),
+       ('SQL'),
+       ('HTML'),
+       ('CSS'),
+       ('PLAINTEXT');
 
 -- //============================================================================// --
 

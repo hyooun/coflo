@@ -22,7 +22,7 @@ public class MergeRequestController {
 
     private final MergeRequestService mergeRequestService;
 
-    @GetMapping
+    @PostMapping
     @Operation(summary = "프로젝트의 merge request 목록 조회", description = "키워드 검색 가능, 상태 필터, 페이지네이션 제공")
     public ApiResponse<GitlabMrPageResponse> getGitlabMergeRequests(
             @AuthUser User user,

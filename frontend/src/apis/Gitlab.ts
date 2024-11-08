@@ -24,8 +24,8 @@ export const Gitlab = {
   validateBotToken: (data: ValidateBotTokenRequest): Promise<ApiResponse<boolean>> =>
     apiRequests.post<boolean>('gitlab/bot-token/validate', data),
 
-  getGitlabProjectBranched: (gitlabProjectId: number): Promise<ApiResponse<boolean>> =>
-    apiRequests.get<boolean>(`gitlab/${gitlabProjectId}/branches`),
+  getGitlabProjectBranches: (gitlabProjectId: number): Promise<ApiResponse<string[]>> =>
+    apiRequests.get<string[]>(`gitlab/${gitlabProjectId}/branches`),
 
   getGitlabProjects: (
     keyword?: string,

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { customPrompt } from '@apis/CustomPrompt';
+import { projectIdAtom } from '@store/auth';
+import { useAtom } from 'jotai';
 
 interface CustomPrompt {
   customPromptId: string;
@@ -7,15 +9,16 @@ interface CustomPrompt {
 }
 
 const PrevPrompt = () => {
-  const projectId = '1';
+  const [projectId] = useAtom(projectIdAtom);
   const [prevPrompt, setPrevPrompt] = useState<CustomPrompt | null>(null);
 
   useEffect(() => {
     const fetchPrevPrompt = async () => {
+      if (!projectId) return;
       const response = await customPrompt.getCustomPrompt(projectId);
       const data = response.data;
       if (data) {
-        setPrevPrompt(data);
+        setPrevPrompt({ customPromptId: data.customPromptId, content: data.content });
       }
     };
 

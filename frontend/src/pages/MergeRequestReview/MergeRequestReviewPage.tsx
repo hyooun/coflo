@@ -7,17 +7,19 @@ import { Reference } from 'types/reference';
 import { useEffect, useState } from 'react';
 import ReferencesList from '@components/MergeRequest/Review/ReviewReferenceList.tsx';
 import { Review } from '@apis/Review';
+import { projectIdAtom } from '@store/auth';
+import { useAtom } from 'jotai';
 
 const MergeRequestReviewPage = () => {
   const { id } = useParams<{ id: string }>();
-  const projectId = 'your_project_id';
+  const [projectId] = useAtom(projectIdAtom);
   const [mergeRequest, setMergeRequest] = useState<GitlabMergeRequest | null>(null);
   const [reviews, setReviews] = useState<MergeRequestReview['reviews']>([]);
   const [references, setReferences] = useState<Reference[]>([]);
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || !projectId) return;
 
     const fetchMergeRequest = async (projectId: string, id: string) => {
       const response = await Review.getCodeReviewList(projectId, id);
@@ -29,7 +31,7 @@ const MergeRequestReviewPage = () => {
     };
 
     fetchMergeRequest(projectId, id);
-  }, [id]);
+  }, [id, projectId]);
 
   useEffect(() => {
     if (!selectedReviewId) return;

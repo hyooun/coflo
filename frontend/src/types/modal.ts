@@ -15,6 +15,7 @@ export interface GuideModalProps {
   width?: string;
   title: string;
   content?: React.ReactNode;
+  contentBottom?: React.ReactNode;
   image?: {
     src: string;
     alt: string;
@@ -37,6 +38,7 @@ export interface GuideModalProps {
     text: string;
     icon?: React.ReactNode;
   }[];
+  children?: React.ReactNode;
 }
 
 export interface AlertModalProps {

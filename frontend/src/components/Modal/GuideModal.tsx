@@ -13,6 +13,7 @@ export default function GuideModal({
   width = 'w-[600px]',
   title,
   content,
+  contentBottom,
   image,
   onClose,
   onConfirm,
@@ -79,7 +80,7 @@ export default function GuideModal({
     >
       <div
         className={`bg-white p-8 border-2 border-primary-500 rounded-xl ${width} max-h-[90vh] relative`}
-        onClick={(e) => e.stopPropagation()} // 모달 내부 클릭 시 닫히지 않도록
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
@@ -138,6 +139,8 @@ export default function GuideModal({
             ))}
           </div>
         )}
+
+        {contentBottom && <div className="mb-6 space-y-2">{contentBottom}</div>}
 
         {/* Confirm Button */}
         {onConfirm && (

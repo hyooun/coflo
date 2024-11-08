@@ -14,7 +14,7 @@ export function CommonButton({
 
   return (
     <div
-      className={`${className} font-pretendard flex flex-row items-center rounded-3xl 
+      className={`${className} font-pretendard flex flex-row items-center rounded-3xl
         ${currentBgColor} ${currentHoverColor} text-white transition-colors duration-200
         ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
       onClick={disabled ? undefined : onClick}

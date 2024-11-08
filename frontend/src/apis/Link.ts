@@ -17,8 +17,10 @@ const apiRequests = {
 };
 
 export const UserProject = {
-  updateRepository: (repoId: number, data: { botToken?: string }): Promise<ApiResponse<any>> =>
-    apiRequests.post(`user-project/${repoId}`, data),
+  updateRepository: (
+    repoId: number,
+    data: { botToken?: string; branches?: string[] },
+  ): Promise<ApiResponse<any>> => apiRequests.post(`user-project/${repoId}`, data),
 
   getLinkStatus: (): Promise<ApiResponse<{ isLinked: boolean }>> =>
     apiRequests.get<{ isLinked: boolean }>(`user-project/status`),

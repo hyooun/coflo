@@ -38,12 +38,12 @@ export function OAuthRedirectHandler() {
     // });
 
     const searchParams = new URLSearchParams(window.location.search);
-    console.log('파싱된 쿼리 파라미터:', {
-      isSignup: searchParams.get('isSignup'),
-      isConnect: searchParams.get('isConnect'),
-      projectId: searchParams.get('projectId'),
-      raw: Object.fromEntries(searchParams.entries()),
-    });
+    // console.log('파싱된 쿼리 파라미터:', {
+    //   isSignup: searchParams.get('isSignup'),
+    //   isConnect: searchParams.get('isConnect'),
+    //   projectId: searchParams.get('projectId'),
+    //   raw: Object.fromEntries(searchParams.entries()),
+    // });
 
     const isSignup = searchParams.get('isSignup') === 'true';
     const isConnect = searchParams.get('isConnect') === 'true';
@@ -58,13 +58,17 @@ export function OAuthRedirectHandler() {
     setIsConnect(isConnect);
     setProjectId(projectId);
 
+    if (!isSignup) {
+      navigate('/signup', { replace: true });
+      return;
+    }
+
     if (isSignup && isConnect && projectId) {
       navigate(`/${projectId}/main`, { replace: true });
-    } else if (!isSignup) {
-      navigate('/signup', { replace: true });
-    } else {
-      navigate('/repository', { replace: true });
+      return;
     }
+
+    navigate('/repository', { replace: true });
   }, [provider, navigate, setIsLogin, setIsSignup, setIsConnect, setProjectId]);
 
   return null;

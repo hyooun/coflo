@@ -3,17 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { Project } from 'types/project';
 import { ProjectSelectorProps } from 'types/project';
+import { projectIdAtom } from '@store/auth';
+import { useAtom } from 'jotai';
+import { UserProject } from '@apis/Link';
 
 const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [projects, setProjects] = useState<Project[]>([]);
-  const [selectedProject, setSelectedProject] = useState<Project>({ id: '', name: '' });
+  const [selectedProject, setSelectedProject] = useState<Project>({ projectId: '', name: '' });
   const searchInputRef = useRef<HTMLInputElement>(null);
   const selectorRef = useRef<HTMLDivElement>(null);
 
   // 임시 현재 프로젝트 ID
-  const currentProjectId = 'project1';
+  const [currentProjectId] = useAtom(projectIdAtom);
 
   const filterFunction = (project: Project, query: string) =>
     project.name.toLowerCase().includes(query.toLowerCase());
@@ -21,19 +24,23 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
   const filteredItems = projects.filter((project) => filterFunction(project, searchQuery));
 
   useEffect(() => {
-    // 임시 데이터
-    const fetchedProjects = [
-      { id: 'project1', name: '프로젝트 1' },
-      { id: 'reviewping', name: 'ReviewPing' },
-      { id: 'melting', name: 'Melting' },
-      { id: 'project3', name: '프로젝트 3' },
-      { id: 'project4', name: '프로젝트 4' },
-      { id: 'project5', name: '프로젝트 5' },
-    ];
+    if (!currentProjectId) return;
+    const fetchedProjects = async () => {
+      try {
+        const response = await UserProject.getUserProjects({ currentProjectId });
+        console.log(response);
+        console.log(response.data);
+        setProjects(response.data || []);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
 
-    const projectsWithCurrent = fetchedProjects.map((project) => ({
+    fetchedProjects();
+
+    const projectsWithCurrent = projects.map((project) => ({
       ...project,
-      isCurrent: project.id === currentProjectId,
+      isCurrent: project.projectId === currentProjectId,
     }));
 
     setProjects(projectsWithCurrent);
@@ -96,7 +103,7 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
           ) : (
             filteredItems.map((project) => (
               <button
-                key={project.id}
+                key={project.projectId}
                 onClick={() => {
                   setSelectedProject(project);
                   onClose();
@@ -104,7 +111,7 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
                 className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors flex justify-between items-center"
               >
                 <span>{project.name}</span>
-                {project.isCurrent && (
+                {project.projectId === currentProjectId && (
                   <span className="text-xs bg-primary-500 text-white px-2 py-0.5 rounded-full">
                     current
                   </span>

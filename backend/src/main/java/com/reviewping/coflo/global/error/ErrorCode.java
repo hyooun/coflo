@@ -37,6 +37,7 @@ public enum ErrorCode {
      * REVIEW(D000)
      */
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "D001", "존재하지 않는 리뷰입니다."),
+    UNSUPPORTED_LANGUAGE(HttpStatus.INTERNAL_SERVER_ERROR, "D002", "지원하지 않는 언어입니다."),
 
     /**
      * JWT TOKEN(E000)

@@ -20,26 +20,7 @@
             <charset>UTF-8</charset>
             <pattern>%d{MM-dd HH:mm:ss} [%p] %c{1}.%M - %m%n</pattern>
         </encoder>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-    </appender>
-
-    <appender name="FILE_DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/logs/debug.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/logs/debug%d{yyyy-MM-dd}.log.zip</fileNamePattern>
-            <maxFileSize>10MB</maxFileSize>
-            <maxHistory>20</maxHistory>
-            <totalSizeCap>100MB</totalSizeCap>
-        </rollingPolicy>
-        <encoder>
-            <charset>UTF-8</charset>
-            <pattern>%d{MM-dd HH:mm:ss} [%p] %c{1}.%M - %m%n</pattern>
-        </encoder>
-        <filter class="ch.qos.logback.core.filter.ThresholdFilter">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
         </filter>
     </appender>
@@ -86,10 +67,9 @@
     <logger name="org.hibernate" level="INFO"/>
     <logger name="org.apache.http" level="INFO"/>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE_INFO"/>
-        <appender-ref ref="FILE_DEBUG"/>
         <appender-ref ref="FILE_WARN"/>
         <appender-ref ref="FILE_ERROR"/>
     </root>

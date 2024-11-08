@@ -6,7 +6,7 @@ import com.reviewping.coflo.domain.customprompt.entity.CustomPrompt;
 import com.reviewping.coflo.domain.customprompt.repository.CustomPromptRepository;
 import com.reviewping.coflo.domain.project.entity.Branch;
 import com.reviewping.coflo.domain.project.entity.Project;
-import com.reviewping.coflo.domain.project.message.InitRequestMessage;
+import com.reviewping.coflo.domain.project.message.UpdateRequestMessage;
 import com.reviewping.coflo.domain.project.repository.BranchRepository;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
@@ -62,14 +62,15 @@ public class ProjectService {
             Project project, List<Branch> branches, String token, String gitlabUrl) {
         branches.forEach(
                 branch -> {
-                    InitRequestMessage initRequest =
-                            new InitRequestMessage(
+                    UpdateRequestMessage initRequest =
+                            new UpdateRequestMessage(
                                     project.getId(),
                                     branch.getId(),
                                     gitlabUrl,
                                     branch.getName(),
-                                    token);
-                    redisGateway.sendInitRequest(initRequest);
+                                    token,
+                                    "");
+                    redisGateway.sendUpdateRequest(initRequest);
                 });
     }
 

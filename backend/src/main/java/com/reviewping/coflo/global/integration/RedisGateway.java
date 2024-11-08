@@ -1,6 +1,6 @@
 package com.reviewping.coflo.global.integration;
 
-import com.reviewping.coflo.domain.project.message.InitRequestMessage;
+import com.reviewping.coflo.domain.project.message.UpdateRequestMessage;
 import com.reviewping.coflo.domain.review.message.MrEvalRequestMessage;
 import com.reviewping.coflo.domain.review.message.ReviewRegenerateRequestMessage;
 import com.reviewping.coflo.domain.review.message.ReviewRequestMessage;
@@ -11,8 +11,8 @@ import org.springframework.integration.annotation.MessagingGateway;
 @MessagingGateway(defaultRequestChannel = "redisOutboundChannel")
 public interface RedisGateway {
 
-    @Gateway(headers = @GatewayHeader(name = "topic", value = "init"))
-    void sendInitRequest(InitRequestMessage initRequest);
+    @Gateway(headers = @GatewayHeader(name = "topic", value = "update"))
+    void sendUpdateRequest(UpdateRequestMessage updateRequest);
 
     @Gateway(headers = @GatewayHeader(name = "topic", value = "review-request"))
     void sendReviewRequest(ReviewRequestMessage reviewRequestMessage);

@@ -159,6 +159,7 @@ export default function RepositoryPage() {
           }
           contentBottom={
             <div className="mt-4">
+              <label className="block mb-2 text-2xl">참조할 브랜치</label>
               <BranchSelector
                 value={selectedBranches}
                 onChange={setSelectedBranches}
@@ -188,6 +189,7 @@ export default function RepositoryPage() {
             setIsModalOpen(false);
             setSelectedRepo(null);
             setInputValue('');
+            setSelectedBranches([]);
           }}
           onConfirm={handleModalConfirm}
           gitlabProjectId={String(selectedRepo.gitlabProjectId)}

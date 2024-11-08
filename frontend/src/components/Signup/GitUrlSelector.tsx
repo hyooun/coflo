@@ -27,7 +27,7 @@ const GitUrlSelector = ({ value, onChange, labelText }: GitUrlSelectorProps) => 
       <CommonSelector<GitUrlOption>
         selectedItems={[selectedOption]}
         items={gitUrlOptions}
-        onSelect={(option) => onChange(option.value)}
+        onSelect={(option: GitUrlOption[]) => onChange(option[0].value)}
         displayValue={(option) => option.label}
         showSearch={false}
         className="relative"

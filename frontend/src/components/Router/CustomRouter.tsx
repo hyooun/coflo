@@ -35,7 +35,7 @@ const customRouter = createBrowserRouter([
     element: <RepositoryLayout />,
   },
   {
-    path: '/main',
+    path: '/:projectId/main',
     element: <MainLayout />,
     children: [
       {

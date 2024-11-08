@@ -63,18 +63,21 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         loginHistoryService.recordLogin(user);
         badgeEventService.eventRandom(user);
 
-        boolean isSignUp = username == null ? true : false;
+        boolean isSignUp = username == null ? false : true;
         boolean isConnect = userService.isConnect(userId);
         Long projectId = userService.getRecentVisitProjectId(user);
 
         if (isConnect && projectId == null) {
-            UserProject userProject = userProjectRepository.findTopByUserIdOrderByCreatedDateDesc(userId);
+            UserProject userProject =
+                    userProjectRepository.findTopByUserIdOrderByCreatedDateDesc(userId);
             projectId = userProject.getId();
         }
 
         String redirectUrl = cookieUtil.getCookieValue(request, "redirect_url");
-        redirectUrl = String.format("%s?isSignup=%b&isConnect=%b&projectId=%s",
-            redirectUrl, isSignUp, isConnect, projectId != null ? projectId : "");
+        redirectUrl =
+                String.format(
+                        "%s?isSignup=%b&isConnect=%b&projectId=%s",
+                        redirectUrl, isSignUp, isConnect, projectId != null ? projectId : "");
 
         cookieUtil.deleteCookie(request, response, "redirect_url");
 

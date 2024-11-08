@@ -63,7 +63,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         loginHistoryService.recordLogin(user);
         badgeEventService.eventRandom(user);
 
-        boolean isSignUp = username == null ? true : false;
+        boolean isSignUp = username == null ? false : true;
         boolean isConnect = userService.isConnect(userId);
         Long projectId = userService.getRecentVisitProjectId(user);
 
@@ -74,7 +74,6 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         }
 
         String redirectUrl = cookieUtil.getCookieValue(request, "redirect_url");
-        log.info("isSignUp={}, isConnect= {}, projectId={}", isSignUp, isConnect, projectId);
         redirectUrl =
                 String.format(
                         "%s?isSignup=%b&isConnect=%b&projectId=%s",

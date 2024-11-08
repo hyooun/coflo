@@ -1,36 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { FileQuestion } from 'lucide-react';
 
-import { currentPageAtom, totalPagesAtom } from '@store/pagination';
 import { projectIdAtom } from '@store/auth.ts';
 import Header from '@components/Header/Header';
 import { RepositorySearchBar } from '@components/Repository/RepositorySearchBar';
 import { RepositoryItem } from '@components/Repository/RepositoryItem';
 import ToggleSwitch from '@components/Repository/ToggleSwitch';
-import Pagination from '@components/Pagination/Pagination';
 import { CommonButton } from '@components/Button/CommonButton';
 import GuideModal from '@components/Modal/GuideModal.tsx';
 import tokenintro from '@assets/tokenintro.png';
-import { GitlabProject } from 'types/gitLab';
+import { GitlabProject, PageInfo } from 'types/gitLab';
 import { UserProject } from '@apis/Link';
 import { Gitlab } from '@apis/Gitlab';
 import BranchSelector from '@components/Repository/BranchSelector';
 import { BranchOption } from '@components/Repository/BranchSelector';
-
-const MemoizedPagination = React.memo(Pagination);
+import CursorPagination from '@components/Pagination/CursorPagination';
 
 export default function RepositoryPage() {
   const [repositories, setRepositories] = useState<GitlabProject[]>([]);
   const [selectedBranches, setSelectedBranches] = useState<BranchOption[]>([]);
-  const itemsPerPage = 10;
   const [selectedRepo, setSelectedRepo] = useState<GitlabProject | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const navigate = useNavigate();
   const [, setProjectId] = useAtom(projectIdAtom);
-  const [pageInfo, setPageInfo] = useState({
+  const [pageInfo, setPageInfo] = useState<PageInfo>({
     startCursor: '',
     endCursor: '',
     hasNextPage: false,
@@ -38,19 +34,43 @@ export default function RepositoryPage() {
   });
   const [keyword, setKeyword] = useState('');
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      const response = await Gitlab.getGitlabProjects(keyword, currentPage, itemsPerPage);
-      console.log('API 응답:', response);
-      console.log('API 응답:', response.data);
-      if (response && response.data) {
-        setRepositories(response.data.gitlabProjectList);
-        setPageInfo(response.data.pageInfo);
-      }
-    };
+  const fetchProjects = async (pageInfo?: PageInfo) => {
+    const response = await Gitlab.getGitlabProjects(
+      keyword,
+      pageInfo || {
+        startCursor: '',
+        endCursor: '',
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+    );
+    if (response && response.data) {
+      setRepositories(response.data.gitlabProjectList);
+      setPageInfo(response.data.pageInfo);
+    }
+  };
 
-    fetchProjects();
-  }, [currentPage, setTotalPages]);
+  useEffect(() => {
+    fetchProjects(pageInfo);
+  }, []);
+
+  const handleNextPage = () => {
+    if (pageInfo.hasNextPage) {
+      fetchProjects({
+        ...pageInfo,
+        startCursor: pageInfo.startCursor,
+      });
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (pageInfo.hasPreviousPage) {
+      fetchProjects({
+        ...pageInfo,
+        endCursor: pageInfo.endCursor,
+      });
+    }
+  };
 
   const handleInputChange = (value: string) => {
     setInputValue(value);
@@ -172,7 +192,7 @@ export default function RepositoryPage() {
               <BranchSelector
                 value={selectedBranches}
                 onChange={setSelectedBranches}
-                gitlabProjectId={selectedRepo?.gitlabProjectId || 0}
+                gitlabProjectId={Number(selectedRepo?.gitlabProjectId)}
               />
             </div>
           }
@@ -205,7 +225,13 @@ export default function RepositoryPage() {
         ></GuideModal>
       )}
 
-      <MemoizedPagination />
+      {/* <MemoizedPagination /> */}
+      <CursorPagination
+        hasNextPage={pageInfo.hasNextPage}
+        hasPreviousPage={pageInfo.hasPreviousPage}
+        onNext={handleNextPage}
+        onPrevious={handlePreviousPage}
+      />
     </div>
   );
 }

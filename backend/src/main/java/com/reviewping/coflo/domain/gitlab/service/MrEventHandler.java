@@ -32,6 +32,7 @@ public class MrEventHandler {
     @PostConstruct
     void initHandlers() {
         handlers.put("open", this::handleOpen);
+        handlers.put("reopen", this::handleOpen);
     }
 
     @Async

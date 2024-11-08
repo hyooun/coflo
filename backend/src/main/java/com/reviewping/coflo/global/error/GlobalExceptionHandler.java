@@ -46,4 +46,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(ApiErrorResponse.error(errorCode));
     }
+
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<String> handleException(Exception e) {
+        return ResponseEntity.status(500).body(e.getMessage());
+    }
 }

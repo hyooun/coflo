@@ -14,6 +14,7 @@ public enum ErrorCode {
     USER_NOT_EXIST(HttpStatus.NOT_FOUND, "A001", "존재하지 않는 유저입니다"),
     LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "A002", "로그인 도중 오류가 발생했습니다."),
     USER_TOKEN_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "A003", "이미 등록된 USER TOKEN입니다."),
+    USER_AUTHORIZATION_NOT_EXIST(HttpStatus.UNAUTHORIZED, "A004", "권한이 없습니다."),
 
     /**
      * MR_INFO(B000)
@@ -44,6 +45,7 @@ public enum ErrorCode {
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "E002", "만료된 토큰입니다."),
     TOKEN_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "E003", "지원되지 않는 토큰입니다."),
     TOKEN_WRONG(HttpStatus.UNAUTHORIZED, "E004", "잘못된 토큰 서명입니다."),
+    TOKEN_NOT_EXIST(HttpStatus.UNAUTHORIZED, "E005", "토큰이 존재하지 않습니다."),
 
     /**
      * CRYPTO(F000)

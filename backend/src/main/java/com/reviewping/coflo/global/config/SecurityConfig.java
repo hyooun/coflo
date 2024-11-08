@@ -7,6 +7,8 @@ import com.reviewping.coflo.domain.user.service.UserService;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.global.auth.jwt.filter.JwtExceptionFilter;
 import com.reviewping.coflo.global.auth.jwt.filter.JwtVerifyFilter;
+import com.reviewping.coflo.global.auth.jwt.handler.JwtAccessDeniedHandler;
+import com.reviewping.coflo.global.auth.jwt.handler.JwtAuthenticationEntryPoint;
 import com.reviewping.coflo.global.auth.oauth.handler.CommonLoginFailHandler;
 import com.reviewping.coflo.global.auth.oauth.handler.CommonLoginSuccessHandler;
 import com.reviewping.coflo.global.auth.oauth.repository.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -74,6 +76,28 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         JwtVerifyFilter jwtVerifyFilter =
                 new JwtVerifyFilter(redisUtil, cookieUtil, authenticationService);
+
+        http.exceptionHandling(
+                (exceptions) ->
+                        exceptions
+                                .authenticationEntryPoint(
+                                        new JwtAuthenticationEntryPoint()) // 인증 실패 핸들링
+                                .accessDeniedHandler(new JwtAccessDeniedHandler())); // 인가 실패 핸들링
+
+        http.authorizeHttpRequests(
+                authorize ->
+                        authorize
+                                .requestMatchers(
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/actuator/**",
+                                        "/test",
+                                        "/favicon.ico",
+                                        "/webhook/*")
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated() // 그 외 모든 경로는 인증 필요
+                );
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(

@@ -65,7 +65,7 @@ const BadgePage = () => {
   };
 
   return (
-    <div className="flex flex-col flex-grow overflow-auto px-8 pt-6 min-w-[800px]">
+    <div className="flex flex-col flex-grow overflow-auto p-10 min-w-[1000px] items-center">
       <Header
         title={'My Badge'}
         description={['다른 사람에게 보이는 뱃지를 설정 할 수 있습니다.']}

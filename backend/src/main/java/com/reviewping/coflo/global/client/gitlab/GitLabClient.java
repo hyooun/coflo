@@ -33,7 +33,6 @@ import org.springframework.stereotype.Service;
 public class GitLabClient {
 
     private static final String PRIVATE_TOKEN = "PRIVATE-TOKEN";
-    private static final String KST_OFFSET = "+09:00";
 
     private final RestTemplateUtil restTemplateUtil;
     private final GraphQlUtil graphqlUtil;
@@ -84,7 +83,9 @@ public class GitLabClient {
                 graphQlClient
                         .document(graphqlUtil.createSingleProjectQuery(gitlabProjectId))
                         .executeSync();
-        return response.field("projects").toEntity(GitlabProjectDetailContent.class);
+        List<GitlabProjectDetailContent> projects =
+                response.field("projects.nodes").toEntityList(GitlabProjectDetailContent.class);
+        return projects.isEmpty() ? null : projects.getFirst();
     }
 
     public GitlabUserInfoContent getUserInfo(String gitlabUrl, String token) {

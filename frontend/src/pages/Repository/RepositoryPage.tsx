@@ -22,8 +22,6 @@ import { BranchOption } from '@components/Repository/BranchSelector';
 const MemoizedPagination = React.memo(Pagination);
 
 export default function RepositoryPage() {
-  const [currentPage] = useAtom(currentPageAtom);
-  const [, setTotalPages] = useAtom(totalPagesAtom);
   const [repositories, setRepositories] = useState<GitlabProject[]>([]);
   const [selectedBranches, setSelectedBranches] = useState<BranchOption[]>([]);
   const itemsPerPage = 10;
@@ -32,16 +30,22 @@ export default function RepositoryPage() {
   const [inputValue, setInputValue] = useState('');
   const navigate = useNavigate();
   const [, setProjectId] = useAtom(projectIdAtom);
+  const [pageInfo, setPageInfo] = useState({
+    startCursor: '',
+    endCursor: '',
+    hasNextPage: false,
+    hasPreviousPage: false,
+  });
+  const [keyword, setKeyword] = useState('');
 
   useEffect(() => {
     const fetchProjects = async () => {
-      console.log('현재 페이지:', currentPage);
-      const response = await Gitlab.getGitlabProjects(undefined, currentPage, itemsPerPage);
+      const response = await Gitlab.getGitlabProjects(keyword, currentPage, itemsPerPage);
       console.log('API 응답:', response);
       console.log('API 응답:', response.data);
       if (response && response.data) {
         setRepositories(response.data.gitlabProjectList);
-        setTotalPages(response.data.totalPages);
+        setPageInfo(response.data.pageInfo);
       }
     };
 

@@ -28,6 +28,11 @@ public interface UserProjectRepository
     @EntityGraph(attributePaths = {"project", "userProjectScores", "gitlabAccount"})
     List<UserProject> findAll();
 
+    @Query(
+            "SELECT up FROM UserProject up JOIN up.gitlabAccount gl JOIN gl.user u "
+                    + "WHERE u.id = :userId ORDER BY up.createdDate DESC LIMIT 1")
+    UserProject findTopByUserIdOrderByCreatedDateDesc(@Param("userId") Long userId);
+
     default UserProject getByProjectAndGitlabAccount(Project project, GitlabAccount gitlabAccount) {
         return findByProjectAndGitlabAccount(project, gitlabAccount)
                 .orElseThrow(() -> new BusinessException(USER_PROJECT_NOT_EXIST));

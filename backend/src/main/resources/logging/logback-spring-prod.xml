@@ -9,9 +9,9 @@
     </appender>
 
     <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/ubuntu/coflo/logs/info.log</file>
+        <file>/home/ubuntu/coflo/logs/backend/info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/home/ubuntu/coflo/logs/info%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <fileNamePattern>/home/ubuntu/coflo/logs/backend/info%d{yyyy-MM-dd}.log.zip</fileNamePattern>
             <maxHistory>90</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -26,24 +26,24 @@
     </appender>
 
     <appender name="FILE_DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/ubuntu/coflo/logs/debug.log</file>
+        <file>/home/ubuntu/coflo/logs/backend/debug.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/home/ubuntu/coflo/logs/debug%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <fileNamePattern>/home/ubuntu/coflo/logs/backend/debug%d{yyyy-MM-dd}.log.zip</fileNamePattern>
             <maxHistory>90</maxHistory>
         </rollingPolicy>
         <encoder>
             <charset>UTF-8</charset>
             <pattern>%d{MM-dd HH:mm:ss} [%p] %c{1}.%M - %m%n</pattern>
         </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <filter class="ch.qos.logback.core.filter.ThresholdFilter">
             <level>DEBUG</level>
         </filter>
     </appender>
 
     <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/ubuntu/coflo/logs/warn.log</file>
+        <file>/home/ubuntu/coflo/logs/backend/warn.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/home/ubuntu/coflo/logs/warn%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <fileNamePattern>/home/ubuntu/coflo/logs/backend/warn%d{yyyy-MM-dd}.log.zip</fileNamePattern>
             <maxHistory>90</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -58,9 +58,9 @@
     </appender>
 
     <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/ubuntu/coflo/logs/error.log</file>
+        <file>/home/ubuntu/coflo/logs/backend/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/home/ubuntu/coflo/logs/error%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <fileNamePattern>/home/ubuntu/coflo/logs/backend/error%d{yyyy-MM-dd}.log.zip</fileNamePattern>
             <maxHistory>90</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -74,14 +74,14 @@
         </filter>
     </appender>
 
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="org.hibernate" level="INFO"/>
-    <logger name="org.elasticsearch" level="INFO"/>
+    <logger name="org.springframework" level="DEBUG"/>
+    <logger name="org.hibernate" level="DEBUG"/>
+    <logger name="org.apache.http" level="DEBUG"/>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FILE_DEBUG"/>
         <appender-ref ref="FILE_INFO"/>
+        <appender-ref ref="FILE_DEBUG"/>
         <appender-ref ref="FILE_WARN"/>
         <appender-ref ref="FILE_ERROR"/>
     </root>

@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { ApiResponse } from 'types/api';
 import instance from '@config/apiConfig';
-import { UserProjectResponse } from 'types/project';
+import { GetLinkedStatusData, UserProjectResponse } from 'types/project';
 
 const responseBody = <T>(response: AxiosResponse<ApiResponse<T>>) => response.data;
 
@@ -23,8 +23,8 @@ export const UserProject = {
     data: { botToken?: string; branches?: string[] },
   ): Promise<ApiResponse<any>> => apiRequests.post(`user-project/${repoId}`, data),
 
-  getLinkStatus: (): Promise<ApiResponse<{ hasLinkedProject: boolean }>> =>
-    apiRequests.get<{ hasLinkedProject: boolean }>(`user-project/status`),
+  getLinkStatus: (): Promise<ApiResponse<GetLinkedStatusData>> =>
+    apiRequests.get<GetLinkedStatusData>(`user-project/status`),
 
   getUserProjects: (query: {
     currentProjectId: number;

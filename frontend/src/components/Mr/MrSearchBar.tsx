@@ -1,9 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import arrowIcon from '@assets/icons/arrow-icon.svg';
+import { CommonButton } from '@components/Button/CommonButton';
 
-export function CustomSearchBar() {
+interface CustomSearchBarProps {
+  onSearch: (keyword: string, searchType: string) => void;
+}
+
+export const CustomSearchBar = ({ onSearch }: CustomSearchBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('All');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
@@ -26,8 +32,18 @@ export function CustomSearchBar() {
     };
   }, []);
 
+  const handleSearch = () => {
+    onSearch(searchKeyword, selectedOption);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onSearch(searchKeyword, selectedOption);
+    }
+  };
+
   return (
-    <div className="relative mb-2 flex w-[800px] font-pretendard items-center">
+    <div className="relative flex flex-row gap-2 mb-2 font-pretendard items-center justify-between max-w-[1500px] min-w-[1000px]">
       <div className="relative w-[130px] mr-3" ref={dropdownRef}>
         <div
           className="flex items-center justify-center font-semibold rounded-md w-[100px] h-[30px] cursor-pointer text-center"
@@ -61,9 +77,16 @@ export function CustomSearchBar() {
 
       <input
         type="text"
-        className="bg-gray-200 p-2 pl-3 border border-gray-300 rounded-md w-full h-[30px] focus:outline-none focus:border-gray-500 placeholder:text-black font-pretendard"
+        className="bg-gray-200 p-2 pl-3 rounded-md w-full h-full focus:outline-none placeholder:text-black font-pretendard"
         placeholder="Search results..."
+        value={searchKeyword}
+        onChange={(e) => setSearchKeyword(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
+
+      <CommonButton className="w-16 h-full px-2 rounded-md" onClick={handleSearch}>
+        검색
+      </CommonButton>
     </div>
   );
-}
+};

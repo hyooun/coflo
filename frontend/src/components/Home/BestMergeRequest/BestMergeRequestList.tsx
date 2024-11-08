@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { GitlabMergeRequest } from 'types/mergeRequest.ts';
 import { PullRequestIcon } from '@components/TextDiv/Icons/PullRequestIcon.tsx';
 import { MergeRequest } from '@apis/MergeRequest';
+import { projectIdAtom } from '@store/auth';
+import { useAtom } from 'jotai';
 
 const BestMergeRequestList = () => {
   const [bestMergeRequests, setBestMergeRequests] = useState<GitlabMergeRequest[]>([]);
   const navigate = useNavigate();
-  const projectId = 'your_project_id';
+  const [projectId] = useAtom(projectIdAtom);
 
   // {
   //   id: 1,
@@ -41,6 +43,7 @@ const BestMergeRequestList = () => {
   // },
 
   useEffect(() => {
+    if (!projectId) return;
     const fetchMergeRequests = async () => {
       const response = await MergeRequest.getBestMrList(projectId);
       console.log(response.data);

@@ -32,71 +32,45 @@ public class GraphQlUtil {
     }
 
     public String createSearchProjectQuery(GitlabSearchRequest gitlabSearchRequest) {
-        StringBuilder queryBuilder =
-                new StringBuilder(
-                        "query { projects(membership: true, search: \""
-                                + gitlabSearchRequest.keyword()
-                                + "\"");
+        return String.format(
+                "query { projects(membership: true, search: \"%s\"%s) {\n"
+                        + "    nodes {\n"
+                        + "      id\n"
+                        + "      fullPath\n"
+                        + "    }\n"
+                        + "    pageInfo {\n"
+                        + "      startCursor\n"
+                        + "      hasNextPage\n"
+                        + "      hasPreviousPage\n"
+                        + "      endCursor\n"
+                        + "    }\n"
+                        + "  }\n"
+                        + "}",
+                gitlabSearchRequest.keyword(), createPagination(gitlabSearchRequest));
+    }
+
+    private String createPagination(GitlabSearchRequest gitlabSearchRequest) {
         if (!gitlabSearchRequest.startCursor().isEmpty()) {
-            queryBuilder
-                    .append(", before: \"")
-                    .append(gitlabSearchRequest.startCursor())
-                    .append("\"");
-            queryBuilder.append(", last: ").append(gitlabSearchRequest.size());
+            return String.format(
+                    ", before: \"%s\", last: %d",
+                    gitlabSearchRequest.startCursor(), gitlabSearchRequest.size());
         } else if (!gitlabSearchRequest.endCursor().isEmpty()) {
-            queryBuilder.append(", after: \"").append(gitlabSearchRequest.endCursor()).append("\"");
-            queryBuilder.append(", first: ").append(gitlabSearchRequest.size());
+            return String.format(
+                    ", after: \"%s\", first: %d",
+                    gitlabSearchRequest.endCursor(), gitlabSearchRequest.size());
         } else {
-            queryBuilder.append(", first: ").append(gitlabSearchRequest.size());
+            return String.format(", first: %d", gitlabSearchRequest.size());
         }
-
-        queryBuilder
-                .append(") {\n")
-                .append("    nodes {\n")
-                .append("      id\n")
-                .append("      fullPath\n")
-                .append("    }\n")
-                .append("    pageInfo {\n")
-                .append("      startCursor\n")
-                .append("      hasNextPage\n")
-                .append("      hasPreviousPage\n")
-                .append("      endCursor\n")
-                .append("    }\n")
-                .append("  }\n")
-                .append("}");
-
-        return queryBuilder.toString();
     }
 
     public String buildMergeRequestQuery(String fullPath, Long gitMergeRequestIid) {
-        StringBuilder queryBuilder = new StringBuilder();
-
-        queryBuilder
-                .append("query { ")
-                .append("project(fullPath: \"")
-                .append(fullPath)
-                .append("\") { ")
-                .append("mergeRequest(iid: \"")
-                .append(gitMergeRequestIid)
-                .append("\") { ")
-                .append("id ")
-                .append("iid ")
-                .append("title ")
-                .append("description ")
-                .append("state ")
-                .append("mergedAt ")
-                .append("createdAt ")
-                .append("updatedAt ")
-                .append("sourceBranch ")
-                .append("targetBranch ")
-                .append("labels { nodes { title color } } ")
-                .append("assignees(first: 1) { nodes { username name avatarUrl } } ")
-                .append("reviewers(first: 1) { nodes { username name avatarUrl } } ")
-                .append("} ")
-                .append("} ")
-                .append("}");
-
-        return queryBuilder.toString();
+        return String.format(
+                "query { project(fullPath: \"%s\") { mergeRequest(iid: \"%d\") { id iid title"
+                    + " description state mergedAt createdAt updatedAt sourceBranch targetBranch"
+                    + " labels { nodes { title color } } assignees(first: 1) { nodes { username"
+                    + " name avatarUrl } } reviewers(first: 1) { nodes { username name avatarUrl }"
+                    + " } } } }",
+                fullPath, gitMergeRequestIid);
     }
 
     public String createUserInfoQuery() {
@@ -108,8 +82,7 @@ public class GraphQlUtil {
                 "query { project(fullPath: \"%s\") { "
                         + "mergeRequests { count } "
                         + "languages { name color share } "
-                        + "statistics { commitCount } "
-                        + "} }",
+                        + "statistics { commitCount } } }",
                 fullPath);
     }
 

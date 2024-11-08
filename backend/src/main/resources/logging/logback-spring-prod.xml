@@ -20,7 +20,7 @@
             <charset>UTF-8</charset>
             <pattern>%d{MM-dd HH:mm:ss} [%p] %c{1}.%M - %m%n</pattern>
         </encoder>
-        <filter class="ch.qos.logback.core.filter.ThresholdFilter">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
         </filter>
     </appender>

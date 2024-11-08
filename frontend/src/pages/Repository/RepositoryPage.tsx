@@ -16,6 +16,8 @@ import tokenintro from '@assets/tokenintro.png';
 import { GitlabProject } from 'types/gitLab';
 import { UserProject } from '@apis/Link';
 import { Gitlab } from '@apis/Gitlab';
+import BranchSelector from '@components/Repository/BranchSelector';
+import { BranchOption } from '@components/Repository/BranchSelector';
 
 const MemoizedPagination = React.memo(Pagination);
 
@@ -23,6 +25,7 @@ export default function RepositoryPage() {
   const [currentPage] = useAtom(currentPageAtom);
   const [, setTotalPages] = useAtom(totalPagesAtom);
   const [repositories, setRepositories] = useState<GitlabProject[]>([]);
+  const [selectedBranches, setSelectedBranches] = useState<BranchOption[]>([]);
   const itemsPerPage = 10;
   const [selectedRepo, setSelectedRepo] = useState<GitlabProject | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -76,7 +79,12 @@ export default function RepositoryPage() {
 
   const handleModalConfirm = async () => {
     if (selectedRepo) {
-      await UserProject.updateRepository(selectedRepo.gitlabProjectId, { botToken: inputValue });
+      const branchNames = selectedBranches.map((branch) => branch.value);
+
+      await UserProject.updateRepository(selectedRepo.gitlabProjectId, {
+        botToken: inputValue,
+        branches: branchNames,
+      });
 
       setRepositories((prev) => {
         const updatedRepos = [...prev];
@@ -150,11 +158,18 @@ export default function RepositoryPage() {
           content={
             <div className="space-y-2">
               <p>1. 버튼을 클릭하여 프로젝트 검색을 시작하세요.</p>
-              <p>2. 설정(Settings)으로 이동하세요.</p>
-              <p>3. Access Tokens 메뉴를 선택하세요.</p>
-              <p>4. Project Access Tokens를 생성하세요.</p>
-              <p>5. API 체크를 확인하세요.</p>
-              <p>6. Create Access Tokens를 생성하세요.</p>
+              <p>2. 설정(Settings)으로 이동 후 Access Tokens 메뉴를 선택하세요.</p>
+              <p>3. API 체크 후 Project Access Tokens를 생성하세요.</p>
+            </div>
+          }
+          contentBottom={
+            <div className="mt-4">
+              <label className="block mb-2 text-2xl">참조할 브랜치</label>
+              <BranchSelector
+                value={selectedBranches}
+                onChange={setSelectedBranches}
+                gitlabProjectId={selectedRepo?.gitlabProjectId || 0}
+              />
             </div>
           }
           image={{
@@ -179,11 +194,13 @@ export default function RepositoryPage() {
             setIsModalOpen(false);
             setSelectedRepo(null);
             setInputValue('');
+            setSelectedBranches([]);
           }}
           onConfirm={handleModalConfirm}
           gitlabProjectId={String(selectedRepo.gitlabProjectId)}
-        />
+        ></GuideModal>
       )}
+
       <MemoizedPagination />
     </div>
   );

@@ -67,7 +67,7 @@ public class UserProjectService {
                     userProjectRepository.findTopByUserIdOrderByCreatedDateDesc(userId);
             recentVisitedProjectId = userProject.getProject().getId();
         }
-        return new UserProjectStatusResponse(hasLinkedProject, gitlabAccount.getVisitedProjectId());
+        return new UserProjectStatusResponse(hasLinkedProject, recentVisitedProjectId);
     }
 
     public List<UserProjectResponse> getUserProjects(User user, Long currentProjectId) {

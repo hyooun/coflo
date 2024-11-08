@@ -1,17 +1,16 @@
 import { useState } from 'react';
-import { useAtom } from 'jotai';
+import { useNavigate } from 'react-router-dom';
 import { Link, Info, FileQuestion, CircleCheck, TriangleAlert } from 'lucide-react';
 import { CommonButton } from '@components/Button/CommonButton.tsx';
 import GuideModal from '@components/Modal/GuideModal.tsx';
 import AlertModal from '@components/Modal/AlertModal';
+import { TokenInput } from '@components/Input/TokenInput';
 import GitUrlSelector from './GitUrlSelector';
 import { Gitlab } from '@apis/Gitlab';
 import { User } from '@apis/User';
-import { isSignupAtom } from '@store/auth';
-import { useAuthRedirect } from '@hooks/useAuthRedirect';
-import { TokenInput } from '@components/Input/TokenInput';
 
 const SignupForm = () => {
+  const navigate = useNavigate();
   const [domain, setDomain] = useState('lab.ssafy.com');
   const [userToken, setUserToken] = useState('');
   const [isTokenValid, setIsTokenValid] = useState(false);
@@ -20,7 +19,6 @@ const SignupForm = () => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string[]>([]);
   const isSignupEnabled = isTokenValid && domain;
-  const [, setIsSignup] = useAtom(isSignupAtom);
 
   const handleValidateToken = async () => {
     if (!userToken) return;
@@ -57,8 +55,7 @@ const SignupForm = () => {
       });
 
       if (response.status === 'SUCCESS') {
-        setIsSignup(true);
-        useAuthRedirect();
+        navigate('/repository');
       }
     } catch (error) {
       console.error('회원가입 실패', error);
@@ -114,8 +111,7 @@ const SignupForm = () => {
           title="사용자 인증 토큰 안내"
           content={
             <div className="text-center text-xl font-bold text-primary-500">
-              아바타 프로필 클릭 &gt; Edit Profile &gt; User settings &gt; Access Tokens &gt; Add
-              new token
+              아바타 프로필 클릭 &gt; Edit Profile &gt; Access Tokens &gt; Add new token
             </div>
           }
           onClose={() => setIsModalOpen(false)}

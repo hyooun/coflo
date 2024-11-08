@@ -72,6 +72,6 @@ public class UserService {
 
     public Long getRecentVisitProjectId(User user) {
         List<GitlabAccount> gitlabAccounts = gitlabAccountRepository.findAllByUser(user);
-        return gitlabAccounts.isEmpty() ? null : gitlabAccounts.getFirst().getRecentProjectId();
+        return gitlabAccounts.isEmpty() ? null : gitlabAccounts.getFirst().getVisitedProjectId();
     }
 }

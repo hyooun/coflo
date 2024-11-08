@@ -3,8 +3,8 @@ package com.reviewping.coflo.git;
 import com.reviewping.coflo.service.dto.GitFileInfo;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
-import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -31,38 +31,41 @@ public class GitUtil {
      * @param localPath 저장할 Git 로컬 저장소 위치
      * @throws GitUtilException Git 클론 중 발생할 수 있는 예외
      */
-    public void shallowCloneOrPull(String gitUrl, String branch, String token, String localPath) {
-        File localDir = new File(localPath);
-
+    public String shallowCloneOrPull(String gitUrl, String branch, String token, Path localPath) {
+        File localDir = localPath.toFile();
         if (isDirectoryValid(localDir)) {
-            pullUpdates(localDir, branch, token);
-        } else {
-            cloneRepository(gitUrl, branch, token, localDir);
+            return pullUpdates(localDir, branch, token);
         }
+        return cloneRepository(gitUrl, branch, token, localDir);
     }
 
-    public void cloneRepository(String gitUrl, String branch, String token, File localDir) {
-
-        try {
-            // Git 클론 설정
-            CloneCommand cloneCommand =
-                    Git.cloneRepository()
-                            .setURI(gitUrl)
-                            .setBranch(branch)
-                            .setDirectory(localDir)
-                            .setDepth(1)
-                            .setCredentialsProvider(
-                                    new UsernamePasswordCredentialsProvider("token", token));
-            // Git 클론 실행
-            Git git = cloneCommand.call();
-            git.close();
-
-        } catch (GitAPIException e) {
+    private String cloneRepository(String gitUrl, String branch, String token, File localDir) {
+        try (Git git = executeCloneCommand(gitUrl, branch, token, localDir)) {
+            return getLastCommitHash(git);
+        } catch (GitAPIException | IOException e) {
             throw new GitUtilException("Git clone이 실패했습니다.", e);
         }
     }
 
-    private void pullUpdates(File localDir, String branch, String token) {
+    private Git executeCloneCommand(String gitUrl, String branch, String token, File localDir)
+            throws GitAPIException {
+        return Git.cloneRepository()
+                .setURI(gitUrl)
+                .setBranch(branch)
+                .setDirectory(localDir)
+                .setDepth(1)
+                .setCredentialsProvider(new UsernamePasswordCredentialsProvider("token", token))
+                .call();
+    }
+
+    private String getLastCommitHash(Git git) throws IOException {
+        try (RevWalk revWalk = new RevWalk(git.getRepository())) {
+            RevCommit commit = revWalk.parseCommit(git.getRepository().resolve("HEAD"));
+            return commit.getName();
+        }
+    }
+
+    private String pullUpdates(File localDir, String branch, String token) {
         try (Git git = Git.open(localDir)) {
             PullCommand pullCommand =
                     git.pull()
@@ -71,6 +74,7 @@ public class GitUtil {
                             .setRemote("origin")
                             .setRemoteBranchName(branch);
             pullCommand.call();
+            return getLastCommitHash(git);
         } catch (Exception e) {
             throw new GitUtilException("Git pull이 실패했습니다.", e);
         }
@@ -111,10 +115,14 @@ public class GitUtil {
                         .setNewTree(prepareTreeParser(repository, newCommit))
                         .call();
 
+        String repoPath = repository.getDirectory().getParent();
+
         return diffs.stream()
                 .map(
                         diffEntry ->
-                                new GitFileInfo(diffEntry.getChangeType(), diffEntry.getNewPath()))
+                                new GitFileInfo(
+                                        diffEntry.getChangeType(),
+                                        repoPath + "/" + diffEntry.getNewPath()))
                 .toList();
     }
 

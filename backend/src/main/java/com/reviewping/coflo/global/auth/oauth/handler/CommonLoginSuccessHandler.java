@@ -73,20 +73,8 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         }
 
         String redirectUrl = cookieUtil.getCookieValue(request, "redirect_url");
-        StringBuilder redirectUrlBuilder = new StringBuilder(redirectUrl);
-
-        redirectUrlBuilder
-                .append("?isSignup=")
-                .append(isSignUp)
-                .append("&isConnect=")
-                .append(isConnect)
-                .append("&projectId=");
-
-        if (projectId != null) {
-            redirectUrlBuilder.append(projectId);
-        }
-
-        redirectUrl = redirectUrlBuilder.toString();
+        redirectUrl = String.format("%s?isSignup=%b&isConnect=%b&projectId=%s",
+            redirectUrl, isSignUp, isConnect, projectId != null ? projectId : "");
 
         cookieUtil.deleteCookie(request, response, "redirect_url");
 

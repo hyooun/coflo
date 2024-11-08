@@ -16,13 +16,13 @@ import com.reviewping.coflo.domain.review.controller.dto.request.RegenerateRevie
 import com.reviewping.coflo.domain.review.controller.dto.response.RetrievalDetailResponse;
 import com.reviewping.coflo.domain.review.controller.dto.response.ReviewDetailResponse;
 import com.reviewping.coflo.domain.review.controller.dto.response.ReviewResponse;
-import com.reviewping.coflo.domain.review.entity.Language;
 import com.reviewping.coflo.domain.review.entity.LanguageType;
 import com.reviewping.coflo.domain.review.entity.Retrieval;
 import com.reviewping.coflo.domain.review.entity.Review;
 import com.reviewping.coflo.domain.review.message.*;
 import com.reviewping.coflo.domain.review.message.ReviewRequestMessage.MrContent;
 import com.reviewping.coflo.domain.review.message.ReviewResponseMessage;
+import com.reviewping.coflo.domain.review.repository.LanguageRepository;
 import com.reviewping.coflo.domain.review.repository.RetrievalRepository;
 import com.reviewping.coflo.domain.review.repository.ReviewRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
@@ -56,6 +56,7 @@ public class ReviewService {
     private final GitLabClient gitLabClient;
     private final ObjectMapper objectMapper;
     private final RedisGateway redisGateway;
+    private final LanguageRepository languageRepository;
 
     @Transactional
     @ServiceActivator(inputChannel = "reviewResponseChannel")
@@ -227,7 +228,7 @@ public class ReviewService {
                                                 .fileName(message.fileName())
                                                 .content(message.content())
                                                 .language(
-                                                        new Language(
+                                                        languageRepository.getByType(
                                                                 LanguageType.fromType(
                                                                         message.language())))
                                                 .build())

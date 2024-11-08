@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
+import { FileQuestion } from 'lucide-react';
+
 import { currentPageAtom, totalPagesAtom } from '@store/pagination';
+import { projectIdAtom } from '@store/auth.ts';
+import Header from '@components/Header/Header';
 import { RepositorySearchBar } from '@components/Repository/RepositorySearchBar';
 import { RepositoryItem } from '@components/Repository/RepositoryItem';
 import ToggleSwitch from '@components/Repository/ToggleSwitch';
 import Pagination from '@components/Pagination/Pagination';
-import { UserProject } from '@apis/Link';
-import { GitlabProject } from 'types/gitLab';
 import { CommonButton } from '@components/Button/CommonButton';
-import { useNavigate } from 'react-router-dom';
 import GuideModal from '@components/Modal/GuideModal.tsx';
 import tokenintro from '@assets/tokenintro.png';
-import Header from '@components/Header/Header';
-import { FileQuestion } from 'lucide-react';
+import { GitlabProject } from 'types/gitLab';
+import { UserProject } from '@apis/Link';
 import { Gitlab } from '@apis/Gitlab';
 import BranchSelector from '@components/Repository/BranchSelector';
 import { BranchOption } from '@components/Repository/BranchSelector';
@@ -29,6 +31,7 @@ export default function RepositoryPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const navigate = useNavigate();
+  const [, setProjectId] = useAtom(projectIdAtom);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -100,11 +103,14 @@ export default function RepositoryPage() {
 
   const handleButtonClick = async () => {
     const response = await UserProject.getLinkStatus();
-    const isLinked = response.data?.hasLinkedProject;
-    if (isLinked) {
-      navigate('/main');
-    } else {
-      alert('연동되지 않았습니다. 먼저 연동을 완료해주세요.');
+    if (response?.data) {
+      const { hasLinkedProject, projectId } = response.data;
+      setProjectId(projectId);
+      if (hasLinkedProject) {
+        navigate(`/${projectId}/main`);
+      } else {
+        alert('연동되지 않았습니다. 먼저 연동을 완료해주세요.');
+      }
     }
   };
 
@@ -118,7 +124,7 @@ export default function RepositoryPage() {
           />
         </div>
         <CommonButton
-          className="px-4 w-[100px] h-[50px]"
+          className="px-4 min-w-[100px] h-[50px]"
           active={false}
           bgColor="bg-primary-500"
           onClick={handleButtonClick}

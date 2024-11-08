@@ -72,7 +72,7 @@ const Pagination = () => {
   const paginationItems = getPaginationItems();
 
   return (
-    <div className="flex justify-center mt-4 ml-[150px]">
+    <div className="flex justify-center">
       <button
         className="flex items-center px-4 py-2 rounded mx-1"
         onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}

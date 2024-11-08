@@ -22,7 +22,7 @@ export function MrItem({ mergeRequest }: MrItemProps) {
   const updateTimeAgo = useTimeAgo(updatedAt);
 
   return (
-    <div className="pt-5 pb-5 p-2 w-[1000px] border-b border-gray-300 font-pretendard">
+    <div className="pt-5 pb-5 p-2 w-full min-w-[1000px] border-b border-gray-300 font-pretendard">
       <div className="flex flex-row justify-between ">
         <h2 className="text-lg font-semibold">{title}</h2>
         <div className="flex items-center">

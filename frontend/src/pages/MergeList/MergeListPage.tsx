@@ -1,48 +1,83 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { currentPageAtom, totalPagesAtom } from '@store/pagination';
 import { CustomSearchBar } from '@components/Mr/MrSearchBar';
 import { MrItem } from '@components/Mr/MrItem';
+import { MrStatusFilter } from '@components/MergeRequest/MrStatusFilter';
+import { EmptyMergeRequest } from '@components/MergeRequest/EmptyMergeRequest';
 import Pagination from '@components/Pagination/Pagination';
 import { MergeRequest } from '@apis/MergeRequest';
-import { useNavigate } from 'react-router-dom';
 import { GitlabMergeRequest } from 'types/mergeRequest';
+import { currentPageAtom, totalPagesAtom } from '@store/pagination';
+import { projectIdAtom } from '@store/auth';
 
 const MergeListPage = () => {
-  const [currentPage] = useAtom(currentPageAtom);
-  const [setTotalPages] = useAtom(totalPagesAtom);
-  const [mergeRequests, setMergeRequests] = useState<GitlabMergeRequest[]>([]);
-  const itemsPerPage = 5;
   const navigate = useNavigate();
+  const [currentPage] = useAtom(currentPageAtom);
+  const [, setTotalPages] = useAtom(totalPagesAtom);
+  const [mergeRequests, setMergeRequests] = useState<GitlabMergeRequest[]>([]);
+  const itemsPerPage = 7;
+  const [projectId] = useAtom(projectIdAtom);
+  const [currentStatus, setCurrentStatus] = useState('opened');
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [, setSearchType] = useState('All');
+
+  const handleStatusChange = (status: string) => {
+    setCurrentStatus(status);
+  };
+
+  const handleSearch = async (keyword: string, searchType: string) => {
+    setSearchKeyword(keyword);
+    setSearchType(searchType);
+
+    if (!projectId) return;
+
+    const response = await MergeRequest.getMrList(projectId, currentStatus, {
+      keyword: keyword,
+      page: Number(currentPage),
+      size: Number(itemsPerPage),
+    });
+
+    if (response.data) {
+      setTotalPages(response.data.totalPages ?? 1);
+      setMergeRequests(response.data.gitlabMrList);
+    }
+  };
 
   const handleItemClick = (id: number) => {
-    navigate(`/main/merge-request/reviews/${id}`);
+    navigate(`/${projectId}/main/merge-request/reviews/${id}`);
   };
 
   useEffect(() => {
     const fetchMergeRequests = async () => {
-      const response = await MergeRequest.getMrList(
-        undefined,
-        String(Number(currentPage)),
-        String(Number(itemsPerPage)),
-      );
+      if (!projectId) return;
 
-      if (response && response.data) {
+      const response = await MergeRequest.getMrList(projectId, currentStatus, {
+        keyword: searchKeyword,
+        page: Number(currentPage),
+        size: Number(itemsPerPage),
+      });
+
+      if (response.data) {
+        setTotalPages(response.data.totalPages ?? 1);
         setMergeRequests(response.data.gitlabMrList);
-        // setTotalPages(response.data.totalPages);
       }
     };
-
     fetchMergeRequests();
-  }, [currentPage, setTotalPages]);
+  }, [projectId, currentStatus, currentPage]);
 
   return (
-    <div className="flex flex-col flex-grow overflow-auto px-8 pt-6">
-      <div className="max-w-3xl  p-6">
-        <CustomSearchBar></CustomSearchBar>
+    <div className="flex flex-col flex-grow overflow-auto p-6 items-stretch justify-between w-full">
+      <div className="flex flex-col justify-between w-full">
+        <MrStatusFilter onStatusChange={handleStatusChange} />
+        <CustomSearchBar onSearch={handleSearch} />
+      </div>
 
-        <div className="bg-white w-[1000px]">
-          {mergeRequests.map((mergeRequest) => (
+      <div className="bg-white flex flex-col justify-start h-full py-4">
+        {mergeRequests.length === 0 ? (
+          <EmptyMergeRequest />
+        ) : (
+          mergeRequests.map((mergeRequest) => (
             <div
               key={mergeRequest.id}
               onClick={() => handleItemClick(mergeRequest.id)}
@@ -51,11 +86,11 @@ const MergeListPage = () => {
               <MrItem mergeRequest={mergeRequest} />
               <div className="border-t border-gray-300" />
             </div>
-          ))}
-        </div>
-
-        <Pagination />
+          ))
+        )}
       </div>
+
+      <Pagination />
     </div>
   );
 };

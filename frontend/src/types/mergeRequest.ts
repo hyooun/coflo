@@ -31,6 +31,14 @@ export interface GitlabMergeRequest {
   isAiReviewCreated: boolean;
 }
 
+export interface SearchParameter {
+  keyword?: string;
+  /** @format int32 */
+  page?: number;
+  /** @format int32 */
+  size?: number;
+}
+
 export interface GitlabMrListResponse {
   gitlabMrList: GitlabMergeRequest[];
   totalPages?: number;

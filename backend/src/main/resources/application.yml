@@ -36,6 +36,7 @@ logging:
       reviewping:
         coflo: debug
     web: debug
+#  config: classpath:logging/logback-spring.xml
 
 crypto-key: ${CRYPTO_KEY}
 

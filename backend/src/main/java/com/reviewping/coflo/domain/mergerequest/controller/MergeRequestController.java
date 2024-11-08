@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.mergerequest.controller;
 
-import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
+import com.reviewping.coflo.domain.mergerequest.controller.dto.request.GitlabMrPageRequest;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrPageResponse;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
 import com.reviewping.coflo.domain.mergerequest.service.MergeRequestService;
@@ -27,11 +27,15 @@ public class MergeRequestController {
     public ApiResponse<GitlabMrPageResponse> getGitlabMergeRequests(
             @AuthUser User user,
             @RequestParam(name = "projectId") Long projectId,
-            @RequestParam(name = "state") String state,
-            @RequestBody GitlabSearchRequest gitlabSearchRequest) {
+            @RequestParam(name = "state", defaultValue = "opened") String state,
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "keyword", defaultValue = "") String keyword) {
         GitlabMrPageResponse gitlabMergeRequests =
                 mergeRequestService.getGitlabMergeRequests(
-                        user.getId(), projectId, state, gitlabSearchRequest);
+                        user.getId(),
+                        projectId,
+                        new GitlabMrPageRequest(state, size, page, keyword));
         return ApiSuccessResponse.success(gitlabMergeRequests);
     }
 

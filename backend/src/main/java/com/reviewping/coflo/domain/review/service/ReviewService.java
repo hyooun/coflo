@@ -168,11 +168,13 @@ public class ReviewService {
                         mrInfo.getGitlabMrIid());
 
         GitlabMrResponse gitlabMrResponse =
-                gitLabClient.getSingleMergeRequest(
-                        gitlabAccount.getDomain(),
-                        gitlabAccount.getUserToken(),
-                        project.getGitlabProjectId(),
-                        mrInfo.getGitlabMrIid());
+                GitlabMrResponse.of(
+                        gitLabClient.getSingleMergeRequest(
+                                gitlabAccount.getDomain(),
+                                gitlabAccount.getUserToken(),
+                                project.getFullPath(),
+                                mrInfo.getGitlabMrIid()),
+                        true);
 
         CustomPrompt customPrompt = customPromptRepository.getByProjectId(project.getId());
         MrContent mrContent = new MrContent(gitlabMrResponse.description(), mrDiffs.toString());
@@ -208,11 +210,13 @@ public class ReviewService {
                 gitlabAccountRepository.getByUserIdAndProjectId(userId, projectId);
         Project project = projectRepository.getById(projectId);
         GitlabMrResponse gitlabMrResponse =
-                gitLabClient.getSingleMergeRequest(
-                        gitlabAccount.getDomain(),
-                        gitlabAccount.getUserToken(),
-                        project.getGitlabProjectId(),
-                        mergeRequestIid);
+                GitlabMrResponse.of(
+                        gitLabClient.getSingleMergeRequest(
+                                gitlabAccount.getDomain(),
+                                gitlabAccount.getUserToken(),
+                                project.getFullPath(),
+                                mergeRequestIid),
+                        true);
         List<ReviewDetailResponse> reviews =
                 reviewRepository.findByMrInfoOrderByCreatedDateDesc(mrInfo).stream()
                         .map(ReviewDetailResponse::from)

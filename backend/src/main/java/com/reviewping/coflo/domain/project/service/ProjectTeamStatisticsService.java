@@ -1,12 +1,10 @@
 package com.reviewping.coflo.domain.project.service;
 
 import com.reviewping.coflo.domain.badge.entity.BadgeCode;
-import com.reviewping.coflo.domain.project.controller.response.LanguageResponse;
 import com.reviewping.coflo.domain.project.controller.response.ProjectTeamDetailResponse;
 import com.reviewping.coflo.domain.project.controller.response.ProjectTeamRewardResponse;
 import com.reviewping.coflo.domain.project.controller.response.UserScoreInfoResponse;
 import com.reviewping.coflo.domain.project.entity.Project;
-import com.reviewping.coflo.domain.project.repository.LanguageCodeRepository;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
@@ -19,7 +17,6 @@ import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +31,6 @@ public class ProjectTeamStatisticsService {
     private final GitlabAccountRepository gitlabAccountRepository;
     private final ProjectRepository projectRepository;
     private final UserProjectScoreRepository userProjectScoreRepository;
-    private final LanguageCodeRepository languageCodeRepository;
     private final ProjectDateUtil projectDateUtil;
 
     public ProjectTeamDetailResponse getTeamDetail(User user, Long projectId) {
@@ -44,10 +40,10 @@ public class ProjectTeamStatisticsService {
                 gitLabClient.getProjectInfoDetail(
                         gitlabAccount.getDomain(),
                         gitlabAccount.getUserToken(),
-                        project.getGitlabProjectId());
+                        project.getGitlabProjectId(),
+                        project.getFullPath());
         Long aiReviewCount = projectRepository.findReviewCountByProjectId(project.getId());
-        List<LanguageResponse> languages = createLanguageResponse(projectInfoContent.languages());
-        return ProjectTeamDetailResponse.of(projectInfoContent, languages, aiReviewCount);
+        return ProjectTeamDetailResponse.of(projectInfoContent, aiReviewCount);
     }
 
     public ProjectTeamRewardResponse getTeamScore(User user, Long projectId) {
@@ -59,19 +55,6 @@ public class ProjectTeamStatisticsService {
         List<UserScoreInfoResponse> userScoreInfoResponses =
                 getCurrentUserAndTopUserScore(user, project, previousWeek);
         return ProjectTeamRewardResponse.of(startAndEndDates, userScoreInfoResponses);
-    }
-
-    private List<LanguageResponse> createLanguageResponse(Map<String, Double> languages) {
-        return languages.entrySet().stream()
-                .map(
-                        entry -> {
-                            String language = entry.getKey();
-                            double percentage = entry.getValue();
-                            String color =
-                                    languageCodeRepository.findColorByNameOrDefault(language);
-                            return new LanguageResponse(language, percentage, color);
-                        })
-                .toList();
     }
 
     private int getPreviousWeek(LocalDate projectCreatedDate) {

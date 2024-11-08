@@ -10,8 +10,9 @@ import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
-import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectDetailContent;
-import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectPageContent;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectSearchContent;
+import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectSearchContent.GitlabProjectSimpleContent;
+import com.reviewping.coflo.global.util.GraphQlUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class GitlabApiService {
     public GitlabProjectPageResponse getGitlabProjects(
             Long userId, GitlabSearchRequest gitlabSearchRequest) {
         GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(userId);
-        GitlabProjectPageContent gitlabProjectPage =
+        GitlabProjectSearchContent gitlabProjectPage =
                 gitLabClient.searchGitlabProjects(
                         gitlabAccount.getDomain(),
                         gitlabAccount.getUserToken(),
@@ -40,7 +41,7 @@ public class GitlabApiService {
         List<GitlabProjectResponse> gitlabProjects =
                 buildGitlabProjectResponses(gitlabProjectPage, gitlabAccount);
 
-        return GitlabProjectPageResponse.of(gitlabProjects, gitlabProjectPage.pageDetail());
+        return new GitlabProjectPageResponse(gitlabProjects, gitlabProjectPage.pageInfo());
     }
 
     public List<String> getGitlabProjectBranches(Long userId, Long gitlabProjectId) {
@@ -70,16 +71,16 @@ public class GitlabApiService {
     }
 
     private List<GitlabProjectResponse> buildGitlabProjectResponses(
-            GitlabProjectPageContent gitlabProjectPage, GitlabAccount gitlabAccount) {
-        return gitlabProjectPage.gitlabProjectDetailContents().stream()
+            GitlabProjectSearchContent gitlabProjects, GitlabAccount gitlabAccount) {
+        return gitlabProjects.nodes().stream()
                 .map(project -> createGitlabProjectResponse(project, gitlabAccount.getId()))
                 .toList();
     }
 
     private GitlabProjectResponse createGitlabProjectResponse(
-            GitlabProjectDetailContent content, Long gitlabAccountId) {
+            GitlabProjectSimpleContent content, Long gitlabAccountId) {
         return projectRepository
-                .findByGitlabProjectId(content.id())
+                .findByGitlabProjectId(GraphQlUtil.extractIdFromId(content.id()))
                 .map(
                         project -> {
                             boolean isLinked = isProjectLinked(gitlabAccountId, project.getId());

@@ -6,6 +6,6 @@ public record UserProjectResponse(Long projectId, String name) {
 
     public static UserProjectResponse of(UserProject userProject) {
         return new UserProjectResponse(
-                userProject.getProject().getId(), userProject.getProject().getName());
+                userProject.getProject().getId(), userProject.getProject().getFullPath());
     }
 }

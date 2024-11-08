@@ -85,6 +85,7 @@ public class ProjectService {
                 .botToken(projectLinkRequest.botToken())
                 .name(gitlabProject.name())
                 .gitUrl(gitlabProject.httpUrlToRepo())
+                .fullPath(gitlabProject.fullPath())
                 .build();
     }
 

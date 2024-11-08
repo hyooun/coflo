@@ -28,11 +28,13 @@ public class GitlabApiController {
     public ApiResponse<GitlabProjectPageResponse> getGitlabProjects(
             @AuthUser User user,
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size) {
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "startCursor", defaultValue = "") String startCursor,
+            @RequestParam(name = "endCursor", defaultValue = "") String endCursor) {
         GitlabProjectPageResponse gitlabProjects =
                 gitlabApiService.getGitlabProjects(
-                        user.getId(), new GitlabSearchRequest(keyword, page, size));
+                        user.getId(),
+                        new GitlabSearchRequest(keyword, size, startCursor, endCursor));
         return ApiSuccessResponse.success(gitlabProjects);
     }
 

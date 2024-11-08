@@ -1,12 +1,11 @@
 package com.reviewping.coflo.global.client.gitlab;
 
-import static com.reviewping.coflo.global.error.ErrorCode.EXTERNAL_API_BAD_REQUEST;
-import static com.reviewping.coflo.global.error.ErrorCode.EXTERNAL_API_NOT_FOUND;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
+import com.reviewping.coflo.domain.mergerequest.controller.dto.request.GitlabMrPageRequest;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
 import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.global.client.gitlab.request.GitlabNoteRequest;
@@ -14,12 +13,15 @@ import com.reviewping.coflo.global.client.gitlab.response.*;
 import com.reviewping.coflo.global.common.entity.PageDetail;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
+import com.reviewping.coflo.global.util.GraphQlUtil;
 import com.reviewping.coflo.global.util.RestTemplateUtil;
 import java.time.LocalDateTime;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.graphql.client.ClientGraphQlResponse;
+import org.springframework.graphql.client.HttpSyncGraphQlClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,37 +36,29 @@ public class GitLabClient {
     private static final String KST_OFFSET = "+09:00";
 
     private final RestTemplateUtil restTemplateUtil;
+    private final GraphQlUtil graphqlUtil;
     private final ObjectMapper objectMapper;
 
-    public GitlabProjectPageContent searchGitlabProjects(
+    public GitlabProjectSearchContent searchGitlabProjects(
             String gitlabUrl, String token, GitlabSearchRequest gitlabSearchRequest) {
-        HttpHeaders headers = makeGitlabHeaders(token);
-        String url =
-                GitLabApiUrlBuilder.createSearchGitlabProjectUrl(gitlabUrl, gitlabSearchRequest);
-
-        ResponseEntity<List<GitlabProjectDetailContent>> response =
-                restTemplateUtil.sendGetRequest(
-                        url, headers, new ParameterizedTypeReference<>() {});
-
-        PageDetail pageDetail = createPageDetail(response.getHeaders());
-        return new GitlabProjectPageContent(response.getBody(), pageDetail);
+        HttpSyncGraphQlClient graphQlClient = graphqlUtil.getGraphQlClient(gitlabUrl, token);
+        ClientGraphQlResponse response =
+                graphQlClient
+                        .document(graphqlUtil.createSearchProjectQuery(gitlabSearchRequest))
+                        .executeSync();
+        return response.field("projects").toEntity(GitlabProjectSearchContent.class);
     }
 
     public GitlabMrPageContent searchGitlabMergeRequests(
             String gitlabUrl,
             String token,
             Long gitlabProjectId,
-            String mergeRequestState,
-            GitlabSearchRequest gitlabSearchRequest,
+            GitlabMrPageRequest request,
             LocalDateTime createdAt) {
         HttpHeaders headers = makeGitlabHeaders(token);
         String url =
                 GitLabApiUrlBuilder.createSearchMergeRequestUrl(
-                        gitlabUrl,
-                        gitlabProjectId,
-                        mergeRequestState,
-                        gitlabSearchRequest,
-                        this.convertToGitlabDateFormat(createdAt));
+                        gitlabUrl, gitlabProjectId, request, createdAt.toString() + "09:00");
         ResponseEntity<List<GitlabMrDetailContent>> response =
                 restTemplateUtil.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
@@ -73,52 +67,45 @@ public class GitLabClient {
         return new GitlabMrPageContent(response.getBody(), pageDetail);
     }
 
-    public List<GitlabMrResponse> getTop3MrList(
-            String gitlabUrl, String token, Long gitlabProjectId, List<MrInfo> mrInfoList) {
-        List<GitlabMrResponse> top3MrList = new ArrayList<>();
-        for (MrInfo mrInfo : mrInfoList) {
-            GitlabMrResponse singleMergeRequest =
-                    getSingleMergeRequest(
-                            gitlabUrl, token, gitlabProjectId, mrInfo.getGitlabMrIid());
-            top3MrList.add(singleMergeRequest);
-        }
-        return top3MrList;
-    }
-
-    public GitlabMrResponse getSingleMergeRequest(
-            String gitlabUrl, String token, Long gitlabProjectId, Long mergeRequestIid) {
-        HttpHeaders headers = makeGitlabHeaders(token);
-        String url =
-                GitLabApiUrlBuilder.createGetMergeRequestsUrl(
-                        gitlabUrl, gitlabProjectId, mergeRequestIid);
-        ResponseEntity<GitlabMrDetailContent> response =
-                restTemplateUtil.sendGetRequest(
-                        url, headers, new ParameterizedTypeReference<>() {});
-        GitlabMrDetailContent gitlabMrDetailContent = response.getBody();
-        if (gitlabMrDetailContent == null) {
-            throw new BusinessException(EXTERNAL_API_NOT_FOUND);
-        }
-        return GitlabMrResponse.of(gitlabMrDetailContent, false);
+    public GitlabMrDetailContent getSingleMergeRequest(
+            String gitlabUrl, String token, String fullPath, Long mergeRequestIid) {
+        HttpSyncGraphQlClient graphQlClient = graphqlUtil.getGraphQlClient(gitlabUrl, token);
+        ClientGraphQlResponse response =
+                graphQlClient
+                        .document(graphqlUtil.buildMergeRequestQuery(fullPath, mergeRequestIid))
+                        .executeSync();
+        return response.field("project.mergeRequest").toEntity(GitlabMrDetailContent.class);
     }
 
     public GitlabProjectDetailContent getSingleProject(
             String gitlabUrl, String token, Long gitlabProjectId) {
-        HttpHeaders headers = makeGitlabHeaders(token);
-        String url = GitLabApiUrlBuilder.createSingleProjectUrl(gitlabUrl, gitlabProjectId);
-        ResponseEntity<GitlabProjectDetailContent> response =
-                restTemplateUtil.sendGetRequest(
-                        url, headers, new ParameterizedTypeReference<>() {});
-        return response.getBody();
+        HttpSyncGraphQlClient graphQlClient = graphqlUtil.getGraphQlClient(gitlabUrl, token);
+        ClientGraphQlResponse response =
+                graphQlClient
+                        .document(graphqlUtil.createSingleProjectQuery(gitlabProjectId))
+                        .executeSync();
+        return response.field("projects").toEntity(GitlabProjectDetailContent.class);
     }
 
     public GitlabUserInfoContent getUserInfo(String gitlabUrl, String token) {
-        HttpHeaders headers = makeGitlabHeaders(token);
-        String url = GitLabApiUrlBuilder.createUserInfoUrl(gitlabUrl);
+        HttpSyncGraphQlClient graphQlClient = graphqlUtil.getGraphQlClient(gitlabUrl, token);
+        ClientGraphQlResponse response =
+                graphQlClient.document(graphqlUtil.createUserInfoQuery()).executeSync();
+        return response.field("currentUser").toEntity(GitlabUserInfoContent.class);
+    }
 
-        ResponseEntity<GitlabUserInfoContent> response =
-                restTemplateUtil.sendGetRequest(
-                        url, headers, new ParameterizedTypeReference<>() {});
-        return response.getBody();
+    public List<GitlabMrResponse> getTop3MrList(
+            String gitlabUrl, String token, String fullPath, List<MrInfo> mrInfoList) {
+        List<GitlabMrResponse> top3MrList = new ArrayList<>();
+        for (MrInfo mrInfo : mrInfoList) {
+            GitlabMrResponse singleMergeRequest =
+                    GitlabMrResponse.of(
+                            getSingleMergeRequest(
+                                    gitlabUrl, token, fullPath, mrInfo.getGitlabMrIid()),
+                            false);
+            top3MrList.add(singleMergeRequest);
+        }
+        return top3MrList;
     }
 
     public List<GitlabMrDiffsContent> getMrDiffs(
@@ -148,12 +135,18 @@ public class GitLabClient {
     }
 
     public ProjectInfoContent getProjectInfoDetail(
-            String gitlabUrl, String token, Long gitlabProjectId) {
-        int commitCount = getProjectCommitCount(gitlabUrl, token, gitlabProjectId);
+            String gitlabUrl, String token, Long gitlabProjectId, String fullPath) {
+        HttpSyncGraphQlClient graphQlClient = graphqlUtil.getGraphQlClient(gitlabUrl, token);
+        ClientGraphQlResponse response =
+                graphQlClient.document(graphqlUtil.createProjectInfoQuery(fullPath)).executeSync();
+        GitlabProjectInfoContent content =
+                response.field("project").toEntity(GitlabProjectInfoContent.class);
         Long branchCount = getProjectBranchCount(gitlabUrl, token, gitlabProjectId);
-        Long mergeRequestCount = getProjectMRCount(gitlabUrl, token, gitlabProjectId);
-        Map<String, Double> languages = getProjectLanguages(gitlabUrl, token, gitlabProjectId);
-        return ProjectInfoContent.of(commitCount, branchCount, mergeRequestCount, languages);
+        return ProjectInfoContent.of(
+                content.statistics().commitCount(),
+                branchCount,
+                content.mergeRequests().count(),
+                content.languages());
     }
 
     public void addProjectWebhook(
@@ -206,41 +199,10 @@ public class GitLabClient {
         return allBranches;
     }
 
-    private int getProjectCommitCount(String gitlabUrl, String token, Long gitlabProjectId) {
-        String url = GitLabApiUrlBuilder.createProjectCommitsUrl(gitlabUrl, gitlabProjectId);
-        HttpHeaders headers = makeGitlabHeaders(token);
-
-        ResponseEntity<Map<String, Object>> response =
-                restTemplateUtil.sendGetRequest(
-                        url, headers, new ParameterizedTypeReference<>() {});
-
-        Map<String, Object> body = response.getBody();
-        if (body == null || !body.containsKey("statistics")) {
-            throw new BusinessException(EXTERNAL_API_BAD_REQUEST);
-        }
-        Map<String, Object> statistics = (Map<String, Object>) body.get("statistics");
-        return (int) statistics.get("commit_count");
-    }
-
-    private Map<String, Double> getProjectLanguages(
-            String gitlabUrl, String token, Long gitlabProjectId) {
-        String url = GitLabApiUrlBuilder.createProjectLanguagesUrl(gitlabUrl, gitlabProjectId);
-        HttpHeaders headers = makeGitlabHeaders(token);
-        ResponseEntity<Map<String, Double>> response =
-                restTemplateUtil.sendGetRequest(
-                        url, headers, new ParameterizedTypeReference<>() {});
-        return response.getBody();
-    }
-
     private long getProjectBranchCount(String gitlabUrl, String token, Long gitlabProjectId) {
         String url =
                 GitLabApiUrlBuilder.createProjectBranchesUrl(gitlabUrl, gitlabProjectId)
                         + "?per_page=1";
-        return getTotalByHeader(token, url);
-    }
-
-    private long getProjectMRCount(String gitlabUrl, String token, Long gitlabProjectId) {
-        String url = GitLabApiUrlBuilder.createProjectMRUrl(gitlabUrl, gitlabProjectId);
         return getTotalByHeader(token, url);
     }
 
@@ -267,10 +229,6 @@ public class GitLabClient {
         headers.set(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         headers.set(PRIVATE_TOKEN, token);
         return headers;
-    }
-
-    private String convertToGitlabDateFormat(LocalDateTime localDateTime) {
-        return localDateTime.toString() + KST_OFFSET;
     }
 
     private static int getTotalPages(HttpHeaders responseHeaders) {

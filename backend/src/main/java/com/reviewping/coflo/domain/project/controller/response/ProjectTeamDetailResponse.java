@@ -12,14 +12,12 @@ public record ProjectTeamDetailResponse(
         List<LanguageResponse> languages,
         Long aiReviewCount) {
     public static ProjectTeamDetailResponse of(
-            ProjectInfoContent projectInfoContent,
-            List<LanguageResponse> languages,
-            Long aiReviewCount) {
+            ProjectInfoContent projectInfoContent, Long aiReviewCount) {
         return ProjectTeamDetailResponse.builder()
                 .commitCount(projectInfoContent.commitCount())
                 .branchCount(projectInfoContent.branchCount())
                 .mergeRequestCount(projectInfoContent.mergeRequestCount())
-                .languages(languages)
+                .languages(projectInfoContent.languages())
                 .aiReviewCount(aiReviewCount)
                 .build();
     }

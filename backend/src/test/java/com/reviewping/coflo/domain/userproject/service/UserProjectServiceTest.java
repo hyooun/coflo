@@ -2,7 +2,10 @@ package com.reviewping.coflo.domain.userproject.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
+import com.reviewping.coflo.domain.user.entity.GitlabAccount;
+import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class UserProjectServiceTest {
 
     @Mock private UserProjectRepository userProjectRepository;
+    @Mock private GitlabAccountRepository gitlabAccountRepository;
 
     @InjectMocks private UserProjectService userProjectService;
 
@@ -23,11 +27,13 @@ class UserProjectServiceTest {
     public void testUserHasLinkedProject() {
         // given
         Long userId = 1L;
+        GitlabAccount gitlabAccount = mock(GitlabAccount.class);
 
+        given(gitlabAccountRepository.getFirstByUserId(userId)).willReturn(gitlabAccount);
         given(userProjectRepository.existsByGitlabAccountUserId(userId)).willReturn(true);
 
         // when
-        boolean result = userProjectService.hasLinkedProject(userId);
+        boolean result = userProjectService.hasLinkedProject(userId).hasLinkedProject();
 
         // then
         assertThat(result).isTrue();
@@ -38,11 +44,13 @@ class UserProjectServiceTest {
     public void testUserHasNoLinkedProject() {
         // given
         Long userId = 1L;
+        GitlabAccount gitlabAccount = mock(GitlabAccount.class);
 
+        given(gitlabAccountRepository.getFirstByUserId(userId)).willReturn(gitlabAccount);
         given(userProjectRepository.existsByGitlabAccountUserId(userId)).willReturn(false);
 
         // when
-        boolean result = userProjectService.hasLinkedProject(userId);
+        boolean result = userProjectService.hasLinkedProject(userId).hasLinkedProject();
 
         // then
         assertThat(result).isFalse();

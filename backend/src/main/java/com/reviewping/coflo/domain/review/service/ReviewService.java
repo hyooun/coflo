@@ -28,6 +28,7 @@ import com.reviewping.coflo.domain.review.repository.ReviewRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
+import com.reviewping.coflo.domain.webhookchannel.service.WebhookChannelService;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
 import com.reviewping.coflo.global.integration.RedisGateway;
@@ -43,6 +44,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
+    private final String AI_REVIEW_COMPLETE_MESSAGE = "AI 리뷰가 생성되었습니다.";
+
     private final BranchRepository branchRepository;
     private final RetrievalRepository retrievalRepository;
 
@@ -52,6 +55,7 @@ public class ReviewService {
     private final CustomPromptRepository customPromptRepository;
     private final ProjectRepository projectRepository;
     private final BadgeEventService badgeEventService;
+    private final WebhookChannelService webhookChannelService;
 
     private final GitLabClient gitLabClient;
     private final ObjectMapper objectMapper;
@@ -85,6 +89,10 @@ public class ReviewService {
                 "Gitlab에 리뷰를 달았습니다. Saved Review Id: {}, Saved Retrieval Count: {}",
                 savedReview.getId(),
                 savedRetrievalCount);
+
+        if (!project.getWebhookChannels().isEmpty()) {
+            webhookChannelService.sendData(project.getId(), AI_REVIEW_COMPLETE_MESSAGE);
+        }
     }
 
     @Transactional

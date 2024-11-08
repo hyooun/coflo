@@ -63,7 +63,7 @@ export function OAuthRedirectHandler() {
       return;
     }
 
-    if (isSignup && isConnect && projectId) {
+    if (isConnect && projectId) {
       navigate(`/${projectId}/main`, { replace: true });
       return;
     }

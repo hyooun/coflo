@@ -28,6 +28,7 @@ import com.reviewping.coflo.domain.review.repository.ReviewRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
+import com.reviewping.coflo.domain.webhookchannel.service.WebhookChannelService;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
 import com.reviewping.coflo.global.integration.RedisGateway;
@@ -43,6 +44,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
+    private final String AI_REVIEW_COMPLETE_MESSAGE = "AI 리뷰가 생성되었습니다.";
+
     private final BranchRepository branchRepository;
     private final RetrievalRepository retrievalRepository;
 
@@ -52,6 +55,7 @@ public class ReviewService {
     private final CustomPromptRepository customPromptRepository;
     private final ProjectRepository projectRepository;
     private final BadgeEventService badgeEventService;
+    private final WebhookChannelService webhookChannelService;
 
     private final GitLabClient gitLabClient;
     private final ObjectMapper objectMapper;
@@ -71,8 +75,9 @@ public class ReviewService {
         Project project = mrInfo.getProject();
 
         Review review = Review.builder().mrInfo(mrInfo).content(reviewResponse.content()).build();
-        reviewRepository.save(review);
-        saveRetrievals(reviewResponse, review);
+        Review savedReview = reviewRepository.save(review);
+        log.debug("리뷰가 저장되었습니다. Saved Review Id: {}", savedReview.getId());
+        int savedRetrievalCount = saveRetrievals(reviewResponse, review);
 
         gitLabClient.addNoteToMr(
                 reviewResponse.gitlabUrl(),
@@ -80,6 +85,14 @@ public class ReviewService {
                 project.getGitlabProjectId(),
                 mrInfo.getGitlabMrIid(),
                 reviewResponse.content());
+        log.debug(
+                "Gitlab에 리뷰를 달았습니다. Saved Review Id: {}, Saved Retrieval Count: {}",
+                savedReview.getId(),
+                savedRetrievalCount);
+
+        if (!project.getWebhookChannels().isEmpty()) {
+            webhookChannelService.sendData(project.getId(), AI_REVIEW_COMPLETE_MESSAGE);
+        }
     }
 
     @Transactional
@@ -216,7 +229,7 @@ public class ReviewService {
         return review.getRetrievals().stream().map(RetrievalDetailResponse::from).toList();
     }
 
-    private void saveRetrievals(ReviewResponseMessage reviewResponse, Review review) {
+    private int saveRetrievals(ReviewResponseMessage reviewResponse, Review review) {
         List<Retrieval> retrievals =
                 reviewResponse.retrievals().stream()
                         .map(
@@ -231,6 +244,8 @@ public class ReviewService {
                                                                         message.language())))
                                                 .build())
                         .toList();
-        retrievalRepository.saveAll(retrievals);
+        List<Retrieval> saved = retrievalRepository.saveAll(retrievals);
+        log.debug("참고자료가 저장되었습니다. Saved Retrieval Count: {}", saved.size());
+        return saved.size();
     }
 }

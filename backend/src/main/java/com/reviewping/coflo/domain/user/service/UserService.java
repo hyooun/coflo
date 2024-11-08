@@ -5,10 +5,12 @@ import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
+import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabUserInfoContent;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserProjectRepository userProjectRepository;
     private final GitlabAccountRepository gitlabAccountRepository;
     private final GitLabClient gitLabClient;
     private final BadgeEventService badgeEventService;
@@ -30,12 +33,15 @@ public class UserService {
         User user = userRepository.getById(userId);
         badgeEventService.eventFirstLogin(user);
         gitLabClient.getUserInfo(domain, userToken);
+
         try {
             gitlabAccountRepository.save(
                     GitlabAccount.builder().user(user).domain(domain).userToken(userToken).build());
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException(ErrorCode.USER_TOKEN_ALREADY_EXIST);
         }
+
+        if (user.getUsername() == null) synchronizeUserInfo(userId);
     }
 
     @Transactional
@@ -46,5 +52,26 @@ public class UserService {
                         user.getGitlabAccounts().getFirst().getDomain(),
                         user.getGitlabAccounts().getFirst().getUserToken());
         user.updateUserInfo(userInfo.username(), userInfo.avatarUrl());
+    }
+
+    @Transactional
+    public void updateRecentProjectId(Long userId, Long projectId) {
+        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(userId);
+        gitlabAccount.updateRecentProjectId(projectId);
+    }
+
+    public boolean isConnect(Long userId) {
+        User user = userRepository.getById(userId);
+        List<GitlabAccount> gitlabAccounts = gitlabAccountRepository.findAllByUser(user);
+        List<Long> gitlabAccountIds =
+                gitlabAccounts.stream().map(gitlabAccount -> gitlabAccount.getId()).toList();
+        Long connectCount = userProjectRepository.countByGitlabAccountIds(gitlabAccountIds);
+
+        return connectCount > 0 ? true : false;
+    }
+
+    public Long getRecentVisitProjectId(User user) {
+        List<GitlabAccount> gitlabAccounts = gitlabAccountRepository.findAllByUser(user);
+        return gitlabAccounts.isEmpty() ? null : gitlabAccounts.getFirst().getVisitedProjectId();
     }
 }

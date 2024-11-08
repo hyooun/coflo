@@ -93,7 +93,8 @@ public class WebhookChannelService {
             throw new BusinessException(WEBHOOK_REQUEST_SERIALIZATION_ERROR, e);
         }
 
-        restTemplateUtil.sendPostRequest(url, headers, body, new ParameterizedTypeReference<>() {});
+        restTemplateUtil.sendPostRequest(
+                url, headers, body, new ParameterizedTypeReference<String>() {});
     }
 
     private static WebhookContent getWebhookContent(String content, ChannelType channelType) {

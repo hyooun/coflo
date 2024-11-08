@@ -3,6 +3,7 @@ package com.reviewping.coflo.domain.userproject.controller;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.domain.userproject.controller.dto.response.UserProjectResponse;
+import com.reviewping.coflo.domain.userproject.controller.dto.response.UserProjectStatusResponse;
 import com.reviewping.coflo.domain.userproject.service.UserProjectService;
 import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.auth.AuthUser;
@@ -43,9 +44,8 @@ public class UserProjectController {
 
     @GetMapping("/status")
     @Operation(summary = "프로젝트 연동 여부 조회")
-    public ApiResponse<Map<String, Boolean>> getLinkedStatus(@AuthUser User user) {
-        boolean hasLinkedProject = userProjectService.hasLinkedProject(user.getId());
-        return ApiSuccessResponse.success("hasLinkedProject", hasLinkedProject);
+    public ApiResponse<UserProjectStatusResponse> getLinkedStatus(@AuthUser User user) {
+        return ApiSuccessResponse.success(userProjectService.hasLinkedProject(user.getId()));
     }
 
     @GetMapping

@@ -6,7 +6,7 @@ interface CustomSearchBarProps {
   onSearch: (keyword: string, searchType: string) => void;
 }
 
-export function CustomSearchBar({ onSearch }: CustomSearchBarProps) {
+export const CustomSearchBar = ({ onSearch }: CustomSearchBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('All');
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -34,6 +34,12 @@ export function CustomSearchBar({ onSearch }: CustomSearchBarProps) {
 
   const handleSearch = () => {
     onSearch(searchKeyword, selectedOption);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onSearch(searchKeyword, selectedOption);
+    }
   };
 
   return (
@@ -75,6 +81,7 @@ export function CustomSearchBar({ onSearch }: CustomSearchBarProps) {
         placeholder="Search results..."
         value={searchKeyword}
         onChange={(e) => setSearchKeyword(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
 
       <CommonButton className="w-16 h-full px-2 rounded-md" onClick={handleSearch}>
@@ -82,4 +89,4 @@ export function CustomSearchBar({ onSearch }: CustomSearchBarProps) {
       </CommonButton>
     </div>
   );
-}
+};

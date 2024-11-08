@@ -30,7 +30,7 @@ const CodeEditor = ({
 }: CodeQueryEditorProps) => {
   const monacoInstance = useMonaco();
   const [value, setValue] = useState(defaultValue || CODE_SNIPPETS[defaultLanguage]);
-  const [selectedLanguage, setSelectedLanguage] = useState(language || defaultLanguage);
+  const [selectedLanguage, setSelectedLanguage] = useState<string[]>([language || defaultLanguage]);
   const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
@@ -55,11 +55,11 @@ const CodeEditor = ({
     }
   };
 
-  const handleSelectLanguage = (lang: string) => {
-    setValue(CODE_SNIPPETS[lang]);
-    onChange?.(CODE_SNIPPETS[lang] || '');
-    setSelectedLanguage(lang);
-    onLanguageChange?.(lang);
+  const handleSelectLanguage = (lang: string[]) => {
+    setValue(CODE_SNIPPETS[lang[0]]);
+    onChange?.(CODE_SNIPPETS[lang[0]] || '');
+    setSelectedLanguage([lang[0]]);
+    onLanguageChange?.(lang[0]);
   };
 
   return (
@@ -70,7 +70,7 @@ const CodeEditor = ({
           {isLanguageSelectable ? (
             <>
               <CommonSelector<string>
-                selectedItem={selectedLanguage}
+                selectedItems={selectedLanguage}
                 items={Object.keys(LANGUAGE_VERSIONS)}
                 onSelect={handleSelectLanguage}
                 displayValue={(lang) => lang}

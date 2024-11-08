@@ -3,6 +3,9 @@ package com.reviewping.coflo.global.auth.oauth.handler;
 import com.reviewping.coflo.domain.badge.service.BadgeEventService;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.service.LoginHistoryService;
+import com.reviewping.coflo.domain.user.service.UserService;
+import com.reviewping.coflo.domain.userproject.entity.UserProject;
+import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtConstants;
 import com.reviewping.coflo.global.auth.jwt.utils.JwtProvider;
 import com.reviewping.coflo.global.auth.oauth.model.UserDetails;
@@ -27,6 +30,8 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
     private final CookieUtil cookieUtil;
     private final LoginHistoryService loginHistoryService;
     private final BadgeEventService badgeEventService;
+    private final UserService userService;
+    private final UserProjectRepository userProjectRepository;
 
     @Override
     public void onAuthenticationSuccess(
@@ -35,6 +40,7 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         User user = principal.getUser();
         Long userId = user.getId();
+        String username = user.getUsername();
 
         log.info("=== 로그인 성공 ===");
         Map<String, Object> responseMap = Map.of("userId", userId);
@@ -57,7 +63,31 @@ public class CommonLoginSuccessHandler implements AuthenticationSuccessHandler {
         loginHistoryService.recordLogin(user);
         badgeEventService.eventRandom(user);
 
+        boolean isSignUp = username == null ? true : false;
+        boolean isConnect = userService.isConnect(userId);
+        Long projectId = userService.getRecentVisitProjectId(user);
+
+        if (isConnect && projectId == null) {
+            UserProject userProject = userProjectRepository.findByUserId(userId);
+            projectId = userProject.getId();
+        }
+
         String redirectUrl = cookieUtil.getCookieValue(request, "redirect_url");
+        StringBuilder redirectUrlBuilder = new StringBuilder(redirectUrl);
+
+        redirectUrlBuilder
+                .append("?isSignup=")
+                .append(isSignUp)
+                .append("&isConnect=")
+                .append(isConnect)
+                .append("&projectId=");
+
+        if (projectId != null) {
+            redirectUrlBuilder.append(projectId);
+        }
+
+        redirectUrl = redirectUrlBuilder.toString();
+
         cookieUtil.deleteCookie(request, response, "redirect_url");
 
         log.info("redirect_url={}", redirectUrl);

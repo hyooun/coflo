@@ -34,11 +34,17 @@ public class GitlabAccount extends BaseTimeEntity {
     @OneToMany(mappedBy = "gitlabAccount")
     private List<UserProject> userProjects = new ArrayList<>();
 
+    private Long recentProjectId;
+
     @Builder
     public GitlabAccount(User user, String domain, String userToken) {
         this.user = user;
         this.domain = domain;
         this.userToken = userToken;
         user.getGitlabAccounts().add(this);
+    }
+
+    public void updateRecentProjectId(Long recentProjectId) {
+        this.recentProjectId = recentProjectId;
     }
 }

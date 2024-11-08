@@ -25,6 +25,8 @@ public interface GitlabAccountRepository extends JpaRepository<GitlabAccount, Lo
 
     List<GitlabAccount> findAllByUser(User user);
 
+    List<GitlabAccount> findAllByUser_Id(Long userId);
+
     Integer countByUser(User user);
 
     default GitlabAccount getFirstByUserId(Long userId) {

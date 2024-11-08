@@ -1,3 +1,3 @@
 package com.reviewping.coflo.domain.project.controller.response;
 
-public record LanguageResponse(String language, double percentage, String color) {}
+public record LanguageResponse(String name, Double share, String color) {}

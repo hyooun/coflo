@@ -11,6 +11,7 @@ import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.domain.userproject.controller.dto.response.UserProjectResponse;
+import com.reviewping.coflo.domain.userproject.controller.dto.response.UserProjectStatusResponse;
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.global.error.exception.BusinessException;
@@ -57,8 +58,10 @@ public class UserProjectService {
         return userProject.getId();
     }
 
-    public boolean hasLinkedProject(Long userId) {
-        return userProjectRepository.existsByGitlabAccountUserId(userId);
+    public UserProjectStatusResponse hasLinkedProject(Long userId) {
+        GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(userId);
+        Boolean hasLinkedProject = userProjectRepository.existsByGitlabAccountUserId(userId);
+        return new UserProjectStatusResponse(hasLinkedProject, gitlabAccount.getVisitedProjectId());
     }
 
     public List<UserProjectResponse> getUserProjects(User user, Long currentProjectId) {

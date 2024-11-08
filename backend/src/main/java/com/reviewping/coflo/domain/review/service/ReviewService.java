@@ -71,8 +71,9 @@ public class ReviewService {
         Project project = mrInfo.getProject();
 
         Review review = Review.builder().mrInfo(mrInfo).content(reviewResponse.content()).build();
-        reviewRepository.save(review);
-        saveRetrievals(reviewResponse, review);
+        Review savedReview = reviewRepository.save(review);
+        log.debug("리뷰가 저장되었습니다. Saved Review Id: {}", savedReview.getId());
+        int savedRetrievalCount = saveRetrievals(reviewResponse, review);
 
         gitLabClient.addNoteToMr(
                 reviewResponse.gitlabUrl(),
@@ -80,6 +81,10 @@ public class ReviewService {
                 project.getGitlabProjectId(),
                 mrInfo.getGitlabMrIid(),
                 reviewResponse.content());
+        log.debug(
+                "Gitlab에 리뷰를 달았습니다. Saved Review Id: {}, Saved Retrieval Count: {}",
+                savedReview.getId(),
+                savedRetrievalCount);
     }
 
     @Transactional
@@ -212,7 +217,7 @@ public class ReviewService {
         return review.getRetrievals().stream().map(RetrievalDetailResponse::from).toList();
     }
 
-    private void saveRetrievals(ReviewResponseMessage reviewResponse, Review review) {
+    private int saveRetrievals(ReviewResponseMessage reviewResponse, Review review) {
         List<Retrieval> retrievals =
                 reviewResponse.retrievals().stream()
                         .map(
@@ -227,6 +232,8 @@ public class ReviewService {
                                                                         message.language())))
                                                 .build())
                         .toList();
-        retrievalRepository.saveAll(retrievals);
+        List<Retrieval> saved = retrievalRepository.saveAll(retrievals);
+        log.debug("참고자료가 저장되었습니다. Saved Retrieval Count: {}", saved.size());
+        return saved.size();
     }
 }

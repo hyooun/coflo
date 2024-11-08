@@ -9,10 +9,12 @@
     </appender>
 
     <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/ubuntu/coflo/logs/backend/info.log</file>
+        <file>/logs/info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/home/ubuntu/coflo/logs/backend/info%d{yyyy-MM-dd}.log.zip</fileNamePattern>
-            <maxHistory>90</maxHistory>
+            <fileNamePattern>/logs/info%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize> <!-- 로그 파일이 10MB 넘으면 백업하고 새로운 파일 생성 -->
+            <maxHistory>7</maxHistory> <!-- 백업 로그 파일은 7일 이후 삭제 -->
+            <totalSizeCap>100MB</totalSizeCap> <!-- 로그 파일과 백업 로그 파일의 최대 크기는 100MB -->
         </rollingPolicy>
         <encoder>
             <charset>UTF-8</charset>
@@ -26,10 +28,12 @@
     </appender>
 
     <appender name="FILE_DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/ubuntu/coflo/logs/backend/debug.log</file>
+        <file>/logs/debug.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/home/ubuntu/coflo/logs/backend/debug%d{yyyy-MM-dd}.log.zip</fileNamePattern>
-            <maxHistory>90</maxHistory>
+            <fileNamePattern>/logs/debug%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <charset>UTF-8</charset>
@@ -41,10 +45,12 @@
     </appender>
 
     <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/ubuntu/coflo/logs/backend/warn.log</file>
+        <file>/logs/warn.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/home/ubuntu/coflo/logs/backend/warn%d{yyyy-MM-dd}.log.zip</fileNamePattern>
-            <maxHistory>90</maxHistory>
+            <fileNamePattern>/logs/warn%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <charset>UTF-8</charset>
@@ -58,10 +64,12 @@
     </appender>
 
     <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/ubuntu/coflo/logs/backend/error.log</file>
+        <file>/logs/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/home/ubuntu/coflo/logs/backend/error%d{yyyy-MM-dd}.log.zip</fileNamePattern>
-            <maxHistory>90</maxHistory>
+            <fileNamePattern>/logs/error%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <charset>UTF-8</charset>
@@ -74,11 +82,11 @@
         </filter>
     </appender>
 
-    <logger name="org.springframework" level="DEBUG"/>
-    <logger name="org.hibernate" level="DEBUG"/>
-    <logger name="org.apache.http" level="DEBUG"/>
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.hibernate" level="INFO"/>
+    <logger name="org.apache.http" level="INFO"/>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE_INFO"/>
         <appender-ref ref="FILE_DEBUG"/>

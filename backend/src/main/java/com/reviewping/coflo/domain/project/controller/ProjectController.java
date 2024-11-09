@@ -50,13 +50,8 @@ public class ProjectController {
             @RequestParam(name = "calculationType") CalculationType calculationType,
             @RequestParam(name = "scoreDisplayType") ScoreDisplayType scoreDisplayType,
             @RequestParam(name = "period", required = false, defaultValue = "7") Integer period) {
-        if (scoreDisplayType == ScoreDisplayType.INDIVIDUAL) {
-            return ApiSuccessResponse.success(
-                    projectUserStatisticsService.getIndividualScore(
-                            user, projectId, period, calculationType));
-        }
         return ApiSuccessResponse.success(
-                projectUserStatisticsService.getTotalScore(
-                        user, projectId, period, calculationType));
+                projectUserStatisticsService.calculateScore(
+                        user, projectId, period, calculationType, scoreDisplayType));
     }
 }

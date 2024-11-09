@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.project.domain.caculator;
+package com.reviewping.coflo.domain.project.domain.calculator;
 
 import com.reviewping.coflo.domain.project.controller.response.CodeQualityScoreResponse;
 import com.reviewping.coflo.domain.project.controller.response.ScoreOfWeekResponse;

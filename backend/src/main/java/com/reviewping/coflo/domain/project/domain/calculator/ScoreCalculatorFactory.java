@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.project.domain.caculator;
+package com.reviewping.coflo.domain.project.domain.calculator;
 
 import com.reviewping.coflo.domain.project.domain.CalculationType;
 import com.reviewping.coflo.domain.project.domain.ScoreDisplayType;

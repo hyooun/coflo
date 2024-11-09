@@ -5,7 +5,6 @@ import com.reviewping.coflo.domain.project.controller.response.ScoreOfWeekRespon
 import com.reviewping.coflo.domain.project.controller.response.UserProjectIndividualScoreResponse;
 import com.reviewping.coflo.domain.project.domain.CalculationType;
 import com.reviewping.coflo.domain.project.domain.ProjectWeek;
-import com.reviewping.coflo.domain.project.entity.CodeQualityCode;
 import com.reviewping.coflo.domain.userproject.entity.UserProjectScore;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,27 +15,27 @@ import java.util.stream.Collectors;
 
 public class IndividualScoreCalculator
         extends ScoreCalculator<
-                CodeQualityCode, CodeQualityScoreResponse, UserProjectIndividualScoreResponse> {
+                String, CodeQualityScoreResponse, UserProjectIndividualScoreResponse> {
 
     public IndividualScoreCalculator(CalculationType calculationType) {
         super(calculationType);
     }
 
     @Override
-    protected Collector<UserProjectScore, ?, Map<CodeQualityCode, List<UserProjectScore>>>
-            grouping() {
-        return Collectors.groupingBy(UserProjectScore::getCodeQualityCode);
+    protected Collector<UserProjectScore, ?, Map<String, List<UserProjectScore>>> grouping() {
+        return Collectors.groupingBy(
+                userProjectScore -> userProjectScore.getCodeQualityCode().getName());
     }
 
     @Override
-    protected Function<Map.Entry<CodeQualityCode, List<UserProjectScore>>, CodeQualityScoreResponse>
+    protected Function<Map.Entry<String, List<UserProjectScore>>, CodeQualityScoreResponse>
             mapper() {
         return entry -> {
-            CodeQualityCode codeQuality = entry.getKey();
+            String codeQuality = entry.getKey();
             List<UserProjectScore> scoresOfCodeQuality = entry.getValue();
             List<ScoreOfWeekResponse> scoreOfWeekResponses =
                     scoresOfCodeQuality.stream().map(ScoreOfWeekResponse::of).toList();
-            return new CodeQualityScoreResponse(codeQuality.getName(), scoreOfWeekResponses);
+            return new CodeQualityScoreResponse(codeQuality, scoreOfWeekResponses);
         };
     }
 

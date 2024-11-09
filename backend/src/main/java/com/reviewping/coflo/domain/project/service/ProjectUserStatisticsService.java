@@ -41,19 +41,20 @@ public class ProjectUserStatisticsService {
             ScoreDisplayType scoreDisplayType) {
 
         UserProject userProject = getUserProject(user, projectId);
-        ProjectWeek projectWeek =
-                projectDateUtil.calculateWeekRange(
-                        userProject.getProject().getCreatedDate().toLocalDate(),
-                        period,
-                        LocalDate.now());
+        ProjectWeek projectWeek = getProjectWeek(period, userProject);
 
         List<UserProjectScore> userProjectScores =
                 userProjectScoreRepository.findByUserProjectIdAndWeekRange(
                         userProject.getId(), projectWeek.startWeek(), projectWeek.endWeek());
 
-        ScoreCalculator scoreCalculator =
+        ScoreCalculator<?, ?, R> scoreCalculator =
                 scoreCalculatorFactory.get(calculationType, scoreDisplayType);
-        return (R) scoreCalculator.process(projectWeek, userProjectScores);
+        return scoreCalculator.process(projectWeek, userProjectScores);
+    }
+
+    private ProjectWeek getProjectWeek(Integer period, UserProject userProject) {
+        return projectDateUtil.calculateWeekRange(
+                userProject.getProject().getCreatedDate().toLocalDate(), period, LocalDate.now());
     }
 
     private UserProject getUserProject(User user, Long projectId) {

@@ -10,19 +10,19 @@ import java.util.stream.Collector;
 
 public abstract class ScoreCalculator<T, A, R> {
 
-    protected CalculationType calculationType;
+    protected final CalculationType calculationType;
 
     public ScoreCalculator(CalculationType calculationType) {
         this.calculationType = calculationType;
     }
 
     public R process(ProjectWeek projectWeek, List<UserProjectScore> userProjectScores) {
-        List<A> list =
+        List<A> processedScores =
                 userProjectScores.stream().collect(grouping()).entrySet().stream()
                         .map(mapper())
                         .toList();
-        List<A> scores = calculate(list);
-        return response(projectWeek, scores);
+        List<A> finalScores = calculate(processedScores);
+        return response(projectWeek, finalScores);
     }
 
     protected abstract Collector<UserProjectScore, ?, Map<T, List<UserProjectScore>>> grouping();

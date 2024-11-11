@@ -3,7 +3,6 @@ import { ApiResponse } from 'types/api';
 import instance from '@config/apiConfig';
 import {
   GitlabProjectListResponse,
-  PageInfo,
   ValidateBotTokenRequest,
   ValidateUserTokenRequest,
 } from 'types/gitLab';

@@ -23,7 +23,7 @@ const PrevPrompt = () => {
     };
 
     fetchPrevPrompt();
-  }, []);
+  }, [projectId]);
 
   return (
     <div className="flex flex-col border-b-2 border-primary-500 mb-4">

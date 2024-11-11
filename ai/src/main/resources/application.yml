@@ -27,3 +27,6 @@ git-clone-directory: ${GIT_CLONE_DIRECTORY}
 
 mattermost-logger:
   base-url: ${MATTERMOST_WEBHOOK_URL}
+
+service:
+  info: "\n## [참고자료 보러가기](${SERVICE_URL})"

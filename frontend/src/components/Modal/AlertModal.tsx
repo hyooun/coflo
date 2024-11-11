@@ -7,6 +7,7 @@ const AlertModal = ({
   className = '',
   icon: Icon = TriangleAlert,
   iconSize = 48,
+  iconClassName = 'text-state-warning',
 }: AlertModalProps) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -14,7 +15,7 @@ const AlertModal = ({
       <div
         className={`flex flex-col items-center justify-center space-y-6 bg-white rounded-lg p-6 max-w-sm mx-4 relative z-10 border-2 border-primary-500 ${className}`}
       >
-        <Icon className="text-primary-500" size={iconSize} />
+        <Icon className={iconClassName} size={iconSize} />
         <div className="my-2">
           {content.map((text, index) => (
             <p key={index} className="text-center text-xl text-primary-500">

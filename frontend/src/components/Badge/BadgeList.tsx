@@ -15,13 +15,14 @@ const BadgeList = ({ badges, onBadgeClick }: BadgeListProps) => {
       <div className="grid grid-cols-4 grid-rows-3 gap-16 rounded-xl bg-gray-900 p-6">
         {badges.map((badge) =>
           badge.isAcquired ? (
-            <Badge badge={badge} onClick={() => onBadgeClick(badge)} size="2xl" />
+            <Badge badge={badge} onClick={() => onBadgeClick(badge)} size="2xl" key={badge.name} />
           ) : (
             <Badge
               badge={badge}
               onClick={() => onBadgeClick(badge)}
               size="2xl"
               tooltipOptions={{ show: true, showName: true, showDescription: false }}
+              key={badge.name}
             />
           ),
         )}

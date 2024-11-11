@@ -57,12 +57,10 @@ export default function GuideModal({
       const isValid = response.data;
       if (isValid) {
         setIsTokenValid(isValid);
-        console.log('끝');
-        console.log('유효한 토큰입니다.');
         setIsAlertModalOpen(true);
         setAlertMessage(['유효한 토큰입니다.', '회원가입을 진행해주세요.']);
       } else {
-        console.log('유효하지 않은 토큰입니다.');
+        setIsTokenValid(false);
         setIsAlertModalOpen(true);
         setAlertMessage(['유효하지 않은 토큰입니다.', '다시 한 번 입력해주세요.']);
       }
@@ -128,6 +126,7 @@ export default function GuideModal({
             content={alertMessage}
             onConfirm={() => setIsAlertModalOpen(false)}
             icon={isTokenValid ? CircleCheck : TriangleAlert}
+            iconClassName={isTokenValid ? 'text-state-success' : 'text-state-warning'}
           />
         )}
 

@@ -23,8 +23,8 @@ const BestMergeRequestList = () => {
     fetchMergeRequests();
   }, [projectId]);
 
-  const handleItemClick = (id: number) => {
-    navigate(`/main/merge-request/reviews/${id}`);
+  const handleItemClick = (iid: number) => {
+    navigate(`${projectId}/main/merge-request/reviews/${iid}`);
   };
 
   return (
@@ -42,7 +42,7 @@ const BestMergeRequestList = () => {
               <div
                 key={mr.id}
                 className="flex justify-between p-3 mb-3 rounded-lg hover:bg-gray-200 cursor-pointer last:mb-0"
-                onClick={() => handleItemClick(mr.id)}
+                onClick={() => handleItemClick(mr.iid)}
               >
                 <div className="flex flex-col min-w-0 flex-1">
                   <div className="flex items-center space-x-3 mb-1">

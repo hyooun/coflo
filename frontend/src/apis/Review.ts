@@ -14,9 +14,9 @@ const apiRequests = {
 export const Review = {
   getCodeReviewList: (
     projectId: string,
-    mergeRequestId: string,
+    mergeRequestIid: string,
   ): Promise<ApiResponse<MergeRequest>> =>
-    apiRequests.get<MergeRequest>(`reviews`, { mergeRequestId, projectId }),
+    apiRequests.get<MergeRequest>(`reviews`, { mergeRequestIid, projectId }),
 
   getReviewRetrievals: (reviewId: string): Promise<ApiResponse<Reference[]>> =>
     apiRequests.get<Reference[]>(`reviews/${reviewId}/retrievals`),

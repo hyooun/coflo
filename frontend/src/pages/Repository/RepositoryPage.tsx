@@ -109,6 +109,7 @@ export default function RepositoryPage() {
       setIsModalOpen(false);
       setSelectedRepo(null);
       setInputValue('');
+      setSelectedBranches([]);
     }
   };
 

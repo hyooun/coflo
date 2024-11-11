@@ -1,3 +1,3 @@
 package com.reviewping.coflo.domain.customprompt.controller.dto.request;
 
-public record CustomPromptRequest(String contents) {}
+public record CustomPromptRequest(String content) {}

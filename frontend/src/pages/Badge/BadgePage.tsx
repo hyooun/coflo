@@ -13,17 +13,20 @@ const BadgePage = () => {
   const [mainBadge, setMainBadge] = useState<BadgeType | null>(null);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string[]>([]);
-  const [mainBadgeCodeId, setMainBadgeCodeId] = useState<string>('');
+  const [, setMainBadgeCodeId] = useState<string>('');
 
   useEffect(() => {
     const fetchBadges = async () => {
       const response = await Badge.getBadge();
-      if (response.data) {
-        setBadges(response.data.badgeDetails);
-        setMainBadgeCodeId(response.data.mainBadgeCodeId || '');
+      const data = response.data;
+      if (data) {
+        setBadges(data.badgeDetails);
 
-        const mainBadgeData = response.data.badgeDetails.find(
-          (badge: BadgeType) => badge.badgeCodeId === mainBadgeCodeId,
+        const newMainBadgeCodeId = data.mainBadgeCodeId || '';
+        setMainBadgeCodeId(newMainBadgeCodeId);
+
+        const mainBadgeData = data.badgeDetails.find(
+          (badge: BadgeType) => badge.badgeCodeId === newMainBadgeCodeId,
         );
         setMainBadge(mainBadgeData || null);
         setSelectedBadge(mainBadgeData || null);

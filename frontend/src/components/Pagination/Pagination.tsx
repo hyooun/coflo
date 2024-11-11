@@ -10,7 +10,6 @@ const Pagination = () => {
   const totalPages = useAtomValue(totalPagesAtom);
   const totalDisplayedPages = 10;
 
-  console.log('currentPage:', currentPage, 'totalPages:', totalPages);
   if (typeof currentPage !== 'number' || typeof totalPages !== 'number') {
     console.error('currentPage 또는 totalPages가 숫자가 아닙니다:', { currentPage, totalPages });
     return <div></div>;

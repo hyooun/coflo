@@ -1,21 +1,24 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
 import PrevPrompt from './PrevPrompt';
 import AlertModal from '@components/Modal/AlertModal';
 import { customPrompt } from '@apis/CustomPrompt';
-import { useNavigate } from 'react-router-dom';
 import { projectIdAtom } from '@store/auth';
-import { useAtom } from 'jotai';
 
 const CustomPromptContainer = () => {
   const [content, setContent] = useState<string>('');
   const [isAlertModalOpen, setIsAlertModalOpen] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string[]>([]);
+  const [projectId] = useAtom(projectIdAtom);
   const maxLength = 1000;
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
-    setContent(value);
+    if (value.length <= maxLength * 3) {
+      setContent(value);
+    }
   };
 
   const handleSavePrompt = async () => {
@@ -25,11 +28,9 @@ const CustomPromptContainer = () => {
       return;
     }
 
-    const [projectId] = useAtom(projectIdAtom);
-
     if (!projectId) return;
 
-    const response = await customPrompt.updateCustomPrompt(projectId, { promptText: content });
+    const response = await customPrompt.updateCustomPrompt(projectId, { content });
 
     if (response.status === 'SUCCESS') {
       setIsAlertModalOpen(true);

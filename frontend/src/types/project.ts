@@ -39,6 +39,7 @@ export interface UserProjectData {
 export interface GetLinkedStatusData {
   hasLinkedProject: boolean;
   projectId: string;
+  projectFullPath: string;
 }
 
 export interface ProjectTeamRequestResoponse {

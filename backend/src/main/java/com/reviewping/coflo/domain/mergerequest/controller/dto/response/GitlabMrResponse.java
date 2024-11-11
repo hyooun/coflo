@@ -52,11 +52,18 @@ public record GitlabMrResponse(
                 .targetBranch(gitlabMrDetailContent.targetBranch())
                 .labels(gitlabMrDetailContent.labels())
                 .hasConflicts(gitlabMrDetailContent.hasConflicts())
-                .assignee(gitlabMrDetailContent.assignee())
+                .assignee(
+                        new GitlabUserInfoContent(
+                                gitlabMrDetailContent.assignee().username(),
+                                gitlabMrDetailContent.assignee().name(),
+                                gitlabMrDetailContent.assignee().avatarUrl()))
                 .reviewer(
                         gitlabMrDetailContent.reviewers().isEmpty()
                                 ? null
-                                : gitlabMrDetailContent.reviewers().getFirst())
+                                : new GitlabUserInfoContent(
+                                        gitlabMrDetailContent.reviewers().getFirst().username(),
+                                        gitlabMrDetailContent.reviewers().getFirst().name(),
+                                        gitlabMrDetailContent.reviewers().getFirst().avatarUrl()))
                 .isAiReviewCreated(isAiReviewCreated)
                 .build();
     }

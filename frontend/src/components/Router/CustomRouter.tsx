@@ -1,4 +1,3 @@
-import App from 'App';
 import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '@pages/Home/HomePage';
 import MergeListPage from '@pages/MergeList/MergeListPage';
@@ -12,6 +11,7 @@ import SignupPage from '@pages/Signup/SignupPage.tsx';
 import MergeRequestReviewPage from '@pages/MergeRequestReview/MergeRequestReviewPage.tsx';
 import ReferencesPage from '@pages/MergeRequestReview/ReferencesPage';
 import { OAuthRedirectHandler } from '@apis/Auth';
+import App from 'App';
 
 const customRouter = createBrowserRouter([
   {

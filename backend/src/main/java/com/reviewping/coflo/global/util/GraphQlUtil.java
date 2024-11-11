@@ -26,25 +26,35 @@ public class GraphQlUtil {
 
     public String createSingleProjectQuery(Long gitlabProjectId) {
         return String.format(
-                "query { projects(membership: true, ids: [\"gid://gitlab/Project/%d\"]) { nodes {"
-                        + " id name description httpUrlToRepo fullPath } } }",
+                "query { "
+                        + "  projects(membership: true, ids: [\"gid://gitlab/Project/%d\"]) { "
+                        + "    nodes { "
+                        + "      id "
+                        + "      name "
+                        + "      description "
+                        + "      httpUrlToRepo "
+                        + "      fullPath "
+                        + "    } "
+                        + "  } "
+                        + "}",
                 gitlabProjectId);
     }
 
     public String createSearchProjectQuery(GitlabSearchRequest gitlabSearchRequest) {
         return String.format(
-                "query { projects(membership: true, search: \"%s\"%s) {\n"
-                        + "    nodes {\n"
-                        + "      id\n"
-                        + "      fullPath\n"
-                        + "    }\n"
-                        + "    pageInfo {\n"
-                        + "      startCursor\n"
-                        + "      hasNextPage\n"
-                        + "      hasPreviousPage\n"
-                        + "      endCursor\n"
-                        + "    }\n"
-                        + "  }\n"
+                "query { "
+                        + "  projects(membership: true, search: \"%s\"%s) { "
+                        + "    nodes { "
+                        + "      id "
+                        + "      fullPath "
+                        + "    } "
+                        + "    pageInfo { "
+                        + "      startCursor "
+                        + "      hasNextPage "
+                        + "      hasPreviousPage "
+                        + "      endCursor "
+                        + "    } "
+                        + "  } "
                         + "}",
                 gitlabSearchRequest.keyword(), createPagination(gitlabSearchRequest));
     }
@@ -65,11 +75,42 @@ public class GraphQlUtil {
 
     public String buildMergeRequestQuery(String fullPath, Long gitMergeRequestIid) {
         return String.format(
-                "query { project(fullPath: \"%s\") { mergeRequest(iid: \"%d\") { id iid title"
-                    + " description state mergedAt createdAt updatedAt sourceBranch targetBranch"
-                    + " labels { nodes { title color } } assignees(first: 1) { nodes { username"
-                    + " name avatarUrl } } reviewers(first: 1) { nodes { username name avatarUrl }"
-                    + " } } } }",
+                "query { "
+                        + "  project(fullPath: \"%s\") { "
+                        + "    mergeRequest(iid: \"%d\") { "
+                        + "      id "
+                        + "      iid "
+                        + "      title "
+                        + "      description "
+                        + "      state "
+                        + "      mergedAt "
+                        + "      createdAt "
+                        + "      updatedAt "
+                        + "      sourceBranch "
+                        + "      targetBranch "
+                        + "      labels { "
+                        + "        nodes { "
+                        + "          title "
+                        + "          color "
+                        + "        } "
+                        + "      } "
+                        + "      assignees(first: 1) { "
+                        + "        nodes { "
+                        + "          username "
+                        + "          name "
+                        + "          avatarUrl "
+                        + "        } "
+                        + "      } "
+                        + "      reviewers(first: 1) { "
+                        + "        nodes { "
+                        + "          username "
+                        + "          name "
+                        + "          avatarUrl "
+                        + "        } "
+                        + "      } "
+                        + "    } "
+                        + "  } "
+                        + "}",
                 fullPath, gitMergeRequestIid);
     }
 
@@ -79,10 +120,13 @@ public class GraphQlUtil {
 
     public String createProjectInfoQuery(String fullPath) {
         return String.format(
-                "query { project(fullPath: \"%s\") { "
-                        + "mergeRequests { count } "
-                        + "languages { name color share } "
-                        + "statistics { commitCount } } }",
+                "query { "
+                        + "  project(fullPath: \"%s\") { "
+                        + "    mergeRequests { count } "
+                        + "    languages { name color share } "
+                        + "    statistics { commitCount } "
+                        + "  } "
+                        + "}",
                 fullPath);
     }
 

@@ -16,23 +16,38 @@ import com.reviewping.coflo.service.dto.request.ReviewRequestMessage;
 import com.reviewping.coflo.service.dto.response.RetrievalMessage;
 import com.reviewping.coflo.service.dto.response.ReviewResponseMessage;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class ReviewCreateService {
 
     private static final String PROMPT_TYPE = "REVIEW";
 
+    private final String serviceInfo;
     private final RedisGateway redisGateway;
     private final OpenaiClient openaiClient;
     private final JsonUtil jsonUtil;
     private final PromptTemplateRepository promptTemplateRepository;
     private final ChunkedCodeRepository chunkedCodeRepository;
+
+    public ReviewCreateService(
+            @Value("${service.info}") String serviceInfo,
+            RedisGateway redisGateway,
+            OpenaiClient openaiClient,
+            JsonUtil jsonUtil,
+            PromptTemplateRepository promptTemplateRepository,
+            ChunkedCodeRepository chunkedCodeRepository) {
+        this.serviceInfo = serviceInfo;
+        this.redisGateway = redisGateway;
+        this.openaiClient = openaiClient;
+        this.jsonUtil = jsonUtil;
+        this.promptTemplateRepository = promptTemplateRepository;
+        this.chunkedCodeRepository = chunkedCodeRepository;
+    }
 
     @ServiceActivator(inputChannel = "reviewRequestChannel")
     public void createReview(String reviewRequestMessage) {
@@ -61,6 +76,7 @@ public class ReviewCreateService {
         // 4. 리뷰 생성
         ChatCompletionResponse chatCompletionResponse = openaiClient.chat(prompt);
         String chatMessage = chatCompletionResponse.choices().getFirst().message().content();
+        chatMessage += serviceInfo;
         // 5. 리뷰 생성 완료
         ReviewResponseMessage reviewResponse =
                 new ReviewResponseMessage(

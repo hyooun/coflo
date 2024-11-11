@@ -110,6 +110,8 @@ public enum ErrorCode {
     EXTERNAL_API_INTERNAL_SERVER_ERROR(
             HttpStatus.INTERNAL_SERVER_ERROR, "Y005", "외부 API 서버 내부 오류가 발생했습니다."),
     EXTERNAL_API_UNAUTHORIZED(HttpStatus.BAD_REQUEST, "Y006", "외부 API 토큰이 유효하지 않습니다."),
+    EXTERNAL_API_COMMUNICATION(HttpStatus.SERVICE_UNAVAILABLE, "Y007", "외부 API와의 통신 중 오류가 발생했습니다."),
+    EXTERNAL_API_TIMEOUT(HttpStatus.GATEWAY_TIMEOUT, "Y008", "외부 API 요청이 시간 초과되었습니다."),
 
     /**
      * ETC(Z000)

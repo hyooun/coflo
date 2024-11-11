@@ -22,10 +22,10 @@ const labelColors: LabelColors = {
 };
 
 const LabelButton = ({ label }: { label: string }) => {
-  const { bgColor } = labelColors[label] || { bgColor: 'bg-blue-500' };
+  const { bgColor } = labelColors[label] || { bgColor: 'bg-primary-500' };
 
   return (
-    <CommonButton active={true} hoverColor="" bgColor={bgColor} className="w-[70px] h-[15px]">
+    <CommonButton active={true} hoverColor="" bgColor={bgColor} className="w-fit h-full px-2">
       {label}
     </CommonButton>
   );

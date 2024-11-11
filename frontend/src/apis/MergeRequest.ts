@@ -9,12 +9,6 @@ const responseBody = <T>(response: AxiosResponse<ApiResponse<T>>) => response.da
 const apiRequests = {
   get: <T>(url: string, params?: object) =>
     instance.get<ApiResponse<T>>(url, { params }).then(responseBody),
-
-  post: <T>(url: string, params?: object, body?: object) =>
-    instance.post<ApiResponse<T>>(url, body, { params }).then(responseBody),
-
-  // post: <T>(url: string, body: object) =>
-  //   instance.post<ApiResponse<T>>(url, body).then(responseBody),
 };
 
 export const MergeRequest = {
@@ -23,11 +17,11 @@ export const MergeRequest = {
     state: string,
     gitlabSearchRequest: SearchParameter,
   ): Promise<ApiResponse<GitlabMrListResponse>> =>
-    apiRequests.post<GitlabMrListResponse>(
-      'merge-requests',
-      { projectId, state },
-      gitlabSearchRequest,
-    ),
+    apiRequests.get<GitlabMrListResponse>('merge-requests', {
+      projectId,
+      state,
+      ...gitlabSearchRequest,
+    }),
 
   getBestMrList: (projectId: string): Promise<ApiResponse<GitlabMergeRequest[]>> =>
     apiRequests.get<GitlabMergeRequest[]>(`/merge-requests/best?projectId=${projectId}`),

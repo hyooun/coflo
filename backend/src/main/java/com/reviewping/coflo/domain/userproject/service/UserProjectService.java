@@ -65,8 +65,8 @@ public class UserProjectService {
             return UserProjectStatusResponse.withoutProject();
         }
         Long projectId = getRecentProjectId(userId, gitlabAccount, hasLinkedProject);
-        String projectPullPath = projectRepository.getById(projectId).getFullPath();
-        return UserProjectStatusResponse.withProjectDetails(projectId, projectPullPath);
+        String projectFullPath = projectRepository.getById(projectId).getFullPath();
+        return UserProjectStatusResponse.withProjectDetails(projectId, projectFullPath);
     }
 
     public List<UserProjectResponse> getUserProjects(User user, Long currentProjectId) {

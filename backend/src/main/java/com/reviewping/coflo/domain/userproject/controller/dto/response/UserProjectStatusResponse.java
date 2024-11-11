@@ -4,8 +4,8 @@ public record UserProjectStatusResponse(
         Boolean hasLinkedProject, Long projectId, String projectPullPath) {
 
     public static UserProjectStatusResponse withProjectDetails(
-            Long projectId, String projectPullPath) {
-        return new UserProjectStatusResponse(true, projectId, projectPullPath);
+            Long projectId, String projectFullPath) {
+        return new UserProjectStatusResponse(true, projectId, projectFullPath);
     }
 
     public static UserProjectStatusResponse withoutProject() {

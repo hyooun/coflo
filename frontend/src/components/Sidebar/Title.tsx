@@ -33,7 +33,7 @@ export function Title() {
           </div>
 
           <div className="pl-3">
-            <div className="text-sm font-bold text-primary-500 truncate max-w-40">
+            <div className="text-sm font-bold text-primary-500 truncate max-w-36">
               {projectFullPath}
             </div>
             <div className="text-sm text-gray-600">프로젝트 변경</div>

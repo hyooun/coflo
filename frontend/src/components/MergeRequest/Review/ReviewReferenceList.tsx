@@ -29,7 +29,7 @@ const ReviewReferencesList = ({ references, selectedReviewId }: ReviewReferences
 
       {/* References List */}
       <div className="space-y-4">
-        {references.map((reference) => {
+        {references.slice(0, 5).map((reference) => {
           const referenceType: 'CODE' | 'TEXT' =
             reference.language === 'PLAINTEXT' ? 'TEXT' : 'CODE';
 

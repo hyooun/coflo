@@ -33,11 +33,4 @@ public class BadgeController {
         badgeService.updateMainBadge(user, mainBadgeRequest.badgeCodeId());
         return ApiSuccessResponse.success();
     }
-
-    @DeleteMapping
-    @Operation(summary = "로그인 된 사용자의 대표 뱃지 삭제", description = "null로 변경됨")
-    public ApiResponse<Void> deleteMainBadge(@AuthUser User user) {
-        badgeService.deleteMainBadge(user);
-        return ApiSuccessResponse.success();
-    }
 }

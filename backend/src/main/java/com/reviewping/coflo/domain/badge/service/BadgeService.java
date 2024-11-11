@@ -31,13 +31,11 @@ public class BadgeService {
 
     @Transactional
     public void updateMainBadge(User user, Long badgeCodeId) {
-        BadgeCode badgeCode = badgeCodeRepository.getById(badgeCodeId);
+        BadgeCode badgeCode = null;
+        if (badgeCodeId != null) {
+            badgeCode = badgeCodeRepository.getById(badgeCodeId);
+        }
         userRepository.updateBadge(user, badgeCode);
-    }
-
-    @Transactional
-    public void deleteMainBadge(User user) {
-        userRepository.updateBadge(user, null);
     }
 
     private List<BadgeDetail> getBadgeDetails(User user) {

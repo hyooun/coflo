@@ -3,6 +3,7 @@ import { ApiResponse } from 'types/api';
 import instance from '@config/apiConfig';
 import {
   GitlabProjectListResponse,
+  PageInfo,
   ValidateBotTokenRequest,
   ValidateUserTokenRequest,
 } from 'types/gitLab';
@@ -28,9 +29,14 @@ export const Gitlab = {
     apiRequests.get<string[]>(`gitlab/${gitlabProjectId}/branches`),
 
   getGitlabProjects: (
-    keyword?: string,
-    page?: number,
-    size?: number,
+    keyword: string,
+    size: number,
+    cursor?: { startCursor?: string; endCursor?: string },
   ): Promise<ApiResponse<GitlabProjectListResponse>> =>
-    apiRequests.get<GitlabProjectListResponse>('gitlab/search', { keyword, page, size }),
+    apiRequests.get<GitlabProjectListResponse>('gitlab/search', {
+      keyword,
+      size,
+      ...(cursor?.startCursor && { startCursor: cursor.startCursor }),
+      ...(cursor?.endCursor && { endCursor: cursor.endCursor }),
+    }),
 };

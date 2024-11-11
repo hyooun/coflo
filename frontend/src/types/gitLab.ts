@@ -1,5 +1,5 @@
 export interface GitlabProject {
-  gitlabProjectId: number;
+  gitlabProjectId: string;
   name: string;
   isLinked: boolean;
   isLinkable: boolean;
@@ -7,10 +7,14 @@ export interface GitlabProject {
 
 export interface GitlabProjectListResponse {
   gitlabProjectList: GitlabProject[];
-  totalPages: number;
-  totalElements: number;
-  isLast: boolean;
-  currPage: number;
+  pageInfo: PageInfo;
+}
+
+export interface PageInfo {
+  startCursor: string;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  endCursor: string;
 }
 
 export interface ValidateUserTokenRequest {

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.request.GitlabMrPageRequest;
-import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
+import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrQueryResponse;
 import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.global.client.gitlab.request.GitlabNoteRequest;
 import com.reviewping.coflo.global.client.gitlab.response.*;
@@ -76,7 +76,7 @@ public class GitLabClient {
         return new GitlabMrPageContent(response.getBody(), pageDetail);
     }
 
-    public GitlabMrDetailContent getSingleMergeRequest(
+    public GitlabMrQueryContent getSingleMergeRequest(
             String gitlabUrl, String token, String fullPath, Long mergeRequestIid) {
         return executeWithExceptionHandling(
                 () -> {
@@ -89,7 +89,7 @@ public class GitLabClient {
                                                     fullPath, mergeRequestIid))
                                     .executeSync();
                     return response.field("project.mergeRequest")
-                            .toEntity(GitlabMrDetailContent.class);
+                            .toEntity(GitlabMrQueryContent.class);
                 });
     }
 
@@ -121,12 +121,12 @@ public class GitLabClient {
                 });
     }
 
-    public List<GitlabMrResponse> getTop3MrList(
+    public List<GitlabMrQueryResponse> getTop3MrList(
             String gitlabUrl, String token, String fullPath, List<MrInfo> mrInfoList) {
-        List<GitlabMrResponse> top3MrList = new ArrayList<>();
+        List<GitlabMrQueryResponse> top3MrList = new ArrayList<>();
         for (MrInfo mrInfo : mrInfoList) {
-            GitlabMrResponse singleMergeRequest =
-                    GitlabMrResponse.of(
+            GitlabMrQueryResponse singleMergeRequest =
+                    GitlabMrQueryResponse.of(
                             getSingleMergeRequest(
                                     gitlabUrl, token, fullPath, mrInfo.getGitlabMrIid()),
                             false);

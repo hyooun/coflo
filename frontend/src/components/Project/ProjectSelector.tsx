@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { Project } from 'types/project';
 import { ProjectSelectorProps } from 'types/project';
-import { projectIdAtom } from '@store/auth';
+import { projectFullPathAtom, projectIdAtom } from '@store/auth';
 import { useAtom } from 'jotai';
 import { UserProject } from '@apis/Link';
 
@@ -15,8 +15,8 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const selectorRef = useRef<HTMLDivElement>(null);
 
-  // 임시 현재 프로젝트 ID
-  const [currentProjectId] = useAtom(projectIdAtom);
+  const [currentProjectId, setCurrentProjectId] = useAtom(projectIdAtom);
+  const [, setProjectFullPath] = useAtom(projectFullPathAtom);
 
   const filterFunction = (project: Project, query: string) =>
     project.name.toLowerCase().includes(query.toLowerCase());
@@ -70,6 +70,14 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
     };
   }, [onClose, titleRef]);
 
+  const handleProjectClick = (project: Project) => {
+    setCurrentProjectId(project.projectId);
+    setProjectFullPath(project.name);
+    setSelectedProject(project);
+    onClose();
+    navigate(`/${project.projectId}/main`);
+  };
+
   return (
     <div ref={selectorRef} className="w-[240px] bg-white rounded-lg shadow-lg border-2 ">
       <div className="flex justify-between items-center py-2 px-4 border-b-2 ">
@@ -102,13 +110,10 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
             filteredItems.map((project) => (
               <button
                 key={project.projectId}
-                onClick={() => {
-                  setSelectedProject(project);
-                  onClose();
-                }}
+                onClick={() => handleProjectClick(project)}
                 className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors flex justify-between items-center"
               >
-                <span>{project.name}</span>
+                <span className="truncate">{project.name}</span>
                 {project.projectId === currentProjectId && (
                   <span className="text-xs bg-primary-500 text-white px-2 py-0.5 rounded-full">
                     current

@@ -19,7 +19,9 @@ export default function CursorPagination({
         onClick={onPrevious}
         disabled={!hasPreviousPage}
         className={`p-2 rounded ${
-          !hasPreviousPage ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'
+          !hasPreviousPage
+            ? 'text-gray-300 cursor-not-allowed'
+            : 'text-primary-500 hover:bg-primary-500 hover:text-white'
         }`}
       >
         <ChevronLeft size={24} />
@@ -28,7 +30,9 @@ export default function CursorPagination({
         onClick={onNext}
         disabled={!hasNextPage}
         className={`p-2 rounded ${
-          !hasNextPage ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'
+          !hasNextPage
+            ? 'text-gray-300 cursor-not-allowed'
+            : 'text-primary-500 hover:bg-primary-500 hover:text-white'
         }`}
       >
         <ChevronRight size={24} />

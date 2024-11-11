@@ -2,10 +2,13 @@ import { useState, useRef } from 'react';
 import { GitlabIcon } from './Icons/Gitlab';
 import { SelectorIcon } from './Icons/Selector';
 import ProjectSelector from '@components/Project/ProjectSelector';
+import { projectFullPathAtom } from '@store/auth';
+import { useAtom } from 'jotai';
 
 export function Title() {
   const [isOpen, setIsOpen] = useState(false);
   const titleRef = useRef<HTMLDivElement>(null);
+  const [projectFullPath] = useAtom(projectFullPathAtom);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -14,7 +17,6 @@ export function Title() {
   };
 
   const handleClose = () => {
-    console.log('close');
     setIsOpen(false);
   };
 
@@ -31,7 +33,9 @@ export function Title() {
           </div>
 
           <div className="pl-3">
-            <div className="text-sm font-bold text-primary-500">aaaa aaaaaa</div>
+            <div className="text-sm font-bold text-primary-500 truncate max-w-40">
+              {projectFullPath}
+            </div>
             <div className="text-sm text-gray-600">프로젝트 변경</div>
           </div>
         </div>

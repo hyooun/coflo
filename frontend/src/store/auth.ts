@@ -6,3 +6,4 @@ export const isLoginAtom = atomWithStorage<boolean>('isLogin', false);
 export const isSignupAtom = atom<boolean>(false);
 export const isConnectAtom = atom<boolean>(false);
 export const projectIdAtom = atomWithStorage<string | null>('projectId', null);
+export const projectFullPathAtom = atomWithStorage<string | null>('projectFullPath', null);

@@ -10,6 +10,7 @@ import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.DiscordContent;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.MattermostContent;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.WebhookContent;
+import com.reviewping.coflo.domain.webhookchannel.controller.dto.response.ChannelCodeResponse;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.response.WebhookChannelResponse;
 import com.reviewping.coflo.domain.webhookchannel.entity.ChannelCode;
 import com.reviewping.coflo.domain.webhookchannel.entity.ChannelType;
@@ -80,6 +81,11 @@ public class WebhookChannelService {
     public void deleteWebhookChannel(Long webhookChannelId) {
         WebhookChannel webhookChannel = webhookChannelRepository.getById(webhookChannelId);
         webhookChannelRepository.delete(webhookChannel);
+    }
+
+    public List<ChannelCodeResponse> getChannelCodeList() {
+        List<ChannelCode> channelCodes = channelCodeRepository.findAll();
+        return channelCodes.stream().map(ChannelCodeResponse::of).toList();
     }
 
     private void send(String url, String content, ChannelCode channelCode) {

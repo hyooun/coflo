@@ -28,8 +28,6 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
     const fetchedProjects = async () => {
       try {
         const response = await UserProject.getUserProjects({ currentProjectId });
-        console.log(response);
-        console.log(response.data);
         setProjects(response.data || []);
       } catch (error) {
         console.error('Error fetching projects:', error);

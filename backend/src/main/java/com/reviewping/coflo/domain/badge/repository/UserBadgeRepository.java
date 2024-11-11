@@ -21,6 +21,8 @@ public interface UserBadgeRepository extends JpaRepository<UserBadge, Long> {
     List<Long> findUserIdsWithoutBadge(
             @Param("userIds") List<Long> userIds, @Param("badgeCodeId") Long badgeCodeId);
 
+    int countByUser(User user);
+
     default UserBadge getById(Long id) {
         return findById(id).orElseThrow(() -> new BusinessException(USER_BADGE_NOT_EXIST));
     }

@@ -2,6 +2,7 @@ package com.reviewping.coflo.domain.webhookchannel.controller;
 
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.UpdateWebhookChannelRequest;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.WebhookChannelRequest;
+import com.reviewping.coflo.domain.webhookchannel.controller.dto.response.ChannelCodeResponse;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.response.WebhookChannelResponse;
 import com.reviewping.coflo.domain.webhookchannel.service.WebhookChannelService;
 import com.reviewping.coflo.global.aop.LogExecution;
@@ -63,5 +64,11 @@ public class WebhookChannelController {
             @PathVariable("webhookChannelId") Long webhookChannelId) {
         webhookChannelService.deleteWebhookChannel(webhookChannelId);
         return ApiSuccessResponse.success();
+    }
+
+    @GetMapping("/codes")
+    @Operation(summary = "채널 코드 목록 조회")
+    public ApiResponse<List<ChannelCodeResponse>> getChannelCodeList() {
+        return ApiSuccessResponse.success(webhookChannelService.getChannelCodeList());
     }
 }

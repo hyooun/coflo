@@ -43,6 +43,7 @@ export default {
         state: {
           warning: '#EF4545',
           like: '#FF6024',
+          success: '#00C49F',
         },
       },
     },

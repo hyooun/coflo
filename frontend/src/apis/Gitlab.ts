@@ -30,7 +30,13 @@ export const Gitlab = {
 
   getGitlabProjects: (
     keyword: string,
-    pageInfo: PageInfo,
+    size: number,
+    cursor?: { startCursor?: string; endCursor?: string },
   ): Promise<ApiResponse<GitlabProjectListResponse>> =>
-    apiRequests.get<GitlabProjectListResponse>('gitlab/search', { keyword, ...pageInfo }),
+    apiRequests.get<GitlabProjectListResponse>('gitlab/search', {
+      keyword,
+      size,
+      ...(cursor?.startCursor && { startCursor: cursor.startCursor }),
+      ...(cursor?.endCursor && { endCursor: cursor.endCursor }),
+    }),
 };

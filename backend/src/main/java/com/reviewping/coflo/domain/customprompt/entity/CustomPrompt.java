@@ -19,6 +19,7 @@ public class CustomPrompt extends BaseTimeEntity {
     @JoinColumn(name = "project_id")
     private Project project;
 
+    @Column(length = 1000)
     private String content;
 
     public CustomPrompt(Project project) {

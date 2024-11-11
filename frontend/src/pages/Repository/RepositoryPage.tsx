@@ -35,10 +35,8 @@ export default function RepositoryPage() {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      console.log('현재 페이지:', currentPage);
       const response = await Gitlab.getGitlabProjects(undefined, currentPage, itemsPerPage);
-      console.log('API 응답:', response);
-      console.log('API 응답:', response.data);
+
       if (response && response.data) {
         setRepositories(response.data.gitlabProjectList);
         setTotalPages(response.data.totalPages);
@@ -98,6 +96,7 @@ export default function RepositoryPage() {
       setIsModalOpen(false);
       setSelectedRepo(null);
       setInputValue('');
+      setSelectedBranches([]);
     }
   };
 

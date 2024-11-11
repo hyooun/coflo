@@ -1,6 +1,6 @@
 export interface Language {
-  language: string;
-  percentage: number;
+  name: string;
+  share: number;
   color: string;
 }
 
@@ -24,8 +24,8 @@ export interface ProgrammingLanguagesData {
 }
 
 export interface ProgrammingLanguage {
-  language: string;
-  percentage: number;
+  name: string;
+  share: number;
   color: string;
 }
 

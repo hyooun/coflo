@@ -15,8 +15,8 @@ export const fetchProjectDetail = async (
     const programmingLanguagesData: ProgrammingLanguagesData = {
       labels: ['languages'],
       datasets: projectData.languages.map((lang: ProgrammingLanguage, index: number) => ({
-        label: lang.language,
-        data: [lang.percentage],
+        label: lang.name,
+        data: [lang.share],
         backgroundColor: lang.color,
         barThickness: 10,
         borderSkipped: false,
@@ -42,9 +42,7 @@ export const fetchProjectDetail = async (
     console.log('AI Review Count:', aiReviewCount);
 
     projectData.languages.forEach((lang: Language) => {
-      console.log(
-        `Language: ${lang.language}, Percentage: ${lang.percentage}, Color: ${lang.color}`,
-      );
+      console.log(`Language: ${lang.name}, Percentage: ${lang.share}, Color: ${lang.color}`);
     });
 
     console.log('Programming Languages Data:', programmingLanguagesData);

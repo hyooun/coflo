@@ -1,7 +1,7 @@
-package com.reviewping.coflo.domain.project.domain.calculator;
+package com.reviewping.coflo.domain.project.calculator;
 
-import com.reviewping.coflo.domain.project.domain.CalculationType;
-import com.reviewping.coflo.domain.project.domain.ProjectWeek;
+import com.reviewping.coflo.domain.project.enums.CalculationType;
+import com.reviewping.coflo.domain.project.vo.ProjectWeek;
 import com.reviewping.coflo.domain.userproject.entity.UserProjectScore;
 import java.util.List;
 import java.util.Map;

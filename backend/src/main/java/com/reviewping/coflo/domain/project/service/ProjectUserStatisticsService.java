@@ -1,12 +1,12 @@
 package com.reviewping.coflo.domain.project.service;
 
-import com.reviewping.coflo.domain.project.domain.CalculationType;
-import com.reviewping.coflo.domain.project.domain.ProjectWeek;
-import com.reviewping.coflo.domain.project.domain.ScoreDisplayType;
-import com.reviewping.coflo.domain.project.domain.calculator.ScoreCalculator;
-import com.reviewping.coflo.domain.project.domain.calculator.ScoreCalculatorFactory;
+import com.reviewping.coflo.domain.project.calculator.ScoreCalculator;
+import com.reviewping.coflo.domain.project.calculator.ScoreCalculatorFactory;
 import com.reviewping.coflo.domain.project.entity.Project;
+import com.reviewping.coflo.domain.project.enums.CalculationType;
+import com.reviewping.coflo.domain.project.enums.ScoreDisplayType;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
+import com.reviewping.coflo.domain.project.vo.ProjectWeek;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;

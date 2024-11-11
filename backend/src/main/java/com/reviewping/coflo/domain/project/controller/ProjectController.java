@@ -2,8 +2,8 @@ package com.reviewping.coflo.domain.project.controller;
 
 import com.reviewping.coflo.domain.project.controller.response.ProjectTeamDetailResponse;
 import com.reviewping.coflo.domain.project.controller.response.ProjectTeamRewardResponse;
-import com.reviewping.coflo.domain.project.domain.CalculationType;
-import com.reviewping.coflo.domain.project.domain.ScoreDisplayType;
+import com.reviewping.coflo.domain.project.enums.CalculationType;
+import com.reviewping.coflo.domain.project.enums.ScoreDisplayType;
 import com.reviewping.coflo.domain.project.service.ProjectTeamStatisticsService;
 import com.reviewping.coflo.domain.project.service.ProjectUserStatisticsService;
 import com.reviewping.coflo.domain.user.entity.User;

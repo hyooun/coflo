@@ -1,7 +1,7 @@
-package com.reviewping.coflo.domain.project.domain.calculator;
+package com.reviewping.coflo.domain.project.calculator;
 
-import com.reviewping.coflo.domain.project.domain.CalculationType;
-import com.reviewping.coflo.domain.project.domain.ScoreDisplayType;
+import com.reviewping.coflo.domain.project.enums.CalculationType;
+import com.reviewping.coflo.domain.project.enums.ScoreDisplayType;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.project.domain;
+package com.reviewping.coflo.domain.project.vo;
 
 import java.time.LocalDate;
 

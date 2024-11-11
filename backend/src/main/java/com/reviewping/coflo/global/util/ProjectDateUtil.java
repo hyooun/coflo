@@ -1,6 +1,6 @@
 package com.reviewping.coflo.global.util;
 
-import com.reviewping.coflo.domain.project.domain.ProjectWeek;
+import com.reviewping.coflo.domain.project.vo.ProjectWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;

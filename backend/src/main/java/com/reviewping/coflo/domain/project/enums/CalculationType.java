@@ -1,4 +1,4 @@
-package com.reviewping.coflo.domain.project.domain;
+package com.reviewping.coflo.domain.project.enums;
 
 import static com.reviewping.coflo.global.error.ErrorCode.PROJECT_CALCULATION_TYPE_NOT_EXIST;
 

@@ -24,7 +24,7 @@ const BestMergeRequestList = () => {
   }, [projectId]);
 
   const handleItemClick = (iid: number) => {
-    navigate(`${projectId}/main/merge-request/reviews/${iid}`);
+    navigate(`/${projectId}/main/merge-request/reviews/${iid}`);
   };
 
   return (

@@ -58,12 +58,6 @@ const LandingPage = () => {
               <GitMerge className="w-8 h-8 text-primary-500" />
               <span className="text-xl font-bold">coFlo</span>
             </div>
-            <button
-              className="bg-primary-500 px-6 py-2 rounded-full text-white hover:bg-primary-600 transition-colors"
-              onClick={() => navigate('/login')}
-            >
-              시작하기
-            </button>
           </div>
         </div>
       </nav>

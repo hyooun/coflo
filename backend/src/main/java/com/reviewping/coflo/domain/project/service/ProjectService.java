@@ -68,7 +68,7 @@ public class ProjectService {
     }
 
     private void saveBasicCustomPrompt(Project project) {
-        CustomPrompt customPrompt = CustomPrompt.builder().project(project).build();
+        CustomPrompt customPrompt = new CustomPrompt(project);
         customPromptRepository.save(customPrompt);
     }
 }

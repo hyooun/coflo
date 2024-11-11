@@ -4,7 +4,6 @@ import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,11 +19,11 @@ public class CustomPrompt extends BaseTimeEntity {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    private String content = "";
+    private String content;
 
-    @Builder
     public CustomPrompt(Project project) {
         this.project = project;
+        this.content = "";
     }
 
     public void updateContent(String content) {

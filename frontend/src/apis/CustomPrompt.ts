@@ -19,12 +19,9 @@ export const customPrompt = {
   getCustomPrompt: (projectId: string): Promise<ApiResponse<CustomPromptResponse>> =>
     apiRequests.get<CustomPromptResponse>(`custom-prompts/${projectId}`),
 
-  updateCustomPrompt: (
-    projectId: string,
-    data: { promptText: string },
-  ): Promise<ApiResponse<any>> => {
+  updateCustomPrompt: (projectId: string, data: { content: string }): Promise<ApiResponse<any>> => {
     const formData = new FormData();
-    formData.append('promptText', data.promptText);
+    formData.append('content', data.content);
 
     return instance.put(`/custom-prompts/${projectId}`, formData).then(responseBody);
   },

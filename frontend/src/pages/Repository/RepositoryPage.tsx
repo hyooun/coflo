@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { FileQuestion, SearchX } from 'lucide-react';
 
-import { projectIdAtom } from '@store/auth.ts';
+import { projectFullPathAtom, projectIdAtom } from '@store/auth.ts';
 import Header from '@components/Header/Header';
 import { RepositoryItem } from '@components/Repository/RepositoryItem';
 import ToggleSwitch from '@components/Repository/ToggleSwitch';
@@ -26,6 +26,7 @@ export default function RepositoryPage() {
   const [inputValue, setInputValue] = useState('');
   const navigate = useNavigate();
   const [, setProjectId] = useAtom(projectIdAtom);
+  const [, setProjectFullPath] = useAtom(projectFullPathAtom);
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     startCursor: '',
     endCursor: '',
@@ -126,8 +127,9 @@ export default function RepositoryPage() {
   const handleButtonClick = async () => {
     const response = await UserProject.getLinkStatus();
     if (response?.data) {
-      const { hasLinkedProject, projectId } = response.data;
+      const { hasLinkedProject, projectId, projectFullPath } = response.data;
       setProjectId(projectId);
+      setProjectFullPath(projectFullPath);
       if (hasLinkedProject) {
         navigate(`/${projectId}/main`);
       } else {

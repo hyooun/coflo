@@ -1,5 +1,8 @@
 package com.reviewping.coflo.global.client.gitlab;
 
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.web.client.HttpClientErrorException.Unauthorized;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
@@ -13,6 +16,9 @@ import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.util.GraphQlUtil;
 import com.reviewping.coflo.global.util.RestTemplateUtil;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -24,13 +30,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
-
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.Supplier;
-
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.web.client.HttpClientErrorException.Unauthorized;
 
 @Slf4j
 @Service
@@ -71,8 +70,7 @@ public class GitLabClient {
                         gitlabUrl, gitlabProjectId, request, createdAt.toString() + "09:00");
         ResponseEntity<List<GitlabMrDetailContent>> response =
                 restTemplateUtil.sendGetRequest(
-                        url, headers, new ParameterizedTypeReference<>() {
-                        });
+                        url, headers, new ParameterizedTypeReference<>() {});
 
         PageDetail pageDetail = createPageDetail(response.getHeaders());
         return new GitlabMrPageContent(response.getBody(), pageDetail);
@@ -144,8 +142,7 @@ public class GitLabClient {
 
         ResponseEntity<List<GitlabMrDiffsContent>> response =
                 restTemplateUtil.sendGetRequest(
-                        url, headers, new ParameterizedTypeReference<>() {
-                        });
+                        url, headers, new ParameterizedTypeReference<>() {});
         return response.getBody();
     }
 
@@ -161,8 +158,7 @@ public class GitLabClient {
         } catch (JsonProcessingException e) {
             throw new BusinessException(ErrorCode.GITLAB_REQUEST_SERIALIZATION_ERROR, e);
         }
-        restTemplateUtil.sendPostRequest(url, headers, body, new ParameterizedTypeReference<>() {
-        });
+        restTemplateUtil.sendPostRequest(url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
     public ProjectInfoContent getProjectInfoDetail(
@@ -190,10 +186,7 @@ public class GitLabClient {
                                     : 0L;
 
                     return ProjectInfoContent.of(
-                            commitCount,
-                            branchCount,
-                            mergeRequestCount,
-                            content.languages());
+                            commitCount, branchCount, mergeRequestCount, content.languages());
                 });
     }
 
@@ -204,8 +197,7 @@ public class GitLabClient {
 
         ResponseEntity<List<ProjectWebhookContent>> response =
                 restTemplateUtil.sendGetRequest(
-                        url, headers, new ParameterizedTypeReference<>() {
-                        });
+                        url, headers, new ParameterizedTypeReference<>() {});
         return response.getBody();
     }
 
@@ -229,27 +221,26 @@ public class GitLabClient {
             throw new BusinessException(ErrorCode.GITLAB_REQUEST_SERIALIZATION_ERROR, e);
         }
 
-        restTemplateUtil.sendPostRequest(url, headers, body, new ParameterizedTypeReference<>() {
-        });
+        restTemplateUtil.sendPostRequest(url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
-    public List<String> getAllBranchNames(String gitlabUrl, String token, Long gitlabProjectId) {
+    public List<GitlabBranchContent> getAllBranchNames(
+            String gitlabUrl, String token, Long gitlabProjectId) {
         HttpHeaders headers = makeGitlabHeaders(token);
         String branchUrl = GitLabApiUrlBuilder.createProjectBranchesUrl(gitlabUrl, gitlabProjectId);
 
         int page = 1;
         int totalPages = 0;
-        List<String> allBranches = new ArrayList<>();
+        List<GitlabBranchContent> allBranches = new ArrayList<>();
         do {
             String url = branchUrl + "?page=" + page + "&per_page=100";
             ResponseEntity<List<GitlabBranchContent>> response =
                     restTemplateUtil.sendGetRequest(
-                            url, headers, new ParameterizedTypeReference<>() {
-                            });
+                            url, headers, new ParameterizedTypeReference<>() {});
 
             List<GitlabBranchContent> branches = response.getBody();
             if (branches != null) {
-                branches.forEach(branch -> allBranches.add(branch.name()));
+                allBranches.addAll(branches);
             }
 
             if (totalPages == 0) {
@@ -272,8 +263,7 @@ public class GitLabClient {
         HttpHeaders headers = makeGitlabHeaders(token);
         ResponseEntity<Object> response =
                 restTemplateUtil.sendGetRequest(
-                        url, headers, new ParameterizedTypeReference<>() {
-                        });
+                        url, headers, new ParameterizedTypeReference<>() {});
         return Long.parseLong(Objects.requireNonNull(response.getHeaders().getFirst("X-Total")));
     }
 

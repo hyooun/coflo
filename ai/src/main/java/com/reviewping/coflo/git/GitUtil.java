@@ -15,6 +15,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.springframework.stereotype.Component;
@@ -86,6 +87,7 @@ public class GitUtil {
                 RevWalk revWalk = new RevWalk(repository);
                 Git git = new Git(repository)) {
 
+            fetchCommit(git, oldCommitHash);
             RevCommit oldCommit = getCommit(repository, revWalk, oldCommitHash);
             RevCommit newCommit = getCommit(repository, revWalk, newCommitHash);
 
@@ -93,6 +95,14 @@ public class GitUtil {
 
         } catch (Exception e) {
             throw new GitUtilException("커밋 간 파일 변경 내역을 가져오는데 실패했습니다.", e);
+        }
+    }
+
+    public void fetchCommit(Git git, String commitHash) {
+        try {
+            git.fetch().setRefSpecs(new RefSpec(commitHash)).call();
+        } catch (GitAPIException e) {
+            throw new GitUtilException("커밋 fetch에 실패했습니다: " + commitHash, e);
         }
     }
 

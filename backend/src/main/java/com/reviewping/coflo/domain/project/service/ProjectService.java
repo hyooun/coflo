@@ -13,15 +13,11 @@ import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectDetailContent;
-import com.reviewping.coflo.global.client.gitlab.response.ProjectWebhookContent;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.integration.RedisGateway;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,62 +29,41 @@ public class ProjectService {
 
     private final RedisGateway redisGateway;
     private final BranchRepository branchRepository;
-
-    @Value("${domain-webhook-url}")
-    private String domainWebhookUrl;
-
     private final GitLabClient gitLabClient;
     private final ProjectRepository projectRepository;
     private final CustomPromptRepository customPromptRepository;
+    private final ProjectWebhookService projectWebhookService;
 
     @Transactional
     public Project addProject(
             GitlabAccount gitlabAccount,
             Long gitlabProjectId,
             ProjectLinkRequest projectLinkRequest) {
-
-        Project project = createProject(gitlabAccount, gitlabProjectId, projectLinkRequest);
-        List<Branch> branches = List.of();
-        if (projectLinkRequest.branches() != null) {
-            branches = saveProjectBranches(projectLinkRequest.branches(), project);
-        }
-        Project savedProject = projectRepository.save(project);
-        saveBasicCustomPrompt(savedProject);
-        addGitlabProjectWebhooks(gitlabAccount.getDomain(), savedProject);
-        initProject(savedProject, branches, projectLinkRequest.botToken(), project.getGitUrl());
-        return savedProject;
+        Project project = createAndSaveProject(gitlabAccount, gitlabProjectId, projectLinkRequest);
+        List<Branch> branches = saveBranches(projectLinkRequest, project);
+        saveBasicCustomPrompt(project);
+        setupProjectIntegration(
+                project.getId(), branches, projectLinkRequest.botToken(), project.getGitUrl());
+        addProjectWebhooks(gitlabAccount, project);
+        return project;
     }
 
-    private void initProject(
-            Project project, List<Branch> branches, String token, String gitlabUrl) {
-        branches.forEach(
-                branch -> {
-                    UpdateRequestMessage initRequest =
-                            new UpdateRequestMessage(
-                                    project.getId(),
-                                    branch.getId(),
-                                    gitlabUrl,
-                                    branch.getName(),
-                                    token,
-                                    "");
-                    redisGateway.sendUpdateRequest(initRequest);
-                });
-    }
-
-    private Project createProject(
+    private Project createAndSaveProject(
             GitlabAccount gitlabAccount,
             Long gitlabProjectId,
             ProjectLinkRequest projectLinkRequest) {
         GitlabProjectDetailContent gitlabProject =
                 getProjectContentByBotToken(
                         gitlabAccount.getDomain(), gitlabProjectId, projectLinkRequest);
-        return Project.builder()
-                .gitlabProjectId(gitlabProjectId)
-                .botToken(projectLinkRequest.botToken())
-                .name(gitlabProject.name())
-                .gitUrl(gitlabProject.httpUrlToRepo())
-                .fullPath(gitlabProject.fullPath())
-                .build();
+        Project project =
+                Project.builder()
+                        .gitlabProjectId(gitlabProjectId)
+                        .botToken(projectLinkRequest.botToken())
+                        .name(gitlabProject.name())
+                        .gitUrl(gitlabProject.httpUrlToRepo())
+                        .fullPath(gitlabProject.fullPath())
+                        .build();
+        return projectRepository.save(project);
     }
 
     private GitlabProjectDetailContent getProjectContentByBotToken(
@@ -100,9 +75,12 @@ public class ProjectService {
                 domain, projectLinkRequest.botToken(), gitlabProjectId);
     }
 
-    private List<Branch> saveProjectBranches(List<String> branchNames, Project project) {
+    private List<Branch> saveBranches(ProjectLinkRequest projectLinkRequest, Project project) {
+        if (projectLinkRequest.branches() == null) return List.of();
         List<Branch> branches =
-                branchNames.stream().map(branchName -> new Branch(project, branchName)).toList();
+                projectLinkRequest.branches().stream()
+                        .map(branchName -> new Branch(project, branchName))
+                        .toList();
         return branchRepository.saveAll(branches);
     }
 
@@ -111,31 +89,23 @@ public class ProjectService {
         customPromptRepository.save(customPrompt);
     }
 
-    private void addGitlabProjectWebhooks(String projectDomain, Project project) {
-        String eventWebhookUrl = domainWebhookUrl + "/" + project.getId();
-        if (isWebhookAlreadyRegistered(
-                eventWebhookUrl,
-                projectDomain,
-                project.getBotToken(),
-                project.getGitlabProjectId())) {
-            log.info("웹훅 이미 존재!!!!! {}", eventWebhookUrl);
-            return;
-        }
-        Map<String, Boolean> eventSettings = new HashMap<>();
-        eventSettings.put("merge_requests_events", true);
-        eventSettings.put("push_events", true);
-        gitLabClient.addProjectWebhook(
-                projectDomain,
-                project.getBotToken(),
-                project.getGitlabProjectId(),
-                eventWebhookUrl,
-                eventSettings);
+    private void setupProjectIntegration(
+            Long projectId, List<Branch> branches, String token, String gitlabUrl) {
+        branches.forEach(
+                branch -> {
+                    UpdateRequestMessage initRequest =
+                            new UpdateRequestMessage(
+                                    projectId,
+                                    branch.getId(),
+                                    gitlabUrl,
+                                    branch.getName(),
+                                    token,
+                                    "");
+                    redisGateway.sendUpdateRequest(initRequest);
+                });
     }
 
-    private boolean isWebhookAlreadyRegistered(
-            String eventWebhookUrl, String domain, String botToken, Long gitlabProjectId) {
-        List<ProjectWebhookContent> projectWebhooks =
-                gitLabClient.getProjectWebhooks(domain, botToken, gitlabProjectId);
-        return projectWebhooks.stream().anyMatch(content -> content.url().equals(eventWebhookUrl));
+    private void addProjectWebhooks(GitlabAccount gitlabAccount, Project project) {
+        projectWebhookService.addGitlabProjectWebhooks(gitlabAccount.getDomain(), project);
     }
 }

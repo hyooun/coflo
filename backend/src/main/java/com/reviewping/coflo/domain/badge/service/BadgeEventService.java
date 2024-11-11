@@ -20,6 +20,7 @@ import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectScoreRepository;
 import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -38,6 +39,7 @@ public class BadgeEventService {
     private static final long PROMTPT_UPDATE_TARGET_COUNT = 2L;
     private static final int PERCENT = 1;
     private static final long AI_REWARD_TARGET_SCORE = 55L;
+    private static final int TOTAL_BADGES = 8;
     private static final Random random = new Random();
 
     private final UserRepository userRepository;
@@ -78,6 +80,7 @@ public class BadgeEventService {
         if (projectCount == PROJECT_LINK_TARGET_COUNT) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
+            eventAllBadgeUnlocked(user);
         }
     }
 
@@ -90,6 +93,7 @@ public class BadgeEventService {
         if (loginCount >= LOGIN_TARGET_COUNT) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
+            eventAllBadgeUnlocked(user);
         }
     }
 
@@ -99,6 +103,7 @@ public class BadgeEventService {
         if (promptCount == PROMTPT_UPDATE_TARGET_COUNT) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
+            eventAllBadgeUnlocked(user);
         }
     }
 
@@ -112,6 +117,7 @@ public class BadgeEventService {
         if (!userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
+            eventAllBadgeUnlocked(user);
         }
     }
 
@@ -127,16 +133,19 @@ public class BadgeEventService {
 
         badgeCode = badgeCodeRepository.getById(LUCKY_FIND.getId());
 
+        List<User> users = new ArrayList<>();
         List<UserBadge> newBadges =
                 newBadgeUserIds.stream()
                         .map(
                                 userId -> {
                                     User user = userRepository.getById(userId);
+                                    users.add(user);
                                     return UserBadge.of(user, badgeCode);
                                 })
                         .collect(Collectors.toList());
 
         userBadgeRepository.saveAll(newBadges);
+        users.stream().forEach(user -> eventAllBadgeUnlocked(user));
     }
 
     // 코드 마스터 - AI 리뷰평가 리워드 합이 n점 이상 시 획득
@@ -152,6 +161,16 @@ public class BadgeEventService {
     public void eventFirstAiReviewRegenerate(User user) {
         badgeCode = badgeCodeRepository.getById(REVIEW_FINDER.getId());
         if (!userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
+            userBadge = UserBadge.of(user, badgeCode);
+            userBadgeRepository.save(userBadge);
+            eventAllBadgeUnlocked(user);
+        }
+    }
+
+    // 전설의 모험가 - 모든 뱃지를 획득한 경우 획득
+    private void eventAllBadgeUnlocked(User user) {
+        if (userBadgeRepository.countByUser(user) == TOTAL_BADGES) {
+            badgeCode = badgeCodeRepository.getById(LEGEND_ADVENTURER.getId());
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
         }
@@ -170,6 +189,7 @@ public class BadgeEventService {
                 && !userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
             UserBadge userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
+            eventAllBadgeUnlocked(user);
         }
     }
 

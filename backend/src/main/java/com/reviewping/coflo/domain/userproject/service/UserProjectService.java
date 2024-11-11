@@ -61,13 +61,12 @@ public class UserProjectService {
     public UserProjectStatusResponse hasLinkedProject(Long userId) {
         GitlabAccount gitlabAccount = gitlabAccountRepository.getFirstByUserId(userId);
         Boolean hasLinkedProject = userProjectRepository.existsByGitlabAccountUserId(userId);
-        Long recentVisitedProjectId = gitlabAccount.getVisitedProjectId();
-        if (hasLinkedProject && recentVisitedProjectId == null) {
-            UserProject userProject =
-                    userProjectRepository.findTopByUserIdOrderByCreatedDateDesc(userId);
-            recentVisitedProjectId = userProject.getProject().getId();
+        if (!hasLinkedProject) {
+            return UserProjectStatusResponse.withoutProject();
         }
-        return new UserProjectStatusResponse(hasLinkedProject, recentVisitedProjectId);
+        Long projectId = getRecentProjectId(userId, gitlabAccount, hasLinkedProject);
+        String projectFullPath = projectRepository.getById(projectId).getFullPath();
+        return UserProjectStatusResponse.withProjectDetails(projectId, projectFullPath);
     }
 
     public List<UserProjectResponse> getUserProjects(User user, Long currentProjectId) {
@@ -92,6 +91,17 @@ public class UserProjectService {
                         () ->
                                 projectService.addProject(
                                         gitlabAccount, gitlabProjectId, projectLinkRequest));
+    }
+
+    private Long getRecentProjectId(
+            Long userId, GitlabAccount gitlabAccount, Boolean hasLinkedProject) {
+        Long recentVisitedProjectId = gitlabAccount.getVisitedProjectId();
+        if (hasLinkedProject && recentVisitedProjectId == null) {
+            UserProject userProject =
+                    userProjectRepository.findTopByUserIdOrderByCreatedDateDesc(userId);
+            recentVisitedProjectId = userProject.getProject().getId();
+        }
+        return recentVisitedProjectId;
     }
 
     private void moveCurrentProjectToFront(Long currentProjectId, List<UserProject> userProjects) {

@@ -28,17 +28,14 @@ public class TimerAspect {
                         .tag("method", methodName)
                         .register(meterRegistry);
 
-        return timer.recordCallable(
-                () -> {
-                    try {
-                        return joinPoint.proceed();
-                    } catch (Throwable throwable) {
-                        try {
-                            throw throwable;
-                        } catch (Throwable e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
+        long startTime = System.nanoTime();
+        try {
+            Object result = joinPoint.proceed();
+            timer.record(System.nanoTime() - startTime, java.util.concurrent.TimeUnit.NANOSECONDS);
+            return result;
+        } catch (Throwable throwable) {
+            timer.record(System.nanoTime() - startTime, java.util.concurrent.TimeUnit.NANOSECONDS);
+            throw throwable;
+        }
     }
 }

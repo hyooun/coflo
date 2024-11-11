@@ -127,7 +127,6 @@ export default function RepositoryPage() {
     if (response?.data) {
       const { hasLinkedProject, projectId } = response.data;
       setProjectId(projectId);
-      console.log(projectId);
       if (hasLinkedProject) {
         navigate(`/${projectId}/main`);
       } else {

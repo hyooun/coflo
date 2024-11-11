@@ -21,8 +21,8 @@ const MergeRequestReviewPage = () => {
   useEffect(() => {
     if (!id || !projectId) return;
 
-    const fetchMergeRequest = async (projectId: string, id: string) => {
-      const response = await Review.getCodeReviewList(projectId, id);
+    const fetchMergeRequest = async (projectId: string, mergeRequestIid: string) => {
+      const response = await Review.getCodeReviewList(projectId, mergeRequestIid);
       const data = response.data;
       if (data) {
         setMergeRequest(data.mergeRequest);

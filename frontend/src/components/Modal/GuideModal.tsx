@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import { TokenInput } from '@components/Input/TokenInput';
 import type { GuideModalProps } from 'types/modal.ts';
 import { Gitlab } from '@apis/Gitlab';
+import AlertModal from '@components/Modal/AlertModal';
+import { CircleCheck, TriangleAlert } from 'lucide-react';
 
 export default function GuideModal({
   gitlabProjectId,
@@ -24,8 +26,8 @@ export default function GuideModal({
   const [botToken, setBotToken] = useState<string>('');
   const [isTokenValid, setIsTokenValid] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
-  const [, setIsAlertModalOpen] = useState(false);
-  const [, setAlertMessage] = useState<string[]>([]);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string[]>([]);
 
   useEffect(() => {
     if (isOpen && inputProps?.value) {
@@ -119,6 +121,14 @@ export default function GuideModal({
               showValidateButton={true}
             />
           </div>
+        )}
+
+        {isAlertModalOpen && (
+          <AlertModal
+            content={alertMessage}
+            onConfirm={() => setIsAlertModalOpen(false)}
+            icon={isTokenValid ? CircleCheck : TriangleAlert}
+          />
         )}
 
         {/* Link */}

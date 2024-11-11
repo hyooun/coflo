@@ -15,14 +15,13 @@ const BestMergeRequestList = () => {
     if (!projectId) return;
     const fetchMergeRequests = async () => {
       const response = await MergeRequest.getBestMrList(projectId);
-      console.log(response.data);
       if (response.data) {
         setBestMergeRequests(response.data);
       }
     };
 
     fetchMergeRequests();
-  }, []);
+  }, [projectId]);
 
   const handleItemClick = (id: number) => {
     navigate(`/main/merge-request/reviews/${id}`);
@@ -72,7 +71,8 @@ const BestMergeRequestList = () => {
                       {mr.labels.nodes.slice(0, 2).map((label, index) => (
                         <span
                           key={index}
-                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[${label.color}] text-white`}
+                          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium text-white"
+                          style={{ backgroundColor: label.color }}
                         >
                           {label.title}
                         </span>

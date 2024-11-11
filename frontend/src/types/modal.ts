@@ -47,6 +47,7 @@ export interface AlertModalProps {
   className?: string;
   icon?: React.ElementType;
   iconSize?: number;
+  iconClassName?: string;
 }
 
 export interface ConfirmModalProps extends AlertModalProps {

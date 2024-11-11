@@ -150,6 +150,17 @@ public class GitLabClient {
                 content.languages());
     }
 
+    public List<ProjectWebhookContent> getProjectWebhooks(
+            String gitlabUrl, String token, Long gitlabProjectId) {
+        HttpHeaders headers = makeGitlabHeaders(token);
+        String url = GitLabApiUrlBuilder.createProjectWebhookUrl(gitlabUrl, gitlabProjectId);
+
+        ResponseEntity<List<ProjectWebhookContent>> response =
+                restTemplateUtil.sendGetRequest(
+                        url, headers, new ParameterizedTypeReference<>() {});
+        return response.getBody();
+    }
+
     public void addProjectWebhook(
             String gitlabUrl,
             String token,

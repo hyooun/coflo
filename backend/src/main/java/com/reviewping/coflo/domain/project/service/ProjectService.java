@@ -13,6 +13,7 @@ import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectDetailContent;
+import com.reviewping.coflo.global.client.gitlab.response.ProjectWebhookContent;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.integration.RedisGateway;
 import java.util.HashMap;
@@ -112,6 +113,14 @@ public class ProjectService {
 
     private void addGitlabProjectWebhooks(String projectDomain, Project project) {
         String eventWebhookUrl = domainWebhookUrl + "/" + project.getId();
+        if (isWebhookAlreadyRegistered(
+                eventWebhookUrl,
+                projectDomain,
+                project.getBotToken(),
+                project.getGitlabProjectId())) {
+            log.info("웹훅 이미 존재!!!!! {}", eventWebhookUrl);
+            return;
+        }
         Map<String, Boolean> eventSettings = new HashMap<>();
         eventSettings.put("merge_requests_events", true);
         eventSettings.put("push_events", true);
@@ -121,5 +130,12 @@ public class ProjectService {
                 project.getGitlabProjectId(),
                 eventWebhookUrl,
                 eventSettings);
+    }
+
+    private boolean isWebhookAlreadyRegistered(
+            String eventWebhookUrl, String domain, String botToken, Long gitlabProjectId) {
+        List<ProjectWebhookContent> projectWebhooks =
+                gitLabClient.getProjectWebhooks(domain, botToken, gitlabProjectId);
+        return projectWebhooks.stream().anyMatch(content -> content.url().equals(eventWebhookUrl));
     }
 }

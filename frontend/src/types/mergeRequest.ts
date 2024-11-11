@@ -31,6 +31,29 @@ export interface GitlabMergeRequest {
   isAiReviewCreated: boolean;
 }
 
+export interface BestMergeRequest {
+  id: number;
+  iid: number;
+  title: string;
+  description: string;
+  state: 'opened' | 'closed' | 'merged';
+  mergedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  closedAt: string | null;
+  sourceBranch: string;
+  targetBranch: string;
+  labels: {
+    nodes: {
+      title: string;
+      color: string;
+    }[];
+  };
+  assignee: Assignee;
+  reviewer: Reviewer;
+  isAiReviewCreated: boolean;
+}
+
 export interface SearchParameter {
   keyword?: string;
   /** @format int32 */

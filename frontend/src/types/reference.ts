@@ -8,13 +8,19 @@ export interface Reference {
   relevance?: number;
 }
 
+export interface ReferenceRequest {
+  fileName: string;
+  language: string;
+  content: string;
+}
+
 export interface ReferenceProps extends Reference {
   createdAt?: string;
   backgroundColor?: string;
 }
 
 export interface CommonReferenceProps extends ReferenceProps {
-  onEdit: (id: number, content: string) => void;
+  onEdit?: (id: number, content: string) => void;
   onDelete: (id: number) => void;
   onLanguageChange?: (language: string) => void;
   maxLength?: number;

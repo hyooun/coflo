@@ -2,6 +2,7 @@ package com.reviewping.coflo.domain.mergerequest.service;
 
 import com.reviewping.coflo.domain.mergerequest.controller.dto.request.GitlabMrPageRequest;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrPageResponse;
+import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrQueryResponse;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
 import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.domain.mergerequest.repository.MrInfoRepository;
@@ -56,7 +57,7 @@ public class MergeRequestService {
         return GitlabMrPageResponse.of(gitlabMrResponses, gitlabMrPage.pageDetail());
     }
 
-    public List<GitlabMrResponse> getBestMergeRequests(Long userId, Long projectId) {
+    public List<GitlabMrQueryResponse> getBestMergeRequests(Long userId, Long projectId) {
         GitlabAccount gitlabAccount =
                 gitlabAccountRepository.getByUserIdAndProjectId(userId, projectId);
         Project project = projectRepository.getById(projectId);
@@ -71,7 +72,7 @@ public class MergeRequestService {
 
     public List<String> getUsernameBestMergeRequests(Project project) {
         Long userId = project.getUserProjects().getFirst().getGitlabAccount().getUser().getId();
-        List<GitlabMrResponse> top3MrList = getBestMergeRequests(userId, project.getId());
+        List<GitlabMrQueryResponse> top3MrList = getBestMergeRequests(userId, project.getId());
 
         return top3MrList.stream().map(top -> top.assignee().username()).toList();
     }

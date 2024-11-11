@@ -2,7 +2,7 @@ package com.reviewping.coflo.domain.mergerequest.controller;
 
 import com.reviewping.coflo.domain.mergerequest.controller.dto.request.GitlabMrPageRequest;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrPageResponse;
-import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
+import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrQueryResponse;
 import com.reviewping.coflo.domain.mergerequest.service.MergeRequestService;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.global.aop.LogExecution;
@@ -41,9 +41,9 @@ public class MergeRequestController {
 
     @GetMapping("/best")
     @Operation(summary = "프로젝트의 주간 Best MR 조회", description = "점수 가장 높은 상위 3개 항목 조회")
-    public ApiResponse<List<GitlabMrResponse>> getBestGitlabMergeRequests(
+    public ApiResponse<List<GitlabMrQueryResponse>> getBestGitlabMergeRequests(
             @AuthUser User user, @RequestParam(name = "projectId") Long projectId) {
-        List<GitlabMrResponse> gitlabMrResponses =
+        List<GitlabMrQueryResponse> gitlabMrResponses =
                 mergeRequestService.getBestMergeRequests(user.getId(), projectId);
         return ApiSuccessResponse.success(gitlabMrResponses);
     }

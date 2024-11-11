@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reviewping.coflo.domain.badge.service.BadgeEventService;
 import com.reviewping.coflo.domain.customprompt.entity.CustomPrompt;
 import com.reviewping.coflo.domain.customprompt.repository.CustomPromptRepository;
-import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrResponse;
+import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrQueryResponse;
 import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.domain.mergerequest.repository.MrInfoRepository;
 import com.reviewping.coflo.domain.project.entity.Branch;
@@ -168,8 +168,8 @@ public class ReviewService {
                         project.getGitlabProjectId(),
                         mrInfo.getGitlabMrIid());
 
-        GitlabMrResponse gitlabMrResponse =
-                GitlabMrResponse.of(
+        GitlabMrQueryResponse gitlabMrResponse =
+                GitlabMrQueryResponse.of(
                         gitLabClient.getSingleMergeRequest(
                                 gitlabAccount.getDomain(),
                                 gitlabAccount.getUserToken(),
@@ -210,8 +210,8 @@ public class ReviewService {
         GitlabAccount gitlabAccount =
                 gitlabAccountRepository.getByUserIdAndProjectId(userId, projectId);
         Project project = projectRepository.getById(projectId);
-        GitlabMrResponse gitlabMrResponse =
-                GitlabMrResponse.of(
+        GitlabMrQueryResponse gitlabMrQueryContent =
+                GitlabMrQueryResponse.of(
                         gitLabClient.getSingleMergeRequest(
                                 gitlabAccount.getDomain(),
                                 gitlabAccount.getUserToken(),
@@ -222,7 +222,7 @@ public class ReviewService {
                 reviewRepository.findByMrInfoOrderByCreatedDateDesc(mrInfo).stream()
                         .map(ReviewDetailResponse::from)
                         .toList();
-        return ReviewResponse.of(gitlabMrResponse, reviews);
+        return ReviewResponse.of(gitlabMrQueryContent, reviews);
     }
 
     public List<RetrievalDetailResponse> getRetrievalDetail(Long reviewId) {

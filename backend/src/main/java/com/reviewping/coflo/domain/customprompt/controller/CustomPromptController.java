@@ -33,7 +33,7 @@ public class CustomPromptController {
             @AuthUser User user,
             @PathVariable("projectId") Long projectId,
             @ModelAttribute CustomPromptRequest customPromptRequest) {
-        customPromptService.updateCustomPrompt(user, customPromptRequest.contents(), projectId);
+        customPromptService.updateCustomPrompt(user, customPromptRequest.content(), projectId);
         return ApiSuccessResponse.success();
     }
 }

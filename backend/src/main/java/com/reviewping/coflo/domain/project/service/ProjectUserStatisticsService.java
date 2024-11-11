@@ -1,14 +1,12 @@
 package com.reviewping.coflo.domain.project.service;
 
-import com.reviewping.coflo.domain.project.controller.response.UserProjectIndividualScoreResponse;
-import com.reviewping.coflo.domain.project.controller.response.UserProjectTotalScoreResponse;
-import com.reviewping.coflo.domain.project.domain.CalculationType;
-import com.reviewping.coflo.domain.project.domain.ProjectWeek;
-import com.reviewping.coflo.domain.project.domain.calculator.IndividualScoreCalculator;
-import com.reviewping.coflo.domain.project.domain.calculator.ScoreCalculator;
-import com.reviewping.coflo.domain.project.domain.calculator.TotalScoreCalculator;
+import com.reviewping.coflo.domain.project.calculator.ScoreCalculator;
+import com.reviewping.coflo.domain.project.calculator.ScoreCalculatorFactory;
 import com.reviewping.coflo.domain.project.entity.Project;
+import com.reviewping.coflo.domain.project.enums.CalculationType;
+import com.reviewping.coflo.domain.project.enums.ScoreDisplayType;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
+import com.reviewping.coflo.domain.project.vo.ProjectWeek;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
@@ -33,32 +31,30 @@ public class ProjectUserStatisticsService {
     private final UserProjectRepository userProjectRepository;
     private final UserProjectScoreRepository userProjectScoreRepository;
     private final ProjectDateUtil projectDateUtil;
+    private final ScoreCalculatorFactory scoreCalculatorFactory;
 
-    public UserProjectTotalScoreResponse getTotalScore(
-            User user, Long projectId, Integer period, CalculationType calculationType) {
-        return calculateScore(user, projectId, period, new TotalScoreCalculator(calculationType));
-    }
+    public <R> R calculateScore(
+            User user,
+            Long projectId,
+            Integer period,
+            CalculationType calculationType,
+            ScoreDisplayType scoreDisplayType) {
 
-    public UserProjectIndividualScoreResponse getIndividualScore(
-            User user, Long projectId, Integer period, CalculationType calculationType) {
-        return calculateScore(
-                user, projectId, period, new IndividualScoreCalculator(calculationType));
-    }
-
-    private <R> R calculateScore(
-            User user, Long projectId, Integer period, ScoreCalculator<R> calculator) {
         UserProject userProject = getUserProject(user, projectId);
-        ProjectWeek projectWeek =
-                projectDateUtil.calculateWeekRange(
-                        userProject.getProject().getCreatedDate().toLocalDate(),
-                        period,
-                        LocalDate.now());
+        ProjectWeek projectWeek = getProjectWeek(period, userProject);
 
         List<UserProjectScore> userProjectScores =
                 userProjectScoreRepository.findByUserProjectIdAndWeekRange(
                         userProject.getId(), projectWeek.startWeek(), projectWeek.endWeek());
 
-        return calculator.calculateScore(projectWeek, userProjectScores);
+        ScoreCalculator<?, ?, R> scoreCalculator =
+                scoreCalculatorFactory.get(calculationType, scoreDisplayType);
+        return scoreCalculator.process(projectWeek, userProjectScores);
+    }
+
+    private ProjectWeek getProjectWeek(Integer period, UserProject userProject) {
+        return projectDateUtil.calculateWeekRange(
+                userProject.getProject().getCreatedDate().toLocalDate(), period, LocalDate.now());
     }
 
     private UserProject getUserProject(User user, Long projectId) {

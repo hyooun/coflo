@@ -67,6 +67,8 @@ public enum ErrorCode {
             HttpStatus.BAD_REQUEST, "H002", "잘못된 CalculationType 파라미터 값입니다."),
     PROJECT_SCORE_DISPLAY_TYPE_NOT_EXIST(
             HttpStatus.BAD_REQUEST, "H003", "잘못된 ScoreDisplayType 파라미터 값입니다."),
+    PROJECT_STATISTICS_TYPE_NOT_EXIST(
+            HttpStatus.BAD_REQUEST, "H004", "Statistics Type이 존재하지 않습니다."),
 
     /**
      * USER PROJECT(I000)

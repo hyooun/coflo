@@ -1,6 +1,7 @@
 package com.reviewping.coflo.global.client.gitlab;
 
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.web.client.HttpClientErrorException.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +28,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
 
 @Slf4j
 @Service
@@ -268,6 +271,12 @@ public class GitLabClient {
     private <T> T executeWithExceptionHandling(Supplier<T> supplier) {
         try {
             return supplier.get();
+        } catch (Unauthorized e) {
+            throw new BusinessException(ErrorCode.EXTERNAL_API_UNAUTHORIZED);
+        } catch (ResourceAccessException e) {
+            throw new BusinessException(ErrorCode.EXTERNAL_API_TIMEOUT);
+        } catch (RestClientException e) {
+            throw new BusinessException(ErrorCode.EXTERNAL_API_COMMUNICATION);
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.EXTERNAL_API_INTERNAL_SERVER_ERROR);
         }

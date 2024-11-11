@@ -39,19 +39,6 @@ const CustomPromptContainer = () => {
     }
   };
 
-  useEffect(() => {
-    if (!projectId) return;
-
-    const fetchCustomPrompt = async () => {
-      const response = await customPrompt.getCustomPrompt(projectId);
-      if (response.status === 'SUCCESS') {
-        setContent(response.data?.content || '');
-      }
-    };
-
-    fetchCustomPrompt();
-  }, [projectId]);
-
   return (
     <>
       <div className="flex flex-col gap-6 min-w-[600px]">

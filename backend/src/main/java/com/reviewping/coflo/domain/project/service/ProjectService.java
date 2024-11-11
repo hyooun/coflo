@@ -4,23 +4,15 @@ import static com.reviewping.coflo.global.error.ErrorCode.LINK_BOT_TOKEN_NOT_EXI
 
 import com.reviewping.coflo.domain.customprompt.entity.CustomPrompt;
 import com.reviewping.coflo.domain.customprompt.repository.CustomPromptRepository;
-import com.reviewping.coflo.domain.project.entity.Branch;
 import com.reviewping.coflo.domain.project.entity.Project;
-import com.reviewping.coflo.domain.project.message.UpdateRequestMessage;
-import com.reviewping.coflo.domain.project.repository.BranchRepository;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectDetailContent;
 import com.reviewping.coflo.global.error.exception.BusinessException;
-import com.reviewping.coflo.global.integration.RedisGateway;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,64 +22,40 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ProjectService {
 
-    private final RedisGateway redisGateway;
-    private final BranchRepository branchRepository;
-
-    @Value("${domain-webhook-url}")
-    private String domainWebhookUrl;
-
     private final GitLabClient gitLabClient;
     private final ProjectRepository projectRepository;
     private final CustomPromptRepository customPromptRepository;
+    private final ProjectWebhookService projectWebhookService;
+    private final BranchService branchService;
 
     @Transactional
     public Project addProject(
             GitlabAccount gitlabAccount,
             Long gitlabProjectId,
             ProjectLinkRequest projectLinkRequest) {
-
-        Project project = createProject(gitlabAccount, gitlabProjectId, projectLinkRequest);
-        List<Branch> branches = List.of();
-        if (projectLinkRequest.branches() != null) {
-            branches = saveProjectBranches(projectLinkRequest.branches(), project);
-        }
-        Project savedProject = projectRepository.save(project);
-        saveBasicCustomPrompt(savedProject);
-        addGitlabProjectWebhooks(gitlabAccount.getDomain(), savedProject);
-        initProject(savedProject, branches, projectLinkRequest.botToken(), project.getGitUrl());
-        return savedProject;
+        Project project = createAndSaveProject(gitlabAccount, gitlabProjectId, projectLinkRequest);
+        saveBasicCustomPrompt(project);
+        branchService.addBranches(projectLinkRequest, project);
+        projectWebhookService.addGitlabProjectWebhooks(gitlabAccount.getDomain(), project);
+        return project;
     }
 
-    private void initProject(
-            Project project, List<Branch> branches, String token, String gitlabUrl) {
-        branches.forEach(
-                branch -> {
-                    UpdateRequestMessage initRequest =
-                            new UpdateRequestMessage(
-                                    project.getId(),
-                                    branch.getId(),
-                                    gitlabUrl,
-                                    branch.getName(),
-                                    token,
-                                    "");
-                    redisGateway.sendUpdateRequest(initRequest);
-                });
-    }
-
-    private Project createProject(
+    private Project createAndSaveProject(
             GitlabAccount gitlabAccount,
             Long gitlabProjectId,
             ProjectLinkRequest projectLinkRequest) {
         GitlabProjectDetailContent gitlabProject =
                 getProjectContentByBotToken(
                         gitlabAccount.getDomain(), gitlabProjectId, projectLinkRequest);
-        return Project.builder()
-                .gitlabProjectId(gitlabProjectId)
-                .botToken(projectLinkRequest.botToken())
-                .name(gitlabProject.name())
-                .gitUrl(gitlabProject.httpUrlToRepo())
-                .fullPath(gitlabProject.fullPath())
-                .build();
+        Project project =
+                Project.builder()
+                        .gitlabProjectId(gitlabProjectId)
+                        .botToken(projectLinkRequest.botToken())
+                        .name(gitlabProject.name())
+                        .gitUrl(gitlabProject.httpUrlToRepo())
+                        .fullPath(gitlabProject.fullPath())
+                        .build();
+        return projectRepository.save(project);
     }
 
     private GitlabProjectDetailContent getProjectContentByBotToken(
@@ -99,27 +67,8 @@ public class ProjectService {
                 domain, projectLinkRequest.botToken(), gitlabProjectId);
     }
 
-    private List<Branch> saveProjectBranches(List<String> branchNames, Project project) {
-        List<Branch> branches =
-                branchNames.stream().map(branchName -> new Branch(project, branchName)).toList();
-        return branchRepository.saveAll(branches);
-    }
-
     private void saveBasicCustomPrompt(Project project) {
         CustomPrompt customPrompt = CustomPrompt.builder().project(project).build();
         customPromptRepository.save(customPrompt);
-    }
-
-    private void addGitlabProjectWebhooks(String projectDomain, Project project) {
-        String eventWebhookUrl = domainWebhookUrl + "/" + project.getId();
-        Map<String, Boolean> eventSettings = new HashMap<>();
-        eventSettings.put("merge_requests_events", true);
-        eventSettings.put("push_events", true);
-        gitLabClient.addProjectWebhook(
-                projectDomain,
-                project.getBotToken(),
-                project.getGitlabProjectId(),
-                eventWebhookUrl,
-                eventSettings);
     }
 }

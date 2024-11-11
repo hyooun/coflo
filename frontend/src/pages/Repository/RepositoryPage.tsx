@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { FileQuestion } from 'lucide-react';
+import { FileQuestion, SearchX } from 'lucide-react';
 
 import { projectIdAtom } from '@store/auth.ts';
 import Header from '@components/Header/Header';
-import { RepositorySearchBar } from '@components/Repository/RepositorySearchBar';
 import { RepositoryItem } from '@components/Repository/RepositoryItem';
 import ToggleSwitch from '@components/Repository/ToggleSwitch';
 import { CommonButton } from '@components/Button/CommonButton';
@@ -17,6 +16,7 @@ import { Gitlab } from '@apis/Gitlab';
 import BranchSelector from '@components/Repository/BranchSelector';
 import { BranchOption } from '@components/Repository/BranchSelector';
 import CursorPagination from '@components/Pagination/CursorPagination';
+import { CustomSearchBar } from '@components/Mr/MrSearchBar';
 
 export default function RepositoryPage() {
   const [repositories, setRepositories] = useState<GitlabProject[]>([]);
@@ -33,17 +33,10 @@ export default function RepositoryPage() {
     hasPreviousPage: false,
   });
   const [keyword, setKeyword] = useState('');
+  const size = 10;
 
-  const fetchProjects = async (pageInfo?: PageInfo) => {
-    const response = await Gitlab.getGitlabProjects(
-      keyword,
-      pageInfo || {
-        startCursor: '',
-        endCursor: '',
-        hasNextPage: false,
-        hasPreviousPage: false,
-      },
-    );
+  const fetchProjects = async (cursor?: { startCursor?: string; endCursor?: string }) => {
+    const response = await Gitlab.getGitlabProjects(keyword, size, cursor);
     if (response && response.data) {
       setRepositories(response.data.gitlabProjectList);
       setPageInfo(response.data.pageInfo);
@@ -51,24 +44,18 @@ export default function RepositoryPage() {
   };
 
   useEffect(() => {
-    fetchProjects(pageInfo);
-  }, []);
+    fetchProjects();
+  }, [keyword]);
 
-  const handleNextPage = () => {
+  const handleNextPage = async () => {
     if (pageInfo.hasNextPage) {
-      fetchProjects({
-        ...pageInfo,
-        startCursor: pageInfo.startCursor,
-      });
+      fetchProjects({ endCursor: pageInfo.endCursor });
     }
   };
 
-  const handlePreviousPage = () => {
+  const handlePreviousPage = async () => {
     if (pageInfo.hasPreviousPage) {
-      fetchProjects({
-        ...pageInfo,
-        endCursor: pageInfo.endCursor,
-      });
+      fetchProjects({ startCursor: pageInfo.startCursor });
     }
   };
 
@@ -125,11 +112,22 @@ export default function RepositoryPage() {
     }
   };
 
+  const handleSearch = (searchKeyword: string) => {
+    setKeyword(searchKeyword);
+    setPageInfo({
+      startCursor: '',
+      endCursor: '',
+      hasNextPage: false,
+      hasPreviousPage: false,
+    });
+  };
+
   const handleButtonClick = async () => {
     const response = await UserProject.getLinkStatus();
     if (response?.data) {
       const { hasLinkedProject, projectId } = response.data;
       setProjectId(projectId);
+      console.log(projectId);
       if (hasLinkedProject) {
         navigate(`/${projectId}/main`);
       } else {
@@ -139,39 +137,54 @@ export default function RepositoryPage() {
   };
 
   return (
-    <div className="flex flex-col ml-[80px] p-6 w-full">
-      <div className="flex flex-row justify-between items-center pr-3">
-        <div>
-          <Header
-            title="Repository"
-            description={['내 프로젝트에서 리뷰할 프로젝트를 선택합니다.']}
-          />
+    <div className="flex flex-col ml-[80px] p-6 w-full justify-between overflow-auto">
+      <div>
+        <div className="flex flex-row justify-between items-center pr-3">
+          <div>
+            <Header
+              title="Repository"
+              description={['내 프로젝트에서 리뷰할 프로젝트를 선택합니다.']}
+            />
+          </div>
+          <CommonButton
+            className="px-4 min-w-[100px] h-[50px]"
+            active={false}
+            bgColor="bg-primary-500"
+            onClick={handleButtonClick}
+          >
+            시작하기
+          </CommonButton>
         </div>
-        <CommonButton
-          className="px-4 min-w-[100px] h-[50px]"
-          active={false}
-          bgColor="bg-primary-500"
-          onClick={handleButtonClick}
-        >
-          시작하기
-        </CommonButton>
+
+        <CustomSearchBar
+          onSearch={handleSearch}
+          showOption={false}
+          width="pl-3 max-w-[1000px] min-w-[400px]"
+        />
       </div>
 
-      <RepositorySearchBar />
-
-      <div className="bg-white w-full">
-        {repositories.map((repo, index) => (
-          <div key={repo.gitlabProjectId}>
-            <div className="flex items-center justify-between p-4">
-              <RepositoryItem
-                name={repo.name}
-                integrate={repo.isLinkable ? '' : '프로젝트 토큰을 설정해주세요'}
-              />
-              <ToggleSwitch checked={repo.isLinked} onChange={() => handleToggleChange(index)} />
+      <div className="flex flex-col flex-grow overflow-auto bg-white w-full justify-start">
+        {repositories.length > 0 ? (
+          repositories.map((repo, index) => (
+            <div key={repo.gitlabProjectId}>
+              <div className="flex items-center justify-between py-[22px] px-6">
+                <RepositoryItem
+                  name={repo.name}
+                  integrate={repo.isLinkable ? '' : '프로젝트 토큰을 설정해주세요'}
+                />
+                <ToggleSwitch checked={repo.isLinked} onChange={() => handleToggleChange(index)} />
+              </div>
+              {index < repositories.length - 1 && <div className="border-t border-gray-300" />}
             </div>
-            {index < repositories.length - 1 && <div className="border-t border-gray-300" />}
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center h-full">
+            <SearchX size={100} className="text-primary-500" />
+            <div className="text-center text-primary-500 text-3xl font-bold mt-6">
+              검색 결과가 없습니다.
+            </div>
           </div>
-        ))}
+        )}
       </div>
 
       {isModalOpen && selectedRepo && (

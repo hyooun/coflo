@@ -53,10 +53,12 @@ public record GitlabMrResponse(
                 .labels(gitlabMrDetailContent.labels())
                 .hasConflicts(gitlabMrDetailContent.hasConflicts())
                 .assignee(
-                        new GitlabUserInfoContent(
-                                gitlabMrDetailContent.assignee().username(),
-                                gitlabMrDetailContent.assignee().name(),
-                                gitlabMrDetailContent.assignee().avatarUrl()))
+                        gitlabMrDetailContent.assignee() == null
+                                ? null
+                                : new GitlabUserInfoContent(
+                                        gitlabMrDetailContent.assignee().username(),
+                                        gitlabMrDetailContent.assignee().name(),
+                                        gitlabMrDetailContent.assignee().avatarUrl()))
                 .reviewer(
                         gitlabMrDetailContent.reviewers().isEmpty()
                                 ? null

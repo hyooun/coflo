@@ -40,7 +40,6 @@ const MergeRequestReviewPage = () => {
       const response = await Review.getReviewRetrievals(reviewId);
 
       const data = response.data;
-      console.log(data);
       if (data) {
         setReferences(data);
       }
@@ -58,7 +57,6 @@ const MergeRequestReviewPage = () => {
   if (!mergeRequest) return <div>Loading...</div>;
 
   const handleReviewClick = (reviewId: string) => {
-    console.log(reviewId);
     setSelectedReviewId(reviewId);
   };
 

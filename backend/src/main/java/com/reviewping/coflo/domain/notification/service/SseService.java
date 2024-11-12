@@ -18,16 +18,16 @@ public class SseService {
     private final EmitterRepository emitterRepository;
     private final ObjectMapper objectMapper;
 
-    public SseEmitter subscribe(Long mrInfoId) {
-        SseEmitter emitter = createEmitter(mrInfoId);
+    public SseEmitter subscribe(Long reviewId) {
+        SseEmitter emitter = createEmitter(reviewId);
 
-        sendToClient(mrInfoId, "EventStream Created. [mrInfoId=" + mrInfoId + "]");
+        sendToClient(reviewId, "EventStream Created. [reviewId=" + reviewId + "]");
         return emitter;
     }
 
-    public void notify(Long mrInfoId, Object event) {
-        log.info("Notify method called with mrInfoId: " + mrInfoId + " and event: " + event);
-        sendToClient(mrInfoId, event);
+    public void notify(Long reviewId, Object event) {
+        log.info("Notify method called with reviewId: " + reviewId + " and event: " + event);
+        sendToClient(reviewId, event);
     }
 
     private void sendToClient(Long id, Object data) {

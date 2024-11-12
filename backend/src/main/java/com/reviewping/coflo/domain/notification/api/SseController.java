@@ -15,12 +15,12 @@ public class SseController {
 
     @Operation(summary = "SSE 연결", description = "SSE를 연결합니다.")
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter subscribe(@RequestParam(name = "mrInfoId") Long mrInfoId) {
-        return sseService.subscribe(mrInfoId);
+    public SseEmitter subscribe(@RequestParam(name = "reviewId") Long reviewId) {
+        return sseService.subscribe(reviewId);
     }
 
     @PostMapping
-    public void sendDataTest(@RequestParam(name = "mrInfoId") Long mrInfoId) {
-        sseService.notify(mrInfoId, "data");
+    public void sendDataTest(@RequestParam(name = "reviewId") Long reviewId) {
+        sseService.notify(reviewId, "data");
     }
 }

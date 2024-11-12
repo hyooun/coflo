@@ -29,5 +29,9 @@ export const Review = {
     gitlabMrIid: string,
     retrievals: ReferenceRequest[],
   ): Promise<ApiResponse<any>> =>
-    apiRequests.post<ApiResponse<any>>(`reviews`, { projectId, gitlabMrIid, retrievals }),
+    apiRequests.post<ApiResponse<any>>(`reviews`, {
+      projectId: Number(projectId),
+      gitlabMrIid: Number(gitlabMrIid),
+      retrievals,
+    }),
 };

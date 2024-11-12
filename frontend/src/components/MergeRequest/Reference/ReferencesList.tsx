@@ -6,10 +6,11 @@ import { CommonButton } from '@components/Button/CommonButton';
 import AddReferenceModal from '@components/Modal/AddReferenceModal';
 import { Reference, ReferencesListProps } from 'types/reference.ts';
 import ConfirmModal from '@components/Modal/ConfirmModal.tsx';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Review } from '@apis/Review';
 
 const ReferencesList = ({ references: initialReferences }: ReferencesListProps) => {
+  const navigate = useNavigate();
   const { id, selectedReviewId } = useParams<{ id: string; selectedReviewId: string }>();
   const [references, setReferences] = useState<Reference[]>(initialReferences || []);
   const [isAddReferenceModalOpen, setIsAddReferenceModalOpen] = useState(false);
@@ -73,6 +74,7 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
       setAlertModalContent(['리뷰가 재생성되었습니다.']);
       setIsAlertModalOpen(true);
       // TODO: 필요한 경우 페이지 리로드나 상태 업데이트
+      navigate(`/${projectId}/main/merge-request/reviews/${id}`);
     } catch (error) {
       console.error('리뷰 재생성 중 오류 발생:', error);
       setAlertModalContent(['리뷰 재생성 중 오류가 발생했습니다.']);

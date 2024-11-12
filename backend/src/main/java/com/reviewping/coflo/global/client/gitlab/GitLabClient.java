@@ -86,7 +86,7 @@ public class GitLabClient {
                     ClientGraphQlResponse response =
                             graphQlClient
                                     .document(
-                                            graphqlUtil.buildMergeRequestQuery(
+                                            graphqlUtil.createSingleMergeRequestQuery(
                                                     fullPath, mergeRequestIid))
                                     .executeSync();
                     return response.field("project.mergeRequest")
@@ -124,16 +124,27 @@ public class GitLabClient {
 
     public List<GitlabMrQueryResponse> getTop3MrList(
             String gitlabUrl, String token, String fullPath, List<MrInfo> mrInfoList) {
-        List<GitlabMrQueryResponse> top3MrList = new ArrayList<>();
-        for (MrInfo mrInfo : mrInfoList) {
-            GitlabMrQueryResponse singleMergeRequest =
-                    GitlabMrQueryResponse.of(
-                            getSingleMergeRequest(
-                                    gitlabUrl, token, fullPath, mrInfo.getGitlabMrIid()),
-                            false);
-            top3MrList.add(singleMergeRequest);
-        }
-        return top3MrList;
+        return executeWithExceptionHandling(
+                () -> {
+                    HttpSyncGraphQlClient graphQlClient =
+                            graphqlUtil.getGraphQlClient(gitlabUrl, token);
+                    List<Long> gitlabMrIids =
+                            mrInfoList.stream().map(MrInfo::getGitlabMrIid).toList();
+                    ClientGraphQlResponse response =
+                            graphQlClient
+                                    .document(
+                                            graphqlUtil.createMergeRequestsQuery(
+                                                    fullPath, gitlabMrIids))
+                                    .executeSync();
+                    List<GitlabMrQueryContent> mergeRequestContents =
+                            response.field("project.mergeRequests.nodes")
+                                    .toEntityList(GitlabMrQueryContent.class);
+                    return mergeRequestContents.isEmpty()
+                            ? null
+                            : mergeRequestContents.stream()
+                                    .map(content -> GitlabMrQueryResponse.of(content, true))
+                                    .toList();
+                });
     }
 
     public List<GitlabMrDiffsContent> getMrDiffs(

@@ -67,30 +67,34 @@ const MergeListPage = () => {
   }, [projectId, currentStatus, currentPage]);
 
   return (
-    <div className="flex flex-col flex-grow overflow-auto p-6 items-stretch justify-between w-full">
-      <div className="flex flex-col justify-between w-full">
-        <MrStatusFilter onStatusChange={handleStatusChange} />
-        <CustomSearchBar onSearch={handleSearch} />
-      </div>
+    <div className="h-full overflow-auto w-full">
+      <div className="flex flex-col justify-between min-h-full p-6">
+        <div className="flex flex-col gap-4">
+          <MrStatusFilter onStatusChange={handleStatusChange} />
+          <CustomSearchBar onSearch={handleSearch} showOption={false} />
+        </div>
 
-      <div className="bg-white flex flex-col justify-start h-full py-4">
-        {mergeRequests.length === 0 ? (
-          <EmptyMergeRequest />
-        ) : (
-          mergeRequests.map((mergeRequest) => (
-            <div
-              key={mergeRequest.id}
-              onClick={() => handleItemClick(mergeRequest.iid)}
-              className="cursor-pointer"
-            >
-              <MrItem mergeRequest={mergeRequest} />
-              <div className="border-t border-gray-300" />
-            </div>
-          ))
-        )}
-      </div>
+        <div className="flex-1 bg-white">
+          <div className="py-4 h-full">
+            {mergeRequests.length === 0 ? (
+              <EmptyMergeRequest />
+            ) : (
+              mergeRequests.map((mergeRequest) => (
+                <div
+                  key={mergeRequest.id}
+                  onClick={() => handleItemClick(mergeRequest.iid)}
+                  className="cursor-pointer"
+                >
+                  <MrItem mergeRequest={mergeRequest} />
+                  <div className="border-t border-gray-300" />
+                </div>
+              ))
+            )}
+          </div>
+        </div>
 
-      <Pagination />
+        <Pagination />
+      </div>
     </div>
   );
 };

@@ -1,3 +1,5 @@
 package com.reviewping.coflo.domain.webhookchannel.controller.dto.request;
 
-public record UpdateWebhookChannelRequest(String webhookUrl) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record UpdateWebhookChannelRequest(@NotBlank String webhookUrl) {}

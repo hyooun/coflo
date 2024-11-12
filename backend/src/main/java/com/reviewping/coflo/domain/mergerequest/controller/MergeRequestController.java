@@ -26,11 +26,11 @@ public class MergeRequestController {
     @Operation(summary = "프로젝트의 merge request 목록 조회", description = "키워드 검색 가능, 상태 필터, 페이지네이션 제공")
     public ApiResponse<GitlabMrPageResponse> getGitlabMergeRequests(
             @AuthUser User user,
-            @RequestParam(name = "projectId") Long projectId,
-            @RequestParam(name = "state", defaultValue = "opened") String state,
-            @RequestParam(name = "size", defaultValue = "10") int size,
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "keyword", defaultValue = "") String keyword) {
+            @RequestParam Long projectId,
+            @RequestParam(defaultValue = "opened") String state,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam String keyword) {
         GitlabMrPageResponse gitlabMergeRequests =
                 mergeRequestService.getGitlabMergeRequests(
                         user.getId(),
@@ -42,7 +42,7 @@ public class MergeRequestController {
     @GetMapping("/best")
     @Operation(summary = "프로젝트의 주간 Best MR 조회", description = "점수 가장 높은 상위 3개 항목 조회")
     public ApiResponse<List<GitlabMrQueryResponse>> getBestGitlabMergeRequests(
-            @AuthUser User user, @RequestParam(name = "projectId") Long projectId) {
+            @AuthUser User user, @RequestParam Long projectId) {
         List<GitlabMrQueryResponse> gitlabMrResponses =
                 mergeRequestService.getBestMergeRequests(user.getId(), projectId);
         return ApiSuccessResponse.success(gitlabMrResponses);

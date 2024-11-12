@@ -9,6 +9,7 @@ import com.reviewping.coflo.global.aop.LogExecution;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class WebhookChannelController {
     @PostMapping
     @Operation(summary = "웹훅 채널 신규 등록")
     public ApiResponse<Void> addWebhookChannel(
-            @RequestBody WebhookChannelRequest webhookChannelRequest) {
+            @Valid @RequestBody WebhookChannelRequest webhookChannelRequest) {
         webhookChannelService.addWebhookChannel(
                 webhookChannelRequest.projectId(),
                 webhookChannelRequest.channelCodeId(),
@@ -52,7 +53,7 @@ public class WebhookChannelController {
     @Operation(summary = "연동된 웹훅 정보 수정")
     public ApiResponse<Void> updateWebhookChannel(
             @PathVariable("webhookChannelId") Long webhookChannelId,
-            @RequestBody UpdateWebhookChannelRequest updateWebhookChannelRequest) {
+            @Valid @RequestBody UpdateWebhookChannelRequest updateWebhookChannelRequest) {
         webhookChannelService.updateWebhookChannel(
                 webhookChannelId, updateWebhookChannelRequest.webhookUrl());
         return ApiSuccessResponse.success();

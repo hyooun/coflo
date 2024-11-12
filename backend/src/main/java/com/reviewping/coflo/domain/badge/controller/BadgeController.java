@@ -9,6 +9,7 @@ import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class BadgeController {
     @PatchMapping
     @Operation(summary = "로그인 된 사용자의 대표 뱃지 변경")
     public ApiResponse<Void> updateMainBadge(
-            @AuthUser User user, @RequestBody MainBadgeRequest mainBadgeRequest) {
+            @AuthUser User user, @Valid @RequestBody MainBadgeRequest mainBadgeRequest) {
         badgeService.updateMainBadge(user, mainBadgeRequest.badgeCodeId());
         return ApiSuccessResponse.success();
     }

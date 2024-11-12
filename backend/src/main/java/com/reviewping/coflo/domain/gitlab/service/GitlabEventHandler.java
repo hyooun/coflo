@@ -22,12 +22,13 @@ import java.util.function.BiConsumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
-public class MrEventHandler {
+public class GitlabEventHandler {
 
     private final Map<String, BiConsumer<Long, GitlabEventRequest>> handlers = new HashMap<>();
     private final ReviewService reviewCreateService;
@@ -39,11 +40,10 @@ public class MrEventHandler {
     void initHandlers() {
         handlers.put("open", this::handleOpen);
         handlers.put("reopen", this::handleOpen);
-        handlers.put("push", this::handlePush);
     }
 
     @Async
-    public void handle(Long projectId, GitlabEventRequest gitlabEventRequest) {
+    public void handleMergeRequest(Long projectId, GitlabEventRequest gitlabEventRequest) {
         log.debug(
                 "#handle:: eventType: {}, action: {}",
                 gitlabEventRequest.eventType(),
@@ -82,8 +82,9 @@ public class MrEventHandler {
                 projectId);
     }
 
+    @Transactional
     public void handlePush(Long projectId, GitlabEventRequest gitlabEventRequest) {
-        Project project = projectRepository.getByGitlabProjectId(gitlabEventRequest.project().id());
+        Project project = projectRepository.getById(projectId);
         String branchName = gitlabEventRequest.ref().replace("refs/heads/", "");
         Branch branch = branchRepository.getByNameAndProject(branchName, project);
         UpdateRequestMessage updateRequest =

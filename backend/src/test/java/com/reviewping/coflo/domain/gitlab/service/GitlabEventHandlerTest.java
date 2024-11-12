@@ -19,21 +19,21 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class MrEventHandlerTest {
+class GitlabEventHandlerTest {
 
     @Mock private ReviewService reviewService;
 
     @Mock private ProjectRepository projectRepository;
 
-    @InjectMocks private MrEventHandler mrEventHandler;
+    @InjectMocks private GitlabEventHandler gitlabEventHandler;
 
     @BeforeEach
     void setUp() {
-        mrEventHandler.initHandlers();
+        gitlabEventHandler.initHandlers();
     }
 
     @Test
-    void handleOpenActionShouldInvokeHandleOpen() {
+    void handleOpenActionShouldInvokeHandleMergeRequestOpen() {
         // given
         Long projectId = 1L;
         GitlabEventRequest openActionRequest = GitlabEventRequestFixture.createOpenActionRequest();
@@ -41,7 +41,7 @@ class MrEventHandlerTest {
         given(projectRepository.getById(1L)).willReturn(mockProject);
 
         // when
-        mrEventHandler.handle(projectId, openActionRequest);
+        gitlabEventHandler.handleMergeRequest(projectId, openActionRequest);
 
         // then
         then(reviewService)
@@ -58,22 +58,25 @@ class MrEventHandlerTest {
     }
 
     @Test
-    void handleUnsupportedActionShouldThrowBusinessException() {
+    void handleMergeRequestUnsupportedActionShouldThrowBusinessException() {
         // given
         GitlabEventRequest unsupportedActionRequest =
                 GitlabEventRequestFixture.createUnsupportedActionRequest();
 
         // when & then
         assertThrows(
-                BusinessException.class, () -> mrEventHandler.handle(1L, unsupportedActionRequest));
+                BusinessException.class,
+                () -> gitlabEventHandler.handleMergeRequest(1L, unsupportedActionRequest));
     }
 
     @Test
-    void handleInvalidGitlabUrlShouldThrowBusinessException() {
+    void handleMergeRequestInvalidGitlabUrlShouldThrowBusinessException() {
         // given
         GitlabEventRequest invalidUrlRequest = GitlabEventRequestFixture.createInvalidUrlRequest();
 
         // when & then
-        assertThrows(BusinessException.class, () -> mrEventHandler.handle(1L, invalidUrlRequest));
+        assertThrows(
+                BusinessException.class,
+                () -> gitlabEventHandler.handleMergeRequest(1L, invalidUrlRequest));
     }
 }

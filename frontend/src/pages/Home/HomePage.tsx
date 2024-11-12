@@ -130,9 +130,12 @@ const HomePage = () => {
     if (!projectId) return;
     const loadProjectData = async () => {
       const langauageData = await fetchProjectDetail(projectId);
+
       const teamScoreData = await fetchProjectTeamScore(projectId);
+      console.log(teamScoreData);
 
       setProjectDetail(langauageData || initialProjectDetail);
+
       if (teamScoreData) {
         setRadarData(teamScoreData.radarData);
         setProfileIcons(teamScoreData.profileIcons);

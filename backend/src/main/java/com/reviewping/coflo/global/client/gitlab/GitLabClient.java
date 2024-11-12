@@ -9,6 +9,7 @@ import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchReq
 import com.reviewping.coflo.domain.mergerequest.controller.dto.request.GitlabMrPageRequest;
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrQueryResponse;
 import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
+import com.reviewping.coflo.domain.project.controller.response.ProjectLabelResponse;
 import com.reviewping.coflo.global.client.gitlab.request.GitlabNoteRequest;
 import com.reviewping.coflo.global.client.gitlab.response.*;
 import com.reviewping.coflo.global.common.entity.PageDetail;
@@ -250,6 +251,17 @@ public class GitLabClient {
         } while (page <= totalPages);
 
         return allBranches;
+    }
+
+    public ProjectLabelResponse getProjectLabels(
+            String gitlabUrl, String token, Long gitlabProjectId) {
+        HttpHeaders headers = makeGitlabHeaders(token);
+        String url = GitLabApiUrlBuilder.createProjectLabelUrl(gitlabUrl, gitlabProjectId);
+
+        ResponseEntity<List<GitlabLabelColorContent>> response =
+                restTemplateUtil.sendGetRequest(
+                        url, headers, new ParameterizedTypeReference<>() {});
+        return ProjectLabelResponse.of(response.getBody());
     }
 
     private long getProjectBranchCount(String gitlabUrl, String token, Long gitlabProjectId) {

@@ -4,9 +4,11 @@ import static com.reviewping.coflo.global.error.ErrorCode.LINK_BOT_TOKEN_NOT_EXI
 
 import com.reviewping.coflo.domain.customprompt.entity.CustomPrompt;
 import com.reviewping.coflo.domain.customprompt.repository.CustomPromptRepository;
+import com.reviewping.coflo.domain.project.controller.response.ProjectLabelResponse;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
+import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.userproject.controller.dto.request.ProjectLinkRequest;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabProjectDetailContent;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProjectService {
+    private final GitlabAccountRepository gitlabAccountRepository;
 
     private final GitLabClient gitLabClient;
     private final ProjectRepository projectRepository;
@@ -70,5 +73,15 @@ public class ProjectService {
     private void saveBasicCustomPrompt(Project project) {
         CustomPrompt customPrompt = new CustomPrompt(project);
         customPromptRepository.save(customPrompt);
+    }
+
+    public ProjectLabelResponse getProjectLabels(Long userId, Long projectId) {
+        Project project = projectRepository.getById(projectId);
+        GitlabAccount gitlabAccount =
+                gitlabAccountRepository.getByUserIdAndProjectId(userId, projectId);
+        return gitLabClient.getProjectLabels(
+                gitlabAccount.getDomain(),
+                gitlabAccount.getUserToken(),
+                project.getGitlabProjectId());
     }
 }

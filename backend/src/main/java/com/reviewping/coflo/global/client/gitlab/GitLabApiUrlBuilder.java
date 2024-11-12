@@ -61,4 +61,12 @@ public class GitLabApiUrlBuilder {
                 + gitlabProjectId
                 + "/hooks";
     }
+
+    public static String createProjectLabelUrl(String gitlabUrl, Long gitlabProjectId) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + SINGLE_PROJECT_ENDPOINT
+                + gitlabProjectId
+                + "/labels";
+    }
 }

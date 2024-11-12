@@ -143,9 +143,6 @@ const HomePage = () => {
     loadProjectData();
   }, [projectId]);
 
-  const fixedSpacing = 22;
-  const offset = totalUsers < 1 ? 0 : (containerHeight - totalUsers * fixedSpacing) / 2 + 87;
-
   useEffect(() => {
     if (containerRef.current) {
       setContainerHeight(containerRef.current.clientHeight);
@@ -173,37 +170,6 @@ const HomePage = () => {
               profileIcons={profileIcons}
               badgeIcons={badgeIcons}
             />
-            {/* {Object.entries(profileIcons).map(([userId, profileUrl], index) => (
-              <div
-                key={`user-${userId}`}
-                className="absolute"
-                style={{
-                  top: offset + index * fixedSpacing,
-                  left: 910,
-                }}
-              >
-                <img
-                  src={profileUrl}
-                  alt={`User ${userId} Profile`}
-                  style={{ width: 20, height: 20 }}
-                />
-
-                {badgeIcons[parseInt(userId)] && (
-                  <img
-                    src={badgeIcons[parseInt(userId)]!}
-                    alt={`User ${userId} Badge`}
-                    style={{
-                      width: 20,
-                      height: 20,
-                      marginLeft: 5,
-                      position: 'absolute',
-                      top: 0,
-                      left: 25,
-                    }}
-                  />
-                )}
-              </div>
-            ))} */}
           </div>
         </div>
         {/* Project Total - 2/5 너비 */}

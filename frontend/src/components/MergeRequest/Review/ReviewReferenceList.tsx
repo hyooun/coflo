@@ -19,30 +19,40 @@ const ReviewReferencesList = ({ references, selectedReviewId }: ReviewReferences
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">References</h2>
+
         <Link
           to={`/${projectId}/main/merge-request/reviews/${id}/references/${selectedReviewId}`}
           className="hover:text-gray-800 transition-colors"
         >
-          전체보기
+          {references.length > 0 ? '전체보기' : '추가하기'}
         </Link>
       </div>
 
       {/* References List */}
       <div className="space-y-4">
-        {references.slice(0, 5).map((reference) => {
-          const referenceType: 'CODE' | 'TEXT' =
-            reference.language === 'PLAINTEXT' ? 'TEXT' : 'CODE';
+        {references.length === 0 ? (
+          <div className="rounded-lg border-2 border-secondary">
+            <ReviewComment title="EMPTY" content="참고 자료가 없습니다." type="TEXT" />
+          </div>
+        ) : (
+          references.slice(0, 5).map((reference) => {
+            const referenceType: 'CODE' | 'TEXT' =
+              reference.language === 'PLAINTEXT' ? 'TEXT' : 'CODE';
 
-          return (
-            <div key={reference.id} className="max-h-[330px] rounded-lg border-2 border-secondary">
-              <ReviewComment
-                title={reference.fileName}
-                content={reference.content}
-                type={referenceType}
-              />
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={reference.id}
+                className="max-h-[330px] rounded-lg border-2 border-secondary"
+              >
+                <ReviewComment
+                  title={reference.fileName}
+                  content={reference.content}
+                  type={referenceType}
+                />
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );

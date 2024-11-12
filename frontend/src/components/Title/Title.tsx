@@ -10,7 +10,7 @@ export default function Title({
     <div
       className={`flex flex-row font-pretendard items-center justify-between ${px} ${py} ${ml} ${mt}`}
     >
-      <div className={`${textSize} font-bold text-[#172b4d]`}>{title}</div>
+      <div className={`${textSize} font-bold text-primary-500`}>{title}</div>
     </div>
   );
 }

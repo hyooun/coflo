@@ -31,7 +31,7 @@ const BestMergeRequestList = () => {
   return (
     <>
       <Title title="Best Merge Request" textSize="text-lg" />
-      <div className="flex-grow bg-gray-400 border-2 border-gray-500 rounded-lg">
+      <div className="flex-grow bg-primary-100/20 border-2 border-secondary rounded-lg">
         {bestMergeRequests.length === 0 ? (
           <div className="w-full h-full flex flex-col items-center justify-center text-gray-700 text-lg">
             <p>아직 BEST MR이 없습니다.</p>

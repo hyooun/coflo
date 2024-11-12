@@ -16,21 +16,24 @@ const CustomPromptContainer = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
-    if (value.length <= maxLength * 3) {
-      setContent(value);
+    const normalizedValue = value.replace(/\n+/g, '\n');
+
+    if (normalizedValue.length <= maxLength * 3) {
+      setContent(normalizedValue);
     }
   };
 
   const handleSavePrompt = async () => {
+    let trimmedContent = content;
     if (maxLength && content.length > maxLength) {
-      setIsAlertModalOpen(true);
-      setAlertMessage(['최대 글자 수를 초과하였습니다.']);
+      trimmedContent = content.slice(0, maxLength);
+      setContent(trimmedContent);
       return;
     }
 
     if (!projectId) return;
 
-    const response = await customPrompt.updateCustomPrompt(projectId, { content });
+    const response = await customPrompt.updateCustomPrompt(projectId, { content: trimmedContent });
 
     if (response.status === 'SUCCESS') {
       setIsAlertModalOpen(true);

@@ -67,15 +67,15 @@ const MergeListPage = () => {
   }, [projectId, currentStatus, currentPage]);
 
   return (
-    <div className="h-screen overflow-auto w-full">
-      <div className="flex flex-col justify-between min-h-full p-6 gap-4">
+    <div className="h-full overflow-auto w-full">
+      <div className="flex flex-col justify-between min-h-full p-6">
         <div className="flex flex-col gap-4">
           <MrStatusFilter onStatusChange={handleStatusChange} />
           <CustomSearchBar onSearch={handleSearch} showOption={false} />
         </div>
 
         <div className="flex-1 bg-white">
-          <div className="py-4">
+          <div className="py-4 h-full">
             {mergeRequests.length === 0 ? (
               <EmptyMergeRequest />
             ) : (
@@ -93,9 +93,7 @@ const MergeListPage = () => {
           </div>
         </div>
 
-        <div className="pt-4">
-          <Pagination />
-        </div>
+        <Pagination />
       </div>
     </div>
   );

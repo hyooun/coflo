@@ -64,7 +64,7 @@ export const CustomSearchBar = ({
       className={`relative flex flex-row gap-2 mb-2 font-pretendard items-center justify-between ${width}`}
     >
       {showOption && (
-        <div className="relative w-[130px] mr-3" ref={dropdownRef}>
+        <div className="relative w-[130px] mr-3 flex items-center" ref={dropdownRef}>
           <div
             className="flex items-center justify-center font-semibold rounded-md w-[100px] h-[30px] cursor-pointer text-center"
             onClick={toggleDropdown}
@@ -95,7 +95,7 @@ export const CustomSearchBar = ({
         </div>
       )}
 
-      <div className="flex-1 flex flex-col h-12">
+      <div className="flex-1 flex flex-col">
         <div className="flex flex-row gap-2">
           <input
             type="text"

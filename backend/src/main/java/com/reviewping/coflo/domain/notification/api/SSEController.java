@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
-@RequestMapping("/sse")
+@RequestMapping("/api/sse")
 @RequiredArgsConstructor
 public class SSEController {
     private final SSEService sseService;

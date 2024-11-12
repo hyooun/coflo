@@ -1,6 +1,7 @@
 package com.reviewping.coflo.global.util;
 
 import com.reviewping.coflo.domain.gitlab.controller.dto.request.GitlabSearchRequest;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.client.HttpSyncGraphQlClient;
 import org.springframework.stereotype.Component;
@@ -73,7 +74,7 @@ public class GraphQlUtil {
         }
     }
 
-    public String buildMergeRequestQuery(String fullPath, Long gitMergeRequestIid) {
+    public String createSingleMergeRequestQuery(String fullPath, Long gitMergeRequestIid) {
         return String.format(
                 "query { "
                         + "  project(fullPath: \"%s\") { "
@@ -112,6 +113,56 @@ public class GraphQlUtil {
                         + "  } "
                         + "}",
                 fullPath, gitMergeRequestIid);
+    }
+
+    public String createMergeRequestsQuery(String fullPath, List<Long> gitlabMrIids) {
+        String iids =
+                gitlabMrIids.stream()
+                        .map(String::valueOf)
+                        .reduce((a, b) -> a + "\", \"" + b)
+                        .map(iid -> "[\"" + iid + "\"]")
+                        .orElse("[]");
+
+        return String.format(
+                "query { "
+                        + "  project(fullPath: \"%s\") { "
+                        + "    mergeRequests(iids: %s) { "
+                        + "      nodes { "
+                        + "        id "
+                        + "        iid "
+                        + "        title "
+                        + "        description "
+                        + "        state "
+                        + "        mergedAt "
+                        + "        createdAt "
+                        + "        updatedAt "
+                        + "        sourceBranch "
+                        + "        targetBranch "
+                        + "        labels { "
+                        + "          nodes { "
+                        + "            title "
+                        + "            color "
+                        + "          } "
+                        + "        } "
+                        + "        assignees(first: 1) { "
+                        + "          nodes { "
+                        + "            username "
+                        + "            name "
+                        + "            avatarUrl "
+                        + "          } "
+                        + "        } "
+                        + "        reviewers(first: 1) { "
+                        + "          nodes { "
+                        + "            username "
+                        + "            name "
+                        + "            avatarUrl "
+                        + "          } "
+                        + "        } "
+                        + "      } "
+                        + "    } "
+                        + "  } "
+                        + "}",
+                fullPath, iids);
     }
 
     public String createUserInfoQuery() {

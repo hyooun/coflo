@@ -36,7 +36,7 @@ const HomePage = () => {
     labels: [],
     datasets: [],
   };
-  const [containerHeight, setContainerHeight] = useState<number>(0);
+  const [, setContainerHeight] = useState<number>(0);
 
   const [radarData, setRadarData] = useState<RadarData | null>(initialRadarData);
   const [profileIcons, setProfileIcons] = useState<Record<number, string>>({});
@@ -56,7 +56,6 @@ const HomePage = () => {
 
   const [maxValue, setMaxValue] = useState<number>(0);
   const [minValue, setMinValue] = useState<number>(100);
-  const totalUsers = Object.keys(profileIcons).length;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [projectDetail, setProjectDetail] = useState<{
     programmingLanguagesData: ProgrammingLanguagesData | null;

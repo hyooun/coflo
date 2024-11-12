@@ -154,8 +154,9 @@ public class ReviewService {
     }
 
     @Transactional
-    public void regenerateReview(User user, Long mrInfoId, List<RetrievalContent> retrievals) {
-        MrInfo mrInfo = mrInfoRepository.getById(mrInfoId);
+    public void regenerateReview(
+            User user, Long projectId, Long gitlabMrIid, List<RetrievalContent> retrievals) {
+        MrInfo mrInfo = mrInfoRepository.getByProjectIdAndGitlabMrIid(projectId, gitlabMrIid);
         Project project = mrInfo.getProject();
 
         GitlabAccount gitlabAccount =

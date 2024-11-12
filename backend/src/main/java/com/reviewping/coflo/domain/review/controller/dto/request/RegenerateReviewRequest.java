@@ -5,7 +5,8 @@ import com.reviewping.coflo.global.common.enums.EnumValue;
 import jakarta.validation.Valid;
 import java.util.List;
 
-public record RegenerateReviewRequest(Long mrInfoId, @Valid List<RetrievalContent> retrievals) {
+public record RegenerateReviewRequest(
+        Long projectId, Long gitlabMrIid, @Valid List<RetrievalContent> retrievals) {
     public record RetrievalContent(
             String content,
             String fileName,

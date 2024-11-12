@@ -1,11 +1,15 @@
 package com.reviewping.coflo.domain.gitlab.service;
 
+import com.reviewping.coflo.domain.project.entity.Branch;
 import com.reviewping.coflo.domain.project.entity.Project;
+import com.reviewping.coflo.domain.project.message.UpdateRequestMessage;
+import com.reviewping.coflo.domain.project.repository.BranchRepository;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.review.service.ReviewService;
 import com.reviewping.coflo.global.client.gitlab.request.GitlabEventRequest;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
+import com.reviewping.coflo.global.integration.RedisGateway;
 import jakarta.annotation.PostConstruct;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -28,11 +32,14 @@ public class MrEventHandler {
     private final Map<String, BiConsumer<Long, GitlabEventRequest>> handlers = new HashMap<>();
     private final ReviewService reviewCreateService;
     private final ProjectRepository projectRepository;
+    private final RedisGateway redisGateway;
+    private final BranchRepository branchRepository;
 
     @PostConstruct
     void initHandlers() {
         handlers.put("open", this::handleOpen);
         handlers.put("reopen", this::handleOpen);
+        handlers.put("push", this::handlePush);
     }
 
     @Async
@@ -73,6 +80,21 @@ public class MrEventHandler {
                 targetBranch,
                 gitlabCreatedDate,
                 projectId);
+    }
+
+    public void handlePush(Long projectId, GitlabEventRequest gitlabEventRequest) {
+        Project project = projectRepository.getByGitlabProjectId(gitlabEventRequest.project().id());
+        String branchName = gitlabEventRequest.ref().replace("refs/heads/", "");
+        Branch branch = branchRepository.getByNameAndProject(branchName, project);
+        UpdateRequestMessage updateRequest =
+                new UpdateRequestMessage(
+                        project.getId(),
+                        branch.getId(),
+                        project.getGitUrl(),
+                        branch.getName(),
+                        project.getBotToken(),
+                        "");
+        redisGateway.sendUpdateRequest(updateRequest);
     }
 
     private String getGitlabUrl(GitlabEventRequest gitlabEventRequest) {

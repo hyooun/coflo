@@ -2,6 +2,7 @@ import useTimeAgo from '@hooks/time';
 import { Review } from 'types/review';
 import ReviewComment from './ReviewComment';
 import { GitlabMergeRequest } from 'types/mergeRequest';
+import { REVIEWER } from '@constants/reviewer';
 
 const ReviewItem = ({
   review,
@@ -18,13 +19,13 @@ const ReviewItem = ({
       <div className="flex items-center gap-2 mb-4">
         <div className="absolute -left-4">
           <img
-            src={mergeRequest.reviewer.avatarUrl}
-            alt={mergeRequest.reviewer.name}
+            src={REVIEWER.avatarUrl}
+            alt={REVIEWER.name}
             className="w-8 h-8 rounded-full bg-secondary"
           />
         </div>
         <div className="flex items-center gap-2">
-          <span className="font-bold">{mergeRequest.reviewer.name}</span>
+          <span className="font-bold">{REVIEWER.name}</span>
           <span className="text-gray-700">reviewed</span>
           <span className="text-gray-700">{timeAgo}</span>
         </div>
@@ -32,11 +33,7 @@ const ReviewItem = ({
 
       {/* 메인 리뷰 코멘트 - 깃 트리와 살짝 겹치게 */}
       <div className="bg-white rounded-t-lg border-2 border-secondary rounded-lg -ml-10">
-        <ReviewComment
-          name={mergeRequest.reviewer.name}
-          content={review.content}
-          createdAt={timeAgo}
-        />
+        <ReviewComment name={REVIEWER.name} content={review.content} createdAt={timeAgo} />
       </div>
 
       {/* 코드 리뷰 코멘트들 - 깃 트리 오른쪽에 표시 */}

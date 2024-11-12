@@ -35,6 +35,7 @@ const SignupForm = () => {
         setIsAlertModalOpen(true);
         setAlertMessage(['유효한 토큰입니다.', '회원가입을 진행해주세요.']);
       } else {
+        setIsTokenValid(false);
         setIsAlertModalOpen(true);
         setAlertMessage(['유효하지 않은 토큰입니다.', '다시 한 번 입력해주세요.']);
       }
@@ -138,6 +139,7 @@ const SignupForm = () => {
             content={alertMessage}
             onConfirm={() => setIsAlertModalOpen(false)}
             icon={isTokenValid ? CircleCheck : TriangleAlert}
+            iconClassName={isTokenValid ? 'text-state-success' : 'text-state-warning'}
           />
         )}
 

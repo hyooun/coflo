@@ -8,6 +8,7 @@ import com.reviewping.coflo.domain.customprompt.repository.CustomPromptRepositor
 import com.reviewping.coflo.domain.mergerequest.controller.dto.response.GitlabMrQueryResponse;
 import com.reviewping.coflo.domain.mergerequest.entity.MrInfo;
 import com.reviewping.coflo.domain.mergerequest.repository.MrInfoRepository;
+import com.reviewping.coflo.domain.notification.service.SseService;
 import com.reviewping.coflo.domain.project.entity.Branch;
 import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.BranchRepository;
@@ -56,6 +57,7 @@ public class ReviewService {
     private final ProjectRepository projectRepository;
     private final BadgeEventService badgeEventService;
     private final WebhookChannelService webhookChannelService;
+    private final SseService sseService;
 
     private final GitLabClient gitLabClient;
     private final ObjectMapper objectMapper;
@@ -94,6 +96,8 @@ public class ReviewService {
         if (!project.getWebhookChannels().isEmpty()) {
             webhookChannelService.sendData(project.getId(), AI_REVIEW_COMPLETE_MESSAGE);
         }
+
+        sseService.notify(mrInfo.getId(), "create review");
     }
 
     @Transactional

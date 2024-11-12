@@ -1,8 +1,6 @@
 package com.reviewping.coflo.domain.notification.api;
 
 import com.reviewping.coflo.domain.notification.service.SseService;
-import com.reviewping.coflo.domain.user.entity.User;
-import com.reviewping.coflo.global.auth.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -17,12 +15,12 @@ public class SseController {
 
     @Operation(summary = "SSE 연결", description = "SSE를 연결합니다.")
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter subscribe(@AuthUser User user) {
-        return sseService.subscribe(user.getId());
+    public SseEmitter subscribe(@RequestParam(name = "mrInfoId") Long mrInfoId) {
+        return sseService.subscribe(mrInfoId);
     }
 
     @PostMapping
-    public void sendDataTest(@AuthUser User user) {
-        sseService.notify(user.getId(), "data");
+    public void sendDataTest(@RequestParam(name = "mrInfoId") Long mrInfoId) {
+        sseService.notify(mrInfoId, "data");
     }
 }

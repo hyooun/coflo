@@ -5,27 +5,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reviewping.coflo.domain.notification.repository.EmitterRepository;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SseService {
-    private static final long DEFAULT_TIMEOUT = 60L * 1000 * 60;
+    private static final long DEFAULT_TIMEOUT = 60L * 1000 * 3; // 3분
 
     private final EmitterRepository emitterRepository;
     private final ObjectMapper objectMapper;
 
-    public SseEmitter subscribe(Long userId) {
-        SseEmitter emitter = createEmitter(userId);
+    public SseEmitter subscribe(Long mrInfoId) {
+        SseEmitter emitter = createEmitter(mrInfoId);
 
-        sendToClient(userId, "EventStream Created. [userId=" + userId + "]");
+        sendToClient(mrInfoId, "EventStream Created. [mrInfoId=" + mrInfoId + "]");
         return emitter;
     }
 
-    public void notify(Long userId, Object event) {
-        System.out.println("Notify method called with userId: " + userId + " and event: " + event);
-        sendToClient(userId, event);
+    public void notify(Long mrInfoId, Object event) {
+        log.info("Notify method called with mrInfoId: " + mrInfoId + " and event: " + event);
+        sendToClient(mrInfoId, event);
     }
 
     private void sendToClient(Long id, Object data) {
@@ -33,7 +35,7 @@ public class SseService {
         if (emitter != null) {
             try {
                 String jsonData = objectMapper.writeValueAsString(data);
-                System.out.println("Sending data: " + jsonData);
+                log.info("Sending data: " + jsonData);
                 emitter.send(
                         SseEmitter.event()
                                 .id(String.valueOf(id))
@@ -48,7 +50,7 @@ public class SseService {
                 throw new RuntimeException("연결 오류!", e);
             }
         } else {
-            System.err.println("Emitter not found for id: " + id);
+            log.error("Emitter not found for id: " + id);
         }
     }
 

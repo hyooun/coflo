@@ -30,7 +30,7 @@ export function ChartDropdown({ onSelect }: { onSelect: (option: string) => void
   };
 
   return (
-    <div className="relative w-[150px] h-[30px] mt-3 mr-4 z-10" ref={dropdownRef}>
+    <div className="relative w-[150px] h-[30px] z-10 font-pretendard" ref={dropdownRef}>
       <div
         className="flex items-center bg-transparent justify-between bg-gray-200 p-1 rounded-md cursor-pointer "
         onClick={toggleDropdown}

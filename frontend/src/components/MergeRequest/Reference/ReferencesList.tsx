@@ -11,15 +11,12 @@ import { Review } from '@apis/Review';
 
 const ReferencesList = ({ references: initialReferences }: ReferencesListProps) => {
   const navigate = useNavigate();
-  const { id, selectedReviewId } = useParams<{ id: string; selectedReviewId: string }>();
+  const { id } = useParams<{ id: string }>();
   const [references, setReferences] = useState<Reference[]>(initialReferences || []);
   const [isAddReferenceModalOpen, setIsAddReferenceModalOpen] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [alertModalContent, setAlertModalContent] = useState<string[]>([]);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
-
-  console.log('iid: ', id);
-  console.log('selectedReviewId: ', selectedReviewId);
 
   useEffect(() => {
     setReferences(initialReferences || []);

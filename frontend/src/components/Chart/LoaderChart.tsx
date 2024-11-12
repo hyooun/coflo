@@ -19,16 +19,12 @@ export const loadChartData = async (
   const fetchData = async (): Promise<any> => {
     switch (chartType) {
       case '누적 통합 스코어':
-        console.log('Fetching 누적 통합 스코어');
         return await ProjectRequest.getProjectCumulativeTotalScore(projectId, queryParams);
       case '누적 개별 스코어':
-        console.log('Fetching 누적 개별 스코어');
         return await ProjectRequest.getProjectCumulativeIndividualScore(projectId, queryParams);
       case '획득 통합 스코어':
-        console.log('Fetching 획득 통합 스코어');
         return await ProjectRequest.getProjectNonCumulativeTotalScore(projectId, queryParams);
       case '획득 개별 스코어':
-        console.log('Fetching 획득 개별 스코어');
         return await ProjectRequest.getProjectNonCumulativeIndividualScore(projectId, queryParams);
       default:
         throw new Error('Invalid chart type');
@@ -37,7 +33,7 @@ export const loadChartData = async (
 
   try {
     const response = await fetchData();
-    console.log(response);
+    // console.log(response);
 
     if (response.data) {
       const responseData = response.data as any;
@@ -67,8 +63,6 @@ export const loadChartData = async (
   } catch (error) {
     console.error('Failed to load chart data:', error);
   }
-  console.log(cumulativeScoreData);
-  console.log(individualScoreData);
 
   const minScore = cumulativeScoreData?.scoreOfWeek[0]?.score ?? 0;
 
@@ -80,7 +74,6 @@ export const loadChartData = async (
       codeQuality.scoreOfWeek.map((weekScore) => weekScore.score),
     ) || [0]),
   );
-  console.log(minScore, maxScore);
 
   const createLineData = () => {
     const labelsSet = new Set();
@@ -126,10 +119,7 @@ export const loadChartData = async (
   });
 
   const lineData = createLineData();
-  console.log(lineData);
   const cubicLineData = createCubicLineData();
-  console.log(cubicLineData);
-  console.log(chartType);
 
   return {
     lineData,

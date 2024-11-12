@@ -10,6 +10,7 @@ import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class ReviewController {
     @PostMapping
     @Operation(summary = "리뷰 재생성 요청", description = "참고 자료 수정/삭제 후 요청")
     public ApiResponse<Void> regenerateReview(
-            @AuthUser User user, @RequestBody RegenerateReviewRequest request) {
+            @AuthUser User user, @Valid @RequestBody RegenerateReviewRequest request) {
         reviewService.regenerateReview(
                 user, request.projectId(), request.gitlabMrIid(), request.retrievals());
         return ApiSuccessResponse.success();

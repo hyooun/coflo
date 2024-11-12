@@ -3,10 +3,13 @@ package com.reviewping.coflo.domain.review.controller.dto.request;
 import com.reviewping.coflo.domain.review.entity.LanguageType;
 import com.reviewping.coflo.global.common.enums.EnumValue;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record RegenerateReviewRequest(
-        Long projectId, Long gitlabMrIid, @Valid List<RetrievalContent> retrievals) {
+        @NotNull Long projectId,
+        @NotNull Long gitlabMrIid,
+        @NotNull @Valid List<RetrievalContent> retrievals) {
     public record RetrievalContent(
             String content,
             String fileName,

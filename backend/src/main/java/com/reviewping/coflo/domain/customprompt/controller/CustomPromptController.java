@@ -9,6 +9,7 @@ import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ public class CustomPromptController {
     public ApiResponse<Void> updateCustomPrompt(
             @AuthUser User user,
             @PathVariable("projectId") Long projectId,
-            @ModelAttribute CustomPromptRequest customPromptRequest) {
+            @Valid @ModelAttribute CustomPromptRequest customPromptRequest) {
         customPromptService.updateCustomPrompt(user, customPromptRequest.content(), projectId);
         return ApiSuccessResponse.success();
     }

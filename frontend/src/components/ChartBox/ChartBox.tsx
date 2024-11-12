@@ -1,5 +1,5 @@
 import { Radar, Line, Bar } from 'react-chartjs-2';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import {
   Chart as ChartJS,
@@ -24,6 +24,12 @@ ChartJS.register(
   LinearScale,
 );
 
+interface ProfileBadgeProps {
+  profileIcons?: Record<number, string>;
+  badgeIcons?: Record<number, string>;
+  containerHeight?: number;
+}
+
 const ChartBox = ({
   chartType,
   data,
@@ -32,10 +38,13 @@ const ChartBox = ({
   width = '100%',
   height = '100%',
   plugins,
-}: ChartBoxProps) => {
+  profileIcons,
+  badgeIcons,
+}: ChartBoxProps & ProfileBadgeProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<any>(null);
   const observerRef = useRef<ResizeObserver | null>(null);
+  const [containerHeight, setContainerHeight] = useState<number>(0);
 
   useEffect(() => {
     const resizeChart = () => {
@@ -93,6 +102,40 @@ const ChartBox = ({
     }
   };
 
+  const renderProfileBadges = () => {
+    if (!profileIcons || !badgeIcons) return null;
+
+    const totalUsers = Object.keys(profileIcons).length;
+    const fixedSpacing = 22;
+    const offset = totalUsers < 1 ? 0 : (containerHeight - totalUsers * fixedSpacing) / 2;
+
+    return Object.entries(profileIcons).map(([userId, profileUrl], index) => (
+      <div
+        key={`user-${userId}`}
+        className="absolute"
+        style={{
+          top: offset + index * fixedSpacing,
+          right: '20px',
+        }}
+      >
+        <img src={profileUrl} alt={`User ${userId} Profile`} className="w-5 h-5 rounded-full" />
+        {badgeIcons[parseInt(userId)] && (
+          <img
+            src={badgeIcons[parseInt(userId)]!}
+            alt={`User ${userId} Badge`}
+            className="w-6 h-6 absolute -top-1 left-5"
+          />
+        )}
+      </div>
+    ));
+  };
+
+  useEffect(() => {
+    if (containerRef.current) {
+      setContainerHeight(containerRef.current.clientHeight);
+    }
+  }, []);
+
   return (
     <div
       ref={containerRef}
@@ -100,6 +143,7 @@ const ChartBox = ({
       className="w-full h-full"
     >
       {renderChart()}
+      {renderProfileBadges()}
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { BadgeType } from 'types/badge';
 import AlertModal from '@components/Modal/AlertModal';
 import Header from '@components/Header/Header.tsx';
 import { Badge } from '@apis/Badge';
+import { CircleCheck, TriangleAlert } from 'lucide-react';
 
 const BadgePage = () => {
   const [badges, setBadges] = useState<BadgeType[]>([]);
@@ -14,6 +15,7 @@ const BadgePage = () => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string[]>([]);
   const [, setMainBadgeCodeId] = useState<string>('');
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     const fetchBadges = async () => {
@@ -45,6 +47,9 @@ const BadgePage = () => {
 
   const handleSave = async () => {
     if (mainBadge?.badgeCodeId === selectedBadge?.badgeCodeId) {
+      setIsSuccess(false);
+      setAlertMessage(['이미 설정된 뱃지입니다.']);
+      setIsAlertModalOpen(true);
       return;
     }
 
@@ -52,6 +57,7 @@ const BadgePage = () => {
       const { status } = await Badge.updateMainBadge(selectedBadge?.badgeCodeId || '');
 
       if (status === 'SUCCESS') {
+        setIsSuccess(true);
         setMainBadge(selectedBadge);
         setAlertMessage([
           selectedBadge ? '대표 뱃지가 설정되었습니다.' : '대표 뱃지가 해제되었습니다.',
@@ -59,7 +65,7 @@ const BadgePage = () => {
         setIsAlertModalOpen(true);
       }
     } catch (error) {
-      console.error('Error saving badge:', error);
+      setIsSuccess(false);
       setAlertMessage([
         selectedBadge ? '대표 뱃지 설정에 실패했습니다.' : '대표 뱃지 해제에 실패했습니다.',
       ]);
@@ -76,7 +82,12 @@ const BadgePage = () => {
       <RepresentativeBadge selectedBadge={selectedBadge?.imageUrl || null} onSave={handleSave} />
       <BadgeList badges={badges} onBadgeClick={handleBadgeClick} />
       {isAlertModalOpen && (
-        <AlertModal content={alertMessage} onConfirm={() => setIsAlertModalOpen(false)} />
+        <AlertModal
+          content={alertMessage}
+          onConfirm={() => setIsAlertModalOpen(false)}
+          icon={isSuccess ? CircleCheck : TriangleAlert}
+          iconClassName={isSuccess ? 'text-state-success' : 'text-state-warning'}
+        />
       )}
     </div>
   );

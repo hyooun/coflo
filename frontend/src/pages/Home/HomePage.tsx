@@ -156,21 +156,23 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col flex-grow overflow-auto px-8 pt-6">
-      <div className="flex flex-row ml-4">
-        <div className="flex flex-col mr-8">
-          <Title title="Team Radar Charts" />
+    <div className="flex flex-col flex-grow overflow-auto p-4 gap-4 min-w-[1000px] min-h-[800px] max-w-[2000px] max-h-[1500px]">
+      {/* 첫 번째 행 */}
+      <div className="flex flex-row h-1/2 gap-4">
+        {/* Team Radar Charts - 3/5 너비 */}
+        <div className="flex flex-col flex-[3] min-w-[570px] min-h-[500px]">
+          <Title title="Team Radar Charts" textSize="text-lg" />
           <div
             ref={containerRef}
-            className="w-[680px] h-[320px]  bg-gray-400 border-2 border-gray-500 rounded-lg m-2 flex items-center justify-center "
+            className="flex-grow bg-gray-400 border-2 border-gray-500 rounded-lg flex items-center justify-center p-4"
           >
             <ChartBox
               chartType="radar"
               data={radarData}
               options={createRadarOptions()}
               chartId="radarChart"
-              width={500}
-              height={300}
+              width="100%"
+              height="100%"
             />
             {Object.entries(profileIcons).map(([userId, profileUrl], index) => (
               <div
@@ -205,12 +207,13 @@ const HomePage = () => {
             ))}
           </div>
         </div>
-        <div className="flex flex-col">
-          <Title title="Project Total" />
-          <div className="w-[420px] h-[320px] p-2 bg-gray-400 border-2 border-gray-500 rounded-lg m-2 flex  flex-col ">
-            <Title title="About" textSize="text-lg" px="px-1" py="py-1" ml="ml-6" mt="mt-3" />
-            <Title title="Language" px="px-1" py="py-1" ml="ml-8" />
-            <div className="ml-16">
+        {/* Project Total - 2/5 너비 */}
+        <div className="flex flex-col flex-[2] min-w-[380px] min-h-[500px]">
+          <Title title="Project Total" textSize="text-lg" />
+          <div className="flex-grow p-4 bg-gray-400 border-2 border-gray-500 rounded-lg">
+            <Title title="About" textSize="text-xl" />
+            <Title title="Language" textSize="text-lg" py="py-1" />
+            <div className="mx-4">
               {projectDetail.programmingLanguagesData &&
               projectDetail.programmingLanguagesData.labels ? (
                 <ChartBox
@@ -218,92 +221,100 @@ const HomePage = () => {
                   data={projectDetail.programmingLanguagesData}
                   options={createHorizontalBarOptions([0, 100])}
                   chartId="horizontalBarChart"
-                  width={300}
-                  height={100}
+                  width="100%"
+                  height="100%"
                 />
               ) : (
                 <p>No Chart</p>
               )}
             </div>
-            <div className="h-5 pr-4 pl-4 w-full flex flex-col justify-center">
+            <div className="h-5 px-2 w-full flex flex-col justify-center">
               <div className="bg-gray-600 h-[1px] w-full"></div>
             </div>
-            <Title title="Info" px="px-1" py="py-1" ml="ml-8" />
-            <div className="flex flex-row m-4 ml-8 gap-4">
-              <IconWithText svg={<CommitIcon />} text="commits" count={projectDetail.commitCount} />
-              <IconWithText
-                svg={<BranchIcon className="w-4 h-4" />}
-                text="branches"
-                count={projectDetail.branchCount}
-              />
-            </div>
-            <div className="flex flex-row m-2 ml-8 gap-4">
-              <IconWithText
-                svg={<PullRequestIcon className="w-4 h-4" />}
-                text="MRs"
-                count={projectDetail.mergeRequestCount}
-              />
-              <IconWithText
-                svg={<AiIcon />}
-                text="Ai reviews"
-                count={projectDetail.aiReviewCount}
-              />
+            <div className="flex flex-col space-y-5">
+              <Title title="Info" textSize="text-lg" py="py-1" />
+              <div className="flex flex-col space-y-5 items-center justify-center">
+                <div className="flex flex-row justify-around gap-4">
+                  <IconWithText
+                    svg={<CommitIcon />}
+                    text="commits"
+                    count={projectDetail.commitCount}
+                  />
+                  <IconWithText
+                    svg={<BranchIcon className="w-4 h-4" />}
+                    text="branches"
+                    count={projectDetail.branchCount}
+                  />
+                </div>
+                <div className="flex flex-row justify-around gap-4">
+                  <IconWithText
+                    svg={<PullRequestIcon className="w-4 h-4" />}
+                    text="MRs"
+                    count={projectDetail.mergeRequestCount}
+                  />
+                  <IconWithText
+                    svg={<AiIcon />}
+                    text="Ai reviews"
+                    count={projectDetail.aiReviewCount}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex">
-        <div className="flex flex-row ml-4">
-          <div className="flex flex-col mr-8">
-            <div className="flex flex-row justify-between">
-              <Title title="Personal Growth Graph" />
-
-              <ChartDropdown
-                onSelect={(option) => {
-                  handleSelect(option);
-                  setSelectedOption(option);
-                }}
+      {/* 두 번째 행 */}
+      <div className="flex flex-row h-1/2 gap-4">
+        {/* Personal Growth Graph - 3/5 너비 */}
+        <div className="flex flex-col flex-[3] min-w-[570px] min-h-[500px]">
+          <div className="flex flex-row justify-between items-center">
+            <Title title="Personal Growth Graph" textSize="text-lg" />
+            <ChartDropdown
+              onSelect={(option) => {
+                handleSelect(option);
+                setSelectedOption(option);
+              }}
+            />
+          </div>
+          <div className="flex-grow bg-gray-400 border-2 border-gray-500 rounded-lg items-center justify-center p-4">
+            {selectedChart === '획득 통합 스코어' && (
+              <ChartBox
+                chartType="line"
+                data={cubicLineData}
+                options={createLineOptions([0, 70])}
+                chartId="lineChart"
               />
-            </div>
-            <div className="w-[680px] h-[320px]  bg-gray-400 border-2 border-gray-500 rounded-lg m-2 flex items-center justify-center ">
-              {selectedChart === '획득 통합 스코어' && (
-                <ChartBox
-                  chartType="line"
-                  data={cubicLineData}
-                  options={createLineOptions([0, 70])}
-                  chartId="lineChart"
-                />
-              )}
-              {selectedChart === '획득 개별 스코어' && (
-                <ChartBox
-                  chartType="line"
-                  data={lineData}
-                  options={createLineOptions([0, 11])}
-                  chartId="cubicLineChart"
-                />
-              )}
-              {selectedChart === '누적 통합 스코어' && (
-                <ChartBox
-                  chartType="line"
-                  data={cubicLineData}
-                  options={createCubicLineOptions([minValue, maxValue])}
-                  chartId="cumulativeLineChart"
-                />
-              )}
-              {selectedChart === '누적 개별 스코어' && (
-                <ChartBox
-                  chartType="line"
-                  data={lineData}
-                  options={createCubicLineOptions([minValue, maxValue])}
-                  chartId="cumulativeCubicLineChart"
-                />
-              )}
-            </div>
+            )}
+            {selectedChart === '획득 개별 스코어' && (
+              <ChartBox
+                chartType="line"
+                data={lineData}
+                options={createLineOptions([0, 11])}
+                chartId="cubicLineChart"
+              />
+            )}
+            {selectedChart === '누적 통합 스코어' && (
+              <ChartBox
+                chartType="line"
+                data={cubicLineData}
+                options={createCubicLineOptions([minValue, maxValue])}
+                chartId="cumulativeLineChart"
+              />
+            )}
+            {selectedChart === '누적 개별 스코어' && (
+              <ChartBox
+                chartType="line"
+                data={lineData}
+                options={createCubicLineOptions([minValue, maxValue])}
+                chartId="cumulativeCubicLineChart"
+              />
+            )}
           </div>
-          <div className="w-[420px] h-[320px] mt-6 ml-2 ">
-            <BestMergeRequestList />
-          </div>
+        </div>
+        {/* Best Merge Request - 2/5 너비 */}
+        <div className="flex flex-col flex-[2] min-w-[380px] min-h-[500px]">
+          <BestMergeRequestList />
         </div>
       </div>
     </div>

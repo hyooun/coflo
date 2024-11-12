@@ -3,8 +3,8 @@ interface ChartBoxProps {
   data: any;
   options: any;
   chartId: any;
-  width?: number;
-  height?: number;
+  width?: string;
+  height?: string;
   plugins?: any[];
 }
 

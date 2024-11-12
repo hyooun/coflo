@@ -1,9 +1,11 @@
 package com.reviewping.coflo.domain.project.controller;
 
+import com.reviewping.coflo.domain.project.controller.response.ProjectLabelResponse;
 import com.reviewping.coflo.domain.project.controller.response.ProjectTeamDetailResponse;
 import com.reviewping.coflo.domain.project.controller.response.ProjectTeamRewardResponse;
 import com.reviewping.coflo.domain.project.enums.CalculationType;
 import com.reviewping.coflo.domain.project.enums.ScoreDisplayType;
+import com.reviewping.coflo.domain.project.service.ProjectService;
 import com.reviewping.coflo.domain.project.service.ProjectTeamStatisticsService;
 import com.reviewping.coflo.domain.project.service.ProjectUserStatisticsService;
 import com.reviewping.coflo.domain.user.entity.User;
@@ -25,6 +27,7 @@ public class ProjectController {
 
     private final ProjectTeamStatisticsService projectTeamStatisticsService;
     private final ProjectUserStatisticsService projectUserStatisticsService;
+    private final ProjectService projectService;
 
     @GetMapping("/{projectId}")
     @Operation(summary = "프로젝트 상세 정보 조회")
@@ -53,5 +56,12 @@ public class ProjectController {
         return ApiSuccessResponse.success(
                 projectUserStatisticsService.calculateScore(
                         user, projectId, period, calculationType, scoreDisplayType));
+    }
+
+    @GetMapping("/{projectId}/labels")
+    public ApiResponse<ProjectLabelResponse> getProjectLabels(
+            @AuthUser User user, @PathVariable Long projectId) {
+        ProjectLabelResponse labels = projectService.getProjectLabels(user.getId(), projectId);
+        return ApiSuccessResponse.success(labels);
     }
 }

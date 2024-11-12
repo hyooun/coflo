@@ -6,6 +6,8 @@ const colors = ['#5795D1', '#B8E314', '#F2B870', '#BB92F6', '#B4D3F1', '#EBC3BB'
 const profileIcons: Record<number, string> = {};
 const badgeIcons: Record<number, string> = {};
 
+const defaultLabels = ['가독성', '유지보수성', '보안성', '신뢰성', '재사용성', '일관성'];
+
 export interface TeamScoreResponse {
   radarData: RadarData;
   profileIcons: Record<number, string>;
@@ -29,10 +31,13 @@ export const fetchProjectTeamScore = async (
     });
 
     const radarData = {
-      labels: teamData.userScores[0].scores.map((score) => score.name),
+      labels: defaultLabels,
       datasets: teamData.userScores.slice(0, 6).map((user, index) => ({
         label: user.username,
-        data: user.scores.map((score) => score.score),
+        data: defaultLabels.map((label) => {
+          const scoreObj = user.scores.find((score) => score.name === label);
+          return scoreObj ? scoreObj.score : 0;
+        }),
         borderColor: colors[index % colors.length],
         backgroundColor: 'transparent',
       })),

@@ -1,62 +1,30 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GitlabMergeRequest } from 'types/mergeRequest.ts';
+import { BestMergeRequest } from 'types/mergeRequest.ts';
 import { PullRequestIcon } from '@components/TextDiv/Icons/PullRequestIcon.tsx';
 import { MergeRequest } from '@apis/MergeRequest';
 import { projectIdAtom } from '@store/auth';
 import { useAtom } from 'jotai';
 
 const BestMergeRequestList = () => {
-  const [bestMergeRequests, setBestMergeRequests] = useState<GitlabMergeRequest[]>([]);
+  const [bestMergeRequests, setBestMergeRequests] = useState<BestMergeRequest[]>([]);
   const navigate = useNavigate();
   const [projectId] = useAtom(projectIdAtom);
-
-  // {
-  //   id: 1,
-  //   branchName: 'feature/user',
-  //   title: 'Feat: 회원가입 컴포넌트 구현',
-  //   assignee: '/images/mocks/profile1.png',
-  //   reviewer: '/images/mocks/profile2.png',
-  //   createdAt: '1 week ago',
-  //   labels: ['feat', 'style'],
-  //   author: '이보연',
-  // },
-  // {
-  //   id: 2,
-  //   branchName: 'dev',
-  //   title: 'Fix: 입력폼 수정',
-  //   assignee: '/images/mocks/profile1.png',
-  //   reviewer: '/images/mocks/profile2.png',
-  //   createdAt: '1 week ago',
-  //   labels: ['fix', 'error'],
-  //   author: '구승석',
-  // },
-  // {
-  //   id: 3,
-  //   branchName: 'dev',
-  //   title: 'Fix: 입력폼 수정',
-  //   assignee: '/images/mocks/profile1.png',
-  //   reviewer: '/images/mocks/profile2.png',
-  //   createdAt: '1 week ago',
-  //   labels: ['fix', 'error'],
-  //   author: '구승석',
-  // },
 
   useEffect(() => {
     if (!projectId) return;
     const fetchMergeRequests = async () => {
       const response = await MergeRequest.getBestMrList(projectId);
-      console.log(response.data);
       if (response.data) {
         setBestMergeRequests(response.data);
       }
     };
 
     fetchMergeRequests();
-  }, []);
+  }, [projectId]);
 
-  const handleItemClick = (id: number) => {
-    navigate(`/main/merge-request/reviews/${id}`);
+  const handleItemClick = (iid: number) => {
+    navigate(`/${projectId}/main/merge-request/reviews/${iid}`);
   };
 
   return (
@@ -74,7 +42,7 @@ const BestMergeRequestList = () => {
               <div
                 key={mr.id}
                 className="flex justify-between p-3 mb-3 rounded-lg hover:bg-gray-200 cursor-pointer last:mb-0"
-                onClick={() => handleItemClick(mr.id)}
+                onClick={() => handleItemClick(mr.iid)}
               >
                 <div className="flex flex-col min-w-0 flex-1">
                   <div className="flex items-center space-x-3 mb-1">
@@ -100,12 +68,13 @@ const BestMergeRequestList = () => {
                   </div>
                   <div className="flex items-center mt-1 space-x-3">
                     <div className="flex space-x-1">
-                      {mr.labels.slice(0, 2).map((label, index) => (
+                      {mr.labels.nodes.slice(0, 2).map((label, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-secondary text-white"
+                          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium text-white"
+                          style={{ backgroundColor: label.color }}
                         >
-                          {label}
+                          {label.title}
                         </span>
                       ))}
                     </div>

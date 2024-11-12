@@ -44,8 +44,8 @@ const MergeListPage = () => {
     }
   };
 
-  const handleItemClick = (id: number) => {
-    navigate(`/${projectId}/main/merge-request/reviews/${id}`);
+  const handleItemClick = (iid: number) => {
+    navigate(`/${projectId}/main/merge-request/reviews/${iid}`);
   };
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const MergeListPage = () => {
           mergeRequests.map((mergeRequest) => (
             <div
               key={mergeRequest.id}
-              onClick={() => handleItemClick(mergeRequest.id)}
+              onClick={() => handleItemClick(mergeRequest.iid)}
               className="cursor-pointer"
             >
               <MrItem mergeRequest={mergeRequest} />

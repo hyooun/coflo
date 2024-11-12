@@ -16,9 +16,7 @@ const ReferencesPage = () => {
 
     const fetchReferences = async (reviewId: string) => {
       const response = await Review.getReviewRetrievals(reviewId);
-
       const data = response.data;
-      console.log(data);
       if (data) {
         setReferences(data);
       }

@@ -111,7 +111,6 @@ const HomePage = () => {
       } = await loadChartData(projectId, selectedChart, queryParams);
 
       if (fetchedLineData) {
-        console.log(fetchedLineData);
         setLineData(fetchedLineData);
       }
 
@@ -132,10 +131,8 @@ const HomePage = () => {
       const langauageData = await fetchProjectDetail(projectId);
 
       const teamScoreData = await fetchProjectTeamScore(projectId);
-      console.log(teamScoreData);
 
       setProjectDetail(langauageData || initialProjectDetail);
-
       if (teamScoreData) {
         setRadarData(teamScoreData.radarData);
         setProfileIcons(teamScoreData.profileIcons);
@@ -173,8 +170,10 @@ const HomePage = () => {
               chartId="radarChart"
               width="100%"
               height="100%"
+              profileIcons={profileIcons}
+              badgeIcons={badgeIcons}
             />
-            {Object.entries(profileIcons).map(([userId, profileUrl], index) => (
+            {/* {Object.entries(profileIcons).map(([userId, profileUrl], index) => (
               <div
                 key={`user-${userId}`}
                 className="absolute"
@@ -204,7 +203,7 @@ const HomePage = () => {
                   />
                 )}
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
         {/* Project Total - 2/5 너비 */}
@@ -225,7 +224,7 @@ const HomePage = () => {
                   height="100%"
                 />
               ) : (
-                <p>No Chart</p>
+                <p className="text-center">No Chart</p>
               )}
             </div>
             <div className="h-5 px-2 w-full flex flex-col justify-center">

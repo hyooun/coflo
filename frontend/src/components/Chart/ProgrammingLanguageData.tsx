@@ -2,7 +2,7 @@ import { ProjectRequest } from '@apis/Project';
 import { ProjectRequestResponse } from 'types/language';
 import { ProgrammingLanguagesData } from 'types/language';
 import { ProgrammingLanguage } from 'types/language';
-import { Language } from 'types/language';
+// import { Language } from 'types/language';
 import { ProjectDetailResponse } from 'types/language';
 
 export const fetchProjectDetail = async (
@@ -36,16 +36,16 @@ export const fetchProjectDetail = async (
     const mergeRequestCount: number = projectData.mergeRequestCount;
     const aiReviewCount: number = projectData.aiReviewCount;
 
-    console.log('Commit Count:', commitCount);
-    console.log('Branch Count:', branchCount);
-    console.log('Merger Request Count:', mergeRequestCount);
-    console.log('AI Review Count:', aiReviewCount);
+    // console.log('Commit Count:', commitCount);
+    // console.log('Branch Count:', branchCount);
+    // console.log('Merger Request Count:', mergeRequestCount);
+    // console.log('AI Review Count:', aiReviewCount);
 
-    projectData.languages.forEach((lang: Language) => {
-      console.log(`Language: ${lang.name}, Percentage: ${lang.share}, Color: ${lang.color}`);
-    });
+    // projectData.languages.forEach((lang: Language) => {
+    //   console.log(`Language: ${lang.name}, Percentage: ${lang.share}, Color: ${lang.color}`);
+    // });
 
-    console.log('Programming Languages Data:', programmingLanguagesData);
+    // console.log('Programming Languages Data:', programmingLanguagesData);
 
     return {
       programmingLanguagesData,

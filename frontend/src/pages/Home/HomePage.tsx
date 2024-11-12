@@ -165,8 +165,8 @@ const HomePage = () => {
               data={radarData}
               options={createRadarOptions()}
               chartId="radarChart"
-              width="100%"
-              height="100%"
+              width="500px"
+              height="300px"
               profileIcons={profileIcons}
               badgeIcons={badgeIcons}
             />
@@ -249,6 +249,7 @@ const HomePage = () => {
                 data={cubicLineData}
                 options={createLineOptions([0, 70])}
                 chartId="lineChart"
+                height="400px"
               />
             )}
             {selectedChart === '획득 개별 스코어' && (
@@ -257,6 +258,7 @@ const HomePage = () => {
                 data={lineData}
                 options={createLineOptions([0, 11])}
                 chartId="cubicLineChart"
+                height="400px"
               />
             )}
             {selectedChart === '누적 통합 스코어' && (
@@ -265,6 +267,7 @@ const HomePage = () => {
                 data={cubicLineData}
                 options={createCubicLineOptions([minValue, maxValue])}
                 chartId="cumulativeLineChart"
+                height="400px"
               />
             )}
             {selectedChart === '누적 개별 스코어' && (
@@ -273,6 +276,7 @@ const HomePage = () => {
                 data={lineData}
                 options={createCubicLineOptions([minValue, maxValue])}
                 chartId="cumulativeCubicLineChart"
+                height="400px"
               />
             )}
           </div>

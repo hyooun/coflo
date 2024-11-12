@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import MergeRequestHeader from '@components/MergeRequest/MergeRequestHeader ';
+import MergeRequestHeader from '@components/MergeRequest/MergeRequestHeader';
 import ReviewList from '@components/MergeRequest/Review/ReviewList.tsx';
 import { GitlabMergeRequest } from 'types/mergeRequest.ts';
 import { MergeRequestReview } from 'types/review.ts';

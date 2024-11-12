@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import MergeRequestHeader from '@components/MergeRequest/MergeRequestHeader ';
+import MergeRequestHeader from '@components/MergeRequest/MergeRequestHeader';
 import ReviewList from '@components/MergeRequest/Review/ReviewList.tsx';
 import { GitlabMergeRequest } from 'types/mergeRequest.ts';
 import { MergeRequestReview } from 'types/review.ts';
@@ -21,8 +21,8 @@ const MergeRequestReviewPage = () => {
   useEffect(() => {
     if (!id || !projectId) return;
 
-    const fetchMergeRequest = async (projectId: string, id: string) => {
-      const response = await Review.getCodeReviewList(projectId, id);
+    const fetchMergeRequest = async (projectId: string, mergeRequestIid: string) => {
+      const response = await Review.getCodeReviewList(projectId, mergeRequestIid);
       const data = response.data;
       if (data) {
         setMergeRequest(data.mergeRequest);
@@ -40,7 +40,6 @@ const MergeRequestReviewPage = () => {
       const response = await Review.getReviewRetrievals(reviewId);
 
       const data = response.data;
-      console.log(data);
       if (data) {
         setReferences(data);
       }
@@ -58,7 +57,6 @@ const MergeRequestReviewPage = () => {
   if (!mergeRequest) return <div>Loading...</div>;
 
   const handleReviewClick = (reviewId: string) => {
-    console.log(reviewId);
     setSelectedReviewId(reviewId);
   };
 

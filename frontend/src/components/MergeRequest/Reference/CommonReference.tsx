@@ -14,7 +14,7 @@ const CommonReference = ({
   content,
   type,
   language,
-  onEdit,
+  // onEdit,
   onDelete,
   maxLength = 2000,
 }: CommonReferenceProps) => {
@@ -33,7 +33,7 @@ const CommonReference = ({
       return;
     }
 
-    onEdit(id, editedContent);
+    // onEdit(id, editedContent);
     setShowSaveMessage(true);
     setTimeout(() => {
       setShowSaveMessage(false);

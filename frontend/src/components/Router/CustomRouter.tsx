@@ -39,21 +39,21 @@ const customRouter = createBrowserRouter([
   {
     path: '/repository',
     element: (
-      <ErrorBoundary>
-        <AuthGuard>
-          <RepositoryLayout />
-        </AuthGuard>
-      </ErrorBoundary>
+      // <ErrorBoundary>
+      <AuthGuard>
+        <RepositoryLayout />
+      </AuthGuard>
+      // </ErrorBoundary>
     ),
   },
   {
     path: '/:projectId/main',
     element: (
-      <ErrorBoundary>
-        <AuthGuard>
-          <MainLayout />
-        </AuthGuard>
-      </ErrorBoundary>
+      // <ErrorBoundary>
+      <AuthGuard>
+        <MainLayout />
+      </AuthGuard>
+      // </ErrorBoundary>
     ),
     children: [
       {

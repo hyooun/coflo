@@ -11,12 +11,15 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [projects, setProjects] = useState<Project[]>([]);
-  const [selectedProject, setSelectedProject] = useState<Project>({ projectId: '', name: '' });
   const searchInputRef = useRef<HTMLInputElement>(null);
   const selectorRef = useRef<HTMLDivElement>(null);
 
   const [currentProjectId, setCurrentProjectId] = useAtom(projectIdAtom);
-  const [, setProjectFullPath] = useAtom(projectFullPathAtom);
+  const [projectFullPath, setProjectFullPath] = useAtom(projectFullPathAtom);
+  const [, setSelectedProject] = useState<Project>({
+    projectId: currentProjectId || '',
+    name: projectFullPath || '',
+  });
 
   const filterFunction = (project: Project, query: string) =>
     project.name.toLowerCase().includes(query.toLowerCase());
@@ -43,8 +46,7 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
 
     setProjects(projectsWithCurrent);
     setSelectedProject(projectsWithCurrent.find((p) => p.isCurrent) || projectsWithCurrent[0]);
-    console.log(selectedProject);
-  }, [selectedProject]);
+  }, [currentProjectId]);
 
   useEffect(() => {
     searchInputRef.current?.focus();
@@ -114,7 +116,7 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
                 className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors flex justify-between items-center"
               >
                 <span className="truncate">{project.name}</span>
-                {project.projectId === currentProjectId && (
+                {Number(project.projectId) === Number(currentProjectId) && (
                   <span className="text-xs bg-primary-500 text-white px-2 py-0.5 rounded-full">
                     current
                   </span>

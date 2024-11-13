@@ -103,7 +103,8 @@ public enum ErrorCode {
     /**
      * SSE(N000)
      */
-    SSE_DATA_SEND_ERROR(HttpStatus.NOT_FOUND, "N001", "SSE 데이터를 클라이언트로 전송 도중 오류가 발생했습니다."),
+    SSE_DATA_SEND_ERROR(
+            HttpStatus.INTERNAL_SERVER_ERROR, "N001", "SSE 데이터를 클라이언트로 전송 도중 오류가 발생했습니다."),
     SSE_DATA_SERIALIZATION_ERROR(
             HttpStatus.INTERNAL_SERVER_ERROR, "N002", "SSE 데이터를 직렬화 도중 에러가 발생했습니다."),
 

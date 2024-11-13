@@ -17,6 +17,7 @@ import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDetailContent;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrPageContent;
 import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -97,6 +98,8 @@ public class MergeRequestService {
 
     private GitlabMrResponse createGitlabMrResponse(GitlabMrDetailContent content) {
         boolean exists = mrInfoRepository.existsByGitlabMrIid(content.iid());
-        return GitlabMrResponse.of(content, exists);
+        LocalDateTime lastReviewCreatedAt =
+                mrInfoRepository.findLatestReviewDateByGitlabMrIid(content.iid());
+        return GitlabMrResponse.of(content, exists, lastReviewCreatedAt);
     }
 }

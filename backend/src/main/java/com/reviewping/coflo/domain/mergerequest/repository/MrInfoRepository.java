@@ -37,4 +37,10 @@ public interface MrInfoRepository extends JpaRepository<MrInfo, Long> {
             @Param("projectId") Long projectId,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
+
+    @Query(
+            "SELECT MAX(r.createdDate) "
+                    + "FROM Review r "
+                    + "WHERE r.mrInfo.gitlabMrIid = :gitlabMrIid")
+    LocalDateTime findLatestReviewDateByGitlabMrIid(@Param("gitlabMrIid") Long gitlabMrIid);
 }

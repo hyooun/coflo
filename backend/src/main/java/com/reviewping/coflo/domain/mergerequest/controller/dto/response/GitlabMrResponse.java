@@ -23,9 +23,12 @@ public record GitlabMrResponse(
         Boolean hasConflicts,
         GitlabUserInfoContent assignee,
         GitlabUserInfoContent reviewer,
-        Boolean isAiReviewCreated) {
+        Boolean isAiReviewCreated,
+        LocalDateTime lastReviewCreatedAt) {
     public static GitlabMrResponse of(
-            GitlabMrDetailContent gitlabMrDetailContent, Boolean isAiReviewCreated) {
+            GitlabMrDetailContent gitlabMrDetailContent,
+            Boolean isAiReviewCreated,
+            LocalDateTime lastReviewCreatedAt) {
         return GitlabMrResponse.builder()
                 .id(gitlabMrDetailContent.id())
                 .iid(gitlabMrDetailContent.iid())
@@ -67,6 +70,7 @@ public record GitlabMrResponse(
                                         gitlabMrDetailContent.reviewers().getFirst().name(),
                                         gitlabMrDetailContent.reviewers().getFirst().avatarUrl()))
                 .isAiReviewCreated(isAiReviewCreated)
+                .lastReviewCreatedAt(lastReviewCreatedAt)
                 .build();
     }
 }

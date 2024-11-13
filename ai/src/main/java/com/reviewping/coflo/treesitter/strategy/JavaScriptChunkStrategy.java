@@ -33,32 +33,21 @@ public class JavaScriptChunkStrategy implements ChunkStrategy {
 
     private void traverseAndCollectNodes(
             TSNode node, List<ChunkedCode> chunks, byte[] code, File file) {
-        if ("function_declaration".equals(node.getType())) {
-            String functionCode =
+        //        log.info("\nNode type: {} \n{}", node.getType(), new
+        // String(Arrays.copyOfRange(code, node.getStartByte(), node.getEndByte())));
+
+        if ("class_declaration".equals(node.getType())
+                || "function_declaration".equals(node.getType())
+                || "lexical_declaration".equals(node.getType())) {
+            String nodeContent =
                     new String(Arrays.copyOfRange(code, node.getStartByte(), node.getEndByte()));
-            chunks.add(new ChunkedCode(functionCode, file.getName(), file.getPath(), "javascript"));
-        } else if ("variable_declarator".equals(node.getType())) {
-            boolean hasArrowFunction = false;
-            TSNode parent = node.getParent();
-            for (int i = 0; i < node.getChildCount(); i++) {
-                TSNode child = node.getChild(i);
-                if ("arrow_function".equals(child.getType())) {
-                    hasArrowFunction = true;
-                    break;
-                }
-            }
-            if (hasArrowFunction && parent != null) {
-                String functionCode =
-                        new String(
-                                Arrays.copyOfRange(
-                                        code, parent.getStartByte(), parent.getEndByte()));
-                chunks.add(
-                        new ChunkedCode(
-                                functionCode, file.getName(), file.getPath(), "javascript"));
-            }
+            chunks.add(new ChunkedCode(nodeContent, file.getName(), file.getPath(), "javascript"));
+            return;
         }
+
         for (int i = 0; i < node.getChildCount(); i++) {
-            traverseAndCollectNodes(node.getChild(i), chunks, code, file);
+            TSNode childNode = node.getChild(i);
+            traverseAndCollectNodes(childNode, chunks, code, file);
         }
     }
 }

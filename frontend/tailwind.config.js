@@ -38,13 +38,14 @@ export default {
           900: '#515151',
         },
         background: {
-          navy: '#e3d8f6',
+          navy: '#E3E8F6',
         },
         state: {
           warning: '#EF4545',
           like: '#FF6024',
           success: '#00C49F',
         },
+        secondary2: '#C1C6D8',
       },
     },
   },

@@ -23,6 +23,8 @@ import BestMergeRequestList from '@components/Home/BestMergeRequest/BestMergeReq
 import { ProgrammingLanguagesData } from 'types/language';
 import { projectIdAtom } from '@store/auth';
 import { useAtom } from 'jotai';
+import { ProjectIdError } from 'types/errors';
+import { useParams } from 'react-router-dom';
 
 const HomePage = () => {
   const initialProjectDetail = {
@@ -64,7 +66,9 @@ const HomePage = () => {
     mergeRequestCount: number;
     aiReviewCount: number;
   }>(initialProjectDetail);
-  const [projectId] = useAtom(projectIdAtom);
+  const { projectId: urlProjectId } = useParams();
+  const [projectId, setProjectId] = useAtom(projectIdAtom);
+  const [error, setError] = useState<Error | null>(null);
 
   const handleSelect = (chart: string) => {
     setSelectedChart(chart);
@@ -100,42 +104,93 @@ const HomePage = () => {
       scoreDisplayType,
     };
 
-    const fetchData = async () => {
-      if (!projectId) return;
-      const {
-        lineData: fetchedLineData,
-        cubicLineData: fetchedCubicLineData,
-        maxScore,
-        minScore,
-      } = await loadChartData(projectId, selectedChart, queryParams);
+    // projectId 유효성 검사를 위한 useEffect 수정
+    useEffect(() => {
+      const validateProjectId = () => {
+        // 로컬 스토리지 검사
+        const storedProjectId = localStorage.getItem('projectId');
 
-      if (fetchedLineData) {
-        setLineData(fetchedLineData);
+        if (!storedProjectId) {
+          throw new ProjectIdError('프로젝트 접근 권한이 없습니다.');
+        }
+
+        // URL의 projectId와 저장된 projectId 비교
+        if (urlProjectId && storedProjectId !== urlProjectId) {
+          throw new ProjectIdError('잘못된 프로젝트에 접근하였습니다.');
+        }
+
+        // atom의 projectId 검사 및 업데이트
+        if (!projectId) {
+          setProjectId(storedProjectId);
+        }
+      };
+
+      try {
+        validateProjectId();
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err);
+        }
+      }
+    }, [projectId, urlProjectId, setProjectId]);
+
+    // API 호출하는 useEffect들 수정
+    useEffect(() => {
+      if (!projectId) {
+        // throw new ProjectIdError('프로젝트 접근 권한이 없습니다.');
+        return;
       }
 
-      if (fetchedCubicLineData) {
-        setCubicLineData(fetchedCubicLineData);
-      }
+      const fetchData = async () => {
+        try {
+          const {
+            lineData: fetchedLineData,
+            cubicLineData: fetchedCubicLineData,
+            maxScore,
+            minScore,
+          } = await loadChartData(projectId, selectedChart, queryParams);
 
-      setMaxValue(maxScore);
-      setMinValue(minScore);
-    };
+          if (fetchedLineData) {
+            setLineData(fetchedLineData);
+          }
 
-    fetchData();
+          if (fetchedCubicLineData) {
+            setCubicLineData(fetchedCubicLineData);
+          }
+
+          setMaxValue(maxScore);
+          setMinValue(minScore);
+        } catch (error) {
+          throw error;
+        }
+      };
+
+      fetchData().catch((error) => {
+        if (error instanceof Error) {
+          setError(error);
+        }
+      });
+    }, [selectedChart, projectId]);
   }, [selectedChart, projectId]);
 
   useEffect(() => {
-    if (!projectId) return;
+    if (!projectId) {
+      return;
+    }
+
     const loadProjectData = async () => {
-      const langauageData = await fetchProjectDetail(projectId);
+      try {
+        const languageData = await fetchProjectDetail(projectId);
+        const teamScoreData = await fetchProjectTeamScore(projectId);
 
-      const teamScoreData = await fetchProjectTeamScore(projectId);
-
-      setProjectDetail(langauageData || initialProjectDetail);
-      if (teamScoreData) {
-        setRadarData(teamScoreData.radarData);
-        setProfileIcons(teamScoreData.profileIcons);
-        setBadgeIcons(teamScoreData.badgeIcons);
+        setProjectDetail(languageData || initialProjectDetail);
+        if (teamScoreData) {
+          setRadarData(teamScoreData.radarData);
+          setProfileIcons(teamScoreData.profileIcons);
+          setBadgeIcons(teamScoreData.badgeIcons);
+        }
+      } catch (error) {
+        // 에러는 interceptor에서 처리됨
       }
     };
 
@@ -147,6 +202,11 @@ const HomePage = () => {
       setContainerHeight(containerRef.current.clientHeight);
     }
   }, []);
+
+  // 에러가 있으면 에러를 던져서 ErrorBoundary가 잡을 수 있게 함
+  if (error) {
+    throw error;
+  }
 
   return (
     <div className="flex flex-col flex-grow p-4 gap-8 min-w-[1000px] max-w-[2000px] overflow-auto">

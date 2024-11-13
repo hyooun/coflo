@@ -17,12 +17,12 @@ public enum ErrorCode {
     USER_AUTHORIZATION_NOT_EXIST(HttpStatus.UNAUTHORIZED, "A004", "권한이 없습니다."),
 
     /**
-     * MR_INFO(B000)
+     * MR INFO(B000)
      */
     MR_INFO_NOT_EXIST(HttpStatus.NOT_FOUND, "B001", "MR_INFO를 찾을 수 없습니다."),
 
     /**
-     * Gitlab(C000)
+     * GITLAB(C000)
      */
     USER_GITLAB_ACCOUNT_NOT_EXIST(HttpStatus.NOT_FOUND, "C001", "사용자의 깃랩 계정이 존재하지 않습니다."),
     GITLAB_REQUEST_SERIALIZATION_ERROR(
@@ -91,14 +91,22 @@ public enum ErrorCode {
     BADGE_NOT_EXIST(HttpStatus.NOT_FOUND, "K002", "존재하지 않는 뱃지입니다."),
 
     /**
-     * language (L000)
+     * LANGUAGE(L000)
      */
     LANGUAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "L001", "지원하지 않는 언어입니다."),
 
     /**
-     * branch (M000)
+     * BRANCH(M000)
      */
     BRANCH_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "존재하지 않는 브랜치입니다."),
+
+    /**
+     * SSE(N000)
+     */
+    SSE_DATA_SEND_ERROR(
+            HttpStatus.INTERNAL_SERVER_ERROR, "N001", "SSE 데이터를 클라이언트로 전송 도중 오류가 발생했습니다."),
+    SSE_DATA_SERIALIZATION_ERROR(
+            HttpStatus.INTERNAL_SERVER_ERROR, "N002", "SSE 데이터를 직렬화 도중 에러가 발생했습니다."),
 
     /**
      * EXTERNAL API(Y000)

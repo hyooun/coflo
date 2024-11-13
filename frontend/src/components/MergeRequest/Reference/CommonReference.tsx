@@ -115,7 +115,7 @@ const CommonReference = ({
         ) : (
           <div
             className={`${
-              type === 'CODE' ? 'font-SFMono bg-secondary/30 text-sm' : ''
+              type === 'CODE' ? 'font-SFMono bg-background-navy text-sm' : ''
             } p-4 whitespace-break-spaces max-h-[420px] overflow-y-auto w-full`}
           >
             {editedContent}

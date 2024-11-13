@@ -1,7 +1,11 @@
 import { atom } from 'jotai';
+import { ErrorState } from '../types/api';
 
-export const errorAtom = atom<string>(''); // 기본값은 빈 문자열
+export const errorAtom = atom<ErrorState | null>(null);
 
-export const setError = atom(null, (get, set, errorMessage: string) => {
-  set(errorAtom, errorMessage); // 에러 메시지 업데이트
+export const setError = atom(null, (get, set, error: ErrorState) => {
+  set(errorAtom, {
+    ...error,
+    timestamp: new Date(),
+  });
 });

@@ -13,27 +13,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.treesitter.TSParser;
 
-public class JavaChunkStrategyTest {
+public class JavaScriptChunkStrategyTest {
 
-    private JavaChunkStrategy strategy;
+    private JavaScriptChunkStrategy strategy;
     private File tempFile;
 
     @BeforeEach
     public void setUp() throws IOException {
         TSParser parser = new TSParser();
-        strategy = new JavaChunkStrategy(parser);
+        strategy = new JavaScriptChunkStrategy(parser);
 
-        tempFile = File.createTempFile("TestClass", ".java");
+        tempFile = File.createTempFile("TestScript", ".js");
         try (FileWriter writer = new FileWriter(tempFile)) {
             writer.write(
-                    "public class TestClass {\n"
-                            + "    public void methodOne() {\n"
-                            + "        System.out.println(\"Method One\");\n"
-                            + "    }\n\n"
-                            + "    private int methodTwo() {\n"
-                            + "        return 42;\n"
-                            + "    }\n"
-                            + "}");
+                    "function functionOne() {\n"
+                            + "    console.log('Function One');\n"
+                            + "}\n\n"
+                            + "const functionTwo = () => {\n"
+                            + "    return 42;\n"
+                            + "};");
         }
     }
 
@@ -43,19 +41,24 @@ public class JavaChunkStrategyTest {
     }
 
     @Test
-    public void testChunkingJavaFile() {
+    public void testChunkingJavaScriptFile() {
         List<ChunkedCode> chunks = strategy.chunk(tempFile);
 
-        assertEquals(2, chunks.size(), "Expected 2 methods to be extracted.");
+        System.out.println("Extracted chunks size: " + chunks.size());
+        for (int i = 0; i < chunks.size(); i++) {
+            System.out.println("[Chunk " + i + " content] \n" + chunks.get(i).getContent() + "\n");
+        }
+
+        assertEquals(2, chunks.size(), "Expected 2 functions to be extracted.");
 
         assertEquals(
-                "public void methodOne() {\n        System.out.println(\"Method One\");\n    }",
+                "function functionOne() {\n    console.log('Function One');\n}",
                 chunks.get(0).getContent().trim());
         assertEquals(
-                "private int methodTwo() {\n        return 42;\n    }",
+                "const functionTwo = () => {\n    return 42;\n};",
                 chunks.get(1).getContent().trim());
 
         assertEquals(tempFile.getName(), chunks.get(0).getFileName());
-        assertEquals("java", chunks.get(0).getLanguage());
+        assertEquals("javascript", chunks.get(0).getLanguage());
     }
 }

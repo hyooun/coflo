@@ -1,82 +1,27 @@
 package com.reviewping.coflo.treesitter;
 
 import com.reviewping.coflo.service.dto.ChunkedCode;
+import com.reviewping.coflo.treesitter.strategy.*;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.treesitter.*;
 
 @Component
 @RequiredArgsConstructor
 public class TreeSitterUtil {
 
-    private final TSParser parser;
+    private final ChunkStrategyFactory chunkStrategyFactory;
 
     public List<ChunkedCode> chunk(File file) {
-        parser.reset();
-        String fileName = file.getName().toLowerCase();
-
-        if (fileName.endsWith(".java")) {
-            return chunkJava(file);
-        } else if (fileName.endsWith(".js")) {
-            return chunkJavascript(file);
-        } else {
-            return null;
-        }
+        String extension = getFileExtension(file);
+        ChunkStrategy strategy = chunkStrategyFactory.getStrategy(extension);
+        return strategy.chunk(file);
     }
 
-    private List<ChunkedCode> chunkJava(File file) {
-        byte[] code = getCodeBytes(file);
-        TSLanguage java = new TreeSitterJava();
-        parser.setLanguage(java);
-        TSTree tree = parser.parseString(null, new String(code));
-        TSNode rootNode = tree.getRootNode();
-        List<ChunkedCode> chunks = new ArrayList<>();
-
-        for (int i = 0; i < rootNode.getChildCount(); i++) {
-            TSNode classNode = rootNode.getChild(i);
-            if ("class_declaration".equals(classNode.getType())) {
-
-                for (int j = 0; j < classNode.getChildCount(); j++) {
-                    TSNode classBodyNode = classNode.getChild(j);
-                    for (int k = 0; k < classBodyNode.getChildCount(); k++) {
-                        TSNode methodNode = classBodyNode.getChild(k);
-
-                        if ("method_declaration".equals(methodNode.getType())) {
-                            String methodCode =
-                                    new String(
-                                            Arrays.copyOfRange(
-                                                    code,
-                                                    methodNode.getStartByte(),
-                                                    methodNode.getEndByte()));
-
-                            chunks.add(
-                                    new ChunkedCode(
-                                            methodCode, file.getName(), file.getPath(), "java"));
-                        }
-                    }
-                }
-            }
-        }
-        return chunks;
-    }
-
-    private byte[] getCodeBytes(File file) {
-        try {
-            return Files.readAllBytes(Paths.get(file.getPath()));
-        } catch (IOException e) {
-            throw new FileReadException("파일을 불러오지 못했습니다.", e);
-        }
-    }
-
-    // TODO: 다른 언어들에 대한 구현
-    private List<ChunkedCode> chunkJavascript(File file) {
-        return null;
+    private String getFileExtension(File file) {
+        String fileName = file.getName();
+        int lastIndexOfDot = fileName.lastIndexOf(".");
+        return (lastIndexOfDot == -1) ? "" : fileName.substring(lastIndexOfDot + 1).toLowerCase();
     }
 }

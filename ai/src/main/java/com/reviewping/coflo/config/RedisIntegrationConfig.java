@@ -2,6 +2,7 @@ package com.reviewping.coflo.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -55,7 +56,7 @@ public class RedisIntegrationConfig {
 
     @Bean
     public RedisInboundChannelAdapter redisInboundChannelAdapter(
-            MessageChannel redisInboundChannel) {
+            @Qualifier("redisInboundChannel") MessageChannel redisInboundChannel) {
 
         RedisInboundChannelAdapter adapter = new RedisInboundChannelAdapter(redisConnectionFactory);
         adapter.setTopics(

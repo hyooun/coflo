@@ -1,8 +1,11 @@
 package com.reviewping.coflo.domain.notification.service;
 
+import static com.reviewping.coflo.global.error.ErrorCode.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reviewping.coflo.domain.notification.repository.EmitterRepository;
+import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +23,6 @@ public class SseService {
 
     public SseEmitter subscribe(Long reviewId) {
         SseEmitter emitter = createEmitter(reviewId);
-
         sendToClient(reviewId, "EventStream Created. [reviewId=" + reviewId + "]");
         return emitter;
     }
@@ -42,15 +44,13 @@ public class SseService {
                                 .name("notification")
                                 .data(jsonData));
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
-                throw new RuntimeException("JSON 변환 오류!", e);
+                throw new BusinessException(SSE_DATA_SERIALIZATION_ERROR);
             } catch (IOException e) {
-                e.printStackTrace();
                 emitterRepository.deleteById(id);
-                throw new RuntimeException("연결 오류!", e);
+                throw new BusinessException(SSE_DATA_SEND_ERROR);
             }
         } else {
-            log.error("Emitter not found for id: " + id);
+            log.error("Emitter not found for reviewId: " + id);
         }
     }
 

@@ -97,7 +97,9 @@ public class ReviewService {
             webhookChannelService.sendData(project.getId(), AI_REVIEW_COMPLETE_MESSAGE);
         }
 
-        sseService.notify(mrInfo.getId(), "create review");
+        Review findReview = reviewRepository.findFirstByMrInfoOrderByCreatedDateAsc(mrInfo);
+        log.info("findReview id: {}", findReview.getId());
+        sseService.notify(findReview.getId(), "create review");
     }
 
     @Transactional

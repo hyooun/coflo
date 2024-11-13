@@ -4,11 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.reviewping.coflo.service.dto.ChunkedCode;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.treesitter.TSParser;
@@ -16,46 +14,56 @@ import org.treesitter.TSParser;
 public class JavaChunkStrategyTest {
 
     private JavaChunkStrategy strategy;
-    private File tempFile;
+    private File javaFile;
 
     @BeforeEach
     public void setUp() throws IOException {
         TSParser parser = new TSParser();
         strategy = new JavaChunkStrategy(parser);
-
-        tempFile = File.createTempFile("TestClass", ".java");
-        try (FileWriter writer = new FileWriter(tempFile)) {
-            writer.write(
-                    "public class TestClass {\n"
-                            + "    public void methodOne() {\n"
-                            + "        System.out.println(\"Method One\");\n"
-                            + "    }\n\n"
-                            + "    private int methodTwo() {\n"
-                            + "        return 42;\n"
-                            + "    }\n"
-                            + "}");
-        }
+        javaFile = Paths.get("src/test/resources/TestClass.java").toFile();
     }
 
-    @AfterEach
-    public void tearDown() throws IOException {
-        Files.deleteIfExists(tempFile.toPath());
+    private String normalize(String input) {
+        return input.replaceAll("\\s+", " ").trim();
     }
 
     @Test
     public void testChunkingJavaFile() {
-        List<ChunkedCode> chunks = strategy.chunk(tempFile);
+        List<ChunkedCode> chunks = strategy.chunk(javaFile);
 
-        assertEquals(2, chunks.size(), "Expected 2 methods to be extracted.");
+        System.out.println("Extracted chunks size: " + chunks.size());
+        for (int i = 0; i < chunks.size(); i++) {
+            System.out.println("[Chunk " + i + " content] \n" + chunks.get(i).getContent() + "\n");
+        }
+
+        assertEquals(4, chunks.size(), "Expected 4 methods to be extracted.");
 
         assertEquals(
-                "public void methodOne() {\n        System.out.println(\"Method One\");\n    }",
-                chunks.get(0).getContent().trim());
+                normalize("public void methodOne() {\n    System.out.println(\"Method One\");\n}"),
+                normalize(chunks.get(0).getContent()));
         assertEquals(
-                "private int methodTwo() {\n        return 42;\n    }",
-                chunks.get(1).getContent().trim());
+                normalize("private int methodTwo() {\n    int result = 42;\n    return result;\n}"),
+                normalize(chunks.get(1).getContent()));
+        assertEquals(
+                normalize(
+                        "public static String staticMethod(String input) {\n"
+                                + "    return \"Hello \" + input;\n"
+                                + "}"),
+                normalize(chunks.get(2).getContent()));
+        assertEquals(
+                normalize(
+                        "private void methodWithInnerClass() {\n"
+                                + "    class InnerClass {\n"
+                                + "        public void innerMethod() {\n"
+                                + "            System.out.println(\"Inner Method\");\n"
+                                + "        }\n"
+                                + "    }\n"
+                                + "    InnerClass inner = new InnerClass();\n"
+                                + "    inner.innerMethod();\n"
+                                + "}"),
+                normalize(chunks.get(3).getContent()));
 
-        assertEquals(tempFile.getName(), chunks.get(0).getFileName());
+        assertEquals(javaFile.getName(), chunks.get(0).getFileName());
         assertEquals("java", chunks.get(0).getLanguage());
     }
 }

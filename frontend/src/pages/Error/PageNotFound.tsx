@@ -11,12 +11,12 @@ const PageNotFound = () => {
         <div className="bg-gray-900 rounded-lg overflow-hidden shadow-xl mb-8">
           <div className="flex items-center gap-2 bg-gray-800 px-4 py-2">
             <div className="w-3 h-3 rounded-full bg-red-500"></div>
-            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+            {/* <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div className="w-3 h-3 rounded-full bg-green-500"></div> */}
             <span className="text-gray-400 text-sm ml-2">terminal</span>
           </div>
           <div className="p-6 font-mono">
-            <div className="text-gray-400">$ curl codeflow.dev/page</div>
+            <div className="text-gray-400">$ curl coflo.co.kr/page</div>
             <div className="text-red-400 mt-2">Error 404: Page Not Found</div>
             <div className="text-yellow-400 mt-2">{">>> Page you're looking for might be:"}</div>
             <div className="text-gray-400 mt-2">
@@ -36,9 +36,10 @@ const PageNotFound = () => {
         <div className="text-center">
           <Terminal className="w-16 h-16 text-primary-500 mx-auto mb-4" />
           <h1 className="text-4xl font-bold mb-4">404: Route Not Found</h1>
-          <p className="text-gray-600 mb-8 max-w-md mx-auto">
-            이 페이지는 존재하지 않거나 삭제되었을 수 있습니다. 홈으로 돌아가서 다시 시도해보세요.
-          </p>
+          <div className="text-gray-600 mb-8 max-w-md mx-auto">
+            <p>이 페이지는 존재하지 않거나 삭제되었을 수 있습니다.</p>
+            <p>홈으로 돌아가서 다시 시도해보세요.</p>
+          </div>
 
           <div className="flex gap-4 justify-center">
             <button
@@ -61,7 +62,7 @@ const PageNotFound = () => {
         </div>
 
         {/* Git Command Suggestion */}
-        <div className="mt-12 text-center">
+        {/* <div className="mt-12 text-center">
           <div className="inline-block bg-gray-100 rounded-lg px-6 py-4 font-mono text-sm text-gray-700">
             <span className="text-gray-400"># Try this:</span>
             <br />
@@ -69,7 +70,7 @@ const PageNotFound = () => {
             <br />
             git pull origin main
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

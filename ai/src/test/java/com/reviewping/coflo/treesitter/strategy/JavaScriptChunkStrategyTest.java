@@ -31,12 +31,12 @@ public class JavaScriptChunkStrategyTest {
     public void testChunkingJavaScriptFile() {
         List<ChunkedCode> chunks = strategy.chunk(jsFile);
 
-        System.out.println("Extracted chunks size: " + chunks.size());
+        System.out.println("chunks size: " + chunks.size());
         for (int i = 0; i < chunks.size(); i++) {
             System.out.println("[Chunk " + i + " content] \n" + chunks.get(i).getContent() + "\n");
         }
 
-        assertEquals(4, chunks.size(), "Expected 5 functions to be extracted.");
+        assertEquals(4, chunks.size());
 
         assertEquals(
                 normalize("function functionOne() {\n    console.log('Function One');\n}"),

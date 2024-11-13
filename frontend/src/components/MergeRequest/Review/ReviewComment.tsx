@@ -32,7 +32,7 @@ export default function ReviewComment({
         )}
       </div>
       {/* 코멘트 내용 */}
-      <div className={` p-4 ${type === 'CODE' ? 'bg-secondary/30 font-SFMono text-sm' : ''}`}>
+      <div className={` p-4 ${type === 'CODE' ? 'bg-background-navy font-SFMono text-sm' : ''}`}>
         {reviewer && (
           <div className="flex items-center gap-2 mb-2">
             <img src={reviewer.avatarUrl} alt={reviewer.name} className="w-6 h-6 rounded-full" />

@@ -86,7 +86,7 @@ const MergeListPage = () => {
                   className="cursor-pointer"
                 >
                   <MrItem mergeRequest={mergeRequest} />
-                  <div className="border-t border-gray-300" />
+                  <div className="border-1px border-gray-300" />
                 </div>
               ))
             )}

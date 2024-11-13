@@ -60,7 +60,7 @@ const AddReferenceModal = ({ isOpen, onClose, onSubmit }: AddReferenceModalProps
             onChange={handleFileNameChange}
             warningMessage="제목을 다시 입력해주세요."
             isWarning={isWarning}
-            className="border-b-2 rounded-none "
+            className="border-b-[1px] rounded-none "
           />
         </div>
 

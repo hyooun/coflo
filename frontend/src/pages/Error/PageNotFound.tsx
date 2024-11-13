@@ -35,7 +35,7 @@ const PageNotFound = () => {
         {/* Error Message and Navigation */}
         <div className="text-center">
           <Terminal className="w-16 h-16 text-primary-500 mx-auto mb-4" />
-          <h1 className="text-4xl font-bold mb-4">404: Route Not Found</h1>
+          <h1 className="text-4xl font-bold mb-4">404: Page Not Found</h1>
           <div className="text-gray-600 mb-8 max-w-md mx-auto">
             <p>이 페이지는 존재하지 않거나 삭제되었을 수 있습니다.</p>
             <p>홈으로 돌아가서 다시 시도해보세요.</p>
@@ -43,7 +43,7 @@ const PageNotFound = () => {
 
           <div className="flex gap-4 justify-center">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(-2)}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full 
                 border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors"
             >

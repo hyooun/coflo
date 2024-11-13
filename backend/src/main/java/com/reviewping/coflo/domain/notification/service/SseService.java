@@ -58,8 +58,23 @@ public class SseService {
         SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
         emitterRepository.save(id, emitter);
 
-        emitter.onCompletion(() -> emitterRepository.deleteById(id));
-        emitter.onTimeout(() -> emitterRepository.deleteById(id));
+        emitter.onCompletion(
+                () -> {
+                    log.info("SSE connection completed for id: " + id);
+                    emitterRepository.deleteById(id);
+                });
+        emitter.onTimeout(
+                () -> {
+                    log.info("SSE connection timed out for id: " + id);
+                    emitter.complete();
+                    emitterRepository.deleteById(id);
+                });
+        emitter.onError(
+                (e) -> {
+                    log.error("SSE connection error for id: " + id, e);
+                    emitterRepository.deleteById(id);
+                });
+
         return emitter;
     }
 }

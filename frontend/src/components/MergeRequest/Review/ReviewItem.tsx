@@ -14,7 +14,7 @@ const ReviewItem = ({
   const timeAgo = useTimeAgo(review.createdAt);
 
   return (
-    <div className="relative pl-6 border-l-2 py-6 border-secondary">
+    <div className="relative pl-6 border-l-[1px] py-6 border-secondary2">
       {/* 리뷰어 정보 헤더 - 깃 트리의 시작점 */}
       <div className="flex items-center gap-2 mb-4">
         <div className="absolute -left-4">
@@ -32,7 +32,7 @@ const ReviewItem = ({
       </div>
 
       {/* 메인 리뷰 코멘트 - 깃 트리와 살짝 겹치게 */}
-      <div className="bg-white rounded-t-lg border-2 border-secondary rounded-lg -ml-10">
+      <div className="bg-white rounded-t-lg border-[1px] border-secondary2 rounded-lg -ml-10">
         <ReviewComment name={REVIEWER.name} content={review.content} createdAt={timeAgo} />
       </div>
 

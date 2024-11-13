@@ -1,5 +1,5 @@
 export function NavButton({ active, icon, children, className }: BtnProps) {
-  const bgColor = active ? 'bg-[#ebecf0]' : 'bg-[#f4f5f7]';
+  const bgColor = active ? 'bg-[#ebecf0]' : 'bg-[#F5F7FA]';
   const textColor = active ? 'text-secondary' : 'text-primary-500';
 
   return (

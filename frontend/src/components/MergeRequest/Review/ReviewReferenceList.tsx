@@ -31,7 +31,7 @@ const ReviewReferencesList = ({ references, selectedReviewId }: ReviewReferences
       {/* References List */}
       <div className="space-y-4">
         {references.length === 0 ? (
-          <div className="rounded-lg border-2 border-secondary">
+          <div className="rounded-lg border-[1px] border-secondary2">
             <ReviewComment title="EMPTY" content="참고 자료가 없습니다." type="TEXT" />
           </div>
         ) : (
@@ -42,7 +42,7 @@ const ReviewReferencesList = ({ references, selectedReviewId }: ReviewReferences
             return (
               <div
                 key={reference.id}
-                className="max-h-[330px] rounded-lg border-2 border-secondary"
+                className="max-h-[330px] rounded-lg border-[1px] border-secondary2"
               >
                 <ReviewComment
                   title={reference.fileName}

@@ -14,7 +14,7 @@ const ReviewItem = ({
   const timeAgo = useTimeAgo(review.createdAt);
 
   return (
-    <div className="relative pl-6 border-l-[1px] py-6 border-secondary2">
+    <div className="relative pl-6 border-l-[1px] py-6 border-background-bnavy">
       {/* 리뷰어 정보 헤더 - 깃 트리의 시작점 */}
       <div className="flex items-center gap-2 mb-4">
         <div className="absolute -left-4">
@@ -32,14 +32,14 @@ const ReviewItem = ({
       </div>
 
       {/* 메인 리뷰 코멘트 - 깃 트리와 살짝 겹치게 */}
-      <div className="bg-white rounded-t-lg border-[1px] border-secondary2 rounded-lg -ml-10">
+      <div className="bg-white rounded-t-lg border-[1px] border-background-bnavy rounded-lg -ml-10">
         <ReviewComment name={REVIEWER.name} content={review.content} createdAt={timeAgo} />
       </div>
 
       {/* 코드 리뷰 코멘트들 - 깃 트리 오른쪽에 표시 */}
       {/* <div className="mt-4 space-y-4">
         {review.comments.map((comment) => (
-          <div className="border-2 border-secondary rounded-lg" key={comment.id}>
+          <div className="border-2 border-background-bnavy rounded-lg" key={comment.id}>
             <ReviewComment
               name={comment.reviewer.name}
               content={comment.content}

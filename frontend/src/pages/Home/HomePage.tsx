@@ -157,7 +157,7 @@ const HomePage = () => {
           <Title title="Team Radar Charts" textSize="text-lg" />
           <div
             ref={containerRef}
-            className="flex-grow bg-gray-400 border-2 border-secondary rounded-lg flex items-center justify-center p-4"
+            className="flex-grow bg-gray-400 border-2 border-gray-300 rounded-lg flex items-center justify-center p-4"
           >
             <ChartBox
               chartType="radar"
@@ -174,7 +174,7 @@ const HomePage = () => {
         {/* Project Total - 2/5 너비 */}
         <div className="flex flex-col flex-[2] min-w-[380px]">
           <Title title="Project Total" textSize="text-lg" />
-          <div className="flex flex-col flex-grow justify-between p-4 bg-gray-400 border-2 border-secondary rounded-lg">
+          <div className="flex flex-col flex-grow justify-between p-4 bg-gray-400 border-2 border-gray-300 rounded-lg">
             <Title title="About" textSize="text-xl" />
             <Title title="Language" textSize="text-lg" py="py-1" />
             <div className="mx-4">
@@ -241,7 +241,7 @@ const HomePage = () => {
               }}
             />
           </div>
-          <div className="flex-grow bg-gray-400 border-2 border-secondary rounded-lg items-center justify-center p-4">
+          <div className="flex-grow bg-gray-400 border-2 border-gray-300 rounded-lg items-center justify-center p-4">
             {selectedChart === '획득 통합 스코어' && (
               <ChartBox
                 chartType="line"

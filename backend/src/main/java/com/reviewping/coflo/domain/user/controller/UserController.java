@@ -8,6 +8,8 @@ import com.reviewping.coflo.global.auth.AuthUser;
 import com.reviewping.coflo.global.common.response.ApiResponse;
 import com.reviewping.coflo.global.common.response.impl.ApiSuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +43,14 @@ public class UserController {
     public ApiResponse<Void> updateRecentProject(
             @AuthUser User user, @PathVariable Long projectId) {
         userService.updateRecentProjectId(user.getId(), projectId);
+        return ApiSuccessResponse.success();
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "로그아웃", description = "사용자 쿠키 만료, redis에 저장된 refresh-token 삭제")
+    public ApiResponse<Void> logout(
+            @AuthUser User user, HttpServletRequest request, HttpServletResponse response) {
+        userService.logout(request, response, user.getId());
         return ApiSuccessResponse.success();
     }
 }

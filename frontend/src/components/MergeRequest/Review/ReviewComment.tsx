@@ -16,7 +16,7 @@ export default function ReviewComment({
   return (
     <div className="flex flex-col">
       <div
-        className={`flex items-center gap-2 p-2 border-b-[1px] border-secondary2 rounded-t-md ${backgroundColor} flex-shrink-0`}
+        className={`flex items-center gap-2 p-2 border-b-[1px] border-background-bnavy rounded-t-md ${backgroundColor} flex-shrink-0`}
       >
         {name && (
           <>

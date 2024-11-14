@@ -10,11 +10,12 @@ import { Review } from '@apis/Review';
 import { projectIdAtom } from '@store/auth';
 import { useAtom } from 'jotai';
 import AlertModal from '@components/Modal/AlertModal';
+import ScrollNavigationButton from '@components/Button/ScrollNavigationButton';
 
 const MergeRequestReviewPage = () => {
   const { id } = useParams<{ id: string }>();
   const [projectId] = useAtom(projectIdAtom);
-  console.log(projectId);
+
   const [mergeRequest, setMergeRequest] = useState<GitlabMergeRequest | null>(null);
   const [reviews, setReviews] = useState<MergeRequestReview['reviews']>([]);
   const [references, setReferences] = useState<Reference[]>([]);
@@ -73,7 +74,7 @@ const MergeRequestReviewPage = () => {
   };
 
   return (
-    <div className="p-8 flex flex-col w-full overflow-auto items-center">
+    <div className="p-8 flex flex-col w-full overflow-auto items-center scroll-container">
       <div className="w-full border-b-[1px] border-background-bnavy">
         <MergeRequestHeader mergeRequest={mergeRequest} />
         <div className="flex gap-12 w-full">
@@ -93,6 +94,8 @@ const MergeRequestReviewPage = () => {
       {isAlertModalOpen && (
         <AlertModal content={alertMessage} onConfirm={() => setIsAlertModalOpen(false)} />
       )}
+
+      <ScrollNavigationButton />
     </div>
   );
 };

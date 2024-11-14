@@ -25,6 +25,20 @@ export function MrItem({ mergeRequest }: MrItemProps) {
     <div className="pt-5 pb-5 p-2 w-full min-w-[1000px] border-b border-gray-300 font-pretendard">
       <div className="flex flex-row justify-between ">
         <h2 className="text-lg font-semibold">{title}</h2>
+      </div>
+      <div className="flex flex-row justify-between mt-1">
+        <div className="flex items-center">
+          <span className="text-xs mr-1">created {createTimeAgo} </span>
+          {assignee ? (
+            <>
+              <span className="text-xs mr-3"> by {assignee.username}</span>
+            </>
+          ) : (
+            <span className="text-xs text-gray-500 mr-3"></span>
+          )}
+          <PullRequestIcon className="w-3 h-3 flex-shrink-0 mr-1" />
+          <span className="text-xs font-bold mr-1">{targetBranch}</span>
+        </div>
         <div className="flex items-center">
           {assignee ? (
             <>
@@ -54,26 +68,12 @@ export function MrItem({ mergeRequest }: MrItemProps) {
           )}
         </div>
       </div>
-      <div className="flex flex-row justify-between mt-1">
-        <div className="flex items-center">
-          <span className="text-xs mr-1">created {createTimeAgo} </span>
-          {assignee ? (
-            <>
-              <span className="text-xs mr-3"> by {assignee.username}</span>
-            </>
-          ) : (
-            <span className="text-xs text-gray-500 mr-3"></span>
-          )}
-          <PullRequestIcon className="w-3 h-3 flex-shrink-0 mr-1" />
-          <span className="text-xs font-bold mr-1">{targetBranch}</span>
-        </div>
-        <div className="text-xs mr-1">
-          <span>updated {updateTimeAgo}</span>
-        </div>
-      </div>
       <div className="mt-2 text-xs text-gray-600 flex justify-between">
         <div>
           <LabelList labels={labels} />
+        </div>
+        <div className="text-xs mr-1">
+          <span>updated {updateTimeAgo}</span>
         </div>
       </div>
     </div>

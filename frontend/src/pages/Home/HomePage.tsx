@@ -149,15 +149,15 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col flex-grow overflow-auto p-4 gap-4 min-w-[1000px] min-h-[800px] max-w-[2000px] max-h-[1500px]">
+    <div className="flex flex-col flex-grow p-4 gap-8 min-w-[1000px] max-w-[2000px] overflow-auto">
       {/* 첫 번째 행 */}
-      <div className="flex flex-row h-1/2 gap-4">
+      <div className="flex flex-row min-h-[500px] gap-4">
         {/* Team Radar Charts - 3/5 너비 */}
-        <div className="flex flex-col flex-[3] min-w-[570px] min-h-[500px]">
+        <div className="flex flex-col flex-[3] min-w-[570px]">
           <Title title="Team Radar Charts" textSize="text-lg" />
           <div
             ref={containerRef}
-            className="flex-grow bg-gray-400 border-2 border-gray-500 rounded-lg flex items-center justify-center p-4"
+            className="flex-grow bg-gray-400 border-2 border-gray-300 rounded-lg flex items-center justify-center p-4"
           >
             <ChartBox
               chartType="radar"
@@ -172,9 +172,9 @@ const HomePage = () => {
           </div>
         </div>
         {/* Project Total - 2/5 너비 */}
-        <div className="flex flex-col flex-[2] min-w-[380px] min-h-[500px]">
+        <div className="flex flex-col flex-[2] min-w-[380px]">
           <Title title="Project Total" textSize="text-lg" />
-          <div className="flex-grow p-4 bg-gray-400 border-2 border-gray-500 rounded-lg">
+          <div className="flex flex-col flex-grow justify-between p-4 bg-gray-400 border-2 border-gray-300 rounded-lg">
             <Title title="About" textSize="text-xl" />
             <Title title="Language" textSize="text-lg" py="py-1" />
             <div className="mx-4">
@@ -186,7 +186,7 @@ const HomePage = () => {
                   options={createHorizontalBarOptions([0, 100])}
                   chartId="horizontalBarChart"
                   width="100%"
-                  height="100%"
+                  height="60px"
                 />
               ) : (
                 <p className="text-center">No Chart</p>
@@ -195,7 +195,7 @@ const HomePage = () => {
             <div className="h-5 px-2 w-full flex flex-col justify-center">
               <div className="bg-gray-600 h-[1px] w-full"></div>
             </div>
-            <div className="flex flex-col space-y-5">
+            <div className="flex flex-col space-y-5 py-5">
               <Title title="Info" textSize="text-lg" py="py-1" />
               <div className="flex flex-col space-y-5 items-center justify-center">
                 <div className="flex flex-row justify-around gap-4">
@@ -229,9 +229,9 @@ const HomePage = () => {
       </div>
 
       {/* 두 번째 행 */}
-      <div className="flex flex-row h-1/2 gap-4">
+      <div className="flex flex-row min-h-[450px] gap-4 mb-4">
         {/* Personal Growth Graph - 3/5 너비 */}
-        <div className="flex flex-col flex-[3] min-w-[570px] min-h-[500px]">
+        <div className="flex flex-col flex-[3] min-w-[570px]">
           <div className="flex flex-row justify-between items-center">
             <Title title="Personal Growth Graph" textSize="text-lg" />
             <ChartDropdown
@@ -241,14 +241,14 @@ const HomePage = () => {
               }}
             />
           </div>
-          <div className="flex-grow bg-gray-400 border-2 border-gray-500 rounded-lg items-center justify-center p-4">
+          <div className="flex-grow bg-gray-400 border-2 border-gray-300 rounded-lg items-center justify-center p-4">
             {selectedChart === '획득 통합 스코어' && (
               <ChartBox
                 chartType="line"
                 data={cubicLineData}
                 options={createLineOptions([0, 70])}
                 chartId="lineChart"
-                height="400px"
+                height="350px"
               />
             )}
             {selectedChart === '획득 개별 스코어' && (
@@ -257,7 +257,7 @@ const HomePage = () => {
                 data={lineData}
                 options={createLineOptions([0, 11])}
                 chartId="cubicLineChart"
-                height="400px"
+                height="350px"
               />
             )}
             {selectedChart === '누적 통합 스코어' && (
@@ -266,7 +266,7 @@ const HomePage = () => {
                 data={cubicLineData}
                 options={createCubicLineOptions([minValue, maxValue])}
                 chartId="cumulativeLineChart"
-                height="400px"
+                height="350px"
               />
             )}
             {selectedChart === '누적 개별 스코어' && (
@@ -275,13 +275,13 @@ const HomePage = () => {
                 data={lineData}
                 options={createCubicLineOptions([minValue, maxValue])}
                 chartId="cumulativeCubicLineChart"
-                height="400px"
+                height="350px"
               />
             )}
           </div>
         </div>
         {/* Best Merge Request - 2/5 너비 */}
-        <div className="flex flex-col flex-[2] min-w-[380px] min-h-[500px]">
+        <div className="flex flex-col flex-[2] min-w-[380px]">
           <BestMergeRequestList />
         </div>
       </div>

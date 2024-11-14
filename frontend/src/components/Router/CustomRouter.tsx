@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
+import AuthGuard from './AuthGuard';
 import HomePage from '@pages/Home/HomePage';
 import MergeListPage from '@pages/MergeList/MergeListPage';
 import CustomPromptPage from '@pages/CustomPrompt/CustomPromptPage';
@@ -12,6 +13,11 @@ import MergeRequestReviewPage from '@pages/MergeRequestReview/MergeRequestReview
 import ReferencesPage from '@pages/MergeRequestReview/ReferencesPage';
 import { OAuthRedirectHandler } from '@apis/Auth';
 import App from 'App';
+import PageNotFound from '@pages/Error/PageNotFound';
+// import ErrorBoundary from './ErrorBoundary';
+import { ServerErrorPage } from '@pages/Error/ServerErrorPage';
+import { BadRequestPage } from '@pages/Error/BadRequestPage';
+import { UnauthorizedPage } from '@pages/Error/UnauthorizedPage';
 
 const customRouter = createBrowserRouter([
   {
@@ -32,11 +38,23 @@ const customRouter = createBrowserRouter([
   },
   {
     path: '/repository',
-    element: <RepositoryLayout />,
+    element: (
+      // <ErrorBoundary>
+      <AuthGuard>
+        <RepositoryLayout />
+      </AuthGuard>
+      // </ErrorBoundary>
+    ),
   },
   {
     path: '/:projectId/main',
-    element: <MainLayout />,
+    element: (
+      // <ErrorBoundary>
+      <AuthGuard>
+        <MainLayout />
+      </AuthGuard>
+      // </ErrorBoundary>
+    ),
     children: [
       {
         path: '',
@@ -67,6 +85,31 @@ const customRouter = createBrowserRouter([
         element: <SettingsPage />,
       },
     ],
+  },
+  {
+    path: '/error',
+    children: [
+      {
+        path: 'not-found',
+        element: <PageNotFound />,
+      },
+      {
+        path: 'server-error',
+        element: <ServerErrorPage />,
+      },
+      {
+        path: 'bad-request',
+        element: <BadRequestPage />,
+      },
+      {
+        path: 'unauthorized',
+        element: <UnauthorizedPage />,
+      },
+    ],
+  },
+  {
+    path: '*',
+    element: <PageNotFound />,
   },
 ]);
 

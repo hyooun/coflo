@@ -13,22 +13,24 @@ import { useAtom } from 'jotai';
 const MergeRequestReviewPage = () => {
   const { id } = useParams<{ id: string }>();
   const [projectId] = useAtom(projectIdAtom);
+  console.log(projectId);
   const [mergeRequest, setMergeRequest] = useState<GitlabMergeRequest | null>(null);
   const [reviews, setReviews] = useState<MergeRequestReview['reviews']>([]);
   const [references, setReferences] = useState<Reference[]>([]);
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
+  const [sendReviewId, setSendReviewId] = useState<string | null>(null);
+
+  const fetchMergeRequest = async (projectId: string, mergeRequestIid: string) => {
+    const response = await Review.getCodeReviewList(projectId, mergeRequestIid);
+    const data = response.data;
+    if (data) {
+      setMergeRequest(data.mergeRequest);
+      setReviews(data.reviews);
+    }
+  };
 
   useEffect(() => {
     if (!id || !projectId) return;
-
-    const fetchMergeRequest = async (projectId: string, mergeRequestIid: string) => {
-      const response = await Review.getCodeReviewList(projectId, mergeRequestIid);
-      const data = response.data;
-      if (data) {
-        setMergeRequest(data.mergeRequest);
-        setReviews(data.reviews);
-      }
-    };
 
     fetchMergeRequest(projectId, id);
   }, [id, projectId]);
@@ -51,6 +53,7 @@ const MergeRequestReviewPage = () => {
   useEffect(() => {
     if (reviews.length > 0 && !selectedReviewId) {
       setSelectedReviewId(String(Number(reviews[0].id)));
+      setSendReviewId(String(Number(reviews[reviews.length - 1].id)));
     }
   }, [reviews, selectedReviewId]);
 
@@ -70,7 +73,11 @@ const MergeRequestReviewPage = () => {
             mergeRequest={mergeRequest}
             onReviewClick={handleReviewClick}
           />
-          <ReferencesList references={references} selectedReviewId={selectedReviewId} />
+          <ReferencesList
+            references={references}
+            selectedReviewId={selectedReviewId}
+            sendReviewId={sendReviewId}
+          />
         </div>
       </div>
     </div>

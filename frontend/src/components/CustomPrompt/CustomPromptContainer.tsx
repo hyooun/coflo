@@ -5,6 +5,7 @@ import PrevPrompt from './PrevPrompt';
 import AlertModal from '@components/Modal/AlertModal';
 import { customPrompt } from '@apis/CustomPrompt';
 import { projectIdAtom } from '@store/auth';
+import SaveIcon from './icons/SaveIcon';
 
 const CustomPromptContainer = () => {
   const [content, setContent] = useState<string>('');
@@ -42,33 +43,40 @@ const CustomPromptContainer = () => {
     }
   };
 
+  const isSaveDisabled = content.trim() === '';
+
   return (
     <>
       <div className="flex flex-col gap-6 min-w-[600px]">
         <div className="relative w-full border-1 border-primary-500 shadow-lg rounded-xl p-4 bg-[#EFF2FB] min-h-[300px]">
           <PrevPrompt />
         </div>
-        <textarea
-          className="w-full min-h-[400px] h-auto max-h-[420px] border-1 border-primary-500 shadow-lg p-4 pb-8 rounded-2xl resize-none overflow-y-auto focus:outline-none bg-[#F5F7FA] placeholder:text-[#A5A5A5]"
-          value={content}
-          onChange={handleChange}
-          placeholder="원하는 프롬프트를 입력해주세요."
-        />
-        {maxLength && (
-          <div
-            className={`absolute bottom-6 right-5 text-sm px-1 ${content.length >= maxLength ? 'text-state-warning bg-white rounded-2xl' : 'text-gray-600'}`}
+        <div className="relative w-full">
+          <textarea
+            className="w-full min-h-[400px] h-auto max-h-[420px] border-1 border-primary-500 shadow-lg  p-10 pt-13  rounded-2xl resize-none overflow-y-auto focus:outline-none bg-[#F5F7FA] placeholder:text-[#A5A5A5]"
+            value={content}
+            onChange={handleChange}
+            placeholder="원하는 프롬프트를 입력해주세요."
+          />
+          {maxLength && (
+            <div
+              className={`absolute top-5 right-7 text-lg px-1 ${
+                content.length >= maxLength
+                  ? 'text-state-warning bg-white rounded-2xl'
+                  : 'text-gray-600'
+              }`}
+            >
+              {content.length} / {maxLength}
+            </div>
+          )}
+          <button
+            className="absolute bottom-5 right-5 p-2 rounded-xl"
+            onClick={handleSavePrompt}
+            disabled={isSaveDisabled}
           >
-            {content.length} / {maxLength}
-          </div>
-        )}
-      </div>
-      <div className="flex mt-5 justify-end">
-        <button
-          className="bg-primary-500 text-white px-4 py-2 rounded-xl w-fit"
-          onClick={handleSavePrompt}
-        >
-          저장
-        </button>
+            <SaveIcon width={50} height={50} fill={isSaveDisabled ? '#e3e3e3' : '#2C365B'} />
+          </button>
+        </div>
       </div>
 
       {isAlertModalOpen && (

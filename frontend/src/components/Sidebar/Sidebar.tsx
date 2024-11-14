@@ -40,7 +40,7 @@ export const Sidebar = () => {
         </NavButton>
       </Link>
       <div className="h-10 w-full flex flex-col justify-center">
-        <div className="bg-[#c1c7d0] h-[1px] w-full"></div>
+        <div className="bg-gray-300 h-[1.5px] w-full"></div>
       </div>
       <Link to={`/${projectId}/main/badge`} className="w-full">
         <NavButton active={location.pathname === `/${projectId}/main/badge`} icon={<BadgeIcon />}>

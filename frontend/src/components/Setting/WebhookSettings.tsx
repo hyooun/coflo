@@ -95,7 +95,7 @@ export const WebhookSettings = () => {
 
   return (
     <div className="p-4">
-      <div className="flex flex-row items-center gap-2">
+      <div className="flex flex-row items-center gap-2 min-w-[200px] mb-4">
         <div className="w-4 h-4 bg-primary-500 rounded-full"></div>
         <h2 className="text-lg font-bold">웹훅 설정</h2>
       </div>

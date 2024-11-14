@@ -29,9 +29,14 @@ import com.reviewping.coflo.domain.review.repository.ReviewRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
+import com.reviewping.coflo.domain.user.repository.UserRepository;
+import com.reviewping.coflo.domain.userproject.entity.UserProject;
+import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.domain.webhookchannel.service.WebhookChannelService;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
+import com.reviewping.coflo.global.error.ErrorCode;
+import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.integration.RedisGateway;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -63,6 +68,8 @@ public class ReviewService {
     private final ObjectMapper objectMapper;
     private final RedisGateway redisGateway;
     private final LanguageRepository languageRepository;
+    private final UserProjectRepository userProjectRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     @ServiceActivator(inputChannel = "reviewResponseChannel")
@@ -93,7 +100,14 @@ public class ReviewService {
                 savedReview.getId(),
                 savedRetrievalCount);
 
-        notificationService.create(reviewResponse.userId(), AI_REVIEW_COMPLETE_MESSAGE);
+        User user = userRepository.getById(reviewResponse.userId());
+        GitlabAccount gitlabAccount = user.getGitlabAccounts().getFirst();
+        UserProject userProject =
+                userProjectRepository
+                        .findByProjectAndGitlabAccount(project, gitlabAccount)
+                        .orElseThrow(() -> new BusinessException(ErrorCode.USER_PROJECT_NOT_EXIST));
+
+        notificationService.create(user.getId(), userProject, AI_REVIEW_COMPLETE_MESSAGE);
 
         if (!project.getWebhookChannels().isEmpty()) {
             webhookChannelService.sendData(project.getId(), AI_REVIEW_COMPLETE_MESSAGE);

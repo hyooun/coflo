@@ -41,11 +41,11 @@ export const AlarmButton = ({ active }: AlarmButtonProps) => {
     setCount(mockData.filter((alarm) => !alarm.read).length);
   }, []);
 
-  const handleNewAlarm = (newAlarm: Alarm) => {
-    setAlarms((prevAlarms) => [newAlarm, ...prevAlarms]);
-    setCount((prevCount) => prevCount + 1);
-    setToastMessage(newAlarm.message);
-  };
+  // const handleNewAlarm = (newAlarm: Alarm) => {
+  //   setAlarms((prevAlarms) => [newAlarm, ...prevAlarms]);
+  //   setCount((prevCount) => prevCount + 1);
+  //   setToastMessage(newAlarm.message);
+  // };
 
   const handleAlarmClick = (id: number) => {
     setAlarms((prevAlarms) =>

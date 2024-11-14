@@ -23,8 +23,10 @@ import BestMergeRequestList from '@components/Home/BestMergeRequest/BestMergeReq
 import { ProgrammingLanguagesData } from 'types/language';
 import { projectIdAtom } from '@store/auth';
 import { useAtom } from 'jotai';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const initialProjectDetail = {
     programmingLanguagesData: null,
     commitCount: 0,
@@ -122,7 +124,10 @@ const HomePage = () => {
     };
 
     const fetchData = async () => {
-      if (!projectId) return;
+      if (!projectId) {
+        navigate('/repository');
+        return;
+      }
       const {
         lineData: fetchedLineData,
         cubicLineData: fetchedCubicLineData,

@@ -24,8 +24,8 @@ public class SseController {
     }
 
     @PostMapping("/disconnect")
-    public ApiResponse<Void> disconnect(@RequestParam(name = "reviewId") Long reviewId) {
-        sseService.disconnect(reviewId);
+    public ApiResponse<Void> disconnect(@AuthUser User user) {
+        sseService.disconnect(user.getId());
         return ApiSuccessResponse.success();
     }
 

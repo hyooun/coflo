@@ -82,6 +82,7 @@ public class ReviewCreateService {
                 new ReviewResponseMessage(
                         reviewRequest.gitlabUrl(),
                         reviewRequest.mrInfoId(),
+                        0L,
                         chatMessage,
                         retrievals);
         log.info(
@@ -115,6 +116,7 @@ public class ReviewCreateService {
                 new ReviewResponseMessage(
                         reviewRequest.gitlabUrl(),
                         reviewRequest.mrInfoId(),
+                        reviewRequest.userId(),
                         chatMessage,
                         reviewRequest.retrievals());
         log.info(

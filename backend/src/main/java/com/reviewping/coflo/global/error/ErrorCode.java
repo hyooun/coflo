@@ -109,6 +109,11 @@ public enum ErrorCode {
             HttpStatus.INTERNAL_SERVER_ERROR, "N002", "SSE 데이터를 직렬화 도중 에러가 발생했습니다."),
 
     /**
+     * NOTIFICATION(O000)
+     */
+    NOTIFICATION_NOT_EXIST(HttpStatus.NOT_FOUND, "O001", "존재하지 않는 알림입니다."),
+
+    /**
      * EXTERNAL API(Y000)
      */
     EXTERNAL_API_NOT_FOUND(HttpStatus.NOT_FOUND, "Y001", "외부 API를 찾을 수 없습니다."),

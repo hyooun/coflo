@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { BellIcon } from '@components/Sidebar/Icons/Bell';
 
 interface Alarm {
@@ -17,6 +17,8 @@ export const AlarmButton = ({ active }: AlarmButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [alarms, setAlarms] = useState<Alarm[]>([]);
   const [count, setCount] = useState(0);
+  const popupRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // 알람 목록을 불러오는 API 호출
@@ -45,12 +47,30 @@ export const AlarmButton = ({ active }: AlarmButtonProps) => {
     setCount((prevCount) => prevCount - 1);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (buttonRef.current?.contains(event.target as Node)) {
+        return;
+      }
+
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const bgColor = isOpen || active ? 'bg-[#ebecf0]' : 'bg-[#F5F7FA]';
   const textColor = isOpen || active ? 'secondary' : 'primary-500';
 
   return (
     <div className="relative w-full">
       <div
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className={`font-pretentard flex flex-row items-center rounded-[3px] w-full h-10 ${bgColor} text-${textColor} px-3 py-2 select-none hover:cursor-pointer`}
       >
@@ -66,7 +86,10 @@ export const AlarmButton = ({ active }: AlarmButtonProps) => {
       </div>
 
       {isOpen && (
-        <div className="absolute top-0 left-60 w-[300px] bg-white shadow-lg rounded-md border border-gray-200 z-50 max-h-[250px] overflow-y-auto">
+        <div
+          className="absolute top-0 left-60 w-[300px] bg-white shadow-lg rounded-md border border-gray-200 z-50 max-h-[250px] overflow-y-auto"
+          ref={popupRef}
+        >
           <div className="px-4">
             {alarms.map((alarm) => (
               <div

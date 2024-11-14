@@ -10,8 +10,6 @@ import com.reviewping.coflo.domain.project.entity.Project;
 import com.reviewping.coflo.domain.project.repository.ProjectRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
-import com.reviewping.coflo.domain.userproject.entity.UserProject;
-import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDetailContent;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrPageContent;
@@ -35,15 +33,12 @@ public class MergeRequestService {
     private final MrInfoRepository mrInfoRepository;
     private final ProjectRepository projectRepository;
     private final ProjectDateUtil projectDateUtil;
-    private final UserProjectRepository userProjectRepository;
 
     public GitlabMrPageResponse getGitlabMergeRequests(
             Long userId, Long projectId, GitlabMrPageRequest request) {
         GitlabAccount gitlabAccount =
                 gitlabAccountRepository.getByUserIdAndProjectId(userId, projectId);
         Project project = projectRepository.getById(projectId);
-        UserProject userProject =
-                userProjectRepository.getByProjectAndGitlabAccount(project, gitlabAccount);
 
         GitlabMrPageContent gitlabMrPage =
                 gitLabClient.searchGitlabMergeRequests(
@@ -51,7 +46,7 @@ public class MergeRequestService {
                         gitlabAccount.getUserToken(),
                         project.getGitlabProjectId(),
                         request,
-                        userProject.getCreatedDate());
+                        project.getCreatedDate());
 
         List<GitlabMrResponse> gitlabMrResponses = buildGitlabMrResponses(gitlabMrPage);
 

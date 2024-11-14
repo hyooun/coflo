@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.notification.entity;
 
-import com.reviewping.coflo.domain.user.entity.User;
+import com.reviewping.coflo.domain.userproject.entity.UserProject;
 import com.reviewping.coflo.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,8 +24,8 @@ public class Notification extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "user_project_id")
+    private UserProject userProject;
 
     @Column(nullable = false)
     private String content;
@@ -35,8 +35,8 @@ public class Notification extends BaseTimeEntity {
     private boolean isRead;
 
     @Builder
-    public Notification(User user, String content, String targetUrl, boolean isRead) {
-        this.user = user;
+    public Notification(UserProject userProject, String content, String targetUrl, boolean isRead) {
+        this.userProject = userProject;
         this.content = content;
         this.targetUrl = targetUrl;
         this.isRead = isRead;

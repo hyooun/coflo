@@ -4,8 +4,15 @@ import com.reviewping.coflo.domain.notification.api.dto.response.NotificationRes
 import com.reviewping.coflo.domain.notification.api.dto.response.UnreadCountResponse;
 import com.reviewping.coflo.domain.notification.entity.Notification;
 import com.reviewping.coflo.domain.notification.repository.NotificationRepository;
+import com.reviewping.coflo.domain.project.entity.Project;
+import com.reviewping.coflo.domain.project.repository.ProjectRepository;
+import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.UserRepository;
+import com.reviewping.coflo.domain.userproject.entity.UserProject;
+import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
+import com.reviewping.coflo.global.error.ErrorCode;
+import com.reviewping.coflo.global.error.exception.BusinessException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -18,18 +25,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class NotificationService {
 
-    private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
+    private final NotificationRepository notificationRepository;
+    private final UserProjectRepository userProjectRepository;
     private final SseService sseService;
+    private final ProjectRepository projectRepository;
 
     @Transactional
-    public void create(Long userId, String content) {
+    public void create(Long userId, UserProject userProject, String content) {
         sseService.notify(userId, content);
-        User user = userRepository.getById(userId);
 
         Notification notification =
                 Notification.builder()
-                        .user(user)
+                        .userProject(userProject)
                         .content(content)
                         .targetUrl(null)
                         .isRead(false)
@@ -37,9 +45,11 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public List<NotificationResponse> getByUser(User user) {
+    public List<NotificationResponse> getByUser(Long userId, Long projectId) {
+        UserProject userProject = getUserProject(userId, projectId);
+
         List<Notification> notifications =
-                notificationRepository.findAllByUserOrderByCreatedDateDesc(user);
+                notificationRepository.findAllByUserProjectOrderByCreatedDateDesc(userProject);
 
         return notifications.stream()
                 .map(
@@ -58,11 +68,24 @@ public class NotificationService {
         if (!notification.isRead()) notification.updateIsRead(true);
     }
 
-    public UnreadCountResponse unreadNotificationCount(User user) {
+    public UnreadCountResponse unreadNotificationCount(Long userId, Long projectId) {
+        UserProject userProject = getUserProject(userId, projectId);
+
         List<Notification> notifications =
-                notificationRepository.findAllByUserOrderByCreatedDateDesc(user);
+                notificationRepository.findAllByUserProjectOrderByCreatedDateDesc(userProject);
         return UnreadCountResponse.of(
                 notifications.stream().filter(notification -> !notification.isRead()).count());
+    }
+
+    private UserProject getUserProject(Long userId, Long projectId) {
+        User user = userRepository.getById(userId);
+        GitlabAccount gitlabAccount = user.getGitlabAccounts().getFirst();
+        Project project = projectRepository.getById(projectId);
+        UserProject userProject =
+                userProjectRepository
+                        .findByProjectAndGitlabAccount(project, gitlabAccount)
+                        .orElseThrow(() -> new BusinessException(ErrorCode.USER_PROJECT_NOT_EXIST));
+        return userProject;
     }
 
     private String formatCreatedDate(LocalDateTime startDT, LocalDateTime endDT) {

@@ -13,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/notifications")
@@ -25,14 +25,17 @@ public class NotificationController {
 
     @Operation(summary = "알림 목록 조회", description = "자신의 알림 목록을 조회합니다.")
     @GetMapping
-    public ApiResponse<List<NotificationResponse>> findNotification(@AuthUser User user) {
-        return ApiSuccessResponse.success(notificationService.getByUser(user));
+    public ApiResponse<List<NotificationResponse>> findNotification(
+            @AuthUser User user, @RequestParam(name = "projectId") Long projectId) {
+        return ApiSuccessResponse.success(notificationService.getByUser(user.getId(), projectId));
     }
 
     @Operation(summary = "읽지 않은 알림 개수 조회", description = "읽지 않은 알림 개수를 조회합니다.")
     @GetMapping("/unread-counts")
-    public ApiResponse<UnreadCountResponse> findUnreadNotificationsCount(@AuthUser User user) {
-        return ApiSuccessResponse.success(notificationService.unreadNotificationCount(user));
+    public ApiResponse<UnreadCountResponse> findUnreadNotificationsCount(
+            @AuthUser User user, @RequestParam(name = "projectId") Long projectId) {
+        return ApiSuccessResponse.success(
+                notificationService.unreadNotificationCount(user.getId(), projectId));
     }
 
     @Operation(summary = "알림 확인", description = "자신의 알림을 확인합니다.")
@@ -40,12 +43,6 @@ public class NotificationController {
     public ApiResponse<Void> updateNotification(
             @PathVariable(name = "notificationId") Long notificationId) {
         notificationService.updateIsRead(notificationId);
-        return ApiSuccessResponse.success();
-    }
-
-    @PostMapping
-    public ApiResponse<Void> test(@AuthUser User user) {
-        notificationService.create(user.getId(), "test data");
         return ApiSuccessResponse.success();
     }
 }

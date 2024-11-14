@@ -8,9 +8,14 @@ import { useAtom } from 'jotai';
 interface ReviewReferencesListProps {
   references: Reference[];
   selectedReviewId: string | null;
+  sendReviewId: string | null;
 }
 
-const ReviewReferencesList = ({ references, selectedReviewId }: ReviewReferencesListProps) => {
+const ReviewReferencesList = ({
+  references,
+  selectedReviewId,
+  sendReviewId,
+}: ReviewReferencesListProps) => {
   const { id } = useParams();
   const [projectId] = useAtom(projectIdAtom);
 
@@ -20,7 +25,10 @@ const ReviewReferencesList = ({ references, selectedReviewId }: ReviewReferences
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">References</h2>
         <Link
-          to={`/${projectId}/main/merge-request/reviews/${id}/references/${selectedReviewId}`}
+          to={{
+            pathname: `/${projectId}/main/merge-request/reviews/${id}/references/${selectedReviewId}`,
+          }}
+          state={{ sendReviewId: sendReviewId }}
           className="hover:text-gray-800 transition-colors"
         >
           전체보기

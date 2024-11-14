@@ -225,9 +225,10 @@ public class ReviewService {
                                 project.getFullPath(),
                                 mergeRequestIid),
                         true);
+        String gitlabMrDetailUrl = getGitlabMrDetailUrl(gitlabAccount, project, mrInfo);
         List<ReviewDetailResponse> reviews =
                 reviewRepository.findByMrInfoOrderByCreatedDateDesc(mrInfo).stream()
-                        .map(ReviewDetailResponse::from)
+                        .map(review -> ReviewDetailResponse.from(review, gitlabMrDetailUrl))
                         .toList();
         return ReviewResponse.of(gitlabMrQueryContent, reviews);
     }
@@ -255,5 +256,12 @@ public class ReviewService {
         List<Retrieval> saved = retrievalRepository.saveAll(retrievals);
         log.debug("참고자료가 저장되었습니다. Saved Retrieval Count: {}", saved.size());
         return saved.size();
+    }
+
+    private String getGitlabMrDetailUrl(
+            GitlabAccount gitlabAccount, Project project, MrInfo mrInfo) {
+        return String.format(
+                "https://%s/%s/-/merge_requests/%d",
+                gitlabAccount.getDomain(), project.getFullPath(), mrInfo.getGitlabMrIid());
     }
 }

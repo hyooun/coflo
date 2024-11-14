@@ -93,6 +93,8 @@ public class ReviewService {
                 savedReview.getId(),
                 savedRetrievalCount);
 
+        sseService.notify(reviewResponse.userId(), "review created");
+
         if (!project.getWebhookChannels().isEmpty()) {
             webhookChannelService.sendData(project.getId(), AI_REVIEW_COMPLETE_MESSAGE);
         }
@@ -185,11 +187,13 @@ public class ReviewService {
         Branch branch =
                 branchRepository.getByNameAndProject(gitlabMrResponse.targetBranch(), project);
 
+        log.info("send review request userId: {}", user.getId());
         ReviewRegenerateRequestMessage regenerateRequest =
                 new ReviewRegenerateRequestMessage(
                         project.getId(),
                         mrInfo.getId(),
                         branch.getId(),
+                        user.getId(),
                         mrContent,
                         customPrompt.getContent(),
                         gitlabAccount.getDomain(),

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { BellIcon } from '@components/Sidebar/Icons/Bell';
+import { Toast } from '@components/Common/Toast';
 
 interface Alarm {
   id: number;
@@ -17,6 +18,7 @@ export const AlarmButton = ({ active }: AlarmButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [alarms, setAlarms] = useState<Alarm[]>([]);
   const [count, setCount] = useState(0);
+  const [toastMessage, setToastMessage] = useState('');
   const popupRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
 
@@ -38,6 +40,12 @@ export const AlarmButton = ({ active }: AlarmButtonProps) => {
     setAlarms(mockData);
     setCount(mockData.filter((alarm) => !alarm.read).length);
   }, []);
+
+  const handleNewAlarm = (newAlarm: Alarm) => {
+    setAlarms((prevAlarms) => [newAlarm, ...prevAlarms]);
+    setCount((prevCount) => prevCount + 1);
+    setToastMessage(newAlarm.message);
+  };
 
   const handleAlarmClick = (id: number) => {
     setAlarms((prevAlarms) =>
@@ -110,6 +118,8 @@ export const AlarmButton = ({ active }: AlarmButtonProps) => {
           </div>
         </div>
       )}
+
+      {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage('')} />}
     </div>
   );
 };

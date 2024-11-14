@@ -13,9 +13,10 @@ interface AlarmButtonProps {
   active: boolean;
 }
 
-export const AlarmButton = ({ count, active }: AlarmButtonProps) => {
+export const AlarmButton = ({ active }: AlarmButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [alarms, setAlarms] = useState<Alarm[]>([]);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     // 알람 목록을 불러오는 API 호출
@@ -33,12 +34,15 @@ export const AlarmButton = ({ count, active }: AlarmButtonProps) => {
       // 추가 목업 데이터
     ];
     setAlarms(mockData);
+    setCount(mockData.filter((alarm) => !alarm.read).length);
   }, []);
 
   const handleAlarmClick = (id: number) => {
     setAlarms((prevAlarms) =>
       prevAlarms.map((alarm) => (alarm.id === id ? { ...alarm, read: true } : alarm)),
     );
+
+    setCount((prevCount) => prevCount - 1);
   };
 
   const bgColor = isOpen || active ? 'bg-[#ebecf0]' : 'bg-[#F5F7FA]';

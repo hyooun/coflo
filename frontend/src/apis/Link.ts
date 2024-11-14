@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { ApiResponse } from 'types/api';
-import instance from '@config/apiConfig';
+import { instance } from '@config/apiConfig';
 import { GetLinkedStatusData, Project } from 'types/project';
 
 const responseBody = <T>(response: AxiosResponse<ApiResponse<T>>) => response.data;

@@ -14,14 +14,8 @@ public class TreeSitterUtil {
     private final ChunkStrategyFactory chunkStrategyFactory;
 
     public List<ChunkedCode> chunk(File file) {
-        String extension = getFileExtension(file);
+        String extension = FileUtil.getFileExtension(file);
         ChunkStrategy strategy = chunkStrategyFactory.getStrategy(extension);
         return strategy.chunk(file);
-    }
-
-    private String getFileExtension(File file) {
-        String fileName = file.getName();
-        int lastIndexOfDot = fileName.lastIndexOf(".");
-        return (lastIndexOfDot == -1) ? "" : fileName.substring(lastIndexOfDot + 1).toLowerCase();
     }
 }

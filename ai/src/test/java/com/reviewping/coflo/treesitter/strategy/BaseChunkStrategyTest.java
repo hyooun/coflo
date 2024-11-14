@@ -9,17 +9,15 @@ import java.nio.file.Paths;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.treesitter.TSParser;
 
-class HtmlChunkStrategyTest {
+class BaseChunkStrategyTest {
 
-    private HtmlChunkStrategy strategy;
+    private BaseChunkStrategy strategy;
     private File htmlFile;
 
     @BeforeEach
     public void setUp() throws IOException {
-        TSParser parser = new TSParser();
-        strategy = new HtmlChunkStrategy(parser);
+        strategy = new BaseChunkStrategy();
         htmlFile = Paths.get("src/test/resources/TestHTML.html").toFile();
     }
 
@@ -36,7 +34,7 @@ class HtmlChunkStrategyTest {
             System.out.println("[Chunk " + i + " content] \n" + chunks.get(i).getContent() + "\n");
         }
 
-        assertEquals(1, chunks.size(), "Expected 4 chunks to be extracted.");
+        assertEquals(1, chunks.size(), "Expected 1 chunks to be extracted.");
 
         assertEquals(htmlFile.getName(), chunks.get(0).getFileName());
         assertEquals("html", chunks.get(0).getLanguage());

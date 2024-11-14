@@ -228,9 +228,9 @@ public class ReviewService {
         String gitlabMrDetailUrl = getGitlabMrDetailUrl(gitlabAccount, project, mrInfo);
         List<ReviewDetailResponse> reviews =
                 reviewRepository.findByMrInfoOrderByCreatedDateDesc(mrInfo).stream()
-                        .map(review -> ReviewDetailResponse.from(review, gitlabMrDetailUrl))
+                        .map(ReviewDetailResponse::from)
                         .toList();
-        return ReviewResponse.of(gitlabMrQueryContent, reviews);
+        return ReviewResponse.of(gitlabMrQueryContent, reviews, gitlabMrDetailUrl);
     }
 
     public List<RetrievalDetailResponse> getRetrievalDetail(Long reviewId) {

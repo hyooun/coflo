@@ -11,7 +11,7 @@ import { fetchProjectTeamScore } from '@components/Chart/ProjectTeamScoreData';
 import { RadarData } from 'types/project';
 import { ChartDropdown } from '@components/Home/ChartDropDown';
 import { loadChartData } from '@components/Chart/LoaderChart';
-
+import { useNavigate } from 'react-router-dom';
 import {
   createHorizontalBarOptions,
   createRadarOptions,
@@ -43,7 +43,7 @@ const HomePage = () => {
   const [badgeIcons, setBadgeIcons] = useState<Record<number, string>>({});
   const [selectedChart, setSelectedChart] = useState<string>('획득 통합 스코어');
   const [, setSelectedOption] = useState<string | null>(null);
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [lineData, setLineData] = useState({
     labels: [],
     datasets: [],
@@ -56,6 +56,8 @@ const HomePage = () => {
 
   const [maxValue, setMaxValue] = useState<number>(0);
   const [minValue, setMinValue] = useState<number>(100);
+  const navigate = useNavigate();
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [projectDetail, setProjectDetail] = useState<{
     programmingLanguagesData: ProgrammingLanguagesData | null;
@@ -69,6 +71,25 @@ const HomePage = () => {
   const handleSelect = (chart: string) => {
     setSelectedChart(chart);
   };
+
+  useEffect(() => {
+    if (!projectId) {
+      setIsLoading(false);
+      return;
+    }
+
+    const loadProjectData = async () => {
+      setIsLoading(false);
+    };
+
+    loadProjectData();
+  }, [projectId]);
+
+  useEffect(() => {
+    if (!isLoading && !projectId) {
+      navigate('/repository');
+    }
+  }, [isLoading, projectId, navigate]);
 
   useEffect(() => {
     let calculationType = 'acquisition';

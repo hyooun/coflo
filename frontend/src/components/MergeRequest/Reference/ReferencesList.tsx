@@ -8,18 +8,31 @@ import { Reference, ReferencesListProps } from 'types/reference.ts';
 import ConfirmModal from '@components/Modal/ConfirmModal.tsx';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Review } from '@apis/Review';
+import { useAtom } from 'jotai';
+import { projectIdAtom } from '@store/auth';
+// import { useNotification } from './useNotification';
+// import { useLocation } from 'react-router-dom';
+// import Loading from './Loading';
 
 const ReferencesList = ({ references: initialReferences }: ReferencesListProps) => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string; selectedReviewId: string }>();
+  const [projectId] = useAtom(projectIdAtom);
   const [references, setReferences] = useState<Reference[]>(initialReferences || []);
   const [isAddReferenceModalOpen, setIsAddReferenceModalOpen] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [alertModalContent, setAlertModalContent] = useState<string[]>([]);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+  const [, setIsLoading] = useState(true);
+
+  // const location = useLocation();
+  // const sendReviewId = location.state?.sendReviewId;
+
+  // const { notify } = useNotification(sendReviewId || '', id || '', projectId || '', setIsLoading);
 
   useEffect(() => {
     setReferences(initialReferences || []);
+    setIsLoading(false);
   }, [initialReferences]);
 
   const handleDeleteClick = (id: number) => {
@@ -51,6 +64,7 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
       setIsAlertModalOpen(true);
       return;
     }
+    // setIsLoading(true);
 
     try {
       const retrievals = references.map((ref) => ({
@@ -59,7 +73,6 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
         language: ref.language.toUpperCase(),
       }));
 
-      const projectId = localStorage.getItem('projectId');
       if (!projectId) {
         setAlertModalContent(['프로젝트 ID가 없습니다.']);
         setIsAlertModalOpen(true);
@@ -70,7 +83,9 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
       console.log('response: ', response);
       setAlertModalContent(['리뷰가 재생성되었습니다.']);
       setIsAlertModalOpen(true);
-      // TODO: 필요한 경우 페이지 리로드나 상태 업데이트
+
+      // notify();
+
       navigate(`/${projectId}/main/merge-request/reviews/${id}`);
     } catch (error) {
       console.error('리뷰 재생성 중 오류 발생:', error);
@@ -96,60 +111,68 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
   };
 
   return (
-    <div className="w-full my-4 min-w-[350px]">
-      <div className="space-y-4">
-        {references.map((reference) => {
-          const referenceType = reference.language.toLowerCase() === 'plaintext' ? 'TEXT' : 'CODE';
+    <div>
+      {/* {isLoading ? (
+        <Loading />
+      ) : ( */}
+      <div className="w-full my-4 min-w-[350px]">
+        <div className="space-y-4">
+          {references.map((reference) => {
+            const referenceType =
+              reference.language.toLowerCase() === 'plaintext' ? 'TEXT' : 'CODE';
 
-          return (
-            <CommonReference
-              key={reference.id}
-              id={reference.id}
-              fileName={reference.fileName}
-              content={reference.content}
-              language={reference.language}
-              type={referenceType}
-              onDelete={handleDeleteClick}
-              maxLength={3000}
-            />
-          );
-        })}
-        {references.length < 15 && (
-          <div
-            className="flex flex-col justify-center items-center border-[1.2px] rounded-lg border-background-bnavy py-10 space-y-4 hover:cursor-pointer"
-            onClick={handleAddReference}
-          >
-            <Plus className="text-primary-500 w-14 h-14" strokeWidth={4} />
-            <span className="text-primary-500 text-2xl"> 참고자료 추가하기 </span>
-          </div>
-        )}
-      </div>
+            return (
+              <CommonReference
+                key={reference.id}
+                id={reference.id}
+                fileName={reference.fileName}
+                content={reference.content}
+                language={reference.language}
+                type={referenceType}
+                onDelete={handleDeleteClick}
+                maxLength={3000}
+              />
+            );
+          })}
+          {references.length < 15 && (
+            <div
+              className="flex flex-col justify-center items-center border-2 rounded-lg border-primary-500 py-10 space-y-4 hover:cursor-pointer"
+              onClick={handleAddReference}
+              aria-label="Add a new reference"
+            >
+              <Plus className="text-primary-500 w-14 h-14" strokeWidth={4} />
+              <span className="text-primary-500 text-2xl">참고자료 추가하기</span>
+            </div>
+          )}
+        </div>
 
-      <AddReferenceModal
-        isOpen={isAddReferenceModalOpen}
-        onClose={() => setIsAddReferenceModalOpen(false)}
-        onSubmit={handleAddReferenceSubmit}
-      />
-
-      {isAlertModalOpen && (
-        <ConfirmModal
-          content={alertModalContent}
-          onConfirm={handleAlertModalConfirm}
-          onCancel={handleAlertModalCancel}
-          className="w-72 h-44"
+        <AddReferenceModal
+          isOpen={isAddReferenceModalOpen}
+          onClose={() => setIsAddReferenceModalOpen(false)}
+          onSubmit={handleAddReferenceSubmit}
         />
-      )}
 
-      <div className="flex justify-center my-8">
-        <CommonButton
-          className="w-fit px-10 py-4 cursor-pointer"
-          bgColor="bg-primary-500"
-          active={true}
-          onClick={handleRegistReference}
-        >
-          리뷰 재생성
-        </CommonButton>
+        {isAlertModalOpen && (
+          <ConfirmModal
+            content={alertModalContent}
+            onConfirm={handleAlertModalConfirm}
+            onCancel={handleAlertModalCancel}
+            className="w-72 h-44"
+          />
+        )}
+
+        <div className="flex justify-center my-8">
+          <CommonButton
+            className="w-fit px-10 py-4 cursor-pointer"
+            bgColor="bg-primary-500"
+            active={true}
+            onClick={handleRegistReference}
+          >
+            리뷰 재생성
+          </CommonButton>
+        </div>
       </div>
+      {/* )} */}
     </div>
   );
 };

@@ -96,10 +96,6 @@ public class ReviewService {
         if (!project.getWebhookChannels().isEmpty()) {
             webhookChannelService.sendData(project.getId(), AI_REVIEW_COMPLETE_MESSAGE);
         }
-
-        Review findReview = reviewRepository.findFirstByMrInfoOrderByCreatedDateAsc(mrInfo);
-        log.info("findReview id: {}", findReview.getId());
-        sseService.notify(findReview.getId(), "create review");
     }
 
     @Transactional

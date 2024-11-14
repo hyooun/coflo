@@ -21,15 +21,15 @@ public class SseService {
     private final EmitterRepository emitterRepository;
     private final ObjectMapper objectMapper;
 
-    public SseEmitter subscribe(Long reviewId) {
-        SseEmitter emitter = createEmitter(reviewId);
-        sendToClient(reviewId, "EventStream Created. [reviewId=" + reviewId + "]");
+    public SseEmitter subscribe(Long userId) {
+        SseEmitter emitter = createEmitter(userId);
+        sendToClient(userId, "EventStream Created. [userId=" + userId + "]");
         return emitter;
     }
 
-    public void notify(Long reviewId, Object event) {
-        log.info("Notify method called with reviewId: " + reviewId + " and event: " + event);
-        sendToClient(reviewId, event);
+    public void notify(Long userId, Object event) {
+        log.info("Notify method called with userId: " + userId + " and event: " + event);
+        sendToClient(userId, event);
     }
 
     private void sendToClient(Long id, Object data) {
@@ -50,7 +50,7 @@ public class SseService {
                 throw new BusinessException(SSE_DATA_SEND_ERROR);
             }
         } else {
-            log.error("Emitter not found for reviewId: " + id);
+            log.error("Emitter not found for userId: " + id);
         }
     }
 
@@ -71,10 +71,22 @@ public class SseService {
                 });
         emitter.onError(
                 (e) -> {
-                    log.error("SSE connection error for id: " + id, e);
-                    emitterRepository.deleteById(id);
+                    log.error("SSE connection error: ", e);
+                    emitter.completeWithError(e);
                 });
 
         return emitter;
+    }
+
+    public void disconnect(Long userId) {
+        SseEmitter emitter = emitterRepository.get(userId);
+        if (emitter != null) {
+            try {
+                emitter.complete();
+            } catch (IllegalStateException e) {
+                log.warn("Emitter already completed for id: " + userId);
+            }
+            emitterRepository.deleteById(userId);
+        }
     }
 }

@@ -7,11 +7,11 @@ export const ServerErrorPage = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
       <div className="max-w-2xl w-full">
         <TerminalWindow title="server.log">
-          <div className="text-gray-400">$ systemctl status codeflow-server</div>
+          <div className="text-gray-400">$ systemctl status coFlo-server</div>
           <div className="text-red-400 mt-2">
-            ● codeflow-server.service - CodeFlow API Server
+            ● coFlo-server.service - coFlo API Server
             <br />
-            Loaded: loaded (/etc/systemd/system/codeflow.service)
+            Loaded: loaded (/etc/systemd/system/coFlow.service)
             <br />
             Active: failed (Result: exit-code)
           </div>

@@ -21,12 +21,12 @@ export const fetchProjectTeamScore = async (
   if (response.data) {
     const teamData: ProjectTeamRequestResoponse = response.data;
 
-    teamData.userScores.slice(0, 6).forEach((user) => {
+    teamData.userScores.slice(0, 6).forEach((user, index) => {
       if (user.profileImageUrl) {
-        profileIcons[user.userId] = user.profileImageUrl;
+        profileIcons[index] = user.profileImageUrl;
       }
       if (user.badgeImageUrl) {
-        badgeIcons[user.userId] = user.badgeImageUrl;
+        badgeIcons[index] = user.badgeImageUrl;
       }
     });
 

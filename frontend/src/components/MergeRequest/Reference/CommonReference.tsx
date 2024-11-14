@@ -50,8 +50,8 @@ const CommonReference = ({
     setIsAlertModalOpen(false);
   };
   return (
-    <div className="rounded-lg border-2 border-primary-500 w-full ">
-      <div className="flex flex-wrap justify-between items-center p-2 bg-white rounded-t-lg border-b-2 border-primary-500">
+    <div className="rounded-lg border-[1px] border-background-bnavy w-full ">
+      <div className="flex flex-wrap justify-between items-center p-2 bg-white rounded-t-lg border-b-[1px] border-background-bnavy">
         <h3 className={`font-bold ${type === 'CODE' ? 'font-SFMono text-sm' : ''} overflow-hidden`}>
           {fileName}
         </h3>
@@ -115,7 +115,7 @@ const CommonReference = ({
         ) : (
           <div
             className={`${
-              type === 'CODE' ? 'font-SFMono bg-secondary/30 text-sm' : ''
+              type === 'CODE' ? 'font-SFMono bg-background-navy text-sm' : ''
             } p-4 whitespace-break-spaces max-h-[420px] overflow-y-auto w-full`}
           >
             {editedContent}

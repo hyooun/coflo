@@ -27,7 +27,7 @@ const LoginContent = () => {
             <span className="text-secondary mx-1">coFlo</span>
             <span>할까요?</span>
           </div>
-          <p className="mt-2">팀원과 함께 내 프로젝트 코드를 리뷰하세요.</p>
+          <p className="mt-2">플로핑과 함께 내 프로젝트 코드를 리뷰하세요.</p>
         </div>
         <div className="w-full space-y-3 mb-6">
           <LoginButton

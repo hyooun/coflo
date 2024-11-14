@@ -6,11 +6,13 @@ import AlertModal from '@components/Modal/AlertModal';
 import { customPrompt } from '@apis/CustomPrompt';
 import { projectIdAtom } from '@store/auth';
 import SaveIcon from './icons/SaveIcon';
+import { CircleCheck, TriangleAlert } from 'lucide-react';
 
 const CustomPromptContainer = () => {
   const [content, setContent] = useState<string>('');
   const [isAlertModalOpen, setIsAlertModalOpen] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string[]>([]);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [projectId] = useAtom(projectIdAtom);
   const maxLength = 1000;
   const navigate = useNavigate();
@@ -39,8 +41,14 @@ const CustomPromptContainer = () => {
     if (response.status === 'SUCCESS') {
       setIsAlertModalOpen(true);
       setAlertMessage(['프롬프트가 성공적으로 저장되었습니다.']);
+      setIsSuccess(true);
       navigate(0);
+      return;
     }
+
+    setIsAlertModalOpen(true);
+    setAlertMessage(['프롬프트 저장에 실패했습니다.']);
+    setIsSuccess(false);
   };
 
   const isSaveDisabled = content.trim() === '';
@@ -80,7 +88,12 @@ const CustomPromptContainer = () => {
       </div>
 
       {isAlertModalOpen && (
-        <AlertModal content={alertMessage} onConfirm={() => setIsAlertModalOpen(false)} />
+        <AlertModal
+          content={alertMessage}
+          onConfirm={() => setIsAlertModalOpen(false)}
+          icon={isSuccess ? CircleCheck : TriangleAlert}
+          iconClassName={isSuccess ? 'text-state-success' : 'text-state-warning'}
+        />
       )}
     </>
   );

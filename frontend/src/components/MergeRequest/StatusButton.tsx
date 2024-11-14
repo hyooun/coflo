@@ -1,6 +1,6 @@
 interface StatusButtonProps {
   label: string;
-  count: number;
+  count?: number;
   isActive: boolean;
   onClick: () => void;
 }
@@ -13,6 +13,8 @@ export const StatusButton = ({ label, count, isActive, onClick }: StatusButtonPr
     }`}
   >
     <span>{label}</span>
-    <span className="bg-primary-500 text-white px-3 py-0.5 rounded-2xl text-xs">{count}</span>
+    {count && (
+      <span className="bg-primary-500 text-white px-3 py-0.5 rounded-2xl text-xs">{count}</span>
+    )}
   </button>
 );

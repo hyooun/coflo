@@ -23,7 +23,7 @@ const SearchInput = ({ searchTerm, setSearchTerm, isEditing }: SearchInputProps)
           onChange={handleChange}
           maxLength={maxLength}
           disabled={!isEditing}
-          className="flex-grow border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-500 bg-[#f4f5f7]  overflow-y-hidden resize-none p-15"
+          className="flex-grow border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-500 bg-[#F5F7FA]  overflow-y-hidden resize-none p-15"
           placeholder="커스텀 템플릿을 입력하세요"
           style={{
             height: `${height}px`,

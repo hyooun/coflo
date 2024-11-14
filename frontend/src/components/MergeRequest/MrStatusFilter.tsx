@@ -26,7 +26,6 @@ export const MrStatusFilter = ({ onStatusChange }: MrStatusFilterProps) => {
         <StatusButton
           key={status.value}
           label={status.label}
-          count={status.count}
           isActive={activeStatus === status.value}
           onClick={() => handleStatusClick(status.value)}
         />

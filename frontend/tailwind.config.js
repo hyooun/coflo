@@ -38,7 +38,9 @@ export default {
           900: '#515151',
         },
         background: {
-          navy: '#e3d8f6',
+          blue: '#F5F7FA',
+          navy: '#EFF2FB',
+          bnavy: '#D1D5E8',
         },
         state: {
           warning: '#EF4545',

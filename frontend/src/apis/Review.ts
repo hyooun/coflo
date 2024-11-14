@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { ApiResponse } from 'types/api';
-import instance from '@config/apiConfig';
+import { instance } from '@config/apiConfig';
 import { MergeRequest } from 'types/review';
 import { Reference, ReferenceRequest } from 'types/reference';
 

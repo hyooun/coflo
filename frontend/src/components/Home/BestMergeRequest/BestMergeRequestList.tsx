@@ -5,6 +5,7 @@ import { PullRequestIcon } from '@components/TextDiv/Icons/PullRequestIcon.tsx';
 import { MergeRequest } from '@apis/MergeRequest';
 import { projectIdAtom } from '@store/auth';
 import { useAtom } from 'jotai';
+import Title from '@components/Title/Title';
 
 const BestMergeRequestList = () => {
   const [bestMergeRequests, setBestMergeRequests] = useState<BestMergeRequest[]>([]);
@@ -28,25 +29,25 @@ const BestMergeRequestList = () => {
   };
 
   return (
-    <div className="w-full h-full font-pretendard ">
-      <h2 className="text-sm font-bold mb-4">Best Merge Request</h2>
-      <div className="p-2 bg-gray-400 border-2 border-gray-500 rounded-lg h-full overflow-y-auto">
+    <>
+      <Title title="Best Merge Request" textSize="text-lg" />
+      <div className="flex-grow bg-gray-400 border-2 border-gray-300 rounded-lg">
         {bestMergeRequests.length === 0 ? (
           <div className="w-full h-full flex flex-col items-center justify-center text-gray-700 text-lg">
             <p>아직 BEST MR이 없습니다.</p>
             <p>MR을 올려주세요.</p>
           </div>
         ) : (
-          <div className="flex flex-col">
+          <div className="flex flex-col justify-around h-full overflow-y-auto p-4">
             {bestMergeRequests.map((mr) => (
               <div
                 key={mr.id}
-                className="flex justify-between p-3 mb-3 rounded-lg hover:bg-gray-200 cursor-pointer last:mb-0"
+                className="flex justify-between items-center rounded-lg hover:bg-gray-200 cursor-pointer p-4"
                 onClick={() => handleItemClick(mr.iid)}
               >
-                <div className="flex flex-col min-w-0 flex-1">
-                  <div className="flex items-center space-x-3 mb-1">
-                    <div className="flex -space-x-1">
+                <div className="flex flex-col min-w-0 flex-1 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex -space-x-2 flex-shrink-0">
                       <img
                         src={mr.assignee.avatarUrl}
                         alt="Assignee"
@@ -89,7 +90,7 @@ const BestMergeRequestList = () => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

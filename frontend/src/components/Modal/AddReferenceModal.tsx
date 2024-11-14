@@ -45,7 +45,7 @@ const AddReferenceModal = ({ isOpen, onClose, onSubmit }: AddReferenceModalProps
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
-      <div className="bg-white rounded-lg p-6 w-[800px] border-2 border-primary-500">
+      <div className="bg-white rounded-lg p-6 w-[800px] border-2">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-primary-500">코드/텍스트 추가</h2>
           <button onClick={onClose}>
@@ -60,7 +60,7 @@ const AddReferenceModal = ({ isOpen, onClose, onSubmit }: AddReferenceModalProps
             onChange={handleFileNameChange}
             warningMessage="제목을 다시 입력해주세요."
             isWarning={isWarning}
-            className="border-b-2 rounded-none "
+            className="border-b-[1.2px] border-background-bnavy rounded-none "
           />
         </div>
 

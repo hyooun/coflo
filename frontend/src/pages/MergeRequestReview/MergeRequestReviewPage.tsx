@@ -65,7 +65,7 @@ const MergeRequestReviewPage = () => {
 
   return (
     <div className="p-8 flex flex-col w-full overflow-auto items-center">
-      <div className="w-full border-b-2 border-secondary">
+      <div className="w-full border-b-[1px] border-background-bnavy">
         <MergeRequestHeader mergeRequest={mergeRequest} />
         <div className="flex gap-12 w-full">
           <ReviewList

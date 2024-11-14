@@ -1,6 +1,9 @@
-import ChartBox from '@components/ChartBox/ChartBox';
 import { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
 import 'chart.js/auto';
+
+import ChartBox from '@components/ChartBox/ChartBox';
 import IconWithText from '@components/TextDiv/IconWithText';
 import { BranchIcon } from '@components/TextDiv/Icons/BranchIcon';
 import { PullRequestIcon } from '@components/TextDiv/Icons/PullRequestIcon';
@@ -8,10 +11,10 @@ import { CommitIcon } from '@components/TextDiv/Icons/CommitIcon';
 import { AiIcon } from '@components/TextDiv/Icons/AiIcon';
 import { fetchProjectDetail } from '@components/Chart/ProgrammingLanguageData';
 import { fetchProjectTeamScore } from '@components/Chart/ProjectTeamScoreData';
-import { RadarData } from 'types/project';
-import { ChartDropdown } from '@components/Home/ChartDropDown';
 import { loadChartData } from '@components/Chart/LoaderChart';
-import { useNavigate } from 'react-router-dom';
+import { ChartDropdown } from '@components/Home/ChartDropDown';
+import { RadarData } from 'types/project';
+import { ProgrammingLanguagesData } from 'types/language';
 import {
   createHorizontalBarOptions,
   createRadarOptions,
@@ -20,10 +23,7 @@ import {
 } from '@constants/chartOptions';
 import Title from '@components/Title/Title';
 import BestMergeRequestList from '@components/Home/BestMergeRequest/BestMergeRequestList.tsx';
-import { ProgrammingLanguagesData } from 'types/language';
 import { projectIdAtom } from '@store/auth';
-import { useAtom } from 'jotai';
-import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -58,7 +58,6 @@ const HomePage = () => {
 
   const [maxValue, setMaxValue] = useState<number>(0);
   const [minValue, setMinValue] = useState<number>(100);
-  const navigate = useNavigate();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [projectDetail, setProjectDetail] = useState<{

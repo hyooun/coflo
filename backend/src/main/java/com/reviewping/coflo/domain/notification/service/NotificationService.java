@@ -77,7 +77,7 @@ public class NotificationService {
                 notifications.stream().filter(notification -> !notification.isRead()).count());
     }
 
-    private UserProject getUserProject(Long userId, Long projectId) {
+    public UserProject getUserProject(Long userId, Long projectId) {
         User user = userRepository.getById(userId);
         GitlabAccount gitlabAccount = user.getGitlabAccounts().getFirst();
         Project project = projectRepository.getById(projectId);

@@ -35,8 +35,6 @@ import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.domain.webhookchannel.service.WebhookChannelService;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
-import com.reviewping.coflo.global.error.ErrorCode;
-import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.integration.RedisGateway;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -100,14 +98,12 @@ public class ReviewService {
                 savedReview.getId(),
                 savedRetrievalCount);
 
-        User user = userRepository.getById(reviewResponse.userId());
-        GitlabAccount gitlabAccount = user.getGitlabAccounts().getFirst();
-        UserProject userProject =
-                userProjectRepository
-                        .findByProjectAndGitlabAccount(project, gitlabAccount)
-                        .orElseThrow(() -> new BusinessException(ErrorCode.USER_PROJECT_NOT_EXIST));
-
-        notificationService.create(user.getId(), userProject, AI_REVIEW_COMPLETE_MESSAGE);
+        if (reviewResponse.userId() != 0L) {
+            UserProject userProject =
+                    notificationService.getUserProject(reviewResponse.userId(), project.getId());
+            notificationService.create(
+                    reviewResponse.userId(), userProject, AI_REVIEW_COMPLETE_MESSAGE);
+        }
 
         if (!project.getWebhookChannels().isEmpty()) {
             webhookChannelService.sendData(project.getId(), AI_REVIEW_COMPLETE_MESSAGE);

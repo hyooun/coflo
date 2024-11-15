@@ -36,7 +36,6 @@ export const AlarmButton = () => {
       console.log(response);
       if (response.data) {
         setCount(response.data.unreadCount);
-        setNotificationCount(response.data.unreadCount);
       }
     };
 
@@ -48,7 +47,7 @@ export const AlarmButton = () => {
       prevAlarms.map((alarm) => {
         if (alarm.id === id && !alarm.isRead) {
           setCount((prevCount) => prevCount - 1);
-          setNotificationCount((prevCount) => prevCount - 1);
+
           return { ...alarm, isRead: true };
         }
         return alarm;

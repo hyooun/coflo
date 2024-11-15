@@ -35,6 +35,7 @@ import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.domain.webhookchannel.service.WebhookChannelService;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
+import com.reviewping.coflo.global.client.gitlab.response.MergeRequestDiffVersionContent;
 import com.reviewping.coflo.global.integration.RedisGateway;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -85,7 +86,7 @@ public class ReviewService {
         Review review = Review.builder().mrInfo(mrInfo).content(reviewResponse.content()).build();
         Review savedReview = reviewRepository.save(review);
         log.debug("리뷰가 저장되었습니다. Saved Review Id: {}", savedReview.getId());
-        int savedRetrievalCount = saveRetrievals(reviewResponse, review);
+        int savedRetrievalCount = saveRetrievals(reviewResponse.retrievals(), review);
 
         gitLabClient.addNoteToMr(
                 reviewResponse.gitlabUrl(),
@@ -108,6 +109,43 @@ public class ReviewService {
         if (!project.getWebhookChannels().isEmpty()) {
             webhookChannelService.sendData(project.getId(), AI_REVIEW_COMPLETE_MESSAGE);
         }
+    }
+
+    @Transactional
+    @ServiceActivator(inputChannel = "detailedReviewResponseChannel")
+    public void handleDetailedReviewResponse(String detailedReviewResponseMessage) {
+        DetailedReviewResponseMessage reviewResponse;
+        try {
+            reviewResponse =
+                    objectMapper.readValue(
+                            detailedReviewResponseMessage, DetailedReviewResponseMessage.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        log.info("상세리뷰 응답: {}", reviewResponse.content());
+        MrInfo mrInfo = mrInfoRepository.getById(reviewResponse.mrInfoId());
+        Project project = mrInfo.getProject();
+
+        Review review = Review.builder().mrInfo(mrInfo).content(reviewResponse.content()).build();
+        Review savedReview = reviewRepository.save(review);
+        log.debug("상세 리뷰가 저장되었습니다. Saved Review Id: {}", savedReview.getId());
+        int savedRetrievalCount = saveRetrievals(reviewResponse.retrievals(), review);
+
+        gitLabClient.createDiscussion(
+                reviewResponse.gitlabUrl(),
+                project.getBotToken(),
+                project.getGitlabProjectId(),
+                mrInfo.getGitlabMrIid(),
+                reviewResponse.content(),
+                reviewResponse.baseSha(),
+                reviewResponse.headSha(),
+                reviewResponse.startSha(),
+                reviewResponse.newPath(),
+                reviewResponse.oldPath());
+        log.debug(
+                "Gitlab에 상세 리뷰를 달았습니다. Saved Review Id: {}, Saved Retrieval Count: {}",
+                savedReview.getId(),
+                savedRetrievalCount);
     }
 
     @Transactional
@@ -139,7 +177,7 @@ public class ReviewService {
             String targetBranch,
             LocalDateTime gitlabCreatedDate,
             Long projectId) {
-        log.debug("#makeCodeReviewWhenCalledByWebhook");
+        log.debug("웹훅 요청으로 리뷰를 생성합니다. iid: {}, targetBranch: {}", iid, targetBranch);
         // 1. MrInfo 저장
         Project project = projectRepository.getReferenceById(projectId);
         MrInfo mrInfo = mrInfoRepository.save(new MrInfo(project, iid, gitlabCreatedDate));
@@ -150,7 +188,27 @@ public class ReviewService {
         CustomPrompt customPrompt = customPromptRepository.getByProjectId(projectId);
         // 4. projectId와 targetBranch로 브랜치 id 가져오기
         Branch branch = branchRepository.getByNameAndProject(targetBranch, project);
-        // 5. 리뷰 생성 요청
+        // 5. 상세 리뷰 생성 요청
+        MergeRequestDiffVersionContent mergeRequestDiffVersionContent =
+                gitLabClient
+                        .getMergeRequestDiffVersions(gitlabUrl, token, gitlabProjectId, iid)
+                        .getFirst();
+        log.debug("리뷰 대상 파일 수: {}", mrDiffs.size());
+        mrDiffs.forEach(
+                mrDiff ->
+                        redisGateway.sendDetailedReviewRequest(
+                                new DetailedReviewRequestMessage(
+                                        projectId,
+                                        mrInfo.getId(),
+                                        branch.getId(),
+                                        mrDiff.diff(),
+                                        mergeRequestDiffVersionContent.baseCommitSha(),
+                                        mergeRequestDiffVersionContent.headCommitSha(),
+                                        mergeRequestDiffVersionContent.startCommitSha(),
+                                        mrDiff.newPath(),
+                                        mrDiff.oldPath(),
+                                        gitlabUrl)));
+        // 6. 전체 리뷰 생성 요청
         MrContent mrContent = new MrContent(mrDescription, mrDiffs.toString());
         ReviewRequestMessage reviewRequest =
                 new ReviewRequestMessage(
@@ -160,7 +218,7 @@ public class ReviewService {
                         mrContent,
                         customPrompt.getContent(),
                         gitlabUrl);
-        redisGateway.sendReviewRequest(reviewRequest);
+        redisGateway.sendDetailedReviewRequest(reviewRequest);
         // 6. 리뷰 평가 요청
         MrEvalRequestMessage evalRequest =
                 new MrEvalRequestMessage(mrInfo.getId(), branch.getId(), mrContent);
@@ -248,9 +306,9 @@ public class ReviewService {
         return review.getRetrievals().stream().map(RetrievalDetailResponse::from).toList();
     }
 
-    private int saveRetrievals(ReviewResponseMessage reviewResponse, Review review) {
+    private int saveRetrievals(List<RetrievalMessage> retrievalMessages, Review review) {
         List<Retrieval> retrievals =
-                reviewResponse.retrievals().stream()
+                retrievalMessages.stream()
                         .map(
                                 message ->
                                         Retrieval.builder()

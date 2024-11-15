@@ -48,4 +48,5 @@ export interface ReviewCommentProps {
 export interface MergeRequest {
   mergeRequest: GitlabMergeRequest;
   reviews: Review[];
+  gitlabMrDetailUrl: string;
 }

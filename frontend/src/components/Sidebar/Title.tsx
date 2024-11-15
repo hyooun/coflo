@@ -1,14 +1,16 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useAtom } from 'jotai';
+
 import { GitlabIcon } from './Icons/Gitlab';
 import { SelectorIcon } from './Icons/Selector';
 import ProjectSelector from '@components/Project/ProjectSelector';
 import { projectFullPathAtom } from '@store/auth';
-import { useAtom } from 'jotai';
+import { UserProject } from '@apis/Link';
 
 export function Title() {
   const [isOpen, setIsOpen] = useState(false);
   const titleRef = useRef<HTMLDivElement>(null);
-  const [projectFullPath] = useAtom(projectFullPathAtom);
+  const [projectFullPath, setProjectFullPath] = useAtom(projectFullPathAtom);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -19,6 +21,18 @@ export function Title() {
   const handleClose = () => {
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    const fetchProjectInfo = async () => {
+      const response = await UserProject.getLinkStatus();
+      if (response?.data) {
+        const { projectFullPath } = response.data;
+        setProjectFullPath(projectFullPath);
+      }
+    };
+
+    fetchProjectInfo();
+  }, []);
 
   return (
     <div className="relative w-full">

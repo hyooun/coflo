@@ -29,6 +29,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 
@@ -236,6 +238,35 @@ public class GitLabClient {
         restTemplateUtil.sendPostRequest(url, headers, body, new ParameterizedTypeReference<>() {});
     }
 
+    public void createDiscussion(
+            String gitlabUrl,
+            String botToken,
+            Long gitlabProjectId,
+            Long gitlabMrIid,
+            String content,
+            String baseSha,
+            String headSha,
+            String startSha,
+            String newPath,
+            String oldPath) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.set(PRIVATE_TOKEN, botToken);
+        String url =
+                GitLabApiUrlBuilder.createDiscussionUrl(gitlabUrl, gitlabProjectId, gitlabMrIid);
+
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("position[position_type]", "file");
+        formData.add("position[base_sha]", baseSha);
+        formData.add("position[head_sha]", headSha);
+        formData.add("position[start_sha]", startSha);
+        formData.add("position[new_path]", newPath);
+        formData.add("position[old_path]", oldPath);
+        formData.add("body", content);
+        restTemplateUtil.sendPostRequest(
+                url, headers, formData, new ParameterizedTypeReference<>() {});
+    }
+
     public List<GitlabBranchContent> getAllBranchNames(
             String gitlabUrl, String token, Long gitlabProjectId) {
         HttpHeaders headers = makeGitlabHeaders(token);
@@ -273,6 +304,18 @@ public class GitLabClient {
                 restTemplateUtil.sendGetRequest(
                         url, headers, new ParameterizedTypeReference<>() {});
         return ProjectLabelResponse.of(response.getBody());
+    }
+
+    public List<MergeRequestDiffVersionContent> getMergeRequestDiffVersions(
+            String gitlabUrl, String token, Long gitlabProjectId, Long iid) {
+        HttpHeaders headers = makeGitlabHeaders(token);
+        String url = GitLabApiUrlBuilder.createMRDiffVersionsUrl(gitlabUrl, gitlabProjectId, iid);
+
+        ResponseEntity<List<MergeRequestDiffVersionContent>> response =
+                restTemplateUtil.sendGetRequest(
+                        url, headers, new ParameterizedTypeReference<>() {});
+
+        return response.getBody();
     }
 
     private long getProjectBranchCount(String gitlabUrl, String token, Long gitlabProjectId) {

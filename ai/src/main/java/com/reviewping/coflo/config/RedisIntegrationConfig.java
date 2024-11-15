@@ -45,6 +45,11 @@ public class RedisIntegrationConfig {
     }
 
     @Bean
+    public MessageChannel detailedReviewRequestChannel() {
+        return new DirectChannel();
+    }
+
+    @Bean
     public MessageChannel mrEvalRequestChannel() {
         return new DirectChannel();
     }
@@ -86,6 +91,7 @@ public class RedisIntegrationConfig {
         router.setChannelMapping("test", "testInboundChannel");
         router.setChannelMapping("update", "updateChannel");
         router.setChannelMapping("review-request", "reviewRequestChannel");
+        router.setChannelMapping("detailed-review-request", "detailedReviewRequestChannel");
         router.setChannelMapping("mr-eval-request", "mrEvalRequestChannel");
         router.setChannelMapping("review-regenerate-request", "reviewRegenerateRequestChannel");
         return router;

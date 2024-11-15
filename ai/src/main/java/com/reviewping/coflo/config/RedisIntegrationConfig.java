@@ -65,7 +65,12 @@ public class RedisIntegrationConfig {
 
         RedisInboundChannelAdapter adapter = new RedisInboundChannelAdapter(redisConnectionFactory);
         adapter.setTopics(
-                "test", "update", "review-request", "mr-eval-request", "review-regenerate-request");
+                "test",
+                "update",
+                "review-request",
+                "mr-eval-request",
+                "review-regenerate-request",
+                "detailed-review-request");
         adapter.setOutputChannel(redisInboundChannel);
         return adapter;
     }

@@ -17,6 +17,16 @@ public class GitLabApiUrlBuilder {
                 + "/diffs";
     }
 
+    public static String createMRDiffVersionsUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + SINGLE_PROJECT_ENDPOINT
+                + gitlabProjectId
+                + "/merge_requests/"
+                + iid
+                + "/versions";
+    }
+
     public static String createNoteToMRUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {
         return URL_PROTOCOL_HTTPS
                 + gitlabUrl
@@ -68,5 +78,15 @@ public class GitLabApiUrlBuilder {
                 + SINGLE_PROJECT_ENDPOINT
                 + gitlabProjectId
                 + "/labels";
+    }
+
+    public static String createDiscussionUrl(String gitlabUrl, Long gitlabProjectId, Long iid) {
+        return URL_PROTOCOL_HTTPS
+                + gitlabUrl
+                + SINGLE_PROJECT_ENDPOINT
+                + gitlabProjectId
+                + "/merge_requests/"
+                + iid
+                + "/discussions";
     }
 }

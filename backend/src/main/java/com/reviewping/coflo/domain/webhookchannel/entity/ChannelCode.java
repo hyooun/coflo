@@ -15,5 +15,7 @@ public class ChannelCode {
     @Id private Long id;
 
     @Enumerated(value = EnumType.STRING)
-    ChannelType name;
+    private ChannelType name;
+
+    private String imageUrl;
 }

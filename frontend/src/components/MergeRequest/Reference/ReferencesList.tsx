@@ -136,7 +136,7 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
           })}
           {references.length < 15 && (
             <div
-              className="flex flex-col justify-center items-center border-2 rounded-lg border-primary-500 py-10 space-y-4 hover:cursor-pointer"
+              className="flex flex-col justify-center items-center border-2 rounded-lg border-background-bnavy py-10 space-y-4 hover:cursor-pointer"
               onClick={handleAddReference}
               aria-label="Add a new reference"
             >

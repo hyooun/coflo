@@ -29,6 +29,7 @@ export interface GitlabMergeRequest {
   assignee: Assignee;
   reviewer: Reviewer;
   isAiReviewCreated: boolean;
+  gitlabMrDetailUrl: string;
 }
 
 export interface BestMergeRequest {

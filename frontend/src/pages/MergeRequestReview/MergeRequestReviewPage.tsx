@@ -9,23 +9,33 @@ import ReferencesList from '@components/MergeRequest/Review/ReviewReferenceList.
 import { Review } from '@apis/Review';
 import { projectIdAtom } from '@store/auth';
 import { useAtom } from 'jotai';
+import AlertModal from '@components/Modal/AlertModal';
+import ScrollNavigationButton from '@components/Button/ScrollNavigationButton';
 
 const MergeRequestReviewPage = () => {
   const { id } = useParams<{ id: string }>();
   const [projectId] = useAtom(projectIdAtom);
-  console.log(projectId);
+
   const [mergeRequest, setMergeRequest] = useState<GitlabMergeRequest | null>(null);
   const [reviews, setReviews] = useState<MergeRequestReview['reviews']>([]);
   const [references, setReferences] = useState<Reference[]>([]);
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
   const [sendReviewId, setSendReviewId] = useState<string | null>(null);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string[]>([]);
 
   const fetchMergeRequest = async (projectId: string, mergeRequestIid: string) => {
-    const response = await Review.getCodeReviewList(projectId, mergeRequestIid);
-    const data = response.data;
-    if (data) {
-      setMergeRequest(data.mergeRequest);
-      setReviews(data.reviews);
+    try {
+      const response = await Review.getCodeReviewList(projectId, mergeRequestIid);
+      const data = response.data;
+      if (data) {
+        setMergeRequest({ ...data.mergeRequest, gitlabMrDetailUrl: data.gitlabMrDetailUrl });
+        setReviews(data.reviews);
+      }
+    } catch (error) {
+      setIsAlertModalOpen(true);
+      setAlertMessage(['리뷰가 아직 생성되지 않았습니다.', '잠시 후 시도해주세요.']);
+      console.error(error);
     }
   };
 
@@ -57,14 +67,14 @@ const MergeRequestReviewPage = () => {
     }
   }, [reviews, selectedReviewId]);
 
-  if (!mergeRequest) return <div>Loading...</div>;
+  if (!mergeRequest) return;
 
   const handleReviewClick = (reviewId: string) => {
     setSelectedReviewId(reviewId);
   };
 
   return (
-    <div className="p-8 flex flex-col w-full overflow-auto items-center">
+    <div className="p-8 flex flex-col w-full overflow-auto items-center scroll-container">
       <div className="w-full border-b-[1px] border-background-bnavy">
         <MergeRequestHeader mergeRequest={mergeRequest} />
         <div className="flex gap-12 w-full">
@@ -80,6 +90,12 @@ const MergeRequestReviewPage = () => {
           />
         </div>
       </div>
+
+      {isAlertModalOpen && (
+        <AlertModal content={alertMessage} onConfirm={() => setIsAlertModalOpen(false)} />
+      )}
+
+      <ScrollNavigationButton />
     </div>
   );
 };

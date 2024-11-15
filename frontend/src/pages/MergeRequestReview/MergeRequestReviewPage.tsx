@@ -29,7 +29,7 @@ const MergeRequestReviewPage = () => {
       const response = await Review.getCodeReviewList(projectId, mergeRequestIid);
       const data = response.data;
       if (data) {
-        setMergeRequest(data.mergeRequest);
+        setMergeRequest({ ...data.mergeRequest, gitlabMrDetailUrl: data.gitlabMrDetailUrl });
         setReviews(data.reviews);
       }
     } catch (error) {
@@ -67,7 +67,7 @@ const MergeRequestReviewPage = () => {
     }
   }, [reviews, selectedReviewId]);
 
-  if (!mergeRequest) return <div>Loading...</div>;
+  if (!mergeRequest) return;
 
   const handleReviewClick = (reviewId: string) => {
     setSelectedReviewId(reviewId);

@@ -22,4 +22,6 @@ export const User = {
 
   synchronizeUserInfo: (): Promise<ApiResponse<boolean>> =>
     apiRequests.patch<boolean>('users/me/sync'),
+
+  logout: (): Promise<ApiResponse<boolean>> => apiRequests.post<boolean>('users/logout', {}),
 };

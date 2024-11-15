@@ -11,13 +11,14 @@ import com.reviewping.coflo.openai.dto.EmbeddingResponse;
 import com.reviewping.coflo.repository.ChunkedCodeRepository;
 import com.reviewping.coflo.repository.PromptTemplateRepository;
 import com.reviewping.coflo.service.dto.ChunkedCode;
+import com.reviewping.coflo.service.dto.request.DetailedReviewRequestMessage;
 import com.reviewping.coflo.service.dto.request.ReviewRegenerateRequestMessage;
 import com.reviewping.coflo.service.dto.request.ReviewRequestMessage;
+import com.reviewping.coflo.service.dto.response.DetailedReviewResponseMessage;
 import com.reviewping.coflo.service.dto.response.RetrievalMessage;
 import com.reviewping.coflo.service.dto.response.ReviewResponseMessage;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +26,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReviewCreateService {
 
-    private static final String PROMPT_TYPE = "REVIEW";
+    private static final String REVIEW_TYPE = "REVIEW";
+    private static final String DETAILED_REVIEW_TYPE = "DETAILED_REVIEW";
 
-    private final String serviceInfo;
     private final RedisGateway redisGateway;
     private final OpenaiClient openaiClient;
     private final JsonUtil jsonUtil;
@@ -35,13 +36,11 @@ public class ReviewCreateService {
     private final ChunkedCodeRepository chunkedCodeRepository;
 
     public ReviewCreateService(
-            @Value("${service.info}") String serviceInfo,
             RedisGateway redisGateway,
             OpenaiClient openaiClient,
             JsonUtil jsonUtil,
             PromptTemplateRepository promptTemplateRepository,
             ChunkedCodeRepository chunkedCodeRepository) {
-        this.serviceInfo = serviceInfo;
         this.redisGateway = redisGateway;
         this.openaiClient = openaiClient;
         this.jsonUtil = jsonUtil;
@@ -50,13 +49,13 @@ public class ReviewCreateService {
     }
 
     @ServiceActivator(inputChannel = "reviewRequestChannel")
-    public void createReview(String reviewRequestMessage) {
+    public void createOverallReview(String reviewRequestMessage) {
         ReviewRequestMessage reviewRequest =
                 jsonUtil.fromJson(reviewRequestMessage, new TypeReference<>() {});
         Long projectId = reviewRequest.projectId();
         Long branchId = reviewRequest.branchId();
         log.info(
-                "리뷰 생성 시작 - GitLab URL: {}, MR Info ID: {}, Project ID: {}, Branch ID: {}",
+                "전체리뷰 생성 시작 - GitLab URL: {}, MR Info ID: {}, Project ID: {}, Branch ID: {}",
                 reviewRequest.gitlabUrl(),
                 reviewRequest.mrInfoId(),
                 projectId,
@@ -76,7 +75,6 @@ public class ReviewCreateService {
         // 4. 리뷰 생성
         ChatCompletionResponse chatCompletionResponse = openaiClient.chat(prompt);
         String chatMessage = chatCompletionResponse.choices().getFirst().message().content();
-        chatMessage += serviceInfo;
         // 5. 리뷰 생성 완료
         ReviewResponseMessage reviewResponse =
                 new ReviewResponseMessage(
@@ -85,7 +83,7 @@ public class ReviewCreateService {
                         chatMessage,
                         retrievals);
         log.info(
-                "리뷰 생성 완료 - GitLab URL: {}, MR Info ID: {}, 참고자료 수: {}",
+                "전체리뷰 생성 완료 - GitLab URL: {}, MR Info ID: {}, 참고자료 수: {}",
                 reviewResponse.gitlabUrl(),
                 reviewResponse.mrInfoId(),
                 reviewResponse.retrievals().size());
@@ -125,9 +123,61 @@ public class ReviewCreateService {
         redisGateway.sendReview(reviewResponse);
     }
 
+    @ServiceActivator(inputChannel = "detailedReviewRequestChannel")
+    public void createDetailedReview(String detailedReviewRequestMessage) {
+        DetailedReviewRequestMessage reviewRequest =
+                jsonUtil.fromJson(detailedReviewRequestMessage, new TypeReference<>() {});
+        Long projectId = reviewRequest.projectId();
+        Long branchId = reviewRequest.branchId();
+        log.info(
+                "상세리뷰 생성 시작 - GitLab URL: {}, MR Info ID: {}, Project ID: {}, Branch ID: {}",
+                reviewRequest.gitlabUrl(),
+                reviewRequest.mrInfoId(),
+                projectId,
+                branchId);
+        // 1. mr 임베딩
+        EmbeddingResponse embeddingResponse = openaiClient.generateEmbedding(reviewRequest.diff());
+        float[] embedding = embeddingResponse.data().getFirst().embedding();
+        // 2. 참고자료 검색
+        List<ChunkedCode> chunkedCodes =
+                chunkedCodeRepository.retrieveRelevantData(projectId, branchId, 10, embedding);
+        List<RetrievalMessage> retrievals =
+                chunkedCodes.stream().map(RetrievalMessage::from).toList();
+        // 3. 프롬프트 생성
+        String prompt = buildDetailedPrompt(reviewRequest.diff(), retrievals);
+        // 4. 리뷰 생성
+        ChatCompletionResponse chatCompletionResponse = openaiClient.chat(prompt);
+        String chatMessage = chatCompletionResponse.choices().getFirst().message().content();
+        // 5. 리뷰 생성 완료
+        DetailedReviewResponseMessage reviewResponse =
+                new DetailedReviewResponseMessage(
+                        projectId,
+                        reviewRequest.mrInfoId(),
+                        branchId,
+                        chatMessage,
+                        reviewRequest.baseSha(),
+                        reviewRequest.headSha(),
+                        reviewRequest.startSha(),
+                        reviewRequest.newPath(),
+                        reviewRequest.oldPath(),
+                        reviewRequest.gitlabUrl(),
+                        retrievals);
+        log.info(
+                "상세리뷰 생성 완료 - GitLab URL: {}, MR Info ID: {}, 참고자료 수: {}",
+                reviewResponse.gitlabUrl(),
+                reviewResponse.mrInfoId(),
+                reviewResponse.retrievals().size());
+        redisGateway.sendReview(reviewResponse);
+    }
+
+    private String buildDetailedPrompt(String diff, List<RetrievalMessage> retrievals) {
+        String prompt = promptTemplateRepository.findLatestTemplate(DETAILED_REVIEW_TYPE).content();
+        return prompt.formatted(retrievals, diff);
+    }
+
     private String buildPrompt(
             MrContent mrContent, String customPrompt, List<RetrievalMessage> retrievals) {
-        String prompt = promptTemplateRepository.findLatestTemplate(PROMPT_TYPE).content();
+        String prompt = promptTemplateRepository.findLatestTemplate(REVIEW_TYPE).content();
         return prompt.formatted(
                 retrievals, mrContent.mrDescription(), mrContent.mrDiffs(), customPrompt);
     }

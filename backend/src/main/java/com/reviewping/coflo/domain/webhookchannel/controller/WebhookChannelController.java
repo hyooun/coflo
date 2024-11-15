@@ -1,5 +1,6 @@
 package com.reviewping.coflo.domain.webhookchannel.controller;
 
+import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.ChannelTestDataRequest;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.UpdateWebhookChannelRequest;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.request.WebhookChannelRequest;
 import com.reviewping.coflo.domain.webhookchannel.controller.dto.response.ChannelCodeResponse;
@@ -42,10 +43,11 @@ public class WebhookChannelController {
         return ApiSuccessResponse.success(webhookChannelService.getWebhookChannelList(projectId));
     }
 
-    @PostMapping("/test/{projectId}")
+    @PostMapping("/test")
     @Operation(summary = "웹훅 연동 테스트")
-    public ApiResponse<Void> testWebhookChannel(@PathVariable("projectId") Long projectId) {
-        webhookChannelService.sendData(projectId, TEST_CONTENT);
+    public ApiResponse<Void> testWebhookChannel(
+            @RequestBody ChannelTestDataRequest channelTestDataRequest) {
+        webhookChannelService.sendData(channelTestDataRequest.projectId(), TEST_CONTENT);
         return ApiSuccessResponse.success();
     }
 

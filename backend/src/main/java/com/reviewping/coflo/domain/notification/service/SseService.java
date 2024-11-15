@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Service
 @RequiredArgsConstructor
 public class SseService {
-    private static final long DEFAULT_TIMEOUT = 60L * 1000 * 3; // 3분
+    private static final long DEFAULT_TIMEOUT = 60L * 1000 * 60; // 1시간
 
     private final EmitterRepository emitterRepository;
     private final ObjectMapper objectMapper;

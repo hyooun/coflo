@@ -92,6 +92,7 @@ public class SecurityConfig {
                                         "/v3/api-docs/**",
                                         "/actuator/**",
                                         "/test",
+                                        "/api/sse/subscribe",
                                         "/favicon.ico",
                                         "/webhook/*")
                                 .permitAll()

@@ -9,7 +9,7 @@ const apiRequests = {
   get: <T>(url: string, params?: object) =>
     instance.get<ApiResponse<T>>(url, { params }).then(responseBody),
 
-  patch: <T>(url: string, data?: any) =>
+  patch: <T>(url: string, data?: object) =>
     instance.patch<ApiResponse<T>>(url, data).then(responseBody),
 };
 

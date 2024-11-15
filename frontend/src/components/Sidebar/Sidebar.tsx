@@ -21,7 +21,7 @@ export const Sidebar = () => {
       <div className="pb-5">
         <Title />
       </div>
-      <AlarmButton count={41} active={location.pathname === `/${projectId}/main/alarm`} />
+      <AlarmButton />
       <div className="h-10 w-full flex flex-col justify-center">
         <div className="bg-[#c1c7d0] h-[1px] w-full"></div>
       </div>

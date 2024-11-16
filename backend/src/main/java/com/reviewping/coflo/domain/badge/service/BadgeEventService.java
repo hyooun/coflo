@@ -37,6 +37,7 @@ public class BadgeEventService {
     private static final long PROMTPT_UPDATE_TARGET_COUNT = 2L;
     private static final int PERCENT = 1;
     private static final long AI_REWARD_TARGET_SCORE = 55L;
+    private static final long BEST_MERGE_REQUEST_TARGET_COUNT = 5L;
     private static final int TOTAL_BADGES = 8;
     private static final Random random = new Random();
 
@@ -122,8 +123,10 @@ public class BadgeEventService {
     // 정복자 - 베스트 MR에 n회 이상 선정 시 획득
     @Transactional
     public void eventBestMrCount() {
-        // BestMrHistory가 3회 이상인 사용자 ID 조회
-        List<Long> userIds = bestMrHistoryRepository.findUsersWithAtLeastNHistory(3);
+        // BestMrHistory가 N회 이상인 사용자 ID 조회
+        List<Long> userIds =
+                bestMrHistoryRepository.findUsersWithAtLeastNHistory(
+                        BEST_MERGE_REQUEST_TARGET_COUNT);
 
         // DB에서 3회 이상 BestMrHistory가 쌓인 사용자 중, 이미 뱃지를 가진 사용자를 제외한 사용자 조회
         List<Long> newBadgeUserIds =

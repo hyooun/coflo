@@ -149,7 +149,7 @@ export default function RepositoryPage() {
             />
           </div>
           <CommonButton
-            className="px-4 min-w-[100px] h-[50px]"
+            className="px-4 min-w-[100px] h-[50px] text-white"
             active={false}
             bgColor="bg-primary-500"
             onClick={handleButtonClick}

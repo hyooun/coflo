@@ -20,7 +20,6 @@ export const AlarmButton = () => {
     const fetchNotifications = async () => {
       if (!projectId) return;
       const response = await Notification.getNotification(projectId);
-      console.log(response.data);
       if (response.data) {
         setAlarms(response.data);
       }
@@ -33,7 +32,6 @@ export const AlarmButton = () => {
     const fetchUnreadCount = async () => {
       if (!projectId) return;
       const response = await Notification.getUnreadNotificationCount(projectId);
-      console.log(response);
       if (response.data) {
         setCount(response.data.unreadCount);
       }

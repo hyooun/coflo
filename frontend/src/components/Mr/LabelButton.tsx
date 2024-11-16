@@ -1,32 +1,24 @@
 import { CommonButton } from '@components/Button/CommonButton';
+import { ProjectLabel } from 'types/project';
 
-const labelColors: LabelColors = {
-  CI: {
-    bgColor: 'bg-yellow-500',
-  },
-  Backend: {
-    bgColor: 'bg-blue-500',
-  },
-  '🐛 Fix': {
-    bgColor: 'bg-red-500',
-  },
-  '✨ Feature': {
-    bgColor: 'bg-[#D500FF]',
-  },
-  '♻️ Refactor': {
-    bgColor: 'bg-[#00BC42]',
-  },
-  '📬 API': {
-    bgColor: 'bg-gray-600',
-  },
-};
-
-const LabelButton = ({ label }: { label: string }) => {
-  const { bgColor } = labelColors[label] || { bgColor: 'bg-primary-500' };
+const LabelButton = ({ labelInfo }: { labelInfo?: ProjectLabel }) => {
+  const { name, bgColor, textColor } = labelInfo || {
+    name: '',
+    textColor: '#ffffff',
+    bgColor: '#2C365B',
+  };
 
   return (
-    <CommonButton active={true} hoverColor="" bgColor={bgColor} className="w-fit h-full px-2">
-      {label}
+    <CommonButton
+      active={true}
+      hoverColor=""
+      style={{
+        backgroundColor: bgColor,
+        color: textColor,
+      }}
+      className="w-fit h-full px-2"
+    >
+      {name}
     </CommonButton>
   );
 };

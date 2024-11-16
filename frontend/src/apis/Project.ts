@@ -6,6 +6,7 @@ import {
   ProjectTeamRequestResoponse,
   ProjectIndividualScoreData,
   ProjectTotalScoreData,
+  ProjectLabelResponse,
 } from 'types/project';
 
 const responseBody = <T>(response: AxiosResponse<ApiResponse<T>>) => response.data;
@@ -68,4 +69,7 @@ export const ProjectRequest = {
 
     return await apiRequests.get<ProjectIndividualScoreData>(url);
   },
+
+  getProjectLabels: async (projectId: string): Promise<ApiResponse<ProjectLabelResponse>> =>
+    apiRequests.get<ProjectLabelResponse>(`projects/${projectId}/labels`),
 };

@@ -128,7 +128,6 @@ public class BadgeEventService {
                 bestMrHistoryRepository.findUsersWithAtLeastNHistory(
                         BEST_MERGE_REQUEST_TARGET_COUNT);
 
-        // DB에서 3회 이상 BestMrHistory가 쌓인 사용자 중, 이미 뱃지를 가진 사용자를 제외한 사용자 조회
         List<Long> newBadgeUserIds =
                 userBadgeRepository.findUserIdsWithoutBadge(userIds, CONQUEROR.getId());
 

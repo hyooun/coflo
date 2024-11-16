@@ -145,7 +145,7 @@ const SignupForm = () => {
 
         <div className="flex justify-center mt-20 cursor-pointer">
           <CommonButton
-            className="w-36 h-14 text-xl"
+            className="w-36 h-14 text-xl text-white"
             disabled={!isSignupEnabled}
             onClick={handleSignup}
           >

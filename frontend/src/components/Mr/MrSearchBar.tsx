@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import arrowIcon from '@assets/icons/arrow-icon.svg';
-import { CommonButton } from '@components/Button/CommonButton';
 import { SearchIcon } from '@components/SearchBar/Icons/Search';
 
 interface CustomSearchBarProps {

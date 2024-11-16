@@ -53,7 +53,7 @@ export const TokenInput = ({
         <CommonButton
           onClick={onValidate}
           disabled={!value || isValidating}
-          className="mt-8 w-24 absolute right-0 -top-7"
+          className="mt-8 w-24 absolute right-0 -top-7 text-white"
         >
           {isValidating ? '검증 중...' : '검증하기'}
         </CommonButton>

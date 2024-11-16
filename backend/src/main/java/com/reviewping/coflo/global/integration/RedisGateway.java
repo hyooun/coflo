@@ -1,6 +1,7 @@
 package com.reviewping.coflo.global.integration;
 
 import com.reviewping.coflo.domain.project.message.UpdateRequestMessage;
+import com.reviewping.coflo.domain.review.message.DetailedReviewRequestMessage;
 import com.reviewping.coflo.domain.review.message.MrEvalRequestMessage;
 import com.reviewping.coflo.domain.review.message.ReviewRegenerateRequestMessage;
 import com.reviewping.coflo.domain.review.message.ReviewRequestMessage;
@@ -15,7 +16,10 @@ public interface RedisGateway {
     void sendUpdateRequest(UpdateRequestMessage updateRequest);
 
     @Gateway(headers = @GatewayHeader(name = "topic", value = "review-request"))
-    void sendReviewRequest(ReviewRequestMessage reviewRequestMessage);
+    void sendDetailedReviewRequest(ReviewRequestMessage reviewRequestMessage);
+
+    @Gateway(headers = @GatewayHeader(name = "topic", value = "detailed-review-request"))
+    void sendDetailedReviewRequest(DetailedReviewRequestMessage detailedReviewRequestMessage);
 
     @Gateway(headers = @GatewayHeader(name = "topic", value = "mr-eval-request"))
     void sendEvalRequest(MrEvalRequestMessage mrEvalRequestMessage);

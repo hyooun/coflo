@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import arrowIcon from '@assets/icons/arrow-icon.svg';
 import { CommonButton } from '@components/Button/CommonButton';
+import { SearchIcon } from '@components/SearchBar/Icons/Search';
 
 interface CustomSearchBarProps {
   showOption?: boolean;
@@ -97,24 +98,29 @@ export const CustomSearchBar = ({
 
       <div className="flex-1 flex flex-col">
         <div className="flex flex-row gap-2">
-          <input
-            type="text"
-            className={`bg-gray-200 p-2 pl-3 rounded-md h-full text-primary-500 focus:outline-none placeholder:text-gray-600 font-pretendard ${
-              showOption ? 'w-full' : 'flex-1'
-            } ${warningMessage ? '' : ''}`}
-            placeholder="Search results..."
-            value={searchKeyword}
-            onChange={(e) => {
-              setSearchKeyword(e.target.value);
-              if (e.target.value.length >= 3) {
-                setWarningMessage('');
-              }
-            }}
-            onKeyDown={handleKeyDown}
-          />
-          <CommonButton className="w-16 h-9 px-2 rounded-md" onClick={handleSearch}>
-            검색
-          </CommonButton>
+          <div className="relative flex-1">
+            <input
+              type="text"
+              className={`bg-gray-200 p-2 pl-3 pr-10 rounded-md h-full w-full text-primary-500 focus:outline-none placeholder:text-gray-600 font-pretendard ${
+                warningMessage ? '' : ''
+              }`}
+              placeholder="검색..."
+              value={searchKeyword}
+              onChange={(e) => {
+                setSearchKeyword(e.target.value);
+                if (e.target.value.length >= 3) {
+                  setWarningMessage('');
+                }
+              }}
+              onKeyDown={handleKeyDown}
+            />
+            <button
+              onClick={handleSearch}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+            >
+              <SearchIcon />
+            </button>
+          </div>
         </div>
         {warningMessage && (
           <span className="text-state-warning text-sm mt-1">{warningMessage}</span>

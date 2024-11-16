@@ -98,26 +98,32 @@ export const AlarmButton = () => {
           ref={popupRef}
         >
           <div className="px-4">
-            {alarms.map((alarm) => {
-              return (
-                <div
-                  key={alarm.id}
-                  className="flex items-center my-4 cursor-pointer px-2"
-                  onClick={() => handleAlarmClick(alarm.id)}
-                >
-                  <span
-                    className={`flex-1 truncate text-lg ${alarm.isRead ? 'text-gray-600' : 'text-primary-500 font-bold'}`}
+            {alarms.length === 0 ? (
+              <div className="flex items-center justify-center my-4 text-gray-700">
+                온 알림이 없습니다
+              </div>
+            ) : (
+              alarms.map((alarm) => {
+                return (
+                  <div
+                    key={alarm.id}
+                    className="flex items-center my-4 cursor-pointer px-2"
+                    onClick={() => handleAlarmClick(alarm.id)}
                   >
-                    {alarm.content}
-                  </span>
-                  <span
-                    className={`text-xs ml-2 ${alarm.isRead ? 'text-gray-600' : 'text-gray-800'}`}
-                  >
-                    {alarm.createdDate}
-                  </span>
-                </div>
-              );
-            })}
+                    <span
+                      className={`flex-1 truncate text-lg ${alarm.isRead ? 'text-gray-600' : 'text-primary-500 font-bold'}`}
+                    >
+                      {alarm.content}
+                    </span>
+                    <span
+                      className={`text-xs ml-2 ${alarm.isRead ? 'text-gray-600' : 'text-gray-800'}`}
+                    >
+                      {alarm.createdDate}
+                    </span>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       )}

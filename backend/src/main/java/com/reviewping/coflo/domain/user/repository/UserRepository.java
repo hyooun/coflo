@@ -22,6 +22,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.username IN (:usernames)")
     List<User> findAllByUsernames(@Param("usernames") List<String> usernames);
 
+    @Query("SELECT u FROM User u WHERE u.id IN (:ids)")
+    List<User> findAllByIds(@Param("ids") List<Long> ids);
+
     default User getById(Long userId) {
         return findById(userId).orElseThrow(() -> new BusinessException(USER_NOT_EXIST));
     }

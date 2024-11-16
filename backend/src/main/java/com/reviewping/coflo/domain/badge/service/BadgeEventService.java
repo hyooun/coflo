@@ -20,10 +20,8 @@ import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectScoreRepository;
 import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -131,21 +129,14 @@ public class BadgeEventService {
         List<Long> newBadgeUserIds =
                 userBadgeRepository.findUserIdsWithoutBadge(userIds, CONQUEROR.getId());
 
-        badgeCode = badgeCodeRepository.getById(LUCKY_FIND.getId());
+        badgeCode = badgeCodeRepository.getById(CONQUEROR.getId());
 
-        List<User> users = new ArrayList<>();
-        List<UserBadge> newBadges =
-                newBadgeUserIds.stream()
-                        .map(
-                                userId -> {
-                                    User user = userRepository.getById(userId);
-                                    users.add(user);
-                                    return UserBadge.of(user, badgeCode);
-                                })
-                        .collect(Collectors.toList());
+        List<User> users = userRepository.findAllByIds(newBadgeUserIds);
+        List<UserBadge> userBadges =
+                users.stream().map(user -> UserBadge.of(user, badgeCode)).toList();
 
-        userBadgeRepository.saveAll(newBadges);
-        users.stream().forEach(user -> eventAllBadgeUnlocked(user));
+        userBadgeRepository.saveAll(userBadges);
+        users.forEach(this::eventAllBadgeUnlocked);
     }
 
     // 코드 마스터 - AI 리뷰평가 리워드 합이 n점 이상 시 획득
@@ -187,7 +178,7 @@ public class BadgeEventService {
         long totalScore = calculateTotalScore(userProject, week - 1);
         if (totalScore >= AI_REWARD_TARGET_SCORE
                 && !userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
-            UserBadge userBadge = UserBadge.of(user, badgeCode);
+            userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
             eventAllBadgeUnlocked(user);
         }

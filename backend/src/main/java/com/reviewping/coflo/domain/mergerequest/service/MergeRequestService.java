@@ -16,6 +16,7 @@ import com.reviewping.coflo.global.client.gitlab.response.GitlabMrPageContent;
 import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,8 +70,9 @@ public class MergeRequestService {
     public List<String> getUsernameBestMergeRequests(Project project) {
         Long userId = project.getUserProjects().getFirst().getGitlabAccount().getUser().getId();
         List<GitlabMrQueryResponse> top3MrList = getBestMergeRequests(userId, project.getId());
-
-        return top3MrList.stream().map(top -> top.assignee().username()).toList();
+        return top3MrList == null
+                ? Collections.emptyList()
+                : top3MrList.stream().map(top -> top.assignee().username()).toList();
     }
 
     private List<MrInfo> getTop3MrInfos(Project project) {

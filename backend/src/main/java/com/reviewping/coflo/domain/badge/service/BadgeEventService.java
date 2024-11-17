@@ -20,10 +20,8 @@ import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.domain.userproject.repository.UserProjectScoreRepository;
 import com.reviewping.coflo.global.util.ProjectDateUtil;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,12 +31,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BadgeEventService {
 
-    // TODO: 운영시에 count 바꾸기
-    private static final long PROJECT_LINK_TARGET_COUNT = 1L;
-    private static final long LOGIN_TARGET_COUNT = 1L;
-    private static final long PROMTPT_UPDATE_TARGET_COUNT = 2L;
-    private static final int PERCENT = 1;
+    private static final long PROJECT_LINK_TARGET_COUNT = 20L;
+    private static final long LOGIN_TARGET_COUNT = 100L;
+    private static final long PROMPT_UPDATE_TARGET_COUNT = 100L;
+    private static final int PERCENT = 3;
     private static final long AI_REWARD_TARGET_SCORE = 55L;
+    private static final long BEST_MERGE_REQUEST_TARGET_COUNT = 50L;
     private static final int TOTAL_BADGES = 8;
     private static final Random random = new Random();
 
@@ -100,7 +98,7 @@ public class BadgeEventService {
     // 프롬프트 창조자 - 커스텀 프롬프트 수정 n회 이상
     public void eventUpdateCustomPrompt(User user) {
         long promptCount = promptHistoryRepository.countByUserId(user.getId());
-        if (promptCount == PROMTPT_UPDATE_TARGET_COUNT) {
+        if (promptCount == PROMPT_UPDATE_TARGET_COUNT) {
             userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
             eventAllBadgeUnlocked(user);
@@ -124,28 +122,22 @@ public class BadgeEventService {
     // 정복자 - 베스트 MR에 n회 이상 선정 시 획득
     @Transactional
     public void eventBestMrCount() {
-        // BestMrHistory가 3회 이상인 사용자 ID 조회
-        List<Long> userIds = bestMrHistoryRepository.findUsersWithAtLeastNHistory(3);
+        // BestMrHistory가 N회 이상인 사용자 ID 조회
+        List<Long> userIds =
+                bestMrHistoryRepository.findUsersWithAtLeastNHistory(
+                        BEST_MERGE_REQUEST_TARGET_COUNT);
 
-        // DB에서 3회 이상 BestMrHistory가 쌓인 사용자 중, 이미 뱃지를 가진 사용자를 제외한 사용자 조회
         List<Long> newBadgeUserIds =
                 userBadgeRepository.findUserIdsWithoutBadge(userIds, CONQUEROR.getId());
 
-        badgeCode = badgeCodeRepository.getById(LUCKY_FIND.getId());
+        badgeCode = badgeCodeRepository.getById(CONQUEROR.getId());
 
-        List<User> users = new ArrayList<>();
-        List<UserBadge> newBadges =
-                newBadgeUserIds.stream()
-                        .map(
-                                userId -> {
-                                    User user = userRepository.getById(userId);
-                                    users.add(user);
-                                    return UserBadge.of(user, badgeCode);
-                                })
-                        .collect(Collectors.toList());
+        List<User> users = userRepository.findAllByIds(newBadgeUserIds);
+        List<UserBadge> userBadges =
+                users.stream().map(user -> UserBadge.of(user, badgeCode)).toList();
 
-        userBadgeRepository.saveAll(newBadges);
-        users.stream().forEach(user -> eventAllBadgeUnlocked(user));
+        userBadgeRepository.saveAll(userBadges);
+        users.forEach(this::eventAllBadgeUnlocked);
     }
 
     // 코드 마스터 - AI 리뷰평가 리워드 합이 n점 이상 시 획득
@@ -187,7 +179,7 @@ public class BadgeEventService {
         long totalScore = calculateTotalScore(userProject, week - 1);
         if (totalScore >= AI_REWARD_TARGET_SCORE
                 && !userBadgeRepository.existsByUserAndBadgeCode(user, badgeCode)) {
-            UserBadge userBadge = UserBadge.of(user, badgeCode);
+            userBadge = UserBadge.of(user, badgeCode);
             userBadgeRepository.save(userBadge);
             eventAllBadgeUnlocked(user);
         }

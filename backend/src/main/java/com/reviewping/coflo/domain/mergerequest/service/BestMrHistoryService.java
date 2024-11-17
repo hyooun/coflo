@@ -13,9 +13,11 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -31,14 +33,19 @@ public class BestMrHistoryService {
         // Read
         List<String> usernames = new ArrayList<>();
         List<Project> projects = projectRepository.findAll();
-        for (Project p : projects) {
-            List<String> findUsernames = mergeRequestService.getUsernameBestMergeRequests(p);
-            usernames.addAll(findUsernames);
+        try {
+            for (Project p : projects) {
+                List<String> findUsernames = mergeRequestService.getUsernameBestMergeRequests(p);
+                usernames.addAll(findUsernames);
+            }
+        } catch (Exception e) {
+            log.error("An error occurred: {}", e.getMessage());
         }
+
+        log.info("BestMergeRequest usernames: {}", usernames);
 
         // Process
         List<User> users = userRepository.findAllByUsernames(usernames);
-
         Map<String, User> userMap =
                 users.stream().collect(Collectors.toMap(User::getUsername, Function.identity()));
 

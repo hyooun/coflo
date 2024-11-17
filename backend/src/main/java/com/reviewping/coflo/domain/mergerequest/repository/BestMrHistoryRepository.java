@@ -8,5 +8,5 @@ import org.springframework.data.repository.query.Param;
 
 public interface BestMrHistoryRepository extends CrudRepository<BestMrHistory, Long> {
     @Query("SELECT b.userId FROM BestMrHistory b GROUP BY b.userId HAVING COUNT(b) >= :count")
-    List<Long> findUsersWithAtLeastNHistory(@Param("count") int count);
+    List<Long> findUsersWithAtLeastNHistory(@Param("count") long count);
 }

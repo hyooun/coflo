@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { CircleCheck, LogOut } from 'lucide-react';
-import logo from 'assets/logo.png';
+import logo from 'assets/logo_white.png';
 import { User } from '@apis/User';
 import { isLoginAtom } from '@store/auth';
 import { useState } from 'react';

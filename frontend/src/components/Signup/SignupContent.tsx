@@ -1,15 +1,13 @@
 import SignupForm from '@components/Signup/SignupForm.tsx';
-import signupBgImage from '@assets/images/signup_bg_image.png';
+import signupBoat from '@assets/images/signup_boat.gif';
 
 const SignupContent = () => {
   return (
-    <div className="w-full h-full flex items-center justify-center">
-      <div className="absolute inset-0 pointer-events-none ">
-        <img src={signupBgImage} alt="sign up" className="w-full h-full object-cover" />
-      </div>
-      <div className="relative inset-x-10 mx-auto z-10 w-full max-w-lg ">
+    <div className="flex flex-row justify-between items-center w-full mx-auto px-20">
+      <div className="relative flex flex-row justify-between items-center w-full mx-auto px-10">
         <SignupForm />
       </div>
+      <img src={signupBoat} alt="sign_up_boat" className="w-2/5 h-auto object-contain" />
     </div>
   );
 };

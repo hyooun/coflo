@@ -124,7 +124,6 @@ const HomePage = () => {
 
     const fetchData = async () => {
       if (!projectId) {
-        navigate('/repository');
         return;
       }
       const {

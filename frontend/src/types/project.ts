@@ -77,3 +77,13 @@ export interface ProjectIndividualScoreData {
     }[];
   }[];
 }
+
+export interface ProjectLabelResponse {
+  labels: ProjectLabel[];
+}
+
+export interface ProjectLabel {
+  name: string;
+  textColor: string;
+  bgColor: string;
+}

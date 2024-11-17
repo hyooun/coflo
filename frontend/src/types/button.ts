@@ -7,6 +7,7 @@ interface BtnProps {
   bgColor?: string;
   hoverColor?: string;
   disabled?: boolean;
+  style?: React.CSSProperties;
 }
 
 interface LabelColors {

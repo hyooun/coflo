@@ -163,7 +163,7 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
 
         <div className="flex justify-center my-8">
           <CommonButton
-            className="w-fit px-10 py-4 cursor-pointer"
+            className="w-fit px-10 py-4 cursor-pointer text-white"
             bgColor="bg-primary-500"
             active={true}
             onClick={handleRegistReference}

@@ -6,21 +6,47 @@ import { MrItem } from '@components/Mr/MrItem';
 import { MrStatusFilter } from '@components/MergeRequest/MrStatusFilter';
 import { EmptyMergeRequest } from '@components/MergeRequest/EmptyMergeRequest';
 import Pagination from '@components/Pagination/Pagination';
-import { MergeRequest } from '@apis/MergeRequest';
-import { GitlabMergeRequest } from 'types/mergeRequest';
 import { currentPageAtom, totalPagesAtom } from '@store/pagination';
 import { projectIdAtom } from '@store/auth';
+import { MergeRequest } from '@apis/MergeRequest';
+import { ProjectRequest } from '@apis/Project';
+import { GitlabMergeRequest } from 'types/mergeRequest';
+import { ProjectLabel } from 'types/project';
 
 const MergeListPage = () => {
   const navigate = useNavigate();
+  const itemsPerPage = 7;
   const [currentPage] = useAtom(currentPageAtom);
   const [, setTotalPages] = useAtom(totalPagesAtom);
-  const [mergeRequests, setMergeRequests] = useState<GitlabMergeRequest[]>([]);
-  const itemsPerPage = 7;
   const [projectId] = useAtom(projectIdAtom);
+  const [mergeRequests, setMergeRequests] = useState<GitlabMergeRequest[]>([]);
   const [currentStatus, setCurrentStatus] = useState('opened');
   const [searchKeyword, setSearchKeyword] = useState('');
   const [, setSearchType] = useState('All');
+  const [projectLabels, setProjectLabels] = useState<ProjectLabel[]>([]);
+
+  const fetchMergeRequests = async () => {
+    if (!projectId) return;
+
+    // MR 리스트와 라벨 정보를 병렬로 조회
+    const [mrResponse, labelsResponse] = await Promise.all([
+      MergeRequest.getMrList(projectId, currentStatus, {
+        keyword: searchKeyword,
+        page: Number(currentPage),
+        size: Number(itemsPerPage),
+      }),
+      ProjectRequest.getProjectLabels(projectId),
+    ]);
+
+    if (mrResponse.data) {
+      setTotalPages(mrResponse.data.totalPages ?? 1);
+      setMergeRequests(mrResponse.data.gitlabMrList);
+    }
+
+    if (labelsResponse.data) {
+      setProjectLabels(labelsResponse.data.labels);
+    }
+  };
 
   const handleStatusChange = (status: string) => {
     setCurrentStatus(status);
@@ -31,17 +57,7 @@ const MergeListPage = () => {
     setSearchType(searchType);
 
     if (!projectId) return;
-
-    const response = await MergeRequest.getMrList(projectId, currentStatus, {
-      keyword: keyword,
-      page: Number(currentPage),
-      size: Number(itemsPerPage),
-    });
-
-    if (response.data) {
-      setTotalPages(response.data.totalPages ?? 1);
-      setMergeRequests(response.data.gitlabMrList);
-    }
+    await fetchMergeRequests();
   };
 
   const handleItemClick = (iid: number) => {
@@ -49,20 +65,6 @@ const MergeListPage = () => {
   };
 
   useEffect(() => {
-    const fetchMergeRequests = async () => {
-      if (!projectId) return;
-
-      const response = await MergeRequest.getMrList(projectId, currentStatus, {
-        keyword: searchKeyword,
-        page: Number(currentPage),
-        size: Number(itemsPerPage),
-      });
-
-      if (response.data) {
-        setTotalPages(response.data.totalPages ?? 1);
-        setMergeRequests(response.data.gitlabMrList);
-      }
-    };
     fetchMergeRequests();
   }, [projectId, currentStatus, currentPage]);
 
@@ -85,7 +87,7 @@ const MergeListPage = () => {
                   onClick={() => handleItemClick(mergeRequest.iid)}
                   className="cursor-pointer"
                 >
-                  <MrItem mergeRequest={mergeRequest} />
+                  <MrItem mergeRequest={mergeRequest} projectLabels={projectLabels} />
                   <div className="border-1px border-gray-300" />
                 </div>
               ))

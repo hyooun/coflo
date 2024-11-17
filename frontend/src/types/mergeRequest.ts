@@ -1,3 +1,5 @@
+import { ProjectLabel } from './project';
+
 export interface Assignee {
   id: number;
   username: string;
@@ -73,4 +75,5 @@ export interface GitlabMrListResponse {
 
 export interface MrItemProps {
   mergeRequest: GitlabMergeRequest;
+  projectLabels: ProjectLabel[];
 }

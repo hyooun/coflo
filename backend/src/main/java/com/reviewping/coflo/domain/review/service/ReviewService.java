@@ -35,6 +35,7 @@ import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
 import com.reviewping.coflo.global.client.gitlab.response.MergeRequestDiffVersionContent;
 import com.reviewping.coflo.global.integration.RedisGateway;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -165,7 +166,7 @@ public class ReviewService {
 
         // TODO: user project socre 저장
         String username = evalResponse.username();
-        userProjectScoreService.saveUserProjectScores(username, mrInfo);
+        userProjectScoreService.saveUserProjectScores(username, mrInfo, LocalDate.now());
     }
 
     @Transactional

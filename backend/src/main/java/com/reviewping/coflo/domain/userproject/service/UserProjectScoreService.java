@@ -47,11 +47,11 @@ public class UserProjectScoreService {
     }
 
     @Transactional
-    public void saveUserProjectScores(String username, MrInfo mrInfo) {
+    public void saveUserProjectScores(String username, MrInfo mrInfo, LocalDate currentDate) {
         UserProject userProject = getUserProject(username, mrInfo.getProject());
         int currentWeek =
                 projectDateUtil.calculateWeekNumber(
-                        mrInfo.getProject().getCreatedDate().toLocalDate(), LocalDate.now());
+                        mrInfo.getProject().getCreatedDate().toLocalDate(), currentDate);
 
         Map<Long, Integer> scoresMap = initializeScoresMap(mrInfo);
         scoresMap.forEach(

@@ -67,6 +67,7 @@ public class GitlabEventHandler {
         String targetBranch = gitlabEventRequest.objectAttributes().targetBranch();
         LocalDateTime gitlabCreatedDate =
                 gitlabEventRequest.objectAttributes().createdAt().toLocalDateTime();
+        String username = gitlabEventRequest.user().username();
         // 2. gitlab project token 찾기
         Project project = projectRepository.getById(projectId);
         String token = project.getBotToken();
@@ -79,7 +80,8 @@ public class GitlabEventHandler {
                 mrDescription,
                 targetBranch,
                 gitlabCreatedDate,
-                projectId);
+                projectId,
+                username);
     }
 
     @Transactional

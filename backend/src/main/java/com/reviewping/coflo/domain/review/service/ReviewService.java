@@ -22,16 +22,13 @@ import com.reviewping.coflo.domain.review.entity.Retrieval;
 import com.reviewping.coflo.domain.review.entity.Review;
 import com.reviewping.coflo.domain.review.message.*;
 import com.reviewping.coflo.domain.review.message.ReviewRequestMessage.MrContent;
-import com.reviewping.coflo.domain.review.message.ReviewResponseMessage;
 import com.reviewping.coflo.domain.review.repository.LanguageRepository;
 import com.reviewping.coflo.domain.review.repository.RetrievalRepository;
 import com.reviewping.coflo.domain.review.repository.ReviewRepository;
 import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
-import com.reviewping.coflo.domain.user.repository.UserRepository;
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
-import com.reviewping.coflo.domain.userproject.repository.UserProjectRepository;
 import com.reviewping.coflo.domain.webhookchannel.service.WebhookChannelService;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
@@ -67,8 +64,6 @@ public class ReviewService {
     private final ObjectMapper objectMapper;
     private final RedisGateway redisGateway;
     private final LanguageRepository languageRepository;
-    private final UserProjectRepository userProjectRepository;
-    private final UserRepository userRepository;
 
     @Transactional
     @ServiceActivator(inputChannel = "reviewResponseChannel")
@@ -176,7 +171,8 @@ public class ReviewService {
             String mrDescription,
             String targetBranch,
             LocalDateTime gitlabCreatedDate,
-            Long projectId) {
+            Long projectId,
+            String username) {
         log.debug("웹훅 요청으로 리뷰를 생성합니다. iid: {}, targetBranch: {}", iid, targetBranch);
         // 1. MrInfo 저장
         Project project = projectRepository.getReferenceById(projectId);
@@ -217,7 +213,8 @@ public class ReviewService {
                         branch.getId(),
                         mrContent,
                         customPrompt.getContent(),
-                        gitlabUrl);
+                        gitlabUrl,
+                        username);
         redisGateway.sendDetailedReviewRequest(reviewRequest);
         // 6. 리뷰 평가 요청
         MrEvalRequestMessage evalRequest =

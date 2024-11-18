@@ -52,8 +52,8 @@ export interface BestMergeRequest {
       color: string;
     }[];
   };
-  assignee: Assignee;
-  reviewer: Reviewer;
+  assignee?: Assignee;
+  reviewer?: Reviewer;
   isAiReviewCreated: boolean;
 }
 

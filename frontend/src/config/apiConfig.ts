@@ -19,7 +19,6 @@ export const handleError = (error: any) => {
   // HTTP 상태 코드별 처리
   switch (error.response.status) {
     case 401:
-      console.log('401 Unauthorized - 로그인 페이지로 이동');
       alert('로그인이 필요한 서비스입니다.');
       window.location.href = '/login';
       break;

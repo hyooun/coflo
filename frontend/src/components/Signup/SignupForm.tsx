@@ -8,6 +8,7 @@ import { TokenInput } from '@components/Input/TokenInput';
 import GitUrlSelector from './GitUrlSelector';
 import { Gitlab } from '@apis/Gitlab';
 import { User } from '@apis/User';
+import LogoImage from '@assets/logo.png';
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -66,13 +67,14 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="relative min-w-[520px]">
+    <div className="relative min-w-[500px]">
       {/* 블러 효과 배경 */}
       <div className="absolute inset-0 backdrop-blur-md rounded-3xl"></div>
 
       {/* SignupForm 콘텐츠 */}
-      <div className="bg-white/50 rounded-3xl p-10 py-20 relative z-10 font-pretendard border-2 border-primary-500">
-        <div className="text-5xl font-bold mb-10 mt-20">회원 가입</div>
+      <div className="bg-white/50 rounded-3xl p-10 py-20 relative z-10 font-pretendard">
+        <img src={LogoImage} alt="logo" className="w-24 h-auto mx-auto mb-4" />
+        <div className="text-4xl font-bold text-secondary text-center mb-20">coFlo</div>
         <form>
           <div className="space-y-14">
             <div className="flex flex-col space-y-10">
@@ -95,11 +97,11 @@ const SignupForm = () => {
                   warningMessage="검증하기 버튼을 눌러 토큰을 검증해주세요."
                 />
                 <div
-                  className="flex items-center text-sm text-secondary mt-1 cursor-pointer"
+                  className="flex items-center text-sm text-primary-500 mt-1 cursor-pointer"
                   onClick={() => setIsModalOpen(true)}
                 >
-                  <Info size={16} />
-                  <span className="ml-1 text-xl">사용자 인증 토큰 안내</span>
+                  <Info size={16} className="text-white" fill="primary-500" />
+                  <span className="ml-1">사용자 인증 토큰 안내</span>
                 </div>
               </div>
             </div>
@@ -145,7 +147,7 @@ const SignupForm = () => {
 
         <div className="flex justify-center mt-20 cursor-pointer">
           <CommonButton
-            className="w-36 h-14 text-xl text-white"
+            className="w-full h-14 text-xl text-white rounded-lg"
             disabled={!isSignupEnabled}
             onClick={handleSignup}
           >

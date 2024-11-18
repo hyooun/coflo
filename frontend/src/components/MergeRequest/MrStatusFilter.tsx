@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StatusButton } from './StatusButton';
 
 export interface MrStatusFilterProps {
+  initialStatus: string;
   onStatusChange: (status: string) => void;
 }
 
-export const MrStatusFilter = ({ onStatusChange }: MrStatusFilterProps) => {
-  const [activeStatus, setActiveStatus] = useState('opened');
+export const MrStatusFilter = ({ initialStatus, onStatusChange }: MrStatusFilterProps) => {
+  const [activeStatus, setActiveStatus] = useState(initialStatus);
+
+  useEffect(() => {
+    setActiveStatus(initialStatus);
+  }, [initialStatus]);
 
   const statuses = [
     { label: 'Opened', value: 'opened', count: 2 },

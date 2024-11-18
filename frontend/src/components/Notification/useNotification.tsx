@@ -19,11 +19,8 @@ export const useNotification = (projectId: string) => {
     eventSourceRef.current = eventSource;
 
     eventSource.addEventListener('notification', (event: MessageEvent) => {
-      console.log('Received notification:', event);
-
       const message = event.data;
       if (message.includes('EventStream Created')) {
-        console.log('Ignoring EventStream Created message:', message);
         return;
       }
 
@@ -36,7 +33,6 @@ export const useNotification = (projectId: string) => {
 
       closeEvtSource();
 
-      console.log('Reconnecting...');
       openEvtSource();
     };
   };

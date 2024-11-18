@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import 'chart.js/auto';
+import { monday, sunday } from '@hooks/useWeek';
 
 import ChartBox from '@components/ChartBox/ChartBox';
 import IconWithText from '@components/TextDiv/IconWithText';
@@ -39,7 +40,8 @@ const HomePage = () => {
     datasets: [],
   };
   const [, setContainerHeight] = useState<number>(0);
-
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
   const [radarData, setRadarData] = useState<RadarData | null>(initialRadarData);
   const [profileIcons, setProfileIcons] = useState<Record<number, string>>({});
   const [badgeIcons, setBadgeIcons] = useState<Record<number, string>>({});
@@ -131,6 +133,8 @@ const HomePage = () => {
         cubicLineData: fetchedCubicLineData,
         maxScore,
         minScore,
+        startDate: fetchedStartDate,
+        endDate: fetchedEndDate,
       } = await loadChartData(projectId, selectedChart, queryParams);
 
       if (fetchedLineData) {
@@ -143,6 +147,10 @@ const HomePage = () => {
 
       setMaxValue(maxScore);
       setMinValue(minScore);
+
+      // Set the start and end date
+      setStartDate(fetchedStartDate);
+      setEndDate(fetchedEndDate);
     };
 
     fetchData();
@@ -179,10 +187,14 @@ const HomePage = () => {
         {/* Team Radar Charts - 3/5 너비 */}
         <div className="flex flex-col flex-[3] min-w-[570px]">
           <Title title="Team Radar Charts" textSize="text-lg" />
+
           <div
             ref={containerRef}
-            className="flex-grow bg-gray-400 border-2 border-gray-300 rounded-lg flex items-center justify-center p-4"
+            className="relative flex-grow bg-gray-400 border-2 border-gray-300 rounded-lg flex items-center justify-center p-4"
           >
+            <div className="absolute top-3 right-7 text-right text-gray-700 font-semibold mb-4">
+              {`${monday} ~ ${sunday}`}
+            </div>
             <ChartBox
               chartType="radar"
               data={radarData}
@@ -265,14 +277,17 @@ const HomePage = () => {
               }}
             />
           </div>
-          <div className="flex-grow bg-gray-400 border-2 border-gray-300 rounded-lg items-center justify-center p-4">
+          <div className="relative flex-grow bg-gray-400 border-2 border-gray-300 rounded-lg items-center justify-center pt-10">
+            <div className="absolute top-3 right-7 text-right text-gray-700 font-semibold mb-4">
+              {`${startDate} ~ ${endDate}`}
+            </div>
             {selectedChart === '획득 통합 스코어' && (
               <ChartBox
                 chartType="line"
                 data={cubicLineData}
                 options={createLineOptions([0, 70])}
                 chartId="lineChart"
-                height="350px"
+                height="330px"
               />
             )}
             {selectedChart === '획득 개별 스코어' && (
@@ -281,7 +296,7 @@ const HomePage = () => {
                 data={lineData}
                 options={createLineOptions([0, 11])}
                 chartId="cubicLineChart"
-                height="350px"
+                height="330px"
               />
             )}
             {selectedChart === '누적 통합 스코어' && (
@@ -290,7 +305,7 @@ const HomePage = () => {
                 data={cubicLineData}
                 options={createCubicLineOptions([minValue, maxValue])}
                 chartId="cumulativeLineChart"
-                height="350px"
+                height="330px"
               />
             )}
             {selectedChart === '누적 개별 스코어' && (
@@ -299,7 +314,7 @@ const HomePage = () => {
                 data={lineData}
                 options={createCubicLineOptions([minValue, maxValue])}
                 chartId="cumulativeCubicLineChart"
-                height="350px"
+                height="330px"
               />
             )}
           </div>

@@ -7,7 +7,7 @@ export const NavigationButtons = () => {
   return (
     <div className="flex gap-4 justify-center">
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => navigate(-2)}
         className="inline-flex items-center gap-2 px-6 py-3 rounded-full 
             border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors"
       >

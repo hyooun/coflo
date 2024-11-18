@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { CustomSearchBar } from '@components/Mr/MrSearchBar';
 import { MrItem } from '@components/Mr/MrItem';
@@ -20,7 +20,8 @@ const MergeListPage = () => {
   const [, setTotalPages] = useAtom(totalPagesAtom);
   const [projectId] = useAtom(projectIdAtom);
   const [mergeRequests, setMergeRequests] = useState<GitlabMergeRequest[]>([]);
-  const [currentStatus, setCurrentStatus] = useState('opened');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentStatus, setCurrentStatus] = useState(searchParams.get('status') || 'opened');
   const [searchKeyword, setSearchKeyword] = useState('');
   const [, setSearchType] = useState('All');
   const [projectLabels, setProjectLabels] = useState<ProjectLabel[]>([]);
@@ -50,6 +51,7 @@ const MergeListPage = () => {
 
   const handleStatusChange = (status: string) => {
     setCurrentStatus(status);
+    setSearchParams({ status });
   };
 
   const handleSearch = async (keyword: string, searchType: string) => {
@@ -72,7 +74,7 @@ const MergeListPage = () => {
     <div className="h-full overflow-auto w-full">
       <div className="flex flex-col justify-between min-h-full p-6">
         <div className="flex flex-col gap-4">
-          <MrStatusFilter onStatusChange={handleStatusChange} />
+          <MrStatusFilter onStatusChange={handleStatusChange} initialStatus={currentStatus} />
           <CustomSearchBar onSearch={handleSearch} showOption={false} />
         </div>
 

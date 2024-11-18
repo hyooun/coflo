@@ -1,7 +1,4 @@
-// components/Modal/GuideModal.tsx
-// import { useState } from 'react';
 import { X } from 'lucide-react';
-// import { Gitlab } from '@apis/Gitlab';
 import { useState, useEffect } from 'react';
 import { TokenInput } from '@components/Input/TokenInput';
 import type { GuideModalProps } from 'types/modal.ts';
@@ -36,9 +33,7 @@ export default function GuideModal({
   }, [inputProps?.value, isOpen]);
 
   const handleValidateToken = async () => {
-    console.log(botToken);
     if (!botToken) return;
-    console.log('토큰 검증 시작');
 
     setIsValidating(true);
 
@@ -92,7 +87,7 @@ export default function GuideModal({
         </button>
 
         {/* Title */}
-        <h2 className="text-2xl font-bold text-center mt-4 mb-6 text-primary-500">{title}</h2>
+        <h2 className="text-xl font-bold text-center mt-4 mb-6 text-primary-500">{title}</h2>
 
         {/* Content */}
         {content && <div className="mb-6 space-y-2">{content}</div>}

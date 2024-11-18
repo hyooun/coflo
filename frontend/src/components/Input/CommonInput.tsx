@@ -13,7 +13,7 @@ function CommonInput({
 }: CommonInputProps) {
   return (
     <div className="w-full">
-      {labelText && <label className="block mb-2 text-2xl">{labelText}</label>}
+      {labelText && <label className="block mb-2 text-xl">{labelText}</label>}
       <div className="relative">
         <input
           type={type}

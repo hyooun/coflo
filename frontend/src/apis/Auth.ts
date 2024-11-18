@@ -31,19 +31,7 @@ export function OAuthRedirectHandler() {
       return;
     }
 
-    // const redirectUrl = getRedirectUrl(provider);
-
-    // fetch(`${VITE_API_BASE_URL}/api/oauth2/authorization/${provider}?redirect_url=${redirectUrl}`, {
-    //   mode: 'no-cors',
-    // });
-
     const searchParams = new URLSearchParams(window.location.search);
-    // console.log('파싱된 쿼리 파라미터:', {
-    //   isSignup: searchParams.get('isSignup'),
-    //   isConnect: searchParams.get('isConnect'),
-    //   projectId: searchParams.get('projectId'),
-    //   raw: Object.fromEntries(searchParams.entries()),
-    // });
 
     const isSignup = searchParams.get('isSignup') === 'true';
     const isConnect = searchParams.get('isConnect') === 'true';

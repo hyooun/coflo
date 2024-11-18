@@ -12,6 +12,8 @@ export const loadChartData = async (
   cubicLineData: any;
   minScore: number;
   maxScore: number;
+  startDate: string | null;
+  endDate: string | null;
 }> => {
   let cumulativeScoreData: ProjectTotalScoreData | null = null;
   let individualScoreData: ProjectIndividualScoreData | null = null;
@@ -31,31 +33,32 @@ export const loadChartData = async (
     }
   };
 
+  let startDate: string | null = null;
+  let endDate: string | null = null;
+
   try {
     const response = await fetchData();
-    // console.log(response);
 
     if (response.data) {
       const responseData = response.data as any;
 
-      if (responseData.startDate && responseData.endDate) {
-        if ('scoreOfWeek' in responseData) {
-          cumulativeScoreData = {
-            startDate: responseData.startDate,
-            endDate: responseData.endDate,
-            scoreOfWeek: responseData.scoreOfWeek || [],
-          };
-        } else if ('codeQualityScores' in responseData) {
-          individualScoreData = {
-            startDate: responseData.startDate,
-            endDate: responseData.endDate,
-            codeQualityScores: responseData.codeQualityScores || [],
-          };
-        } else {
-          throw new Error('Invalid response structure');
-        }
+      startDate = responseData.startDate || null;
+      endDate = responseData.endDate || null;
+
+      if ('scoreOfWeek' in responseData) {
+        cumulativeScoreData = {
+          startDate: responseData.startDate,
+          endDate: responseData.endDate,
+          scoreOfWeek: responseData.scoreOfWeek || [],
+        };
+      } else if ('codeQualityScores' in responseData) {
+        individualScoreData = {
+          startDate: responseData.startDate,
+          endDate: responseData.endDate,
+          codeQualityScores: responseData.codeQualityScores || [],
+        };
       } else {
-        console.warn('Response missing expected date fields');
+        throw new Error('Invalid response structure');
       }
     } else {
       console.warn('No data found in response');
@@ -93,7 +96,6 @@ export const loadChartData = async (
       datasets:
         individualScoreData?.codeQualityScores.map((codeQuality, index) => ({
           label: codeQuality.codeQualityName,
-
           data: labels.map((label) => {
             const weekNumber = parseInt(label);
             const weekData = codeQuality.scoreOfWeek.find((ws) => ws.week === weekNumber);
@@ -126,5 +128,7 @@ export const loadChartData = async (
     cubicLineData,
     minScore,
     maxScore,
+    startDate,
+    endDate,
   };
 };

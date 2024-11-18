@@ -6,6 +6,7 @@ import { MergeRequest } from '@apis/MergeRequest';
 import { projectIdAtom } from '@store/auth';
 import { useAtom } from 'jotai';
 import Title from '@components/Title/Title';
+import { startOfWeek, today } from '@hooks/useWeek';
 
 const BestMergeRequestList = () => {
   const [bestMergeRequests, setBestMergeRequests] = useState<BestMergeRequest[]>([]);
@@ -32,7 +33,10 @@ const BestMergeRequestList = () => {
   return (
     <>
       <Title title="Best Merge Request" textSize="text-lg" />
-      <div className="flex-grow bg-gray-400 border-2 border-gray-300 rounded-lg">
+      <div className="relative flex-grow bg-gray-400 border-2 border-gray-300 rounded-lg p-4">
+        <div className="absolute top-3 right-7 text-right text-gray-700 font-semibold mb-4">
+          {`${startOfWeek} ~ ${today}`}
+        </div>
         {bestMergeRequests.length === 0 ? (
           <div className="w-full h-full flex flex-col items-center justify-center text-gray-700 text-lg">
             <p>아직 BEST MR이 없습니다.</p>

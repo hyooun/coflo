@@ -210,27 +210,26 @@ const HomePage = () => {
         {/* Project Total - 2/5 너비 */}
         <div className="flex flex-col flex-[2] min-w-[380px]">
           <Title title="Project Total" textSize="text-lg" />
-          <div className="flex flex-col flex-grow justify-between p-4 bg-gray-400 border-2 border-gray-300 rounded-lg">
-            <Title title="About" textSize="text-xl" />
-            <Title title="Language" textSize="text-lg" py="py-1" />
-            <div className="mx-4">
-              {projectDetail.programmingLanguagesData &&
-              projectDetail.programmingLanguagesData.labels ? (
-                <ChartBox
-                  chartType="bar"
-                  data={projectDetail.programmingLanguagesData}
-                  options={createHorizontalBarOptions([0, 100])}
-                  chartId="horizontalBarChart"
-                  width="100%"
-                  height="60px"
-                />
-              ) : (
-                <p className="text-center">No Chart</p>
-              )}
+          <div className="flex flex-col flex-grow justify-center p-4 gap-12 bg-gray-400 border-2 border-gray-300 rounded-lg">
+            <div>
+              <Title title="Language" textSize="text-lg" py="py-4" />
+              <div className="mx-4">
+                {projectDetail.programmingLanguagesData &&
+                projectDetail.programmingLanguagesData.labels ? (
+                  <ChartBox
+                    chartType="bar"
+                    data={projectDetail.programmingLanguagesData}
+                    options={createHorizontalBarOptions([0, 100])}
+                    chartId="horizontalBarChart"
+                    width="100%"
+                    height="60px"
+                  />
+                ) : (
+                  <p className="text-center">No Chart</p>
+                )}
+              </div>
             </div>
-            <div className="h-5 px-2 w-full flex flex-col justify-center">
-              <div className="bg-gray-600 h-[1px] w-full"></div>
-            </div>
+
             <div className="flex flex-col space-y-5 py-5">
               <Title title="Info" textSize="text-lg" py="py-1" />
               <div className="flex flex-col space-y-5 items-center justify-center">

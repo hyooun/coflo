@@ -81,7 +81,7 @@ const BestMergeRequestList = () => {
                       {mr.labels.nodes.slice(0, 2).map((label, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium text-white"
+                          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium text-white whitespace-nowrap"
                           style={{ backgroundColor: label.color }}
                         >
                           {label.title}

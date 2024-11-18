@@ -86,7 +86,7 @@ public class UserProjectScoreService {
 
         if (optionalScore.isPresent()) {
             UserProjectScore existingScore = optionalScore.get();
-            existingScore.addToTotalScore(score);
+            existingScore.updateTotalScore(score);
         } else {
             createNewUserProjectScore(userProject, currentWeek, codeQualityCodeId, (long) score);
         }

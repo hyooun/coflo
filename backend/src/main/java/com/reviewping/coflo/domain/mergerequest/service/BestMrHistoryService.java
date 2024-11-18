@@ -39,8 +39,7 @@ public class BestMrHistoryService {
                 usernames.addAll(findUsernames);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("An error occurred: {}", e.getMessage());
+            log.error("An error occurred: {}", e.getMessage(), e);
         }
 
         log.info("BestMergeRequest usernames: {}", usernames);

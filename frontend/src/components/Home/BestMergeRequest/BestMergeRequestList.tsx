@@ -20,7 +20,9 @@ const BestMergeRequestList = () => {
       const data = response.data;
       if (data) {
         setBestMergeRequests(data);
+        return;
       }
+      setBestMergeRequests([]);
     };
 
     fetchMergeRequests();

@@ -6,6 +6,7 @@ import { ProjectSelectorProps } from 'types/project';
 import { projectFullPathAtom, projectIdAtom } from '@store/auth';
 import { useAtom } from 'jotai';
 import { UserProject } from '@apis/Link';
+import { User } from '@apis/User';
 
 const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
   const navigate = useNavigate();
@@ -72,12 +73,15 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
     };
   }, [onClose, titleRef]);
 
-  const handleProjectClick = (project: Project) => {
-    setCurrentProjectId(project.projectId);
-    setProjectFullPath(project.name);
-    setSelectedProject(project);
-    onClose();
-    navigate(`/${project.projectId}/main`);
+  const handleProjectClick = async (project: Project) => {
+    const response = await User.updateRecentProject(Number(project.projectId));
+    if (response.status === 'SUCCESS') {
+      setCurrentProjectId(project.projectId);
+      setProjectFullPath(project.name);
+      setSelectedProject(project);
+      onClose();
+      window.location.href = `/${project.projectId}/main`;
+    }
   };
 
   return (

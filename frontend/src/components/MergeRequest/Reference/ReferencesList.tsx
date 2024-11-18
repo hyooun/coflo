@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus } from 'lucide-react';
+import { CircleCheck, Plus } from 'lucide-react';
 
 import CommonReference from '@components/MergeRequest/Reference/CommonReference.tsx';
 import { CommonButton } from '@components/Button/CommonButton';
@@ -10,6 +10,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Review } from '@apis/Review';
 import { useAtom } from 'jotai';
 import { projectIdAtom } from '@store/auth';
+import AlertModal from '@components/Modal/AlertModal';
 
 const ReferencesList = ({ references: initialReferences }: ReferencesListProps) => {
   const navigate = useNavigate();
@@ -19,6 +20,8 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
   const [isAddReferenceModalOpen, setIsAddReferenceModalOpen] = useState(false);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [alertModalContent, setAlertModalContent] = useState<string[]>([]);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [confirmModalContent, setConfirmModalContent] = useState<string[]>([]);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
   const [, setIsLoading] = useState(true);
 
@@ -29,11 +32,11 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
 
   const handleDeleteClick = (id: number) => {
     setDeleteTargetId(id);
-    setAlertModalContent(['정말 삭제하시겠습니까?']);
-    setIsAlertModalOpen(true);
+    setConfirmModalContent(['정말 삭제하시겠습니까?']);
+    setIsConfirmModalOpen(true);
   };
 
-  const handleAlertModalConfirm = () => {
+  const handleConfirmModal = () => {
     if (deleteTargetId !== null) {
       handleDelete(deleteTargetId);
       setDeleteTargetId(null);
@@ -41,7 +44,7 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
     setIsAlertModalOpen(false);
   };
 
-  const handleAlertModalCancel = () => {
+  const handleConfirmModalCancel = () => {
     setDeleteTargetId(null);
     setIsAlertModalOpen(false);
   };
@@ -70,12 +73,8 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
       }
 
       await Review.regenerateReview(projectId, id, retrievals);
-      setAlertModalContent(['리뷰가 재생성되었습니다.']);
+      setAlertModalContent(['리뷰 재생성 요청을 보냈습니다.']);
       setIsAlertModalOpen(true);
-
-      // notify();
-
-      navigate(`/${projectId}/main/merge-request/reviews/${id}`);
     } catch (error) {
       console.error('리뷰 재생성 중 오류 발생:', error);
       setAlertModalContent(['리뷰 재생성 중 오류가 발생했습니다.']);
@@ -97,6 +96,11 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
 
     setReferences((prev) => [...prev, newReference]);
     setIsAddReferenceModalOpen(false);
+  };
+
+  const handleAlertModalConfirm = () => {
+    setIsAlertModalOpen(false);
+    navigate(`/${projectId}/main/merge-request/reviews/${id}`);
   };
 
   return (
@@ -141,11 +145,11 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
           onSubmit={handleAddReferenceSubmit}
         />
 
-        {isAlertModalOpen && (
+        {isConfirmModalOpen && (
           <ConfirmModal
-            content={alertModalContent}
-            onConfirm={handleAlertModalConfirm}
-            onCancel={handleAlertModalCancel}
+            content={confirmModalContent}
+            onConfirm={handleConfirmModal}
+            onCancel={handleConfirmModalCancel}
             className="w-72 h-44"
           />
         )}
@@ -161,7 +165,16 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
           </CommonButton>
         </div>
       </div>
-      {/* )} */}
+      {isAlertModalOpen && (
+        <AlertModal
+          content={alertModalContent}
+          onConfirm={handleAlertModalConfirm}
+          className="w-72 h-44"
+          icon={CircleCheck}
+          iconClassName="text-state-success"
+          iconSize={48}
+        />
+      )}
     </div>
   );
 };

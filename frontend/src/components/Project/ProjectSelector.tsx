@@ -80,7 +80,7 @@ const ProjectSelector = ({ onClose, titleRef }: ProjectSelectorProps) => {
       setProjectFullPath(project.name);
       setSelectedProject(project);
       onClose();
-      navigate(`/${project.projectId}/main`);
+      window.location.href = `/${project.projectId}/main`;
     }
   };
 

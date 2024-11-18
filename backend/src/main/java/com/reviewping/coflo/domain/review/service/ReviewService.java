@@ -29,6 +29,7 @@ import com.reviewping.coflo.domain.user.entity.GitlabAccount;
 import com.reviewping.coflo.domain.user.entity.User;
 import com.reviewping.coflo.domain.user.repository.GitlabAccountRepository;
 import com.reviewping.coflo.domain.userproject.entity.UserProject;
+import com.reviewping.coflo.domain.userproject.service.UserProjectScoreService;
 import com.reviewping.coflo.domain.webhookchannel.service.WebhookChannelService;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
@@ -59,6 +60,7 @@ public class ReviewService {
     private final BadgeEventService badgeEventService;
     private final WebhookChannelService webhookChannelService;
     private final NotificationService notificationService;
+    private final UserProjectScoreService userProjectScoreService;
 
     private final GitLabClient gitLabClient;
     private final ObjectMapper objectMapper;
@@ -160,6 +162,10 @@ public class ReviewService {
         mrInfo.setReliabilityScore(evalResponse.mrEvaluationMessage().reliabilityScore());
         mrInfo.setMaintainabilityScore(evalResponse.mrEvaluationMessage().maintainabilityScore());
         mrInfo.setReusabilityScore(evalResponse.mrEvaluationMessage().reusabilityScore());
+
+        // TODO: user project socre 저장
+        String username = evalResponse.username();
+        userProjectScoreService.saveUserProjectScores(username, mrInfo);
     }
 
     @Transactional

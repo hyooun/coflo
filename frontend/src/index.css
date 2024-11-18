@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Pretendard, SFMono, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 300;
+  src:
+    url('./assets/fonts/Pretendard-Light.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-Light.woff') format('woff');
+}
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 400;
+  src:
+    url('./assets/fonts/Pretendard-Regular.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-Regular.woff') format('woff');
+}
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 500;
+  src:
+    url('./assets/fonts/Pretendard-Medium.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-Medium.woff') format('woff');
+}
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 700;
+  src:
+    url('./assets/fonts/Pretendard-Bold.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-Bold.woff') format('woff');
+}
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 600;
+  src:
+    url('./assets/fonts/Pretendard-Bold.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-Bold.woff') format('woff');
+}
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 800;
+  src:
+    url('./assets/fonts/Pretendard-ExtraBold.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-ExtraBold.woff') format('woff');
+}
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 900;
+  src:
+    url('./assets/fonts/Pretendard-Black.woff2') format('woff2'),
+    url('./assets/fonts/Pretendard-Black.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 300;
+  src: url('./assets/fonts/sf-mono/SFMonoLight.otf') format('otf');
+}
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 400;
+  src: url('./assets/fonts/sf-mono/SFMonoRegular.otf') format('otf');
+}
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 500;
+  src: url('./assets/fonts/sf-mono/SFMonoMedium.otf') format('otf');
+}
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 600;
+  src: url('./assets/fonts/sf-mono/SFMonoSemibold.otf') format('otf');
+}
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 700;
+  src: url('./assets/fonts/sf-mono/SFMonoBold.otf') format('otf');
+}
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 800;
+  src: url('./assets/fonts/sf-mono/SFMonoBold.otf') format('otf');
+}
+@font-face {
+  font-family: 'SFMono';
+  font-weight: 900;
+  src: url('./assets/fonts/sf-mono/SFMonoHeavy.otf') format('otf');
+}
+
+* {
+  box-sizing: border-box;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  /*background-color: #ffffff;*/
+}
+
+::-webkit-scrollbar-track:hover {
+  /*background-color: #ffffff;*/
+}
+
+::-webkit-scrollbar-track:active {
+  /*background-color: #ffffff;*/
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #2C365B;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #707A9F;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: #707A9F;
+}
+
+::-webkit-scrollbar-corner {
+
+}
+
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: #fff;
+  -webkit-text-fill-color: #fff;
+}
+
+body {
+  margin: 0;
+  -ms-overflow-style: none;
+
+  min-width: 320px;
+  min-height: 100vh;
+}
+main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-weight: normal;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.tooltip {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.relative:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}

@@ -39,6 +39,7 @@ public class BestMrHistoryService {
                 usernames.addAll(findUsernames);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("An error occurred: {}", e.getMessage());
         }
 

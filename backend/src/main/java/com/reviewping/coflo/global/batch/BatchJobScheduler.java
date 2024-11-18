@@ -26,7 +26,7 @@ public class BatchJobScheduler {
         this.aiRewardEventJob = aiRewardEventJob;
     }
 
-    @Scheduled(cron = "0 5 0 * * MON") // 매주 월요일 오전 00시 05분에 실행
+    @Scheduled(cron = "0 55 23 * * SUN") // 매주 일요일 오후 11시 55분에 실행
     public void runBestMergeRequestJob() throws Exception {
         JobParameters params =
                 new JobParametersBuilder()

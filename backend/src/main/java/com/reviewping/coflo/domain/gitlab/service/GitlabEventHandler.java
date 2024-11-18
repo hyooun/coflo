@@ -10,13 +10,11 @@ import com.reviewping.coflo.global.client.gitlab.request.GitlabEventRequest;
 import com.reviewping.coflo.global.error.ErrorCode;
 import com.reviewping.coflo.global.error.exception.BusinessException;
 import com.reviewping.coflo.global.integration.RedisGateway;
-import jakarta.annotation.PostConstruct;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import lombok.RequiredArgsConstructor;
@@ -30,17 +28,18 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class GitlabEventHandler {
 
-    private final Map<String, BiConsumer<Long, GitlabEventRequest>> handlers = new HashMap<>();
     private final ReviewService reviewCreateService;
     private final ProjectRepository projectRepository;
     private final RedisGateway redisGateway;
     private final BranchRepository branchRepository;
-
-    @PostConstruct
-    void initHandlers() {
-        handlers.put("open", this::handleOpen);
-        handlers.put("reopen", this::handleOpen);
-    }
+    private final Map<String, BiConsumer<Long, GitlabEventRequest>> handlers =
+            Map.of(
+                    "open",
+                    this::handleOpen,
+                    "reopen",
+                    this::handleOpen,
+                    "merge",
+                    this::handleMerge);
 
     @Async
     public void handleMergeRequest(Long projectId, GitlabEventRequest gitlabEventRequest) {
@@ -85,9 +84,10 @@ public class GitlabEventHandler {
     }
 
     @Transactional
-    public void handlePush(Long projectId, GitlabEventRequest gitlabEventRequest) {
+    public void handleMerge(Long projectId, GitlabEventRequest gitlabEventRequest) {
+        log.debug("#handleMerged");
         Project project = projectRepository.getById(projectId);
-        String branchName = gitlabEventRequest.ref().replace("refs/heads/", "");
+        String branchName = gitlabEventRequest.objectAttributes().targetBranch();
         Branch branch = branchRepository.getByNameAndProject(branchName, project);
         UpdateRequestMessage updateRequest =
                 new UpdateRequestMessage(

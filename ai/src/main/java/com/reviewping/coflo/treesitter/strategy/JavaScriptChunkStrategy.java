@@ -41,7 +41,8 @@ public class JavaScriptChunkStrategy implements ChunkStrategy {
                 || "lexical_declaration".equals(node.getType())) {
             String nodeContent =
                     new String(Arrays.copyOfRange(code, node.getStartByte(), node.getEndByte()));
-            chunks.add(new ChunkedCode(nodeContent, file.getName(), file.getPath(), "javascript"));
+            String extension = FileUtil.getFileExtension(file);
+            chunks.add(new ChunkedCode(nodeContent, file.getName(), file.getPath(), extension));
             return;
         }
 

@@ -49,9 +49,14 @@ public class ProjectHelper {
     }
 
     private boolean isCodeFile(Path filePath) {
-        // 특정 확장자 필터링 (예: .java, .py 등)
         String fileName = filePath.getFileName().toString();
-        return fileName.endsWith(".java") || fileName.endsWith(".py");
+        return fileName.endsWith(".java")
+                || fileName.endsWith(".js")
+                || fileName.endsWith(".tsx")
+                || fileName.endsWith(".ts")
+                || fileName.endsWith(".css")
+                || fileName.endsWith(".html")
+                || fileName.endsWith(".md");
     }
 
     private List<ChunkedCode> preprocessCode(File file) {

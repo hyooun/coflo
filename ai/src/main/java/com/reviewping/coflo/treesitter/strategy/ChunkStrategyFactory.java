@@ -15,6 +15,7 @@ public class ChunkStrategyFactory {
         strategies.put("java", new JavaChunkStrategy(parser));
         strategies.put("js", new JavaScriptChunkStrategy(parser));
         strategies.put("ts", new TypeScriptChunkStrategy(parser));
+        strategies.put("tsx", new TypeScriptChunkStrategy(parser));
     }
 
     public ChunkStrategy getStrategy(String extension) {

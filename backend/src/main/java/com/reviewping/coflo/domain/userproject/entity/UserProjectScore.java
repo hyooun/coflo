@@ -37,8 +37,8 @@ public class UserProjectScore extends BaseTimeEntity {
         userProject.getUserProjectScores().add(this);
     }
 
-    public void addToTotalScore(Integer score) {
+    public void updateTotalScore(Integer score) {
         if (score == null) score = 0;
-        this.totalScore += score;
+        this.totalScore = (totalScore + score) / 2;
     }
 }

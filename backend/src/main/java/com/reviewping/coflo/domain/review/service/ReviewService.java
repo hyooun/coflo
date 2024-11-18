@@ -33,7 +33,6 @@ import com.reviewping.coflo.domain.userproject.service.UserProjectScoreService;
 import com.reviewping.coflo.domain.webhookchannel.service.WebhookChannelService;
 import com.reviewping.coflo.global.client.gitlab.GitLabClient;
 import com.reviewping.coflo.global.client.gitlab.response.GitlabMrDiffsContent;
-import com.reviewping.coflo.global.client.gitlab.response.MergeRequestDiffVersionContent;
 import com.reviewping.coflo.global.integration.RedisGateway;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -191,27 +190,7 @@ public class ReviewService {
         CustomPrompt customPrompt = customPromptRepository.getByProjectId(projectId);
         // 4. projectId와 targetBranch로 브랜치 id 가져오기
         Branch branch = branchRepository.getByNameAndProject(targetBranch, project);
-        // 5. 상세 리뷰 생성 요청
-        MergeRequestDiffVersionContent mergeRequestDiffVersionContent =
-                gitLabClient
-                        .getMergeRequestDiffVersions(gitlabUrl, token, gitlabProjectId, iid)
-                        .getFirst();
-        log.debug("리뷰 대상 파일 수: {}", mrDiffs.size());
-        mrDiffs.forEach(
-                mrDiff ->
-                        redisGateway.sendDetailedReviewRequest(
-                                new DetailedReviewRequestMessage(
-                                        projectId,
-                                        mrInfo.getId(),
-                                        branch.getId(),
-                                        mrDiff.diff(),
-                                        mergeRequestDiffVersionContent.baseCommitSha(),
-                                        mergeRequestDiffVersionContent.headCommitSha(),
-                                        mergeRequestDiffVersionContent.startCommitSha(),
-                                        mrDiff.newPath(),
-                                        mrDiff.oldPath(),
-                                        gitlabUrl)));
-        // 6. 전체 리뷰 생성 요청
+        // 5. 전체 리뷰 생성 요청
         MrContent mrContent = new MrContent(mrDescription, mrDiffs.toString());
         ReviewRequestMessage reviewRequest =
                 new ReviewRequestMessage(

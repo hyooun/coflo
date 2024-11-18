@@ -13,7 +13,8 @@ const apiRequests = {
   post: <T>(url: string, body: object) =>
     instance.post<ApiResponse<T>>(url, body).then(responseBody),
 
-  patch: <T>(url: string) => instance.patch<ApiResponse<T>>(url).then(responseBody),
+  patch: <T>(url: string, data?: object) =>
+    instance.patch<ApiResponse<T>>(url, data).then(responseBody),
 };
 
 export const User = {
@@ -24,4 +25,7 @@ export const User = {
     apiRequests.patch<boolean>('users/me/sync'),
 
   logout: (): Promise<ApiResponse<boolean>> => apiRequests.post<boolean>('users/logout', {}),
+
+  updateRecentProject: (projectId: number): Promise<ApiResponse<boolean>> =>
+    apiRequests.patch<boolean>(`users/recent-project/${projectId}`),
 };

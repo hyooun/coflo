@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: coflo
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE}
+    include: oauth
+
+  output:
+    ansi:
+      enabled: always
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+    organization: ${OPENAI_ORGANIZATION}
+    project: ${OPENAI_PROJECT}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+      exclude: env,beans,heapdump,threaddump,configprops,quarts
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  web:
+    server:
+      auto-time-requests: true
+
+logging:
+  level:
+    com:
+      reviewping:
+        coflo: debug
+    web: debug
+  config: classpath:logging/logback-spring.xml
+
+crypto-key: ${CRYPTO_KEY}
+
+domain-webhook-url: ${COFLO_WEBHOOK_URL}

@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  postgresql:
+    image: postgres:16.4
+    container_name: postgresql_boot
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: coflo
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - my_network
+  redis:
+    image: "redis:latest"
+    container_name: "redis_boot"
+    hostname: "redis"
+    environment:
+      - REDIS_PASSWORD=${DEV_REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
+  postgres_data:
+
+networks:
+  my_network:
+    driver: bridge

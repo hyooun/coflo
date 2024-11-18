@@ -43,3 +43,5 @@ env
 ### spotlesCheck ###
 spotless_check_output.txt
 
+### queryDsl ###
+src/main/generated/

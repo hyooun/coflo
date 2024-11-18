@@ -77,7 +77,7 @@ const MergeListPage = () => {
         </div>
 
         <div className="flex-1 bg-white">
-          <div className="py-4 h-full">
+          <div className="pb-4 h-full">
             {mergeRequests.length === 0 ? (
               <EmptyMergeRequest />
             ) : (

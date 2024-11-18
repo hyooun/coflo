@@ -16,8 +16,9 @@ const BestMergeRequestList = () => {
     if (!projectId) return;
     const fetchMergeRequests = async () => {
       const response = await MergeRequest.getBestMrList(projectId);
-      if (response.data) {
-        setBestMergeRequests(response.data);
+      const data = response.data;
+      if (data) {
+        setBestMergeRequests(data);
       }
     };
 
@@ -48,16 +49,20 @@ const BestMergeRequestList = () => {
                 <div className="flex flex-col min-w-0 flex-1 space-y-3">
                   <div className="flex items-center gap-2">
                     <div className="flex -space-x-2 flex-shrink-0">
-                      <img
-                        src={mr.assignee.avatarUrl}
-                        alt="Assignee"
-                        className="w-8 h-8 rounded-full border-2 border-white bg-white shadow-sm"
-                      />
-                      <img
-                        src={mr.reviewer.avatarUrl}
-                        alt="Reviewer"
-                        className="w-8 h-8 rounded-full border-2 border-white bg-white shadow-sm z-10"
-                      />
+                      {mr.assignee?.avatarUrl && (
+                        <img
+                          src={mr.assignee.avatarUrl}
+                          alt="Assignee"
+                          className="w-8 h-8 rounded-full border-2 border-white bg-white shadow-sm"
+                        />
+                      )}
+                      {mr.reviewer?.avatarUrl && (
+                        <img
+                          src={mr.reviewer.avatarUrl}
+                          alt="Reviewer"
+                          className="w-8 h-8 rounded-full border-2 border-white bg-white shadow-sm z-10"
+                        />
+                      )}
                     </div>
                     <div className="flex items-center min-w-0 flex-1">
                       <PullRequestIcon className="w-5 h-5 flex-shrink-0 mr-2" />
@@ -79,9 +84,11 @@ const BestMergeRequestList = () => {
                         </span>
                       ))}
                     </div>
-                    <span className="text-sm text-gray-700 ml-2 flex-shrink-0">
-                      created {mr.closedAt} by {mr.assignee.username}
-                    </span>
+                    {mr.assignee && (
+                      <span className="text-sm text-gray-700 ml-2 flex-shrink-0">
+                        created {mr.closedAt} by {mr.assignee.username}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="font-extrabold text-xl">→</div>

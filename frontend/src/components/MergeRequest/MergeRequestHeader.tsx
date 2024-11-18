@@ -17,7 +17,7 @@ const MergeRequestHeader = ({ mergeRequest }: { mergeRequest: GitlabMergeRequest
 
   return (
     <div className="flex flex-row justify-between items-center border-b-[1px] border-background-bnavy ">
-      <div className="space-y-1 font-pretendard pb-2 w-full min-w-[700px]">
+      <div className="space-y-1 font-pretendard w-full min-w-[700px]">
         {/* <div className="space-y-1 border-b-2 border-background-bnavy font-pretendard pb-4"> */}
         <div className="flex items-center gap-2 mb-4">
           <h1 className="text-2xl font-bold truncate">{mergeRequest.title}</h1>

@@ -157,11 +157,7 @@ export default function RepositoryPage() {
             시작하기
           </CommonButton>
         </div>
-        <CustomSearchBar
-          onSearch={handleSearch}
-          showOption={false}
-          width="pl-3 min-w-[400px] mb-4"
-        />
+        <CustomSearchBar onSearch={handleSearch} showOption={false} width="pl-3 min-w-[400px]" />
       </div>
 
       <div className="flex flex-col flex-grow overflow-auto bg-white w-full min-w-[400px] justify-start">

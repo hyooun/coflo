@@ -28,10 +28,17 @@ public class UserProjectScore extends BaseTimeEntity {
     private Long totalScore;
 
     @Builder
-    public UserProjectScore(UserProject userProject, CodeQualityCode codeQualityCode) {
-        this.totalScore = 0L;
+    public UserProjectScore(
+            UserProject userProject, CodeQualityCode codeQualityCode, int week, Long totalScore) {
         this.userProject = userProject;
         this.codeQualityCode = codeQualityCode;
+        this.week = week;
+        this.totalScore = totalScore;
         userProject.getUserProjectScores().add(this);
+    }
+
+    public void addToTotalScore(Integer score) {
+        if (score == null) score = 0;
+        this.totalScore += score;
     }
 }

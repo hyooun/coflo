@@ -1,6 +1,6 @@
 package com.reviewping.coflo.domain.gitlab.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -54,7 +54,8 @@ class GitlabEventHandlerTest {
                         openActionRequest.objectAttributes().description(),
                         openActionRequest.objectAttributes().targetBranch(),
                         openActionRequest.objectAttributes().createdAt().toLocalDateTime(),
-                        projectId);
+                        projectId,
+                        openActionRequest.user().username());
     }
 
     @Test

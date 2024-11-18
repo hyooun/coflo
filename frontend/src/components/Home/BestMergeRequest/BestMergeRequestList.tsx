@@ -19,7 +19,6 @@ const BestMergeRequestList = () => {
       const response = await MergeRequest.getBestMrList(projectId);
       const data = response.data;
       if (data) {
-        console.log(data);
         setBestMergeRequests(data);
         return;
       }

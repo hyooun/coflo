@@ -15,6 +15,8 @@ import org.springframework.data.repository.query.Param;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByOauth2Id(String oauth2Id);
 
+    Optional<User> findByUsername(String username);
+
     @Modifying
     @Query("UPDATE User u SET u.mainBadgeCode = :badgeCode WHERE u = :user")
     void updateBadge(@Param("user") User user, @Param("badgeCode") BadgeCode badgeCode);
@@ -27,5 +29,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     default User getById(Long userId) {
         return findById(userId).orElseThrow(() -> new BusinessException(USER_NOT_EXIST));
+    }
+
+    default User getByUsername(String username) {
+        return findByUsername(username).orElseThrow(() -> new BusinessException(USER_NOT_EXIST));
     }
 }

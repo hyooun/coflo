@@ -61,7 +61,7 @@ export const CustomSearchBar = ({
 
   return (
     <div
-      className={`relative flex flex-row gap-2 my-2 font-pretendard items-center justify-between ${width}`}
+      className={`relative flex flex-row gap-2 font-pretendard items-start justify-between ${width} h-16`}
     >
       {showOption && (
         <div className="relative w-[130px] mr-3 flex items-center" ref={dropdownRef}>

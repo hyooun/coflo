@@ -43,7 +43,7 @@ const ScrollNavigationButton = () => {
     <div className="fixed right-8 bottom-8 z-50">
       <button
         onClick={() => scrollToPosition(isScrolled ? 'top' : 'bottom')}
-        className="bg-primary-500 hover:bg-secondary text-white rounded-full p-3 shadow-lg"
+        className="border-2 border-primary-500 bg-white text-primary-500 hover:bg-primary-500 hover:text-white rounded-full p-3 shadow-lg"
       >
         {isScrolled ? <ChevronUp size={32} /> : <ChevronDown size={32} />}
       </button>

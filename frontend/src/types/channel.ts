@@ -1,6 +1,7 @@
 export interface ChannelCode {
   channelCodeId: number;
   channelName: string;
+  imageUrl: string;
 }
 
 export interface WebhookChannel {

@@ -199,12 +199,11 @@ public class ReviewService {
                         branch.getId(),
                         mrContent,
                         customPrompt.getContent(),
-                        gitlabUrl,
-                        username);
+                        gitlabUrl);
         redisGateway.sendDetailedReviewRequest(reviewRequest);
         // 6. 리뷰 평가 요청
         MrEvalRequestMessage evalRequest =
-                new MrEvalRequestMessage(mrInfo.getId(), branch.getId(), mrContent);
+                new MrEvalRequestMessage(mrInfo.getId(), branch.getId(), mrContent, username);
         redisGateway.sendEvalRequest(evalRequest);
     }
 

@@ -6,7 +6,6 @@ public record ReviewRequestMessage(
         Long branchId,
         MrContent mrContent,
         String customPrompt,
-        String gitlabUrl,
-        String username) {
+        String gitlabUrl) {
     public record MrContent(String mrDescription, String mrDiffs) {}
 }

@@ -102,7 +102,11 @@ export const WebhookSettings = () => {
       {channels.map((channel) => (
         <div key={channel.channelCodeId} className="mb-6">
           <div className="flex items-center mb-2">
-            {/* <img src={channel.logo} alt={`${channel.channelName} logo`} className="w-6 h-6 mr-2" /> */}
+            <img
+              src={channel.imageUrl}
+              alt={`${channel.channelName} logo`}
+              className="w-6 h-6 mr-2"
+            />
             <span className="font-semibold">{channel.channelName}</span>
           </div>
           <div className="flex flex-row items-center justify-between gap-4">

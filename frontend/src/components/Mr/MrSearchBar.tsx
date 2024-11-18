@@ -61,12 +61,12 @@ export const CustomSearchBar = ({
 
   return (
     <div
-      className={`relative flex flex-row gap-2 mb-2 font-pretendard items-center justify-between ${width}`}
+      className={`relative flex flex-row gap-2 font-pretendard items-start justify-between ${width} h-16`}
     >
       {showOption && (
         <div className="relative w-[130px] mr-3 flex items-center" ref={dropdownRef}>
           <div
-            className="flex items-center justify-center font-semibold rounded-md w-[100px] h-[30px] cursor-pointer text-center"
+            className="flex items-center justify-center font-semibold rounded-md w-[100px] h-[40px] cursor-pointer text-center"
             onClick={toggleDropdown}
             style={{
               backgroundImage: `url(${arrowIcon})`,
@@ -100,7 +100,7 @@ export const CustomSearchBar = ({
           <div className="relative flex-1">
             <input
               type="text"
-              className={`bg-gray-200 p-2 pl-3 pr-10 rounded-md h-full w-full text-primary-500 focus:outline-none placeholder:text-gray-600 font-pretendard ${
+              className={`bg-gray-200 p-2 pl-3 pr-10 rounded-md h-[42px] w-full text-primary-500 focus:outline-none placeholder:text-gray-600 font-pretendard ${
                 warningMessage ? '' : ''
               }`}
               placeholder="검색..."

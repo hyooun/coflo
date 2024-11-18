@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: coflo-ai
+
+  main:
+    keep-alive: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRES_JDBC_URL}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+    organization: ${OPENAI_ORGANIZATION}
+    project: ${OPENAI_PROJECT}
+
+git-clone-directory: ${GIT_CLONE_DIRECTORY}
+
+mattermost-logger:
+  base-url: ${MATTERMOST_WEBHOOK_URL}
+
+service:
+  info: "\n## [참고자료 보러가기](${SERVICE_URL})"

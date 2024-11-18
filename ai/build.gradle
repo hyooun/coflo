@@ -1,0 +1,87 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id "com.diffplug.spotless" version "6.25.0"
+}
+
+group = 'com.reviewping'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+
+    // Spring
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-integration'
+    implementation 'org.springframework.integration:spring-integration-http'
+    implementation 'org.springframework.integration:spring-integration-jdbc'
+    implementation 'org.springframework.integration:spring-integration-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-json:3.3.5'
+
+    // Postgresql
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Pgvector
+    implementation 'com.pgvector:pgvector:0.1.6'
+
+    // JGit
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:7.0.0.202409031743-r'
+
+    // Tree-sitter
+    implementation 'io.github.bonede:tree-sitter:0.24.3'
+    implementation 'io.github.bonede:tree-sitter-java:0.21.0a'
+    implementation 'io.github.bonede:tree-sitter-json:0.23.0'
+    implementation 'io.github.bonede:tree-sitter-html:0.20.3'
+    implementation 'io.github.bonede:tree-sitter-javascript:0.21.2'
+    implementation 'io.github.bonede:tree-sitter-typescript:0.21.1'
+
+    testImplementation 'org.springframework:spring-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.integration:spring-integration-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly 'com.h2database:h2'
+
+    // Testcontainers
+    testImplementation "org.testcontainers:testcontainers:1.20.3"
+    testImplementation "org.testcontainers:junit-jupiter:1.20.3"
+    testImplementation "com.redis:testcontainers-redis:2.2.2"
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+spotless {
+    format 'misc', {
+        target '*.gradle'
+        trimTrailingWhitespace()
+        indentWithSpaces(4)
+        endWithNewline()
+    }
+    java {
+        removeUnusedImports()
+        googleJavaFormat().aosp().reflowLongStrings().skipJavadocFormatting()
+        formatAnnotations()
+    }
+}

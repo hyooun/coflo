@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProfile name="!prod">
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+        <logger name="com.reviewping.coflo" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod">
+        <!-- 기본 Logback 설정 포함 -->
+        <springProperty scope="context" name="BASE_URL" source="mattermost-logger.base-url"/>
+        <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+        <appender name="MATTERMOST" class="com.reviewping.coflo.logging.MattermostAppender">
+            <url>${BASE_URL}</url>
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+        <appender name="ASYNC_MATTERMOST" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="MATTERMOST"/>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC_MATTERMOST"/>
+        </root>
+
+        <logger name="com.reviewping.coflo" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC_MATTERMOST"/>
+        </logger>
+    </springProfile>
+</configuration>

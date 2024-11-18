@@ -23,7 +23,7 @@ const GitUrlSelector = ({ value, onChange, labelText }: GitUrlSelectorProps) => 
 
   return (
     <div className="w-full">
-      {labelText && <label className="block mb-2 text-2xl">{labelText}</label>}
+      {labelText && <label className="block mb-2 text-xl">{labelText}</label>}
       <CommonSelector<GitUrlOption>
         selectedItems={[selectedOption]}
         items={gitUrlOptions}

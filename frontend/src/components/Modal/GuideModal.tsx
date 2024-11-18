@@ -92,7 +92,7 @@ export default function GuideModal({
         </button>
 
         {/* Title */}
-        <h2 className="text-2xl font-bold text-center mt-4 mb-6 text-primary-500">{title}</h2>
+        <h2 className="text-xl font-bold text-center mt-4 mb-6 text-primary-500">{title}</h2>
 
         {/* Content */}
         {content && <div className="mb-6 space-y-2">{content}</div>}

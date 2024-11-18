@@ -41,12 +41,12 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
       handleDelete(deleteTargetId);
       setDeleteTargetId(null);
     }
-    setIsAlertModalOpen(false);
+    setIsConfirmModalOpen(false);
   };
 
   const handleConfirmModalCancel = () => {
     setDeleteTargetId(null);
-    setIsAlertModalOpen(false);
+    setIsConfirmModalOpen(false);
   };
 
   const handleDelete = (id: number) => {

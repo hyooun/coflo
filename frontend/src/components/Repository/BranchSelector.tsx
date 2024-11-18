@@ -49,8 +49,8 @@ const BranchSelector = ({ value, onChange, gitlabProjectId }: BranchSelectorProp
         multiSelect={true}
         showCheckbox={true}
         className="relative"
-        buttonClassName="w-full px-4 py-3 rounded-xl text-primary-500 border-2 border-primary-500 bg-transparent flex justify-between items-center"
-        dropdownClassName="absolute z-20 w-full mt-1 bg-white rounded-xl shadow-lg border-2 border-primary-500"
+        buttonClassName="w-full px-4 py-3 rounded-xl text-primary-500 border border-primary-500 bg-transparent flex justify-between items-center"
+        dropdownClassName="absolute z-20 w-full mt-1 bg-white rounded-xl shadow-lg border border-primary-500"
         itemClassName="w-full text-left px-4 py-3 text-lg hover:bg-secondary/30 transition-colors rounded-xl"
       />
     </div>

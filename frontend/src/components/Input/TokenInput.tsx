@@ -38,7 +38,7 @@ export const TokenInput = ({
         onChange={(e) => onChange(e.target.value)}
         isWarning={value !== '' && !isValid}
         warningMessage={warningMessage}
-        className="border-2"
+        className="border"
         icon={
           <button
             type="button"

@@ -16,6 +16,7 @@ import LandingImage0 from '@/assets/images/landing/landing_image00.png';
 import LandingImage1 from '@/assets/images/landing/landing_image01.png';
 import LandingImage2 from '@/assets/images/landing/landing_image02.png';
 import ReviewComment from '@components/MergeRequest/Review/ReviewComment';
+import { useNavigate } from 'react-router-dom';
 
 const ReviewDemo = () => (
   <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl">
@@ -54,6 +55,7 @@ const FullPageSection = ({
 );
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const [currentSection, setCurrentSection] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const sections = useRef(5); // 섹션 수
@@ -149,6 +151,7 @@ const LandingPage = () => {
               <button
                 className="bg-primary-500 text-white px-8 py-4 rounded-full 
                 text-lg hover:bg-primary-600 transition-colors inline-flex items-center gap-2"
+                onClick={() => navigate('/login')}
               >
                 시작하기
                 <ArrowRight className="w-5 h-5" />
@@ -300,6 +303,7 @@ const LandingPage = () => {
             <button
               className="bg-primary-500 text-white px-8 py-4 rounded-full 
               text-lg hover:bg-primary-600 transition-colors inline-flex items-center gap-2"
+              onClick={() => navigate('/login')}
             >
               시작하기
               <ArrowRight className="w-5 h-5" />

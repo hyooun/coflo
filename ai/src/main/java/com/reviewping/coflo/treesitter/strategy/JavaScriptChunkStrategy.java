@@ -6,13 +6,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.treesitter.*;
 
 public class JavaScriptChunkStrategy implements ChunkStrategy {
 
-    private static final Logger log = LoggerFactory.getLogger(JavaScriptChunkStrategy.class);
     private final TSParser parser;
 
     public JavaScriptChunkStrategy(TSParser parser) {
@@ -33,16 +30,13 @@ public class JavaScriptChunkStrategy implements ChunkStrategy {
 
     private void traverseAndCollectNodes(
             TSNode node, List<ChunkedCode> chunks, byte[] code, File file) {
-        //        log.info("\nNode type: {} \n{}", node.getType(), new
-        // String(Arrays.copyOfRange(code, node.getStartByte(), node.getEndByte())));
 
         if ("class_declaration".equals(node.getType())
                 || "function_declaration".equals(node.getType())
                 || "lexical_declaration".equals(node.getType())) {
             String nodeContent =
                     new String(Arrays.copyOfRange(code, node.getStartByte(), node.getEndByte()));
-            String extension = FileUtil.getFileExtension(file);
-            chunks.add(new ChunkedCode(nodeContent, file.getName(), file.getPath(), extension));
+            chunks.add(new ChunkedCode(nodeContent, file.getName(), file.getPath(), "js"));
             return;
         }
 

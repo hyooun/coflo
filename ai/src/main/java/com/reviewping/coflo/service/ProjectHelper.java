@@ -55,8 +55,7 @@ public class ProjectHelper {
                 || fileName.endsWith(".tsx")
                 || fileName.endsWith(".ts")
                 || fileName.endsWith(".css")
-                || fileName.endsWith(".html")
-                || fileName.endsWith(".md");
+                || fileName.endsWith(".html");
     }
 
     private List<ChunkedCode> preprocessCode(File file) {

@@ -10,11 +10,7 @@ import java.time.OffsetDateTime;
  */
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record GitlabEventRequest(
-        String objectKind,
-        String eventType,
-        String ref,
-        Project project,
-        ObjectAttributes objectAttributes) {
+        String objectKind, String eventType, Project project, ObjectAttributes objectAttributes) {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record Project(Long id, String webUrl) {}
 

@@ -149,7 +149,7 @@ export default function RepositoryPage() {
             />
           </div>
           <CommonButton
-            className="px-4 min-w-[100px] h-[50px]"
+            className="px-4 min-w-[100px] h-[50px] text-white"
             active={false}
             bgColor="bg-primary-500"
             onClick={handleButtonClick}
@@ -157,15 +157,14 @@ export default function RepositoryPage() {
             시작하기
           </CommonButton>
         </div>
-
         <CustomSearchBar
           onSearch={handleSearch}
           showOption={false}
-          width="pl-3 max-w-[1000px] min-w-[400px]"
+          width="pl-3 min-w-[400px] mb-4"
         />
       </div>
 
-      <div className="flex flex-col flex-grow overflow-auto bg-white w-full justify-start">
+      <div className="flex flex-col flex-grow overflow-auto bg-white w-full min-w-[400px] justify-start">
         {repositories.length > 0 ? (
           repositories.map((repo, index) => (
             <div key={repo.gitlabProjectId}>

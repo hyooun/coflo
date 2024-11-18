@@ -15,8 +15,6 @@ const MergeRequestHeader = ({ mergeRequest }: { mergeRequest: GitlabMergeRequest
     }
   };
 
-  console.log(mergeRequest.gitlabMrDetailUrl);
-
   return (
     <div className="flex flex-row justify-between items-center border-b-[1px] border-background-bnavy ">
       <div className="space-y-1 font-pretendard pb-2 w-full min-w-[700px]">
@@ -46,7 +44,7 @@ const MergeRequestHeader = ({ mergeRequest }: { mergeRequest: GitlabMergeRequest
       </div>
       <div
         className="flex items-center justify-center bg-primary-500 text-white rounded-xl px-4 whitespace-nowrap w-fit h-10 cursor-pointer"
-        onClick={() => (window.location.href = mergeRequest.gitlabMrDetailUrl)}
+        onClick={() => window.open(mergeRequest.gitlabMrDetailUrl, '_blank', 'noopener')}
       >
         보러 가기
       </div>

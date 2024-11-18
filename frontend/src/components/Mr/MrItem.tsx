@@ -4,7 +4,7 @@ import useTimeAgo from '@hooks/time';
 import { PullRequestIcon } from '@components/TextDiv/Icons/PullRequestIcon';
 import { Tooltip } from '@components/ToolTip/ToolTip';
 
-export function MrItem({ mergeRequest }: MrItemProps) {
+export function MrItem({ mergeRequest, projectLabels }: MrItemProps) {
   const {
     title,
     // state,
@@ -70,7 +70,7 @@ export function MrItem({ mergeRequest }: MrItemProps) {
       </div>
       <div className="mt-2 text-xs text-gray-600 flex justify-between">
         <div>
-          <LabelList labels={labels} />
+          <LabelList labels={labels} projectLabels={projectLabels} />
         </div>
         <div className="text-xs mr-1">
           <span>updated {updateTimeAgo}</span>

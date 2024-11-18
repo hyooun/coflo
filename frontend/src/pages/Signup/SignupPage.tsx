@@ -1,11 +1,13 @@
 import SignupContent from '@components/Signup/SignupContent.tsx';
+import signupBgImage from '@assets/images/signup_bg_image.png';
 
 const SignupPage = () => {
   return (
-    <div className="w-full h-screen flex justify-start items-center">
-      <div className="w-full max-w-2xl p-5">
-        <SignupContent />
+    <div className="w-full h-screen flex justify-around items-center">
+      <div className="absolute inset-0 pointer-events-none -z-10">
+        <img src={signupBgImage} alt="sign up" className="w-full h-full object-cover" />
       </div>
+      <SignupContent />
     </div>
   );
 };

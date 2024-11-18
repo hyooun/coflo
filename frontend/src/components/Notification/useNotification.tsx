@@ -2,20 +2,19 @@ import { useEffect, useRef } from 'react';
 import { useSetAtom } from 'jotai';
 import { notificationAtom } from '@store/auth';
 
-export const useNotification = () => {
+export const useNotification = (projectId: string) => {
   const setNotification = useSetAtom(notificationAtom);
+
   const eventSourceRef = useRef<EventSource | null>(null);
 
   const notify = () => {
     console.log('Notification triggered');
   };
 
-  useEffect(() => {
-    const eventSource = new EventSource(`https://www.coflo.co.kr/api/sse/subscribe`, {
+  const openEvtSource = () => {
+    const eventSource = new EventSource(`https://www.coflo.co.kr/api/sse/subscribe?${projectId}`, {
       withCredentials: true,
     });
-
-    console.log('EventSource created:', eventSource);
 
     eventSourceRef.current = eventSource;
 
@@ -29,12 +28,33 @@ export const useNotification = () => {
       }
 
       setNotification(message);
+      window.location.reload();
     });
 
-    return () => {
-      eventSource.close();
+    eventSource.onerror = async (err) => {
+      console.error('EventSource failed:', err);
+
+      closeEvtSource();
+
+      console.log('Reconnecting...');
+      openEvtSource();
     };
-  }, [setNotification]);
+  };
+
+  const closeEvtSource = () => {
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    openEvtSource();
+
+    return () => {
+      closeEvtSource();
+    };
+  }, [projectId, setNotification]);
 
   return { notify };
 };

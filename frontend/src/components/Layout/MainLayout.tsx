@@ -4,9 +4,12 @@ import CommonLayout from './CommonLayout';
 import { Outlet } from 'react-router-dom';
 import { useNotification } from '@components/Notification/useNotification';
 import Notification from '@components/Notification/Notification';
+import { projectIdAtom } from '@store/auth';
+import { useAtomValue } from 'jotai';
 
 const MainLayout = () => {
-  const { notify } = useNotification();
+  const projectId = useAtomValue(projectIdAtom);
+  const { notify } = useNotification(projectId || '');
 
   useEffect(() => {
     notify();

@@ -11,7 +11,7 @@ import { CircleCheck } from 'lucide-react';
 
 export const WebhookSettings = () => {
   const [channels, setChannels] = useState<ChannelCode[]>([]);
-  const [webhookChannels, setWebhookChannels] = useState<WebhookChannel[]>([]);
+  const [, setWebhookChannels] = useState<WebhookChannel[]>([]);
   const [urls, setUrls] = useState<{ [key: string]: string }>({
     Mattermost: '',
     Discord: '',
@@ -33,8 +33,6 @@ export const WebhookSettings = () => {
       if (!projectId) return;
       const response = await Channels.getWebhookChannelList(Number(projectId));
       setWebhookChannels(response.data ?? []);
-
-      console.log('webhookChannels : ', webhookChannels);
 
       // 기존 웹훅 URL 설정
       const initialUrls =
@@ -87,7 +85,6 @@ export const WebhookSettings = () => {
     if (!projectId) return;
     try {
       await Channels.testWebhookMessage(Number(projectId), channel.channelCodeId);
-      console.log('테스트 메시지 전송 완료');
     } catch (error) {
       console.error('테스트 메시지 전송 실패:', error);
     }

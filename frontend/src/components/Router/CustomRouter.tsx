@@ -14,7 +14,6 @@ import ReferencesPage from '@pages/MergeRequestReview/ReferencesPage';
 import { OAuthRedirectHandler } from '@apis/Auth';
 import App from 'App';
 import PageNotFound from '@pages/Error/PageNotFound';
-// import ErrorBoundary from './ErrorBoundary';
 import { ServerErrorPage } from '@pages/Error/ServerErrorPage';
 import { BadRequestPage } from '@pages/Error/BadRequestPage';
 import { UnauthorizedPage } from '@pages/Error/UnauthorizedPage';
@@ -39,21 +38,17 @@ const customRouter = createBrowserRouter([
   {
     path: '/repository',
     element: (
-      // <ErrorBoundary>
       <AuthGuard>
         <RepositoryLayout />
       </AuthGuard>
-      // </ErrorBoundary>
     ),
   },
   {
     path: '/:projectId/main',
     element: (
-      // <ErrorBoundary>
       <AuthGuard>
         <MainLayout />
       </AuthGuard>
-      // </ErrorBoundary>
     ),
     children: [
       {

@@ -1,7 +1,4 @@
-// components/Modal/GuideModal.tsx
-// import { useState } from 'react';
 import { X } from 'lucide-react';
-// import { Gitlab } from '@apis/Gitlab';
 import { useState, useEffect } from 'react';
 import { TokenInput } from '@components/Input/TokenInput';
 import type { GuideModalProps } from 'types/modal.ts';
@@ -36,9 +33,7 @@ export default function GuideModal({
   }, [inputProps?.value, isOpen]);
 
   const handleValidateToken = async () => {
-    console.log(botToken);
     if (!botToken) return;
-    console.log('토큰 검증 시작');
 
     setIsValidating(true);
 

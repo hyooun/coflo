@@ -10,9 +10,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Review } from '@apis/Review';
 import { useAtom } from 'jotai';
 import { projectIdAtom } from '@store/auth';
-// import { useNotification } from './useNotification';
-// import { useLocation } from 'react-router-dom';
-// import Loading from './Loading';
 
 const ReferencesList = ({ references: initialReferences }: ReferencesListProps) => {
   const navigate = useNavigate();
@@ -24,11 +21,6 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
   const [alertModalContent, setAlertModalContent] = useState<string[]>([]);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
   const [, setIsLoading] = useState(true);
-
-  // const location = useLocation();
-  // const sendReviewId = location.state?.sendReviewId;
-
-  // const { notify } = useNotification(sendReviewId || '', id || '', projectId || '', setIsLoading);
 
   useEffect(() => {
     setReferences(initialReferences || []);
@@ -64,8 +56,6 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
       setIsAlertModalOpen(true);
       return;
     }
-    // setIsLoading(true);
-
     try {
       const retrievals = references.map((ref) => ({
         fileName: ref.fileName,
@@ -79,8 +69,7 @@ const ReferencesList = ({ references: initialReferences }: ReferencesListProps) 
         return;
       }
 
-      const response = await Review.regenerateReview(projectId, id, retrievals);
-      console.log('response: ', response);
+      await Review.regenerateReview(projectId, id, retrievals);
       setAlertModalContent(['리뷰가 재생성되었습니다.']);
       setIsAlertModalOpen(true);
 

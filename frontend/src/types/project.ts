@@ -30,12 +30,6 @@ export interface UserProjectData {
   projectId: number;
 }
 
-// export interface UserProjectResponse {
-//   /** @format int64 */
-//   projectId: number;
-//   name: string;
-// }
-
 export interface GetLinkedStatusData {
   hasLinkedProject: boolean;
   projectId: string;

@@ -49,7 +49,8 @@ public class MrEvalService {
                         chatCompletionResponse.choices().getFirst().message().content(),
                         new TypeReference<>() {});
         MrEvalResponseMessage mrEvalResponseMessage =
-                new MrEvalResponseMessage(evalRequest.mrInfoId(), mrEvaluationMessage);
+                new MrEvalResponseMessage(
+                        evalRequest.mrInfoId(), mrEvaluationMessage, evalRequest.username());
         redisGateway.sendEval(mrEvalResponseMessage);
         log.info(
                 "MR 평가 완료 - MR Info ID: {}, 평가 결과: {}",

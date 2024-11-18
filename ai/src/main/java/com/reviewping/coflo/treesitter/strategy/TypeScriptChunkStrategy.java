@@ -30,21 +30,22 @@ public class TypeScriptChunkStrategy implements ChunkStrategy {
 
     private void traverseAndCollectNodes(
             TSNode node, List<ChunkedCode> chunks, byte[] code, File file) {
+        String extension = FileUtil.getFileExtension(file);
 
         if ("class_declaration".equals(node.getType())) {
             String classCode =
                     new String(Arrays.copyOfRange(code, node.getStartByte(), node.getEndByte()));
-            chunks.add(new ChunkedCode(classCode, file.getName(), file.getPath(), "typescript"));
+            chunks.add(new ChunkedCode(classCode, file.getName(), file.getPath(), extension));
             return;
         } else if ("function_declaration".equals(node.getType())) {
             String functionCode =
                     new String(Arrays.copyOfRange(code, node.getStartByte(), node.getEndByte()));
-            chunks.add(new ChunkedCode(functionCode, file.getName(), file.getPath(), "typescript"));
+            chunks.add(new ChunkedCode(functionCode, file.getName(), file.getPath(), extension));
             return;
         } else if ("lexical_declaration".equals(node.getType())) {
             String lexicalCode =
                     new String(Arrays.copyOfRange(code, node.getStartByte(), node.getEndByte()));
-            chunks.add(new ChunkedCode(lexicalCode, file.getName(), file.getPath(), "typescript"));
+            chunks.add(new ChunkedCode(lexicalCode, file.getName(), file.getPath(), extension));
             return;
         }
 

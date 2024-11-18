@@ -14,9 +14,13 @@ public record GitlabEventRequest(
         String eventType,
         String ref,
         Project project,
+        User user,
         ObjectAttributes objectAttributes) {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record Project(Long id, String webUrl) {}
+
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public record User(String username) {}
 
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record ObjectAttributes(

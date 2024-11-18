@@ -48,40 +48,23 @@ public class UserProjectScoreService {
 
     @Transactional
     public void saveUserProjectScores(String username, MrInfo mrInfo) {
-        User user = userRepository.getByUsername(username);
-        Project project = mrInfo.getProject();
-        GitlabAccount gitlabAccount =
-                gitlabAccountRepository.getByUserIdAndProjectId(user.getId(), project.getId());
-        UserProject userProject =
-                userProjectRepository.getByProjectAndGitlabAccount(project, gitlabAccount);
+        UserProject userProject = getUserProject(username, mrInfo.getProject());
         int currentWeek =
                 projectDateUtil.calculateWeekNumber(
-                        project.getCreatedDate().toLocalDate(), LocalDate.now());
+                        mrInfo.getProject().getCreatedDate().toLocalDate(), LocalDate.now());
 
         Map<Long, Integer> scoresMap = initializeScoresMap(mrInfo);
+        scoresMap.forEach(
+                (codeQualityCodeId, score) ->
+                        updateOrSaveUserProjectScore(
+                                userProject, currentWeek, codeQualityCodeId, score));
+    }
 
-        for (Map.Entry<Long, Integer> entry : scoresMap.entrySet()) {
-            Long codeQualityCodeId = entry.getKey();
-            Integer scoreToAdd = entry.getValue();
-
-            Optional<UserProjectScore> optionalScore =
-                    userProjectScoreRepository.findScoreByProjectWeekAndCode(
-                            userProject, currentWeek, codeQualityCodeId);
-
-            if (optionalScore.isPresent()) {
-                UserProjectScore existingScore = optionalScore.get();
-                existingScore.addToTotalScore(scoreToAdd);
-            } else {
-                UserProjectScore newScore =
-                        UserProjectScore.builder()
-                                .userProject(userProject)
-                                .codeQualityCode(codeQualityCodeMap.get(codeQualityCodeId))
-                                .week(currentWeek)
-                                .totalScore((long) scoreToAdd)
-                                .build();
-                userProjectScoreRepository.save(newScore);
-            }
-        }
+    private UserProject getUserProject(String username, Project project) {
+        User user = userRepository.getByUsername(username);
+        GitlabAccount gitlabAccount =
+                gitlabAccountRepository.getByUserIdAndProjectId(user.getId(), project.getId());
+        return userProjectRepository.getByProjectAndGitlabAccount(project, gitlabAccount);
     }
 
     private Map<Long, Integer> initializeScoresMap(MrInfo mrInfo) {
@@ -93,5 +76,31 @@ public class UserProjectScoreService {
         scoresMap.put(5L, mrInfo.getSecurityScore());
         scoresMap.put(6L, mrInfo.getMaintainabilityScore());
         return scoresMap;
+    }
+
+    private void updateOrSaveUserProjectScore(
+            UserProject userProject, int currentWeek, Long codeQualityCodeId, Integer score) {
+        Optional<UserProjectScore> optionalScore =
+                userProjectScoreRepository.findScoreByProjectWeekAndCode(
+                        userProject, currentWeek, codeQualityCodeId);
+
+        if (optionalScore.isPresent()) {
+            UserProjectScore existingScore = optionalScore.get();
+            existingScore.addToTotalScore(score);
+        } else {
+            createNewUserProjectScore(userProject, currentWeek, codeQualityCodeId, (long) score);
+        }
+    }
+
+    private void createNewUserProjectScore(
+            UserProject userProject, int currentWeek, Long codeQualityCodeId, long score) {
+        UserProjectScore newScore =
+                UserProjectScore.builder()
+                        .userProject(userProject)
+                        .codeQualityCode(codeQualityCodeMap.get(codeQualityCodeId))
+                        .week(currentWeek)
+                        .totalScore(score)
+                        .build();
+        userProjectScoreRepository.save(newScore);
     }
 }

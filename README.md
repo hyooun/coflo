@@ -10,7 +10,7 @@
   &nbsp; | &nbsp; 
   <a href="">리뷰핑 팀 Notion</a>
   &nbsp; | &nbsp; 
-   <a href="exec/발표자료.pdf">발표 PPT</a>
+   <a href="exec/최종발표.pdf">발표 PPT</a>
 </div>
 
 <br>
@@ -141,14 +141,14 @@
 
 <table align="center">
   <tr>
-    <th style="text-align: center;"><a href="https://github.com/">구승석</a></th>
-    <th style="text-align: center;"><a href="https://github.com/">이보연</a></th>
-    <th style="text-align: center;"><a href="https://github.com/">유승현</a></th>
+    <th style="text-align: center;"><a href="https://github.com/anjs124">구승석</a></th>
+    <th style="text-align: center;"><a href="https://github.com/btothey99">이보연</a></th>
+    <th style="text-align: center;"><a href="https://github.com/hyooun">유승현</a></th>
   </tr>
   <tr>
-    <td style="text-align: center;"><img src="./resources/img/member/.png" alt="" width="150px"/></td>
-    <td style="text-align: center;"><img src="./resources/img/member/.png" alt="" width="150px"/></td>
-    <td style="text-align: center;"><img src="./resources/img/member/.png" alt="" width="150px" /></td>
+    <td style="text-align: center;"><img src="./resources/img/member/구승석.png" alt="" width="150px"/></td>
+    <td style="text-align: center;"><img src="./resources/img/member/이보연.png" alt="" width="150px"/></td>
+    <td style="text-align: center;"><img src="./resources/img/member/유승현.png" alt="" width="150px" /></td>
   </tr>
   <tr>
     <td style="text-align: center;"><b>Frontend</b></td>
@@ -159,14 +159,14 @@
 
 <table align="center">
   <tr>
-    <th style="text-align: center;"><a href="https://github.com/">손지민</a></th>
-    <th style="text-align: center;"><a href="https://github.com/">김형민</a></th>
-    <th style="text-align: center;"><a href="https://github.com/">홍선기</a></th>
+    <th style="text-align: center;"><a href="https://github.com/jmxx219">손지민</a></th>
+    <th style="text-align: center;"><a href="https://github.com/fkgnssla">김형민</a></th>
+    <th style="text-align: center;"><a href="https://github.com/qsunki">홍선기</a></th>
   </tr>
   <tr>
-    <td style="text-align: center;"><img src="./resources/img/member/.png" alt="" width="150px" /></td>
-    <td style="text-align: center;"><img src="./resources/img/member/.png" alt="" width="150px"/></td>
-    <td style="text-align: center;"><img src="./resources/img/member/.png" alt="" width="150px" /></td>
+    <td style="text-align: center;"><img src="./resources/img/member/손지민.png" alt="" width="150px" /></td>
+    <td style="text-align: center;"><img src="./resources/img/member/김형민.png" alt="" width="150px"/></td>
+    <td style="text-align: center;"><img src="./resources/img/member/홍선기.png" alt="" width="150px" /></td>
   </tr>
   <tr>
     <td style="text-align: center;"><b>Backend</b></td>

@@ -3,12 +3,12 @@
     <img src="./resources/img/logo.png" width="22px" style="margin-right: 15px"/> 코플로, CoFlo
   </h1>
   <img src="./resources/img/main.png"/>
-  <h4>코플로 서비스</h5>
+  <h3>AI 기반 맞춤형 코드 리뷰 플랫폼</h3>
   <p>2024.10.14 ~ 2024.11.19</p>  
     
-  <a href="">코플로</a>
+  <a href="https://www.coflo.co.kr/">코플로</a>
   &nbsp; | &nbsp; 
-  <a href="">리뷰핑 팀 Notion</a>
+  <a href="https://jmxx219.notion.site/115ced9ff3788076bdd1d0c94a1ecf18?pvs=74">리뷰핑 팀 Notion</a>
   &nbsp; | &nbsp; 
    <a href="exec/최종발표.pdf">발표 PPT</a>
 </div>
@@ -28,16 +28,35 @@
 
 ## [개요](#목차)
 
+코드리뷰는 개발자가 가장 선호하는 개발문화입니다. 장점이 많지만 현실적인 문제에 부딫혀 제대로 하지 쉽지 않습니다. 많은 양의 코드리뷰를 하는 것, 리뷰를 기다리는 것 모두 개발 속도를 늦추는 원인이 되기 때문입니다. 그렇기에 이런 시간적 비용을 단축시키고 개발자의 편의를 돕기 위해 맞춤형 코드 분석을 통해 코드 리뷰를 작성하는 AI 리뷰어, coFlo를 기획하게 되었습니다.
+
 <br>
  
 ### **코플로란?**
+
+code, flow가 합쳐진 합성어로 코드가 물 흐르듯 자연스럽게 리뷰되고 개선되는 것을 표현했습니다.
 
 <br>
 <br>
 
 ## [핵심 기능 소개](#목차)
 
-### 1.
+### 1. AI 코드 리뷰
+
+- **프로젝트 문맥**을 반영한 코드 리뷰: 프로젝트 코드를 메소드, 함수 단위로 청크하여 저장, 리뷰 생성 시 RAG의 검색데이터로 활용
+- **커스텀 프롬프트** 설정: 원하는 리뷰 생성을 위한 프롬프트 수정가능
+
+<br>
+
+### 2. 코드 리뷰 데이터
+
+- **사용자 코드 평가 지표**(6가지): 가독성, 일관성, 재사용성, 신뢰성, 보안성, 유지보수성에 따른 AI의 MR평가
+
+- **주차별 개인 성장 그래프:** 6가지 지표에 대해 주간 점수 통계
+
+- **코드 뱃지 획득:** 도전과제 달성 시 귀여운 뱃지 획득
+
+- **주간 최고 MR:** AI가 평가한 좋은 MR TOP3
 
 <br/>
 <br/>
@@ -108,6 +127,10 @@
 ### [코플로 API 명세서](./resources/img/api_specification.png)
 
 <br/>
+
+### [리뷰핑팀 JIRA](./resources/img/jira)
+
+<br/>
 <br/>
 
 ## [개발 환경 및 기술 스택](#목차)
@@ -121,15 +144,6 @@
 |      **Infra**      | ![amazonec2](https://img.shields.io/badge/amazon_ec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white) ![docker](https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white) ![nginx](https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 |   **Monitoring**    | ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white) ![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=Grafana&logoColor=white)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | **Management Tool** | ![Jira](https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white) ![Gitlab](https://img.shields.io/badge/GitLab-FC6D26?style=for-the-badge&logo=GitLab&logoColor=white) ![Mattermost](https://img.shields.io/badge/mattermost-0058CC?style=for-the-badge&logo=mattermost&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-000000.svg?style=for-the-badge&logo=notion&logoColor=white) ![Figma](https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white) ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)                                                                                                                                                                        |
-
-<br/>
-
-<details>
-<summary>리뷰핑팀 JIRA</summary>
-<div markdown="1">
-<img width="500px" src="./resources/img/jira/jira_flow_digram.PNG">
-</div>
-</details>
 
 <br/>
 <br/>

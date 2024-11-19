@@ -63,49 +63,57 @@ code, flow가 합쳐진 합성어로 코드가 물 흐르듯 자연스럽게 리
 
 ## [서비스 소개](#목차)
 
-### 1️⃣ <b>메인 페이지</b>
+### 1️⃣ <b>로그인 페이지</b>
 
-|                   **Page**                    |                   **Page**                    |
-| :-------------------------------------------: | :-------------------------------------------: |
-| <img src="./resources/gif/.gif" height="400"> | <img src="./resources/gif/.gif" height="400"> |
+|                      **Lading Page**                      |
+| :-------------------------------------------------------: |
+| <img src="./resources/gif/landing_page.gif" height="400"> |
 
-<br>
-
-### 2️⃣ <b> 페이지</b>
-
-> ㅇㅇ
-
-|                   **Page**                    |                   **Page**                    |
-| :-------------------------------------------: | :-------------------------------------------: |
-| <img src="./resources/gif/.gif" height="400"> | <img src="./resources/gif/.gif" height="400"> |
+|                     **Login Page**                      |                     **SignUp Page**                      |
+| :-----------------------------------------------------: | :------------------------------------------------------: |
+| <img src="./resources/gif/login_page.gif" height="400"> | <img src="./resources/gif/signup_page.gif" height="400"> |
 
 <br>
 
-### 3️⃣ <b> 페이지</b>
+### 2️⃣ <b>메인 페이지</b>
 
-> ㅇㅇ
+> 프로젝트 팀 정보와 함께 6가지 지표에 따른 팀 육각형 그래프와 개인 성장 그래프를 조회할 수 있다.
 
-|                   **Page**                    |                   **Page**                    |
-| :-------------------------------------------: | :-------------------------------------------: |
-| <img src="./resources/gif/.gif" height="400"> | <img src="./resources/gif/.gif" height="400"> |
+|                     **Main Page**                      |
+| :----------------------------------------------------: |
+| <img src="./resources/gif/main_page.gif" height="400"> |
 
-<br>
-
-### 4️⃣ <b> 페이지</b>
-
-> ㅇㅇ
-
-|                   **Page**                    |                   **Page**                    |
-| :-------------------------------------------: | :-------------------------------------------: |
-| <img src="./resources/gif/.gif" height="400"> | <img src="./resources/gif/.gif" height="400"> |
+|                       **Project Page**                        |                       **Project Page**                        |
+| :-----------------------------------------------------------: | :-----------------------------------------------------------: |
+| <img src="./resources/gif/repository_start.gif" height="400"> | <img src="./resources/gif/repository_token.gif" height="400"> |
 
 <br>
 
-### 5️⃣ <b>마이 페이지</b>
+### 3️⃣ <b>MR 페이지</b>
 
-|                   **Page**                    |                   **Page**                    |
-| :-------------------------------------------: | :-------------------------------------------: |
-| <img src="./resources/gif/.gif" height="400"> | <img src="./resources/gif/.gif" height="400"> |
+> MR 리스트를 조회하고, AI 리뷰를 조회하고 재생성한다.
+
+|             **Merge Request Search Page**              |                        **Review Page**                         |
+| :----------------------------------------------------: | :------------------------------------------------------------: |
+| <img src="./resources/gif/mr_search.gif" height="400"> | <img src="./resources/gif/review_regenerate.gif" height="400"> |
+
+<br>
+
+### 4️⃣ <b>커스텀 프롬프트 페이지</b>
+
+> AI 리뷰 생성을 위한 커스텀 프롬프트를 등록한다.
+
+|                   **Custom Prompt Page**                   |
+| :--------------------------------------------------------: |
+| <img src="./resources/gif/custom_prompt.gif" height="400"> |
+
+<br>
+
+### 5️⃣ <b>뱃지 & 설정 페이지</b>
+
+|                    **My Badge Page**                    |                     **Setting Page**                      |
+| :-----------------------------------------------------: | :-------------------------------------------------------: |
+| <img src="./resources/gif/badge_page.gif" height="400"> | <img src="./resources/gif/setting_page.gif" height="400"> |
 
 <br/>
 <br/>

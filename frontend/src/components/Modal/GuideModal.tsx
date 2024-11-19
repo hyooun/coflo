@@ -53,7 +53,7 @@ export default function GuideModal({
       if (isValid) {
         setIsTokenValid(isValid);
         setIsAlertModalOpen(true);
-        setAlertMessage(['유효한 토큰입니다.', '회원가입을 진행해주세요.']);
+        setAlertMessage(['유효한 토큰입니다.', '']);
       } else {
         setIsTokenValid(false);
         setIsAlertModalOpen(true);
